@@ -260,7 +260,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .msg-unread{background:var(--blush);color:#fff;font-size:.66rem;font-weight:600;padding:1px 7px;border-radius:10px}
 
 /* Chat */
-.chat-screen{padding:0;display:flex;flex-direction:column;height:100%}
+.chat-screen{padding:0;flex-direction:column;height:100%}
+.chat-screen.active{display:flex}
 .chat-thread{flex:1;overflow-y:auto;padding:16px;background:linear-gradient(180deg,#f7f5f2,#ede8f3)}
 .chat-meta{text-align:center;font-size:.7rem;color:var(--ttl);padding:8px 0 14px;letter-spacing:.04em}
 .bubble-wrap{display:flex;gap:8px;margin-bottom:10px;max-width:80%}
