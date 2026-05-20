@@ -202,6 +202,50 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .feed-point{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:14px;background:rgba(200,184,122,.14);color:var(--gold2);font-size:.7rem;font-weight:500}
 .feed-point.minus{background:rgba(232,180,184,.14);color:var(--blush2)}
 
+/* Providers list */
+.prov-screen{padding:14px 0 0}
+.prov-search{margin:0 18px 12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.prov-search input{flex:1;border:none;outline:none;font-size:.85rem;background:none;font-family:inherit}
+.prov-search .ic{color:var(--tl)}
+.prov-filters{padding:0 18px 6px}
+.filter-section{margin-bottom:10px}
+.filter-section-label{font-size:.66rem;letter-spacing:.15em;color:var(--tl);font-weight:500;margin-bottom:6px;text-transform:uppercase}
+.filter-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.filter-row::-webkit-scrollbar{display:none}
+.prov-meta{display:flex;justify-content:space-between;align-items:center;padding:8px 18px 12px;border-bottom:1px solid rgba(184,175,214,.1);font-size:.76rem;color:var(--tl)}
+.prov-meta b{color:var(--ink);font-weight:600}
+.prov-sort{display:flex;align-items:center;gap:4px;color:var(--lav3);cursor:pointer;font-weight:500}
+.prov-group-h{display:flex;align-items:center;gap:8px;padding:14px 18px 8px;font-size:.7rem;letter-spacing:.1em;color:var(--tl);font-weight:500;text-transform:uppercase}
+.prov-group-h .prov-count{padding:1px 7px;background:rgba(184,175,214,.15);color:var(--lav3);border-radius:10px;font-size:.66rem;font-weight:600;letter-spacing:0}
+.online-dot-h{width:8px;height:8px;border-radius:50%;background:var(--sage2);box-shadow:0 0 0 3px rgba(168,196,176,.25);animation:pulseDot 2s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 3px rgba(168,196,176,.25)}50%{box-shadow:0 0 0 5px rgba(168,196,176,.4)}}
+.prov-list{padding:0 18px;display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.prov-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:13px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:all .2s}
+.prov-card:active{transform:scale(.99);box-shadow:var(--shadow)}
+.prov-card.featured{border-color:rgba(184,175,214,.35);background:linear-gradient(135deg,rgba(184,175,214,.04),rgba(158,202,216,.04))}
+.avatar .online-dot{position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-radius:50%;background:var(--sage2);border:2.5px solid #fff;box-shadow:0 0 0 1px rgba(168,196,176,.2)}
+.avatar.md .online-dot{width:14px;height:14px}
+.avatar .online-dot.yellow{background:#e8c87a}
+.avatar .online-dot.offline{background:#c0c4cc}
+.prov-body{flex:1;min-width:0}
+.prov-row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;gap:8px}
+.prov-name{font-size:.95rem;font-weight:500;display:flex;align-items:center;gap:6px}
+.prov-name .name-active{font-size:.62rem;color:var(--sage2);background:rgba(168,196,176,.15);padding:1px 7px;border-radius:10px;letter-spacing:.04em;font-weight:500}
+.prov-trust{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--lav3);display:flex;align-items:center;gap:3px;flex-shrink:0}
+.prov-trust small{font-size:.6rem;color:var(--tl);font-family:'Noto Sans JP',sans-serif;letter-spacing:.05em}
+.prov-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.prov-tag{padding:2px 9px;border-radius:10px;font-size:.66rem;background:rgba(184,175,214,.12);color:var(--lav3);font-weight:500}
+.prov-tag.elder{background:rgba(184,175,214,.18);color:var(--lav3)}
+.prov-tag.parent{background:rgba(232,180,184,.18);color:var(--blush2)}
+.prov-tag.young{background:rgba(168,196,176,.18);color:var(--sage2)}
+.prov-tag.skill{background:rgba(158,202,216,.15);color:var(--sky2)}
+.prov-stats{display:flex;align-items:center;gap:10px;font-size:.72rem;color:var(--tl)}
+.prov-rating{display:flex;align-items:center;gap:3px;color:var(--gold2)}
+.prov-rating small{color:var(--tl)}
+.prov-loc{display:flex;align-items:center;gap:3px}
+.prov-loc .ic{font-size:.85em;color:var(--tl)}
+.prov-time{margin-left:auto;color:var(--ttl);font-size:.7rem}
+
 /* Map */
 .map-screen{padding:0;background:var(--bg)}
 .map-container{position:relative;height:55vh;min-height:340px;overflow:hidden}
@@ -440,6 +484,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12c0 4.4-4 8-9 8-1.4 0-2.7-.3-3.9-.8L3 21l1.3-3.6C3.5 16.1 3 14.1 3 12c0-4.4 4-8 9-8s9 3.6 9 8z"/></symbol>
 <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.5V19l4 2v-8.5L22 3z"/></symbol>
+<symbol id="i-sort" viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></symbol>
+<symbol id="i-chevron-d" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2h16l-2-2zM10 21h4"/></symbol>
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
 <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
@@ -556,6 +604,217 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
+<!-- PROVIDERS LIST (main page 1) -->
+<div class="screen" id="screen-providers">
+  <div class="app-header">
+    <div class="app-h-logo"><span class="dot"></span>支援者を探す</div>
+    <div class="app-h-actions">
+      <button class="icon-btn" onclick="navTo('msg')"><svg class="ic"><use href="#i-chat"/></svg><span class="badge"></span></button>
+      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
+    </div>
+  </div>
+  <div class="prov-screen">
+    <div class="prov-search">
+      <svg class="ic"><use href="#i-search"/></svg>
+      <input type="text" placeholder="名前・スキルで支援者を探す">
+    </div>
+    <div class="prov-filters">
+      <div class="filter-section">
+        <div class="filter-section-label">地域で絞り込み</div>
+        <div class="filter-row" id="region-filters">
+          <div class="filter-chip on" onclick="filterRegion(this,'高槻市')">高槻市</div>
+          <div class="filter-chip" onclick="filterRegion(this,'茨木市')">茨木市</div>
+          <div class="filter-chip" onclick="filterRegion(this,'吹田市')">吹田市</div>
+          <div class="filter-chip" onclick="filterRegion(this,'大阪市内')">大阪市内</div>
+          <div class="filter-chip" onclick="filterRegion(this,'京都市内')">京都市内</div>
+          <div class="filter-chip" onclick="filterRegion(this,'all')">すべて</div>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-label">カテゴリ</div>
+        <div class="filter-row" id="cat-filters">
+          <div class="filter-chip on" onclick="filterCat(this,'all')">すべて</div>
+          <div class="filter-chip" onclick="filterCat(this,'elder')">老老介護</div>
+          <div class="filter-chip" onclick="filterCat(this,'parent')">ひとり親</div>
+          <div class="filter-chip" onclick="filterCat(this,'young')">ヤングケアラー</div>
+          <div class="filter-chip" onclick="filterCat(this,'daily')">日常支援</div>
+        </div>
+      </div>
+    </div>
+    <div class="prov-meta">
+      <div id="prov-count-info"><span id="prov-region-label">高槻市内</span> / <b id="prov-count">8</b>人が登録中</div>
+      <div class="prov-sort" onclick="toast('並び順を変更：アクティブ順')"><svg class="ic" style="font-size:.85em"><use href="#i-sort"/></svg>アクティブ順<svg class="ic" style="font-size:.8em"><use href="#i-chevron-d"/></svg></div>
+    </div>
+
+    <div class="prov-group-h"><span class="online-dot-h"></span>今アクティブ <span class="prov-count">3</span></div>
+    <div class="prov-list" id="prov-list-active">
+      <div class="prov-card featured" data-region="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
+        <div class="avatar md green">高<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">高橋 美佐子 <span class="name-active">アクティブ</span></div>
+            <div class="prov-trust">91<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag elder">老老介護</span>
+            <span class="prov-tag skill">通院付き添い</span>
+            <span class="prov-tag skill">話し相手</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>5.0<small>(18件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 0.5km</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prov-card featured" data-region="高槻市" data-cat="daily" onclick="openProvider('前田 健太郎','sky','前',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
+        <div class="avatar md sky">前<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">前田 健太郎 <span class="name-active">アクティブ</span></div>
+            <div class="prov-trust">88<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag skill">買い物代行</span>
+            <span class="prov-tag skill">移動支援</span>
+            <span class="prov-tag skill">家事補助</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.9<small>(24件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 0.8km</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prov-card featured" data-region="大阪市内" data-cat="parent" onclick="openProvider('加藤 千夏','pink','加',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
+        <div class="avatar md pink">加<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">加藤 千夏 <span class="name-active">アクティブ</span></div>
+            <div class="prov-trust">94<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag parent">子育て支援</span>
+            <span class="prov-tag skill">家事</span>
+            <span class="prov-tag skill">保育</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>5.0<small>(32件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>大阪市内 4.2km</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prov-group-h">本日中</div>
+    <div class="prov-list">
+      <div class="prov-card" data-region="茨木市" data-cat="young" onclick="openProvider('中村 健','sky','中',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
+        <div class="avatar md sky">中<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">中村 健</div>
+            <div class="prov-trust">85<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag young">ヤングケアラー支援</span>
+            <span class="prov-tag skill">学習サポート</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.8<small>(12件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>茨木市 3.4km</span>
+            <span class="prov-time">30分前</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prov-card" data-region="高槻市" data-cat="elder" onclick="openProvider('渡辺 由美','green','渡',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
+        <div class="avatar md green">渡<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">渡辺 由美</div>
+            <div class="prov-trust">89<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag elder">老老介護</span>
+            <span class="prov-tag skill">家事</span>
+            <span class="prov-tag skill">調理</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.9<small>(21件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 1.2km</span>
+            <span class="prov-time">2時間前</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prov-card" data-region="茨木市" data-cat="parent" onclick="openProvider('井上 真理','pink','井',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
+        <div class="avatar md pink">井<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">井上 真理</div>
+            <div class="prov-trust">93<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag parent">ひとり親支援</span>
+            <span class="prov-tag skill">子育て</span>
+            <span class="prov-tag skill">送り迎え</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>5.0<small>(28件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>茨木市 3.0km</span>
+            <span class="prov-time">4時間前</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prov-group-h">最近</div>
+    <div class="prov-list">
+      <div class="prov-card" data-region="高槻市" data-cat="daily" onclick="openProvider('山本 太一','green','山',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
+        <div class="avatar md green">山<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">山本 太一</div>
+            <div class="prov-trust">82<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag skill">買い物代行</span>
+            <span class="prov-tag skill">移動支援</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.7<small>(15件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 2.1km</span>
+            <span class="prov-time">昨日</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prov-card" data-region="高槻市" data-cat="elder" onclick="openProvider('小林 英樹','sky','小',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
+        <div class="avatar md sky">小<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="prov-body">
+          <div class="prov-row1">
+            <div class="prov-name">小林 英樹</div>
+            <div class="prov-trust">78<small>TRUST</small></div>
+          </div>
+          <div class="prov-tags">
+            <span class="prov-tag elder">多目的支援</span>
+            <span class="prov-tag skill">話し相手</span>
+          </div>
+          <div class="prov-stats">
+            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.6<small>(9件)</small></span>
+            <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 1.8km</span>
+            <span class="prov-time">3日前</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:8px 18px 24px;text-align:center">
+      <button class="btn-secondary" onclick="toast('さらに読み込みました')">もっと見る</button>
+    </div>
+  </div>
+</div>
+
 <!-- HOME -->
 <div class="screen home-screen" id="screen-home">
   <div class="app-header">
@@ -647,13 +906,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
-<!-- MAP -->
+<!-- MAP (main page 2) -->
 <div class="screen map-screen" id="screen-map">
   <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>マップ</div>
+    <div class="app-h-logo"><span class="dot"></span>受援者マップ</div>
     <div class="app-h-actions">
+      <button class="icon-btn" onclick="navTo('msg')"><svg class="ic"><use href="#i-chat"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="centerMap()"><svg class="ic"><use href="#i-target"/></svg></button>
-      <button class="icon-btn" onclick="navTo('settings')"><svg class="ic"><use href="#i-settings"/></svg></button>
     </div>
   </div>
   <div class="map-container">
@@ -882,7 +1141,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="screen" id="screen-rewards">
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>＆ポイント</div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="toast('利用履歴を表示します')"><svg class="ic"><use href="#i-info"/></svg></button></div>
+    <div class="app-h-actions">
+      <button class="icon-btn" onclick="navTo('msg')"><svg class="ic"><use href="#i-chat"/></svg><span class="badge"></span></button>
+      <button class="icon-btn" onclick="toast('利用履歴を表示します')"><svg class="ic"><use href="#i-info"/></svg></button>
+    </div>
   </div>
   <div class="rewards-screen">
     <div class="rew-balance">
@@ -891,29 +1153,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
     </div>
     <div class="rew-tabs">
-      <div class="rew-tab on" onclick="rewTab(this)">クーポン</div>
-      <div class="rew-tab" onclick="rewTab(this)">寄付</div>
-      <div class="rew-tab" onclick="rewTab(this)">サービス</div>
-      <div class="rew-tab" onclick="rewTab(this)">証明書発行</div>
+      <div class="rew-tab on" onclick="rewTab(this,'coupon')">クーポン</div>
+      <div class="rew-tab" onclick="rewTab(this,'donate')">寄付</div>
+      <div class="rew-tab" onclick="rewTab(this,'service')">サービス</div>
+      <div class="rew-tab" onclick="rewTab(this,'cert')">証明書発行</div>
     </div>
-    <div class="rew-grid">
+
+    <!-- COUPONS -->
+    <div class="rew-grid" id="rew-coupon">
       <div class="rew-card" onclick="redeem('カフェ ハコモリ クーポン','500')">
         <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-gift"/></svg></div>
         <div class="rew-cat">高槻市内・飲食</div>
         <div class="rew-name">カフェ ハコモリ<br>500円クーポン</div>
         <div class="rew-price">500<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('図書館エコバッグ','800')">
-        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
-        <div class="rew-cat">高槻市立図書館</div>
-        <div class="rew-name">オリジナル<br>エコバッグ</div>
-        <div class="rew-price">800<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('PRO機能1ヶ月体験','1200')">
-        <div class="rew-img gold"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-star"/></svg></div>
-        <div class="rew-cat">プレミアム</div>
-        <div class="rew-name">PRO機能<br>1ヶ月体験</div>
-        <div class="rew-price">1,200<small>＆pt</small></div>
       </div>
       <div class="rew-card" onclick="redeem('商店街共通券','1000')">
         <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-globe"/></svg></div>
@@ -921,6 +1173,111 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="rew-name">商店街<br>1,000円共通券</div>
         <div class="rew-price">1,000<small>＆pt</small></div>
       </div>
+      <div class="rew-card" onclick="redeem('セレクト書店クーポン','600')">
+        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
+        <div class="rew-cat">市内書店</div>
+        <div class="rew-name">セレクト書店<br>600円クーポン</div>
+        <div class="rew-price">600<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('お弁当 結','450')">
+        <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-heart"/></svg></div>
+        <div class="rew-cat">高槻市内・お弁当</div>
+        <div class="rew-name">お弁当 結<br>450円クーポン</div>
+        <div class="rew-price">450<small>＆pt</small></div>
+      </div>
+    </div>
+
+    <!-- DONATIONS -->
+    <div class="rew-grid" id="rew-donate" style="display:none">
+      <div class="rew-card" onclick="redeem('地域包括支援センターへ寄付','500')">
+        <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-heart"/></svg></div>
+        <div class="rew-cat">高槻市・福祉</div>
+        <div class="rew-name">地域包括支援<br>センターへ寄付</div>
+        <div class="rew-price">500<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('こども食堂支援','300')">
+        <div class="rew-img pink"><svg class="ic" style="width:36px;height:36px"><use href="#il-parent"/></svg></div>
+        <div class="rew-cat">NPO・子育て</div>
+        <div class="rew-name">こども食堂<br>運営支援</div>
+        <div class="rew-price">300<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('ヤングケアラー支援','500')">
+        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#il-young"/></svg></div>
+        <div class="rew-cat">NPO・若者支援</div>
+        <div class="rew-name">ヤングケアラー<br>支援基金</div>
+        <div class="rew-price">500<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('災害支援基金','1000')">
+        <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-shield"/></svg></div>
+        <div class="rew-cat">災害復興</div>
+        <div class="rew-name">災害支援<br>基金</div>
+        <div class="rew-price">1,000<small>＆pt</small></div>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="rew-grid" id="rew-service" style="display:none">
+      <div class="rew-card" onclick="redeem('PRO機能1ヶ月体験','1200')">
+        <div class="rew-img gold"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-star"/></svg></div>
+        <div class="rew-cat">プレミアム</div>
+        <div class="rew-name">PRO機能<br>1ヶ月体験</div>
+        <div class="rew-price">1,200<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('プロフィール強調表示','400')">
+        <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-trophy"/></svg></div>
+        <div class="rew-cat">マッチング強化</div>
+        <div class="rew-name">プロフィール<br>強調表示 7日間</div>
+        <div class="rew-price">400<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('優先マッチング','700')">
+        <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-target"/></svg></div>
+        <div class="rew-cat">マッチング強化</div>
+        <div class="rew-name">優先マッチング<br>1ヶ月</div>
+        <div class="rew-price">700<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('アバターカスタマイズ','250')">
+        <div class="rew-img pink"><svg class="ic" style="width:36px;height:36px"><use href="#i-user"/></svg></div>
+        <div class="rew-cat">プロフィール装飾</div>
+        <div class="rew-name">限定アバター<br>カスタマイズ</div>
+        <div class="rew-price">250<small>＆pt</small></div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATES -->
+    <div class="rew-grid" id="rew-cert" style="display:none">
+      <div class="rew-card" onclick="redeem('支援活動証明書（PDF）','300')">
+        <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-medal"/></svg></div>
+        <div class="rew-cat">公式書類</div>
+        <div class="rew-name">支援活動証明書<br>（PDF）</div>
+        <div class="rew-price">300<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('地域貢献証明書','600')">
+        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-shield"/></svg></div>
+        <div class="rew-cat">行政連携</div>
+        <div class="rew-name">地域貢献<br>証明書</div>
+        <div class="rew-price">600<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('累計実績レポート','450')">
+        <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
+        <div class="rew-cat">統計レポート</div>
+        <div class="rew-name">累計実績<br>レポート</div>
+        <div class="rew-price">450<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('カスタム証明書発行','1500')">
+        <div class="rew-img gold"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-trophy"/></svg></div>
+        <div class="rew-cat">プレミアム書類</div>
+        <div class="rew-name">カスタム<br>証明書発行</div>
+        <div class="rew-price">1,500<small>＆pt</small></div>
+      </div>
+    </div>
+
+    <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px;display:flex;gap:10px;align-items:center;cursor:pointer" onclick="toast('利用履歴ページへ')">
+      <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2)"><svg class="ic"><use href="#i-info"/></svg></div>
+      <div style="flex:1">
+        <div style="font-size:.86rem;font-weight:500">利用履歴を見る</div>
+        <div style="font-size:.74rem;color:var(--tl)">これまでの獲得・使用ポイント</div>
+      </div>
+      <svg class="ic" style="color:var(--ttl)"><use href="#i-chevron-r"/></svg>
     </div>
   </div>
 </div>
@@ -980,6 +1337,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>マイページ</div>
     <div class="app-h-actions">
+      <button class="icon-btn" onclick="navTo('msg')"><svg class="ic"><use href="#i-chat"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="navTo('settings')"><svg class="ic"><use href="#i-settings"/></svg></button>
       <button class="icon-btn" onclick="logout()"><svg class="ic"><use href="#i-logout"/></svg></button>
     </div>
@@ -1169,10 +1527,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav" style="display:none">
-  <button class="nav-item active" data-screen="home" onclick="navTo('home')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>ホーム</span></button>
+  <button class="nav-item active" data-screen="providers" onclick="navTo('providers')"><svg class="ni-icon ic"><use href="#i-users"/></svg><span>支援者</span></button>
   <button class="nav-item" data-screen="map" onclick="navTo('map')"><svg class="ni-icon ic"><use href="#i-map"/></svg><span>マップ</span></button>
   <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
-  <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
+  <button class="nav-item" data-screen="rewards" onclick="navTo('rewards')"><svg class="ni-icon ic"><use href="#i-gift"/></svg><span>＆ポイント</span></button>
   <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
 </div>
 
@@ -1279,7 +1637,73 @@ function navTo(name){
     if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),100);
   }
 }
-function login(){navTo('home');setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300)}
+function login(){navTo('providers');setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300)}
+
+// Providers list filters
+let curRegion='高槻市', curCat='all';
+function filterRegion(el,region){
+  el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  curRegion=region;
+  document.getElementById('prov-region-label').textContent=region==='all'?'すべての地域':(region+'内');
+  applyProvFilters();
+}
+function filterCat(el,cat){
+  el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  curCat=cat;
+  applyProvFilters();
+}
+function applyProvFilters(){
+  const cards=document.querySelectorAll('.prov-card');
+  let count=0;
+  cards.forEach(card=>{
+    const r=card.dataset.region, c=card.dataset.cat;
+    const matchR=(curRegion==='all'||r===curRegion);
+    const matchC=(curCat==='all'||c===curCat);
+    if(matchR && matchC){card.style.display='';count++}
+    else card.style.display='none';
+  });
+  // Hide empty groups
+  document.querySelectorAll('.prov-list').forEach(list=>{
+    const visible=Array.from(list.children).some(c=>c.style.display!=='none');
+    const groupH=list.previousElementSibling;
+    if(groupH && groupH.classList.contains('prov-group-h')){
+      groupH.style.display=visible?'':'none';
+    }
+    list.style.display=visible?'':'none';
+  });
+  document.getElementById('prov-count').textContent=count;
+}
+
+// Provider detail (uses same modal as match)
+function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeStatus,cat,skills){
+  const m=document.getElementById('match-modal');
+  const av=document.getElementById('mm-avatar');
+  av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span>';
+  av.className='avatar md '+color;
+  document.getElementById('mm-title').textContent=name+' さん';
+  document.getElementById('mm-meta').textContent=region+' / '+dist+' ／ '+(timeStatus==='active'?'今アクティブ':timeStatus);
+  document.getElementById('mm-content').textContent='【対応可能なサポート】\n'+skills.join('・')+'\n\n本人確認済み。これまでに'+reviews+'件の支援実績があります。';
+  const tags=document.getElementById('mm-tags');
+  tags.innerHTML='';
+  skills.forEach(sk=>{
+    const t=document.createElement('span');
+    t.className='prov-tag skill';
+    t.textContent=sk;
+    tags.appendChild(t);
+  });
+  const s=document.createElement('span');s.className='mc-stars';
+  s.innerHTML='<svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg> '+stars+' ('+reviews+'件)';
+  s.style.fontSize='.78rem';tags.appendChild(s);
+  document.getElementById('mm-score').textContent=trust;
+  document.getElementById('mm-score-bar').style.width=trust+'%';
+  document.getElementById('mm-contact-btn').onclick=function(){
+    closeModal(null,'match-modal');
+    openChat(name,color,initial);
+  };
+  m.classList.add('show');
+}
 function logout(){goScreen('login')}
 function selectRole(el){el.parentNode.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected')}
 function verifyId(){
@@ -1298,7 +1722,14 @@ function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.c
 function selectCat(el){el.parentNode.querySelectorAll('.cat-opt').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
 function submitPost(){toast('投稿しました。マッチングを開始します');setTimeout(()=>navTo('home'),900)}
 function toggleFilter(el){el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
-function rewTab(el){el.parentNode.querySelectorAll('.rew-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');toast('表示を更新しました')}
+function rewTab(el,key){
+  el.parentNode.querySelectorAll('.rew-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  ['coupon','donate','service','cert'].forEach(k=>{
+    const g=document.getElementById('rew-'+k);
+    if(g) g.style.display=(k===key?'grid':'none');
+  });
+}
 function redeem(name,pt){toast(name+' を '+pt+'＆pt で引き換えました')}
 function cpLike(el){
   const span=el.querySelector('span');
