@@ -30,12 +30,21 @@
   gtag('config', 'G-XLYLHT1ENR');
 </script>
 
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+
+<!-- Leaflet (real map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <style>
 :root{
-  --lav:#b8afd6;--lav2:#9d92c0;--sage:#a8c4b0;--blush:#e8b4b8;
-  --gold:#c8b87a;--sky:#9ecad8;
+  --lav:#b8afd6;--lav2:#9d92c0;--lav3:#7c6fa3;
+  --sage:#a8c4b0;--sage2:#7fa589;
+  --blush:#e8b4b8;--blush2:#c07880;
+  --gold:#c8b87a;--gold2:#a59056;
+  --sky:#9ecad8;--sky2:#6fa9bf;
   --ink:#2a2a35;--mist:#f4f2f0;--tl:#6b6b7a;--ttl:#9aa0b0;
   --bg:#f7f5f2;--card:#fff;--border:rgba(184,175,214,.18);
   --shadow:0 4px 20px rgba(0,0,0,.04);
@@ -43,12 +52,9 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8dff5,#ddf0e8,#fce8ea);color:var(--ink);overflow:hidden;}
+body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8dff5,#ddf0e8,#fce8ea);color:var(--ink);overflow:hidden}
 
-/* ===== Phone Frame (Desktop) ===== */
-.app-wrap{
-  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-}
+.app-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 .phone{
   width:100%;max-width:420px;height:100%;max-height:880px;
   background:var(--bg);position:relative;overflow:hidden;
@@ -58,746 +64,601 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 @media(min-width:480px){.phone{border-radius:36px;border:8px solid #1a1a25}}
 @media(max-width:479px){.phone{max-height:100%;height:100%;border-radius:0}}
 
-/* ===== Screen System ===== */
-.screen{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  display:none;animation:fadeIn .35s ease;
-  padding-bottom:80px;-webkit-overflow-scrolling:touch;
-}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;display:none;animation:fadeIn .3s ease;padding-bottom:80px;-webkit-overflow-scrolling:touch}
 .screen.active{display:block}
 .screen.no-nav{padding-bottom:0}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{width:0}
 
-/* ============================================
-   LOGIN SCREEN
-============================================ */
-.login-screen{
-  background:linear-gradient(160deg,#e8dff5 0%,#ddf0e8 50%,#fce8ea 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:48px 32px;text-align:center;height:100%;
-}
+/* Icon system */
+.ic{width:1em;height:1em;display:inline-block;vertical-align:middle;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ic-fill{fill:currentColor;stroke:none}
+
+/* Buttons */
+.btn-primary{width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--lav),var(--sky));color:#fff;font-family:inherit;font-size:.92rem;font-weight:500;letter-spacing:.05em;box-shadow:0 6px 20px rgba(184,175,214,.4);transition:all .2s}
+.btn-primary:active{transform:translateY(1px);box-shadow:0 3px 12px rgba(184,175,214,.35)}
+.btn-secondary{width:100%;padding:14px;border-radius:12px;background:transparent;border:1px solid rgba(184,175,214,.4);color:var(--lav2);font-family:inherit;font-size:.88rem;cursor:pointer;font-weight:500}
+.btn-link{background:none;border:none;color:var(--lav2);font-size:.78rem;cursor:pointer;text-decoration:underline}
+
+/* Login */
+.login-screen{background:linear-gradient(160deg,#e8dff5 0%,#ddf0e8 50%,#fce8ea 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px;text-align:center;height:100%;position:relative}
 .login-orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .lorb{position:absolute;border-radius:50%;opacity:.4;filter:blur(30px)}
 .lorb1{width:240px;height:240px;background:var(--lav);top:-60px;left:-40px;animation:fl 10s ease-in-out infinite}
 .lorb2{width:180px;height:180px;background:var(--blush);bottom:80px;right:-40px;animation:fl 12s ease-in-out infinite 2s}
 .lorb3{width:140px;height:140px;background:var(--sky);top:40%;left:55%;animation:fl 8s ease-in-out infinite 4s}
 @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
-
 .login-inner{position:relative;z-index:1;width:100%;max-width:340px}
-.login-brand{
-  font-family:'Cormorant Garamond',serif;font-size:3.4rem;font-weight:300;
-  background:linear-gradient(135deg,var(--lav),var(--blush),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:6px;line-height:1;
-}
-.login-tag{font-family:'Noto Serif JP',serif;font-size:.78rem;letter-spacing:.3em;color:var(--tl);margin-bottom:48px}
-.login-card{
-  background:rgba(255,255,255,.7);backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,.6);
-  border-radius:24px;padding:32px 28px;box-shadow:var(--shadow-lg);
-}
-.login-h{font-family:'Noto Serif JP',serif;font-size:1.1rem;font-weight:400;color:var(--ink);margin-bottom:6px}
-.login-sub{font-size:.78rem;color:var(--tl);margin-bottom:28px;line-height:1.8}
-.input-group{margin-bottom:16px;text-align:left}
-.input-label{display:block;font-size:.72rem;letter-spacing:.05em;color:var(--tl);margin-bottom:8px}
-.input{
-  width:100%;padding:14px 16px;border:1px solid rgba(184,175,214,.3);
-  border-radius:12px;background:rgba(255,255,255,.8);
-  font-family:'Noto Sans JP',sans-serif;font-size:.9rem;color:var(--ink);
-  transition:all .2s;
-}
+.login-logo{margin:0 auto 16px;width:64px;height:64px;display:block}
+.login-brand{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;background:linear-gradient(135deg,var(--lav),var(--blush),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;line-height:1}
+.login-tag{font-family:'Noto Serif JP',serif;font-size:.74rem;letter-spacing:.3em;color:var(--tl);margin-bottom:32px}
+.login-card{background:rgba(255,255,255,.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.6);border-radius:24px;padding:28px;box-shadow:var(--shadow-lg)}
+.login-h{font-family:'Noto Serif JP',serif;font-size:1.05rem;font-weight:500;color:var(--ink);margin-bottom:6px}
+.login-sub{font-size:.76rem;color:var(--tl);margin-bottom:22px;line-height:1.8}
+.input-group{margin-bottom:14px;text-align:left}
+.input-label{display:block;font-size:.7rem;letter-spacing:.05em;color:var(--tl);margin-bottom:7px}
+.input{width:100%;padding:13px 15px;border:1px solid rgba(184,175,214,.3);border-radius:12px;background:rgba(255,255,255,.8);font-family:inherit;font-size:.88rem;color:var(--ink);transition:all .2s}
 .input:focus{outline:none;border-color:var(--lav);background:#fff;box-shadow:0 0 0 3px rgba(184,175,214,.15)}
-.btn-primary{
-  width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--lav),var(--sky));
-  color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:.92rem;font-weight:500;
-  letter-spacing:.05em;box-shadow:0 6px 20px rgba(184,175,214,.4);
-  transition:all .2s;margin-top:8px;
-}
-.btn-primary:active{transform:translateY(1px);box-shadow:0 3px 12px rgba(184,175,214,.35)}
-.btn-secondary{
-  width:100%;padding:14px;border-radius:12px;
-  background:transparent;border:1px solid rgba(184,175,214,.4);
-  color:var(--lav2);font-family:'Noto Sans JP',sans-serif;font-size:.88rem;cursor:pointer;
-  margin-top:10px;font-weight:500;
-}
-.btn-link{background:none;border:none;color:var(--lav2);font-size:.78rem;cursor:pointer;text-decoration:underline;margin-top:18px}
-.login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;font-size:.7rem;color:var(--ttl)}
+.login-divider{display:flex;align-items:center;gap:12px;margin:18px 0;font-size:.7rem;color:var(--ttl)}
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(184,175,214,.2)}
 
-/* ============================================
-   ONBOARDING (Role Selection)
-============================================ */
-.onboard-screen{padding:32px 24px 24px;background:var(--bg)}
-.onb-back{
-  display:inline-flex;align-items:center;gap:6px;background:none;border:none;
-  color:var(--tl);font-size:.85rem;cursor:pointer;padding:4px 0;margin-bottom:20px;
-}
-.onb-step{font-size:.68rem;letter-spacing:.25em;color:var(--lav);margin-bottom:6px}
-.onb-h{font-family:'Noto Serif JP',serif;font-size:1.4rem;font-weight:400;line-height:1.6;margin-bottom:8px}
-.onb-sub{font-size:.82rem;color:var(--tl);line-height:2;margin-bottom:32px}
-.role-grid{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
-.role-card{
-  background:var(--card);border:2px solid var(--border);border-radius:18px;
-  padding:22px;cursor:pointer;transition:all .25s;
-  display:flex;gap:16px;align-items:flex-start;
-}
-.role-card:hover,.role-card.selected{border-color:var(--lav);background:rgba(184,175,214,.06)}
-.role-icon{
-  width:48px;height:48px;border-radius:14px;
-  background:linear-gradient(135deg,rgba(184,175,214,.2),rgba(158,202,216,.2));
-  display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;
-}
-.role-title{font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:500;margin-bottom:4px}
-.role-desc{font-size:.78rem;color:var(--tl);line-height:1.8}
-
-/* Verify */
-.verify-card{
-  background:var(--card);border:2px dashed rgba(184,175,214,.4);
-  border-radius:18px;padding:32px 24px;text-align:center;
-  margin-bottom:16px;cursor:pointer;transition:all .2s;
-}
+/* Onboarding */
+.onb-screen{padding:32px 24px 24px;background:var(--bg);min-height:100%}
+.onb-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--tl);font-size:.85rem;cursor:pointer;padding:4px 0;margin-bottom:20px;font-family:inherit}
+.onb-back .ic{font-size:1.1em}
+.onb-step{font-size:.66rem;letter-spacing:.25em;color:var(--lav);margin-bottom:6px;font-weight:500}
+.onb-h{font-family:'Noto Serif JP',serif;font-size:1.35rem;font-weight:500;line-height:1.6;margin-bottom:8px}
+.onb-sub{font-size:.8rem;color:var(--tl);line-height:2;margin-bottom:28px}
+.role-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.role-card{background:var(--card);border:2px solid var(--border);border-radius:18px;padding:18px;cursor:pointer;transition:all .25s;display:flex;gap:14px;align-items:center}
+.role-card.selected,.role-card:hover{border-color:var(--lav);background:rgba(184,175,214,.05)}
+.role-illust{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--lav2)}
+.role-title{font-family:'Noto Serif JP',serif;font-size:.98rem;font-weight:500;margin-bottom:4px}
+.role-desc{font-size:.76rem;color:var(--tl);line-height:1.7}
+.verify-card{background:var(--card);border:2px dashed rgba(184,175,214,.4);border-radius:18px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px;text-align:left}
 .verify-card:hover{border-color:var(--lav);background:rgba(184,175,214,.04)}
 .verify-card.done{border-style:solid;border-color:var(--sage);background:rgba(168,196,176,.08)}
-.verify-icon{font-size:2.4rem;margin-bottom:12px}
-.verify-title{font-family:'Noto Serif JP',serif;font-size:.95rem;margin-bottom:6px}
-.verify-sub{font-size:.78rem;color:var(--tl);line-height:1.8}
+.verify-illust{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2);flex-shrink:0}
+.verify-card.done .verify-illust{background:linear-gradient(135deg,rgba(168,196,176,.25),rgba(158,202,216,.18));color:var(--sage2)}
+.verify-body{flex:1}
+.verify-title{font-family:'Noto Serif JP',serif;font-size:.92rem;margin-bottom:3px}
+.verify-sub{font-size:.74rem;color:var(--tl);line-height:1.7}
 
-/* ============================================
-   HEADER (in-app)
-============================================ */
-.app-header{
-  background:rgba(247,245,242,.92);backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(184,175,214,.12);
-  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:50;
-}
-.app-h-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);display:flex;align-items:center;gap:6px}
+/* Header */
+.app-header{background:rgba(247,245,242,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(184,175,214,.12);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.app-h-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);display:flex;align-items:center;gap:8px}
 .app-h-logo .dot{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--lav),var(--sky))}
-.app-h-actions{display:flex;align-items:center;gap:10px}
-.icon-btn{
-  width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);
-  border:1px solid rgba(184,175,214,.15);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:1rem;position:relative;
-}
-.icon-btn .badge{
-  position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--blush);
-  border:1.5px solid #f7f5f2;
-}
+.app-h-back{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:1rem;font-family:'Noto Serif JP',serif;font-weight:500;cursor:pointer}
+.app-h-back .ic{font-size:1.2em;color:var(--tl)}
+.app-h-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(184,175,214,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:var(--ink);position:relative}
+.icon-btn:active{transform:scale(.95)}
+.icon-btn .badge{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--blush);border:1.5px solid #f7f5f2}
 
-/* ============================================
-   HOME
-============================================ */
+/* Avatar */
+.avatar{border-radius:50%;background:linear-gradient(135deg,var(--lav),var(--sky));display:flex;align-items:center;justify-content:center;font-family:'Noto Serif JP',serif;color:#fff;font-weight:500;position:relative;flex-shrink:0}
+.avatar.sm{width:34px;height:34px;font-size:.85rem}
+.avatar.md{width:46px;height:46px;font-size:1.05rem}
+.avatar.lg{width:64px;height:64px;font-size:1.5rem}
+.avatar.xl{width:84px;height:84px;font-size:2rem;border:3px solid #fff;box-shadow:0 8px 24px rgba(184,175,214,.3)}
+.avatar.green{background:linear-gradient(135deg,var(--sage),var(--gold))}
+.avatar.pink{background:linear-gradient(135deg,var(--blush),var(--lav))}
+.avatar.sky{background:linear-gradient(135deg,var(--sky),var(--lav2))}
+.avatar.gray{background:linear-gradient(135deg,#a0a8c0,#7a82a0)}
+.avatar .v{position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--sage2);border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff}
+.avatar.lg .v,.avatar.xl .v{width:24px;height:24px;border-width:2.5px}
+.avatar.sm .v{width:14px;height:14px;border-width:1.5px}
+
+/* Home */
 .home-screen{padding:0}
-.greeting{padding:20px 20px 0}
-.greet-time{font-size:.72rem;color:var(--tl);letter-spacing:.08em;margin-bottom:4px}
-.greet-name{font-family:'Noto Serif JP',serif;font-size:1.2rem;font-weight:400;color:var(--ink)}
-
-/* Trust Score Card */
-.score-card{
-  margin:20px;border-radius:24px;
-  background:linear-gradient(135deg,#3a3258 0%,#5e5482 50%,#8273b0 100%);
-  color:#fff;padding:24px;position:relative;overflow:hidden;
-  box-shadow:0 8px 30px rgba(58,50,88,.25);
-}
-.score-card::before{
-  content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;
-  background:radial-gradient(circle,rgba(232,180,184,.3),transparent 70%);border-radius:50%;
-}
+.greeting{padding:18px 18px 0}
+.greet-time{font-size:.72rem;color:var(--tl);letter-spacing:.06em;margin-bottom:3px}
+.greet-name{font-family:'Noto Serif JP',serif;font-size:1.15rem;font-weight:500;color:var(--ink)}
+.score-card{margin:16px 18px;border-radius:22px;background:linear-gradient(135deg,#3a3258 0%,#5e5482 50%,#8273b0 100%);color:#fff;padding:22px;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(58,50,88,.25)}
+.score-card::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(232,180,184,.3),transparent 70%);border-radius:50%}
+.score-card::after{content:'';position:absolute;bottom:-30px;left:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(158,202,216,.2),transparent 70%);border-radius:50%}
 .score-row{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1}
-.score-label{font-size:.7rem;letter-spacing:.18em;opacity:.7;margin-bottom:4px}
-.score-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1}
-.score-delta{font-size:.72rem;opacity:.85;margin-left:6px;color:#c8e8d4}
+.score-label{font-size:.66rem;letter-spacing:.18em;opacity:.7;margin-bottom:3px;font-weight:500}
+.score-num{font-family:'Cormorant Garamond',serif;font-size:2.7rem;font-weight:300;line-height:1}
+.score-delta{font-size:.7rem;opacity:.85;margin-left:6px;color:#c8e8d4;font-family:'Noto Sans JP',sans-serif}
 .score-right{text-align:right}
-.score-bar{margin-top:18px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;position:relative;z-index:1}
+.score-bar{margin-top:16px;height:5px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;position:relative;z-index:1}
 .score-fill{height:100%;width:78%;background:linear-gradient(to right,#c8b87a,#e8b4b8,#9ecad8);border-radius:3px}
-.score-tags{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1;flex-wrap:wrap}
-.score-tag{font-size:.68rem;padding:4px 10px;background:rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(10px)}
-
-/* Quick Actions */
-.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 20px;margin-bottom:8px}
-.qa{
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
-  padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;
-}
+.score-tags{display:flex;gap:6px;margin-top:12px;position:relative;z-index:1;flex-wrap:wrap}
+.score-tag{font-size:.66rem;padding:4px 9px;background:rgba(255,255,255,.15);border-radius:20px;backdrop-filter:blur(10px);display:flex;align-items:center;gap:4px}
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 18px}
+.qa{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .2s}
 .qa:active{transform:scale(.96)}
-.qa-icon{font-size:1.3rem;margin-bottom:4px}
-.qa-label{font-size:.66rem;color:var(--tl);letter-spacing:.02em}
+.qa-illust{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;margin:0 auto 6px;color:var(--lav2);font-size:.95rem}
+.qa-label{font-size:.66rem;color:var(--tl)}
 
-/* Section */
-.sec-block{padding:24px 20px 0}
-.sec-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.sec-h-title{font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:500;color:var(--ink)}
-.sec-h-more{font-size:.72rem;color:var(--lav2);cursor:pointer}
+.sec-block{padding:22px 18px 0}
+.sec-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sec-h-title{font-family:'Noto Serif JP',serif;font-size:.96rem;font-weight:500;color:var(--ink)}
+.sec-h-more{font-size:.72rem;color:var(--lav2);cursor:pointer;display:flex;align-items:center;gap:2px}
 
-/* Match Card */
-.match-list{display:flex;flex-direction:column;gap:10px}
-.match-card{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:all .2s;
-}
+.match-list{display:flex;flex-direction:column;gap:9px}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:13px;display:flex;gap:11px;align-items:center;cursor:pointer;transition:all .2s}
 .match-card:active{transform:scale(.99);box-shadow:var(--shadow)}
-.mc-avatar{
-  width:46px;height:46px;border-radius:50%;
-  background:linear-gradient(135deg,var(--lav),var(--sky));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;color:#fff;font-size:1.2rem;flex-shrink:0;
-  position:relative;
-}
-.mc-avatar.green{background:linear-gradient(135deg,var(--sage),var(--gold))}
-.mc-avatar.pink{background:linear-gradient(135deg,var(--blush),var(--lav))}
-.mc-avatar .verified{
-  position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;
-  background:var(--sage);border:2px solid #fff;
-  display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#fff;
-}
 .mc-body{flex:1;min-width:0}
-.mc-row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.mc-name{font-size:.92rem;font-weight:500}
-.mc-dist{font-size:.7rem;color:var(--tl)}
-.mc-desc{font-size:.78rem;color:var(--tl);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:6px}
+.mc-row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;gap:8px}
+.mc-name{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-dist{font-size:.7rem;color:var(--tl);display:flex;align-items:center;gap:3px;flex-shrink:0}
+.mc-desc{font-size:.77rem;color:var(--tl);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:6px}
 .mc-meta{display:flex;gap:6px;align-items:center}
-.mc-stars{font-size:.7rem;color:var(--gold)}
-.mc-cat{font-size:.65rem;padding:2px 8px;border-radius:10px;letter-spacing:.05em}
-.cat-elder{background:rgba(184,175,214,.18);color:var(--lav2)}
-.cat-parent{background:rgba(232,180,184,.18);color:#c07880}
-.cat-young{background:rgba(168,196,176,.18);color:#5a9a6a}
-.cat-emerg{background:rgba(200,184,122,.22);color:#a59056}
+.mc-stars{font-size:.7rem;color:var(--gold2);display:flex;align-items:center;gap:2px}
+.mc-cat{font-size:.64rem;padding:2px 9px;border-radius:10px;letter-spacing:.04em;font-weight:500}
+.cat-elder{background:rgba(184,175,214,.18);color:var(--lav3)}
+.cat-parent{background:rgba(232,180,184,.18);color:var(--blush2)}
+.cat-young{background:rgba(168,196,176,.18);color:var(--sage2)}
+.cat-emerg{background:rgba(200,184,122,.24);color:var(--gold2)}
 
-/* Activity Feed */
-.feed-item{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:14px;margin-bottom:10px;
-}
-.feed-h{display:flex;gap:10px;align-items:center;margin-bottom:8px}
-.feed-dot{width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0}
-.feed-time{font-size:.7rem;color:var(--ttl);margin-left:auto}
+.feed-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:13px;margin-bottom:9px}
+.feed-h{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.feed-dot{width:8px;height:8px;border-radius:50%;background:var(--sage2);flex-shrink:0}
+.feed-time{font-size:.7rem;color:var(--ttl);margin-left:auto;flex-shrink:0}
 .feed-text{font-size:.82rem;color:var(--ink);line-height:1.7}
-.feed-text b{color:var(--lav2);font-weight:500}
-.feed-point{
-  display:inline-flex;align-items:center;gap:4px;margin-top:8px;
-  padding:4px 10px;border-radius:14px;
-  background:rgba(200,184,122,.12);color:#a59056;font-size:.72rem;font-weight:500;
-}
+.feed-text b{color:var(--lav3);font-weight:500}
+.feed-point{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:14px;background:rgba(200,184,122,.14);color:var(--gold2);font-size:.7rem;font-weight:500}
+.feed-point.minus{background:rgba(232,180,184,.14);color:var(--blush2)}
 
-/* ============================================
-   MAP SCREEN
-============================================ */
-.map-screen{padding:0;background:#dde9d8}
-.map-container{position:relative;height:60vh;min-height:380px;background:linear-gradient(160deg,#d8e6dc,#e8e2d0,#d9e2ec);overflow:hidden}
-.map-grid{
-  position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);
-  background-size:32px 32px;
-}
-.map-overlay{position:absolute;inset:0}
-
-/* Heatmap dots */
-.heat{position:absolute;border-radius:50%;pointer-events:none;animation:pulse 3s ease-in-out infinite}
-.heat-r{background:radial-gradient(circle,rgba(232,180,184,.7),rgba(232,180,184,.05) 70%)}
-.heat-p{background:radial-gradient(circle,rgba(184,175,214,.6),rgba(184,175,214,.05) 70%)}
-.heat-y{background:radial-gradient(circle,rgba(168,196,176,.65),rgba(168,196,176,.05) 70%)}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.85}}
-
-/* Pin markers */
-.pin{
-  position:absolute;width:34px;height:34px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:1rem;
-  cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.18);
-  border:2px solid #fff;background:#fff;transform:translate(-50%,-100%);
-  transition:transform .2s;
-}
-.pin:hover{transform:translate(-50%,-100%) scale(1.1)}
-.pin::after{
-  content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:#fff;
-}
-.pin-r{background:#fce8ea;color:#c07880}
-.pin-p{background:#ede8f5;color:var(--lav2)}
-.pin-y{background:#e0ead8;color:#5a9a6a}
-.pin-me{background:linear-gradient(135deg,var(--lav),var(--sky));color:#fff;border-color:#fff;width:24px;height:24px;font-size:.6rem;animation:meBounce 2s ease-in-out infinite}
-.pin-me::after{display:none}
-@keyframes meBounce{0%,100%{transform:translate(-50%,-100%) scale(1)}50%{transform:translate(-50%,-100%) scale(1.15)}}
-
-.map-search{
-  position:absolute;top:14px;left:14px;right:14px;z-index:5;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
-  border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);
-  display:flex;align-items:center;gap:10px;
-}
-.map-search input{flex:1;background:none;border:none;outline:none;font-size:.85rem;color:var(--ink)}
-.map-filter{
-  position:absolute;top:68px;left:14px;right:14px;display:flex;gap:6px;z-index:5;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;
-}
+/* Map */
+.map-screen{padding:0;background:var(--bg)}
+.map-container{position:relative;height:55vh;min-height:340px;overflow:hidden}
+#leaflet-map{width:100%;height:100%;background:#e8eef0}
+.leaflet-container{font-family:'Noto Sans JP',sans-serif!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.85)!important}
+.map-search{position:absolute;top:14px;left:14px;right:14px;z-index:500;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-radius:14px;padding:11px 14px;box-shadow:0 4px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px}
+.map-search input{flex:1;background:none;border:none;outline:none;font-size:.85rem;color:var(--ink);font-family:inherit}
+.map-search .ic{color:var(--tl)}
+.map-filter{position:absolute;top:68px;left:14px;right:14px;display:flex;gap:6px;z-index:500;overflow-x:auto;scrollbar-width:none}
 .map-filter::-webkit-scrollbar{display:none}
-.filter-chip{
-  padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.92);
-  font-size:.72rem;color:var(--ink);cursor:pointer;white-space:nowrap;
-  border:1px solid rgba(184,175,214,.2);
-}
+.filter-chip{padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.94);font-size:.72rem;color:var(--ink);cursor:pointer;white-space:nowrap;border:1px solid rgba(184,175,214,.18);font-family:inherit}
 .filter-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.user-marker{width:42px;height:42px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif JP',serif;color:#fff;font-size:.95rem;font-weight:500;background:linear-gradient(135deg,var(--lav),var(--sky))}
+.user-marker.green{background:linear-gradient(135deg,var(--sage),var(--gold))}
+.user-marker.pink{background:linear-gradient(135deg,var(--blush),var(--lav))}
+.user-marker.sky{background:linear-gradient(135deg,var(--sky),var(--lav2))}
+.me-marker{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--lav),var(--sky));border:3px solid #fff;box-shadow:0 0 0 4px rgba(184,175,214,.35),0 4px 12px rgba(0,0,0,.2)}
+.map-list{padding:16px 18px 24px;background:var(--bg)}
+.map-list-h{font-size:.76rem;color:var(--tl);margin-bottom:12px;letter-spacing:.04em}
+.map-list-h b{color:var(--ink);font-weight:600}
 
-/* Map List */
-.map-list{padding:16px 20px 24px;background:var(--bg)}
-.map-list-h{font-size:.78rem;color:var(--tl);margin-bottom:14px;letter-spacing:.05em}
-.map-list-h b{color:var(--ink);font-weight:500}
-
-/* ============================================
-   POST SCREEN
-============================================ */
-.post-screen{padding:20px}
-.post-toggle{
-  display:flex;background:rgba(184,175,214,.1);border-radius:14px;padding:4px;margin-bottom:24px;
-}
-.pt-btn{
-  flex:1;padding:12px;border:none;background:transparent;border-radius:10px;
-  font-family:'Noto Sans JP',sans-serif;font-size:.85rem;color:var(--tl);cursor:pointer;font-weight:500;
-  transition:all .2s;
-}
+/* Post */
+.post-screen{padding:20px 18px}
+.post-toggle{display:flex;background:rgba(184,175,214,.1);border-radius:14px;padding:4px;margin-bottom:24px}
+.pt-btn{flex:1;padding:11px 8px;border:none;background:transparent;border-radius:10px;font-family:inherit;font-size:.83rem;color:var(--tl);cursor:pointer;font-weight:500;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
 .pt-btn.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
-
 .post-field{margin-bottom:18px}
 .post-label{font-size:.78rem;color:var(--ink);margin-bottom:8px;display:block;font-weight:500}
-.post-input,.post-textarea{
-  width:100%;padding:14px 16px;border:1px solid var(--border);border-radius:12px;
-  background:var(--card);font-family:'Noto Sans JP',sans-serif;font-size:.88rem;
-  color:var(--ink);resize:none;
-}
+.post-input,.post-textarea{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:12px;background:var(--card);font-family:inherit;font-size:.86rem;color:var(--ink);resize:none}
+.post-input:focus,.post-textarea:focus{outline:none;border-color:var(--lav)}
 .post-textarea{min-height:90px;line-height:1.8}
 .cat-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.cat-opt{
-  padding:14px;border:1.5px solid var(--border);border-radius:12px;background:var(--card);
-  cursor:pointer;font-size:.82rem;text-align:center;transition:all .2s;
-}
-.cat-opt.on{border-color:var(--lav);background:rgba(184,175,214,.08);color:var(--lav2);font-weight:500}
-.cat-opt-icon{font-size:1.2rem;margin-bottom:4px}
+.cat-opt{padding:14px 10px;border:1.5px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;font-size:.82rem;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cat-opt.on{border-color:var(--lav);background:rgba(184,175,214,.06);color:var(--lav3);font-weight:500}
+.cat-illust{width:24px;height:24px;color:var(--lav2)}
+.cat-opt.on .cat-illust{color:var(--lav3)}
+.photo-upload{border:2px dashed rgba(184,175,214,.4);border-radius:12px;padding:24px;text-align:center;background:var(--card);cursor:pointer}
+.photo-upload:hover{border-color:var(--lav);background:rgba(184,175,214,.04)}
+.photo-upload .ic{font-size:1.6rem;color:var(--lav2);margin-bottom:6px}
+.photo-upload-text{font-size:.78rem;color:var(--tl);line-height:1.7}
+.photo-upload-text small{opacity:.7;font-size:.72rem}
 
-.photo-upload{
-  border:2px dashed rgba(184,175,214,.4);border-radius:12px;padding:28px;text-align:center;
-  background:var(--card);cursor:pointer;
-}
-.photo-upload-icon{font-size:1.8rem;margin-bottom:6px}
-.photo-upload-text{font-size:.78rem;color:var(--tl)}
-
-/* ============================================
-   MESSAGES
-============================================ */
-.msg-screen{padding:20px 20px 0}
-.msg-search{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:10px 14px;display:flex;align-items:center;gap:8px;margin-bottom:16px;
-}
-.msg-search input{flex:1;border:none;outline:none;font-size:.85rem;background:none}
+/* Messages */
+.msg-screen{padding:18px 18px 0}
+.msg-search{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.msg-search input{flex:1;border:none;outline:none;font-size:.85rem;background:none;font-family:inherit}
+.msg-search .ic{color:var(--tl)}
 .msg-list{display:flex;flex-direction:column}
-.msg-item{
-  display:flex;gap:12px;padding:12px 4px;cursor:pointer;border-bottom:1px solid rgba(184,175,214,.08);
-}
+.msg-item{display:flex;gap:12px;padding:12px 4px;cursor:pointer;border-bottom:1px solid rgba(184,175,214,.08)}
 .msg-item:active{background:rgba(184,175,214,.04)}
 .msg-row1{display:flex;justify-content:space-between;margin-bottom:2px}
-.msg-name{font-size:.92rem;font-weight:500}
+.msg-name{font-size:.9rem;font-weight:500;display:flex;align-items:center;gap:6px}
 .msg-time{font-size:.7rem;color:var(--ttl)}
 .msg-preview{font-size:.78rem;color:var(--tl);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.msg-unread{
-  background:var(--blush);color:#fff;font-size:.68rem;font-weight:600;
-  padding:1px 7px;border-radius:10px;margin-left:6px;
-}
+.msg-unread{background:var(--blush);color:#fff;font-size:.66rem;font-weight:600;padding:1px 7px;border-radius:10px}
 
-/* ============================================
-   PROFILE
-============================================ */
+/* Chat */
+.chat-screen{padding:0;display:flex;flex-direction:column;height:100%}
+.chat-thread{flex:1;overflow-y:auto;padding:16px;background:linear-gradient(180deg,#f7f5f2,#ede8f3)}
+.chat-meta{text-align:center;font-size:.7rem;color:var(--ttl);padding:8px 0 14px;letter-spacing:.04em}
+.bubble-wrap{display:flex;gap:8px;margin-bottom:10px;max-width:80%}
+.bubble-wrap.me{margin-left:auto;flex-direction:row-reverse}
+.bubble{padding:10px 14px;border-radius:18px;font-size:.84rem;line-height:1.6;background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.bubble-wrap.me .bubble{background:linear-gradient(135deg,var(--lav),var(--sky));color:#fff;border-bottom-right-radius:6px}
+.bubble-wrap:not(.me) .bubble{border-bottom-left-radius:6px}
+.bubble-time{font-size:.65rem;color:var(--ttl);margin-top:3px;padding:0 4px}
+.bubble-wrap.me .bubble-time{text-align:right}
+.chat-input{background:#fff;border-top:1px solid rgba(184,175,214,.12);padding:10px 14px;display:flex;gap:8px;align-items:center}
+.chat-input-field{flex:1;padding:10px 14px;border-radius:22px;background:var(--bg);border:1px solid var(--border);font-family:inherit;font-size:.86rem;outline:none}
+.chat-send{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--lav),var(--sky));color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(184,175,214,.35)}
+
+/* Notif */
+.notif-list{padding:18px}
+.notif-group-h{font-size:.7rem;letter-spacing:.15em;color:var(--tl);margin:14px 0 10px;font-weight:500;text-transform:uppercase}
+.notif-group-h:first-child{margin-top:0}
+.notif-item{display:flex;gap:12px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:8px;cursor:pointer}
+.notif-item.unread{background:rgba(184,175,214,.06);border-color:rgba(184,175,214,.25)}
+.notif-illust{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2);flex-shrink:0}
+.notif-illust.gold{background:linear-gradient(135deg,rgba(200,184,122,.25),rgba(252,238,168,.4));color:var(--gold2)}
+.notif-illust.sage{background:linear-gradient(135deg,rgba(168,196,176,.25),rgba(200,232,212,.3));color:var(--sage2)}
+.notif-body{flex:1;min-width:0}
+.notif-title{font-size:.86rem;font-weight:500;margin-bottom:2px}
+.notif-desc{font-size:.76rem;color:var(--tl);line-height:1.7}
+.notif-time{font-size:.68rem;color:var(--ttl);margin-top:4px}
+
+/* Profile */
 .profile-screen{padding:0}
-.profile-hero{
-  padding:32px 20px 24px;text-align:center;
-  background:linear-gradient(160deg,#ede8f5,#e0ead8,#fce8ea);
-}
-.prof-avatar{
-  width:84px;height:84px;border-radius:50%;
-  background:linear-gradient(135deg,var(--lav),var(--sky));
-  margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;color:#fff;font-size:2.2rem;
-  border:3px solid #fff;box-shadow:0 8px 24px rgba(184,175,214,.3);
-  position:relative;
-}
-.prof-avatar .v{
-  position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;
-  background:var(--sage);border:2.5px solid #fff;
-  display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#fff;
-}
-.prof-name{font-family:'Noto Serif JP',serif;font-size:1.25rem;font-weight:500;margin-bottom:4px}
+.profile-hero{padding:32px 20px 22px;text-align:center;background:linear-gradient(160deg,#ede8f5,#e0ead8,#fce8ea)}
+.prof-name{font-family:'Noto Serif JP',serif;font-size:1.2rem;font-weight:500;margin-top:12px;margin-bottom:4px}
 .prof-bio{font-size:.78rem;color:var(--tl);margin-bottom:14px}
 .prof-roles{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.prof-role{
-  padding:4px 12px;border-radius:14px;font-size:.7rem;background:rgba(255,255,255,.6);
-  border:1px solid rgba(184,175,214,.25);color:var(--ink);letter-spacing:.04em;
-}
-
-/* Stats row */
-.stats-row{display:flex;padding:16px 20px;gap:8px}
-.stat-card{
-  flex:1;background:var(--card);border:1px solid var(--border);
-  border-radius:14px;padding:14px;text-align:center;
-}
-.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--ink);line-height:1}
-.stat-num .pt{font-size:.85rem;color:var(--gold);margin-left:2px}
-.stat-label{font-size:.66rem;color:var(--tl);letter-spacing:.08em;margin-top:6px}
-
-/* Score Detail */
-.score-detail{margin:0 20px 16px;padding:18px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+.prof-role{padding:4px 12px;border-radius:14px;font-size:.7rem;background:rgba(255,255,255,.6);border:1px solid rgba(184,175,214,.25);color:var(--ink);letter-spacing:.03em}
+.stats-row{display:flex;padding:14px 18px;gap:8px}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);line-height:1}
+.stat-num .pt{font-size:.85rem;color:var(--gold2);margin-left:2px}
+.stat-label{font-size:.62rem;color:var(--tl);letter-spacing:.06em;margin-top:6px}
+.score-detail{margin:0 18px 14px;padding:16px 18px;background:var(--card);border:1px solid var(--border);border-radius:16px}
 .sd-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.sd-title{font-size:.88rem;font-weight:500}
-.sd-value{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--lav2)}
-.sd-bars{display:flex;flex-direction:column;gap:10px}
-.sd-bar-row{display:grid;grid-template-columns:80px 1fr 36px;align-items:center;gap:10px;font-size:.76rem}
+.sd-title{font-size:.86rem;font-weight:500}
+.sd-value{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--lav2)}
+.sd-bars{display:flex;flex-direction:column;gap:9px}
+.sd-bar-row{display:grid;grid-template-columns:80px 1fr 36px;align-items:center;gap:10px;font-size:.75rem}
 .sd-bar-lbl{color:var(--tl)}
 .sd-bar-track{height:5px;background:rgba(184,175,214,.15);border-radius:3px;overflow:hidden}
 .sd-bar-fill{height:100%;background:linear-gradient(to right,var(--lav),var(--sky));border-radius:3px}
 .sd-bar-val{color:var(--ink);font-weight:500;text-align:right}
-
-/* Certificates */
-.cert-list{padding:0 20px;display:flex;flex-direction:column;gap:8px}
-.cert{
-  display:flex;gap:12px;align-items:center;padding:14px;
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
-}
-.cert-icon{
-  width:42px;height:42px;border-radius:10px;
-  background:linear-gradient(135deg,#fceea8,#e8d168);
-  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
-}
+.cert-list{padding:0 18px;display:flex;flex-direction:column;gap:8px}
+.cert{display:flex;gap:11px;align-items:center;padding:13px;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer}
+.cert:active{transform:scale(.99)}
+.cert-illust{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#fceea8,#e8d168);display:flex;align-items:center;justify-content:center;color:#a08840;flex-shrink:0}
+.cert-illust.sky{background:linear-gradient(135deg,#cfe2ec,#9ecad8);color:#3a7090}
+.cert-illust.lav{background:linear-gradient(135deg,#e8d7f0,#c8b0d8);color:#6b4d8c}
 .cert-body{flex:1}
-.cert-title{font-size:.85rem;font-weight:500;margin-bottom:2px}
+.cert-title{font-size:.84rem;font-weight:500;margin-bottom:2px}
 .cert-meta{font-size:.7rem;color:var(--tl)}
-.cert-action{font-size:.72rem;color:var(--lav2);cursor:pointer}
+.cert-action{font-size:.72rem;color:var(--lav2);display:flex;align-items:center;gap:2px}
 
-/* ============================================
-   BOTTOM NAV
-============================================ */
-.bottom-nav{
-  position:absolute;bottom:0;left:0;right:0;
-  background:rgba(255,255,255,.95);backdrop-filter:blur(24px);
-  border-top:1px solid rgba(184,175,214,.12);
-  display:flex;padding:6px 8px 10px;justify-content:space-around;align-items:center;
-  z-index:60;
-}
-.nav-item{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  background:none;border:none;cursor:pointer;padding:8px 10px;
-  color:var(--ttl);font-family:'Noto Sans JP',sans-serif;
-  font-size:.62rem;letter-spacing:.02em;flex:1;
-  transition:color .2s;
-}
-.nav-item.active{color:var(--lav2)}
+/* Rewards */
+.rewards-screen{padding:18px}
+.rew-balance{margin-bottom:20px;padding:20px 22px;border-radius:18px;background:linear-gradient(135deg,#fceea8,#e8c87a,#d9a55c);color:#5c4520;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(200,168,90,.25)}
+.rew-balance::after{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;background:radial-gradient(circle,rgba(255,255,255,.45),transparent 70%);border-radius:50%}
+.rew-balance-lbl{font-size:.66rem;letter-spacing:.18em;font-weight:500;opacity:.75}
+.rew-balance-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;line-height:1;margin-top:2px;font-weight:400}
+.rew-balance-sub{font-size:.74rem;opacity:.7;margin-top:8px;position:relative;z-index:1}
+.rew-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.rew-tabs::-webkit-scrollbar{display:none}
+.rew-tab{padding:6px 14px;border-radius:20px;background:#fff;border:1px solid var(--border);font-size:.74rem;cursor:pointer;font-family:inherit;color:var(--tl);white-space:nowrap}
+.rew-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rew-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rew-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;cursor:pointer;transition:all .2s}
+.rew-card:active{transform:scale(.98)}
+.rew-img{width:100%;aspect-ratio:1.4/1;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,#fce8ea,#e8d7f0);display:flex;align-items:center;justify-content:center;color:var(--lav2)}
+.rew-img.green{background:linear-gradient(135deg,#dde9d8,#c8dec6);color:var(--sage2)}
+.rew-img.sky{background:linear-gradient(135deg,#d3e7f0,#a8c8d8);color:var(--sky2)}
+.rew-img.gold{background:linear-gradient(135deg,#fceea8,#e8d168);color:#a08840}
+.rew-cat{font-size:.62rem;color:var(--tl);letter-spacing:.04em;margin-bottom:3px}
+.rew-name{font-size:.82rem;font-weight:500;margin-bottom:6px;line-height:1.4}
+.rew-price{display:flex;align-items:baseline;gap:4px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--gold2)}
+.rew-price small{font-size:.65rem;font-family:'Noto Sans JP',sans-serif;color:var(--tl);margin-left:2px}
+
+/* Community */
+.comm-screen{padding:18px}
+.comm-banner{border-radius:16px;padding:20px;margin-bottom:18px;background:linear-gradient(135deg,rgba(184,175,214,.15),rgba(158,202,216,.15));border:1px solid rgba(184,175,214,.2)}
+.comm-banner-h{font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:500;margin-bottom:6px}
+.comm-banner-sub{font-size:.78rem;color:var(--tl);line-height:1.8}
+.comm-post{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
+.comm-post-h{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.cp-meta{flex:1}
+.cp-name{font-size:.86rem;font-weight:500}
+.cp-time{font-size:.7rem;color:var(--ttl)}
+.cp-text{font-size:.83rem;color:var(--ink);line-height:1.8;margin-bottom:10px}
+.cp-actions{display:flex;gap:14px;align-items:center;font-size:.72rem;color:var(--tl)}
+.cp-action{display:flex;align-items:center;gap:4px;cursor:pointer}
+.cp-action:hover{color:var(--lav2)}
+.cp-action.liked{color:#c07880}
+.cp-action.liked .ic{fill:#e8b4b8;stroke:#c07880}
+
+/* Settings */
+.set-screen{padding:18px}
+.set-section-h{font-size:.7rem;letter-spacing:.15em;color:var(--tl);text-transform:uppercase;margin:14px 0 8px;font-weight:500;padding:0 4px}
+.set-section-h:first-child{margin-top:0}
+.set-section{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:6px;overflow:hidden}
+.set-item{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid rgba(184,175,214,.1);cursor:pointer}
+.set-item:last-child{border-bottom:none}
+.set-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2);flex-shrink:0}
+.set-label{flex:1;font-size:.86rem}
+.set-arrow{color:var(--ttl)}
+.set-toggle{width:42px;height:24px;border-radius:14px;background:#dadada;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.set-toggle.on{background:linear-gradient(135deg,var(--lav),var(--sky))}
+.set-toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.set-toggle.on::after{transform:translateX(18px)}
+
+/* User profile */
+.uprof-hero{padding:24px 18px;background:linear-gradient(160deg,#ede8f5,#fce8ea);text-align:center}
+.uprof-section{padding:14px 18px;background:var(--card);margin:0 18px 10px;border-radius:14px;border:1px solid var(--border)}
+.uprof-section h4{font-size:.78rem;color:var(--tl);margin-bottom:8px;font-weight:500;letter-spacing:.04em}
+.uprof-section p{font-size:.83rem;line-height:1.9;color:var(--ink)}
+.uprof-skills{display:flex;flex-wrap:wrap;gap:6px}
+.uprof-skill{padding:4px 10px;background:rgba(184,175,214,.12);color:var(--lav3);border-radius:14px;font-size:.72rem}
+.uprof-review{padding:12px 0;border-bottom:1px solid rgba(184,175,214,.1)}
+.uprof-review:last-child{border:none;padding-bottom:0}
+.uprof-review-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.uprof-rev-name{font-size:.78rem;font-weight:500}
+.uprof-rev-stars{color:var(--gold2);font-size:.72rem;display:flex;gap:1px}
+.uprof-rev-text{font-size:.78rem;color:var(--tl);line-height:1.8}
+
+/* Bottom nav */
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(24px);border-top:1px solid rgba(184,175,214,.12);display:flex;padding:6px 8px 10px;justify-content:space-around;align-items:center;z-index:60}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 6px;color:var(--ttl);font-family:inherit;font-size:.62rem;letter-spacing:.02em;flex:1;transition:color .2s}
+.nav-item.active{color:var(--lav3)}
+.ni-icon{font-size:1.3rem;transition:transform .2s}
 .nav-item.active .ni-icon{transform:translateY(-1px)}
-.ni-icon{font-size:1.25rem;transition:transform .2s}
-.nav-fab{
-  width:48px;height:48px;border-radius:50%;
-  background:linear-gradient(135deg,var(--lav),var(--sky));
-  border:none;cursor:pointer;color:#fff;font-size:1.4rem;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 20px rgba(184,175,214,.45);
-  margin-top:-22px;
-}
+.nav-fab{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--lav),var(--sky));border:none;cursor:pointer;color:#fff;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(184,175,214,.45);margin-top:-22px}
 .nav-fab:active{transform:scale(.95)}
 
-/* ============================================
-   DETAIL MODAL
-============================================ */
-.modal{
-  position:absolute;inset:0;background:rgba(40,30,60,.4);
-  display:none;align-items:flex-end;z-index:200;animation:modalFade .25s ease;
-}
+/* Modal */
+.modal{position:absolute;inset:0;background:rgba(40,30,60,.4);display:none;align-items:flex-end;z-index:200;animation:modalFade .25s ease}
 .modal.show{display:flex}
 @keyframes modalFade{from{background:rgba(40,30,60,0)}}
-.modal-sheet{
-  width:100%;background:#fff;border-radius:24px 24px 0 0;
-  padding:24px 20px 30px;max-height:80%;overflow-y:auto;
-  animation:modalSlide .3s ease;
-}
+.modal-sheet{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:22px 18px 28px;max-height:82%;overflow-y:auto;animation:modalSlide .3s ease}
 @keyframes modalSlide{from{transform:translateY(100%)}}
-.modal-handle{
-  width:40px;height:4px;background:rgba(184,175,214,.4);border-radius:2px;
-  margin:0 auto 16px;
-}
+.modal-handle{width:40px;height:4px;background:rgba(184,175,214,.4);border-radius:2px;margin:0 auto 14px}
 .modal-h{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.modal-title{font-family:'Noto Serif JP',serif;font-size:1.05rem;font-weight:500}
-.modal-meta{font-size:.78rem;color:var(--tl);line-height:2;margin-bottom:14px}
-.modal-content{font-size:.85rem;color:var(--ink);line-height:2;margin-bottom:18px}
-.modal-tags{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.modal-title{font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:500}
+.modal-meta{font-size:.72rem;color:var(--tl)}
+.modal-content{font-size:.85rem;color:var(--ink);line-height:1.9;margin-bottom:16px}
+.modal-tags{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .modal-actions{display:flex;gap:10px}
-.modal-actions .btn-primary{flex:1;margin:0}
-.modal-actions .btn-secondary{flex:1;margin:0}
-.modal-close{margin-left:auto;background:none;border:none;font-size:1.2rem;color:var(--tl);cursor:pointer}
+.modal-actions .btn-primary,.modal-actions .btn-secondary{flex:1;margin:0}
+.modal-close{background:none;border:none;color:var(--tl);cursor:pointer;padding:4px;display:flex;align-items:center}
+
+.cert-detail{border-radius:14px;padding:24px 20px;text-align:center;background:linear-gradient(140deg,#fceea8,#e8c87a);color:#5c4520;margin-bottom:16px}
+.cert-detail.sky{background:linear-gradient(140deg,#cfe2ec,#9ecad8);color:#2c4a5c}
+.cert-detail.lav{background:linear-gradient(140deg,#e8d7f0,#c8b0d8);color:#4a3068}
+.cert-detail-illust{width:42px;height:42px;margin:0 auto 10px;color:inherit}
+.cert-detail-name{font-family:'Noto Serif JP',serif;font-size:1.05rem;font-weight:500;margin-bottom:4px}
+.cert-detail-id{font-family:'Cormorant Garamond',serif;font-size:.78rem;letter-spacing:.1em;opacity:.7}
+.cert-info{font-size:.82rem;color:var(--ink);line-height:2;margin-bottom:14px}
+.cert-info div{display:flex;gap:14px;padding:6px 0}
+.cert-info b{color:var(--tl);font-weight:500;min-width:60px;font-size:.75rem;display:inline-flex;align-items:center}
 
 /* Toast */
-.toast{
-  position:absolute;bottom:90px;left:20px;right:20px;
-  background:rgba(40,42,53,.92);backdrop-filter:blur(20px);
-  color:#fff;padding:12px 18px;border-radius:12px;
-  font-size:.82rem;text-align:center;z-index:300;
-  opacity:0;pointer-events:none;transition:all .3s;
-}
+.toast{position:absolute;bottom:90px;left:20px;right:20px;background:rgba(40,42,53,.94);backdrop-filter:blur(20px);color:#fff;padding:11px 18px;border-radius:12px;font-size:.82rem;text-align:center;z-index:300;opacity:0;pointer-events:none;transition:all .3s}
 .toast.show{opacity:1;transform:translateY(-6px)}
 </style>
 </head>
 <body>
 
-<div class="app-wrap">
-<div class="phone" id="phone">
+<!-- SVG Icon Sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12c0 4.4-4 8-9 8-1.4 0-2.7-.3-3.9-.8L3 21l1.3-3.6C3.5 16.1 3 14.1 3 12c0-4.4 4-8 9-8s9 3.6 9 8z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2h16l-2-2zM10 21h4"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+<symbol id="i-chevron-r" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 7L12 17.8 5.7 21.2l1.2-7-5-4.9 7-1L12 2z"/></symbol>
+<symbol id="i-location" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="i-id-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M14 10h4M14 13h3M5.6 17c.4-1.5 1.7-2.5 3.4-2.5s3 1 3.4 2.5"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+<symbol id="i-comment" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5h4M18 9h2a2 2 0 0 0 2-2V5h-4M4 22h16M10 14.7V17h4v-2.3M18 2H6v6a6 6 0 1 0 12 0z"/></symbol>
+<symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="15" r="6"/><path d="M9 12l-2-9 5 3 5-3-2 9"/><path d="M12 12v6M10 15h4"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.8L2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+<symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+<symbol id="il-provider" viewBox="0 0 48 48"><circle cx="16" cy="18" r="5"/><circle cx="32" cy="18" r="5"/><path d="M8 36c0-4 4-7 8-7s8 3 8 7M24 36c0-4 4-7 8-7s8 3 8 7"/><path d="M21 22l3 4 3-4"/></symbol>
+<symbol id="il-receiver" viewBox="0 0 48 48"><circle cx="24" cy="16" r="5"/><path d="M14 38c0-5 4-10 10-10s10 5 10 10M16 12l3-3M32 12l-3-3M24 8v-3"/></symbol>
+<symbol id="il-org" viewBox="0 0 48 48"><path d="M8 40h32M12 40V18l12-8 12 8v22M18 40v-8h12v8M16 24h2M22 24h2M28 24h2M16 28h2M22 28h2M28 28h2"/></symbol>
+<symbol id="il-elder" viewBox="0 0 24 24"><circle cx="16" cy="6" r="2"/><path d="M14 21v-7l-3-2M16 9l-2 5M19 21l-3-7M11 21l-2-5M5 11l2-4M3 19l3 0 0-7"/></symbol>
+<symbol id="il-parent" viewBox="0 0 24 24"><circle cx="9" cy="5" r="2"/><circle cx="17" cy="9" r="1.5"/><path d="M9 8v13M6 13l3-3 3 3M15 21v-7l3-2"/></symbol>
+<symbol id="il-young" viewBox="0 0 24 24"><circle cx="9" cy="6" r="2"/><path d="M9 9v8l-3 5M9 17l3 4M5 14l-2-1M17 4l4 1-1 4-4-1zM18 8l-2 6"/></symbol>
+<symbol id="il-emerg" viewBox="0 0 24 24"><path d="M13 2L3 14h8l-1 8L20 10h-8l1-8z"/></symbol>
+<symbol id="logo-mark" viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#b8afd6"/><stop offset="100%" stop-color="#e8b4b8"/></linearGradient><linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#9ecad8"/><stop offset="100%" stop-color="#c8b87a"/></linearGradient></defs><circle cx="22" cy="32" r="14" fill="none" stroke="url(#g1)" stroke-width="2.5"/><circle cx="42" cy="32" r="14" fill="none" stroke="url(#g2)" stroke-width="2.5"/></symbol>
+</defs></svg>
 
-<!-- ============================================
-     1. LOGIN
-============================================ -->
+<div class="app-wrap">
+<div class="phone">
+
+<!-- LOGIN -->
 <div class="screen active no-nav" id="screen-login">
   <div class="login-screen">
-    <div class="login-orbs">
-      <div class="lorb lorb1"></div>
-      <div class="lorb lorb2"></div>
-      <div class="lorb lorb3"></div>
-    </div>
+    <div class="login-orbs"><div class="lorb lorb1"></div><div class="lorb lorb2"></div><div class="lorb lorb3"></div></div>
     <div class="login-inner">
+      <svg class="login-logo"><use href="#logo-mark"/></svg>
       <div class="login-brand">You&amp;i Space</div>
       <div class="login-tag">SUPPORT EACH OTHER</div>
-
       <div class="login-card">
         <div class="login-h">おかえりなさい</div>
         <div class="login-sub">支援の輪を、つづけましょう。</div>
-
         <div class="input-group">
           <label class="input-label">メールアドレス</label>
-          <input type="email" class="input" value="ins@example.com" id="login-email">
+          <input type="email" class="input" value="taro.tanaka@example.com">
         </div>
         <div class="input-group">
           <label class="input-label">パスワード</label>
-          <input type="password" class="input" value="••••••••" id="login-pass">
+          <input type="password" class="input" value="••••••••">
         </div>
-
         <button class="btn-primary" onclick="login()">ログイン</button>
+        <div style="height:10px"></div>
         <button class="btn-secondary" onclick="goScreen('onboard')">新規登録</button>
-
-        <button class="btn-link" onclick="login()">パスワードをお忘れですか？</button>
+        <div style="text-align:center;margin-top:18px"><button class="btn-link" onclick="toast('パスワードリセットのメールを送信しました')">パスワードをお忘れですか？</button></div>
       </div>
-
       <div class="login-divider">または</div>
-
-      <button class="btn-secondary" onclick="login()" style="background:rgba(255,255,255,.5);border-color:rgba(184,175,214,.3)">
-        ゲストとしてデモを試す →
-      </button>
+      <button class="btn-secondary" onclick="login()" style="background:rgba(255,255,255,.55);border-color:rgba(184,175,214,.3)">ゲストとしてデモを試す</button>
     </div>
   </div>
 </div>
 
-<!-- ============================================
-     2. ONBOARDING - role select
-============================================ -->
+<!-- ONBOARDING -->
 <div class="screen no-nav" id="screen-onboard">
-  <div class="onboard-screen">
-    <button class="onb-back" onclick="goScreen('login')">← 戻る</button>
+  <div class="onb-screen">
+    <button class="onb-back" onclick="goScreen('login')"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
     <div class="onb-step">STEP 1 / 2</div>
     <h1 class="onb-h">あなたの<br>立場を教えてください</h1>
-    <p class="onb-sub">いつでも変更できます。両方を選ぶこともできます。</p>
-
+    <p class="onb-sub">いつでも変更できます。複数選択も可能です。</p>
     <div class="role-grid">
       <div class="role-card selected" onclick="selectRole(this)">
-        <div class="role-icon">🤝</div>
-        <div>
-          <div class="role-title">＆ Provider（支援者）</div>
-          <div class="role-desc">時間・スキル・経験を使って、誰かを支えたい</div>
-        </div>
+        <div class="role-illust"><svg class="ic" style="width:30px;height:30px"><use href="#il-provider"/></svg></div>
+        <div><div class="role-title">＆ Provider（支援者）</div><div class="role-desc">時間・スキル・経験を使って、誰かを支えたい</div></div>
       </div>
       <div class="role-card" onclick="selectRole(this)">
-        <div class="role-icon">🌱</div>
-        <div>
-          <div class="role-title">＆ Receiver（受援者）</div>
-          <div class="role-desc">支えを必要としている。家族や自分のために</div>
-        </div>
+        <div class="role-illust"><svg class="ic" style="width:30px;height:30px"><use href="#il-receiver"/></svg></div>
+        <div><div class="role-title">＆ Receiver（受援者）</div><div class="role-desc">支えを必要としている。家族や自分のために</div></div>
       </div>
       <div class="role-card" onclick="selectRole(this)">
-        <div class="role-icon">🏛️</div>
-        <div>
-          <div class="role-title">団体・行政として参加</div>
-          <div class="role-desc">NPO・自治体・福祉施設として活動する</div>
-        </div>
+        <div class="role-illust"><svg class="ic" style="width:30px;height:30px"><use href="#il-org"/></svg></div>
+        <div><div class="role-title">団体・行政として参加</div><div class="role-desc">NPO・自治体・福祉施設として活動する</div></div>
       </div>
     </div>
-
     <button class="btn-primary" onclick="goScreen('verify')">次へ</button>
   </div>
 </div>
 
-<!-- ============================================
-     3. VERIFY (身分証提示)
-============================================ -->
+<!-- VERIFY -->
 <div class="screen no-nav" id="screen-verify">
-  <div class="onboard-screen">
-    <button class="onb-back" onclick="goScreen('onboard')">← 戻る</button>
+  <div class="onb-screen">
+    <button class="onb-back" onclick="goScreen('onboard')"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
     <div class="onb-step">STEP 2 / 2</div>
     <h1 class="onb-h">本人確認をお願いします</h1>
-    <p class="onb-sub">信頼の輪を守るため、支援者・受援者すべての方に本人確認をお願いしています。提出された情報は暗号化され、マッチングのためにのみ使われます。</p>
-
+    <p class="onb-sub">信頼の輪を守るため、すべての方に本人確認をお願いしています。提出情報は暗号化され、マッチングのためにのみ使われます。</p>
     <div class="verify-card" id="verify-card" onclick="verifyId()">
-      <div class="verify-icon">🪪</div>
-      <div class="verify-title">身分証をアップロード</div>
-      <div class="verify-sub">運転免許証 / マイナンバーカード / 健康保険証<br>※ デモなのでタップで完了します</div>
+      <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-id-card"/></svg></div>
+      <div class="verify-body"><div class="verify-title">身分証をアップロード</div><div class="verify-sub">運転免許証 / マイナンバーカード / 健康保険証</div></div>
     </div>
-
     <div class="verify-card" id="selfie-card" onclick="verifySelf()">
-      <div class="verify-icon">📸</div>
-      <div class="verify-title">セルフィー認証</div>
-      <div class="verify-sub">なりすまし防止のため、顔写真を撮影します</div>
+      <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-camera"/></svg></div>
+      <div class="verify-body"><div class="verify-title">セルフィー認証</div><div class="verify-sub">なりすまし防止のため、顔写真を撮影</div></div>
     </div>
-
-    <button class="btn-primary" onclick="completeOnboard()">登録を完了する</button>
+    <div style="margin-top:24px"><button class="btn-primary" onclick="login()">登録を完了する</button></div>
   </div>
 </div>
 
-<!-- ============================================
-     4. HOME
-============================================ -->
+<!-- HOME -->
 <div class="screen home-screen" id="screen-home">
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>You&amp;i Space</div>
     <div class="app-h-actions">
-      <button class="icon-btn" onclick="toast('お知らせを開きました')">🔔<span class="badge"></span></button>
-      <button class="icon-btn" onclick="goScreen('profile')">👤</button>
+      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
+      <button class="icon-btn" onclick="navTo('profile')"><svg class="ic"><use href="#i-user"/></svg></button>
     </div>
   </div>
-
   <div class="greeting">
     <div class="greet-time">こんにちは、今日もありがとうございます</div>
-    <div class="greet-name">成 仁脩 さん</div>
+    <div class="greet-name">田中 太郎 さん</div>
   </div>
-
-  <!-- Trust Score Card -->
   <div class="score-card">
     <div class="score-row">
-      <div>
-        <div class="score-label">TRUST SCORE</div>
-        <div class="score-num">782<span class="score-delta">+12</span></div>
-      </div>
-      <div class="score-right">
-        <div class="score-label">&amp; POINTS</div>
-        <div class="score-num" style="font-size:1.8rem;color:#fceea8">1,240<span style="font-size:.9rem;opacity:.7;margin-left:2px">&amp;</span></div>
-      </div>
+      <div><div class="score-label">TRUST SCORE</div><div class="score-num">782<span class="score-delta">+12</span></div></div>
+      <div class="score-right"><div class="score-label">＆ POINTS</div><div class="score-num" style="font-size:1.7rem;color:#fceea8">1,240<span style="font-size:.9rem;opacity:.7;margin-left:2px">＆</span></div></div>
     </div>
     <div class="score-bar"><div class="score-fill"></div></div>
     <div class="score-tags">
-      <span class="score-tag">🌟 支援実績 42件</span>
-      <span class="score-tag">💬 評価 38件</span>
-      <span class="score-tag">🏅 継続 8ヶ月</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支援実績 42</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-comment"/></svg>評価 38</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>継続 8ヶ月</span>
     </div>
   </div>
-
-  <!-- Quick Actions -->
   <div class="qa-grid">
-    <div class="qa" onclick="navTo('map')">
-      <div class="qa-icon">🗺️</div><div class="qa-label">マップ</div>
-    </div>
-    <div class="qa" onclick="navTo('post')">
-      <div class="qa-icon">✍️</div><div class="qa-label">投稿</div>
-    </div>
-    <div class="qa" onclick="toast('＆ポイント交換ページへ')">
-      <div class="qa-icon">🎁</div><div class="qa-label">交換</div>
-    </div>
-    <div class="qa" onclick="toast('コミュニティページへ')">
-      <div class="qa-icon">🌐</div><div class="qa-label">コミュニティ</div>
-    </div>
+    <div class="qa" onclick="navTo('map')"><div class="qa-illust"><svg class="ic"><use href="#i-map"/></svg></div><div class="qa-label">マップ</div></div>
+    <div class="qa" onclick="navTo('post')"><div class="qa-illust"><svg class="ic"><use href="#i-edit"/></svg></div><div class="qa-label">投稿</div></div>
+    <div class="qa" onclick="navTo('rewards')"><div class="qa-illust"><svg class="ic"><use href="#i-gift"/></svg></div><div class="qa-label">交換</div></div>
+    <div class="qa" onclick="navTo('comm')"><div class="qa-illust"><svg class="ic"><use href="#i-globe"/></svg></div><div class="qa-label">コミュニティ</div></div>
   </div>
 
-  <!-- Nearby Requests -->
   <div class="sec-block">
     <div class="sec-h">
       <div class="sec-h-title">あなたの近くの支援要請</div>
-      <div class="sec-h-more" onclick="navTo('map')">マップ →</div>
+      <div class="sec-h-more" onclick="navTo('map')">マップ <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
     </div>
     <div class="match-list">
-      <div class="match-card" onclick="openMatch('高槻市 / 田中さん','高齢の母の通院付き添いを週1でお願いしたいです。歩行が少し不安定なので、近くにいてくれるだけで安心できます。','elder','5.0','1.2km','3年前から介護中。スコア92','田')">
-        <div class="mc-avatar green">田<span class="verified">✓</span></div>
+      <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。歩行が少し不安定なので、近くにいてくれるだけで安心できます。','1.2km','5.0','3年前から介護中・スコア92',92)">
+        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">田中 さん</div><div class="mc-dist">1.2km</div></div>
+          <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
           <div class="mc-desc">高齢の母の通院付き添いを週1で…</div>
           <div class="mc-meta">
             <span class="mc-cat cat-elder">老老介護</span>
-            <span class="mc-stars">★★★★★</span>
+            <span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span>
           </div>
         </div>
       </div>
-      <div class="match-card" onclick="openMatch('高槻市 / 佐藤さん','下の子が熱を出してしまい、上の子の保育園のお迎えに行けません。15時頃に1時間だけお願いできる方を探しています。','parent','4.8','0.8km','ひとり親家庭支援を受給中','佐')">
-        <div class="mc-avatar pink">佐<span class="verified">✓</span></div>
+      <div class="match-card" onclick="openMatch('佐藤','parent','下の子が熱を出してしまい、上の子の保育園のお迎えに行けません。15時頃に1時間だけお願いできる方を探しています。','0.8km','4.8','ひとり親家庭支援を受給中',86)">
+        <div class="avatar md pink">佐<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">佐藤 さん</div><div class="mc-dist">0.8km</div></div>
+          <div class="mc-row1"><div class="mc-name">佐藤 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>0.8km</div></div>
           <div class="mc-desc">上の子の保育園お迎え（15時〜1時間）</div>
           <div class="mc-meta">
             <span class="mc-cat cat-parent">ひとり親</span>
-            <span class="mc-stars">★★★★★</span>
+            <span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>4.8</span>
           </div>
         </div>
       </div>
-      <div class="match-card" onclick="openMatch('高槻市 / 山田さん','母の介護をしている中学2年です。試験前だけ、夕方の食事準備を手伝ってもらえると助かります。','young','—','2.1km','ヤングケアラー支援対象','山')">
-        <div class="mc-avatar">山<span class="verified">✓</span></div>
+      <div class="match-card" onclick="openMatch('山田','young','母の介護をしている中学2年です。試験前だけ、夕方の食事準備を手伝ってもらえると助かります。','2.1km','—','ヤングケアラー支援対象',74)">
+        <div class="avatar md sky">山<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">山田 さん（14）</div><div class="mc-dist">2.1km</div></div>
+          <div class="mc-row1"><div class="mc-name">山田 さん（14）</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>2.1km</div></div>
           <div class="mc-desc">試験前だけ夕食の準備を手伝って…</div>
           <div class="mc-meta">
             <span class="mc-cat cat-young">ヤングケアラー</span>
-            <span class="mc-stars">★★★★☆</span>
+            <span class="mc-stars">新規メンバー</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Activity Feed -->
   <div class="sec-block">
-    <div class="sec-h">
-      <div class="sec-h-title">最近の活動</div>
-    </div>
+    <div class="sec-h"><div class="sec-h-title">最近の活動</div></div>
     <div class="feed-item">
-      <div class="feed-h">
-        <div class="feed-dot"></div>
-        <div class="feed-text"><b>鈴木さん</b>があなたを評価しました</div>
-        <div class="feed-time">2時間前</div>
-      </div>
+      <div class="feed-h"><div class="feed-dot"></div><div class="feed-text"><b>高橋さん</b>があなたを評価しました</div><div class="feed-time">2時間前</div></div>
       <div class="feed-text" style="margin-left:18px">「丁寧で安心できる方でした。また是非お願いしたいです。」</div>
-      <div style="margin-left:18px"><span class="feed-point">＋12 ＆pt</span></div>
+      <div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋12 ＆pt</span></div>
     </div>
     <div class="feed-item">
-      <div class="feed-h">
-        <div class="feed-dot" style="background:var(--lav)"></div>
-        <div class="feed-text"><b>支援実績バッジ</b>「継続支援8ヶ月」を獲得</div>
-        <div class="feed-time">昨日</div>
-      </div>
+      <div class="feed-h"><div class="feed-dot" style="background:var(--lav)"></div><div class="feed-text"><b>支援実績バッジ</b>「継続支援8ヶ月」を獲得</div><div class="feed-time">昨日</div></div>
     </div>
     <div class="feed-item">
-      <div class="feed-h">
-        <div class="feed-dot" style="background:var(--gold)"></div>
-        <div class="feed-text">＆ポイントで<b>高槻市内カフェクーポン</b>と交換しました</div>
-        <div class="feed-time">3日前</div>
-      </div>
-      <div style="margin-left:18px"><span class="feed-point" style="background:rgba(232,180,184,.12);color:#c07880">−500 ＆pt</span></div>
+      <div class="feed-h"><div class="feed-dot" style="background:var(--gold)"></div><div class="feed-text">＆ポイントで<b>高槻市内カフェクーポン</b>と交換</div><div class="feed-time">3日前</div></div>
+      <div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−500 ＆pt</span></div>
     </div>
   </div>
 </div>
 
-<!-- ============================================
-     5. MAP
-============================================ -->
+<!-- MAP -->
 <div class="screen map-screen" id="screen-map">
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>マップ</div>
     <div class="app-h-actions">
-      <button class="icon-btn" onclick="toast('現在地に戻りました')">📍</button>
-      <button class="icon-btn" onclick="toast('フィルター設定を開きました')">⚙️</button>
+      <button class="icon-btn" onclick="centerMap()"><svg class="ic"><use href="#i-target"/></svg></button>
+      <button class="icon-btn" onclick="navTo('settings')"><svg class="ic"><use href="#i-settings"/></svg></button>
     </div>
   </div>
-
   <div class="map-container">
-    <div class="map-grid"></div>
+    <div id="leaflet-map"></div>
     <div class="map-search">
-      <span style="font-size:.9rem">🔍</span>
+      <svg class="ic"><use href="#i-search"/></svg>
       <input type="text" placeholder="地域・条件で探す" value="高槻市">
     </div>
     <div class="map-filter">
@@ -807,177 +668,112 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="filter-chip" onclick="toggleFilter(this)">ヤングケアラー</div>
       <div class="filter-chip" onclick="toggleFilter(this)">緊急</div>
     </div>
-
-    <div class="map-overlay">
-      <!-- Heatmap blobs -->
-      <div class="heat heat-r" style="width:120px;height:120px;top:30%;left:20%"></div>
-      <div class="heat heat-p" style="width:160px;height:160px;top:55%;left:40%"></div>
-      <div class="heat heat-y" style="width:100px;height:100px;top:25%;left:65%"></div>
-      <div class="heat heat-r" style="width:90px;height:90px;top:70%;left:70%"></div>
-
-      <!-- Pin markers -->
-      <div class="pin pin-r" style="top:35%;left:25%" onclick="openMatch('高槻市 / 田中さん','高齢の母の通院付き添いを週1でお願いしたいです。','elder','5.0','1.2km','スコア92','田')">👵</div>
-      <div class="pin pin-p" style="top:60%;left:45%" onclick="openMatch('高槻市 / 佐藤さん','上の子の保育園お迎えを15時に1時間だけお願いしたいです。','parent','4.8','0.8km','ひとり親','佐')">👨‍👧</div>
-      <div class="pin pin-y" style="top:30%;left:68%" onclick="openMatch('高槻市 / 山田さん','試験前だけ夕食準備を手伝ってもらえる方を探しています。','young','—','2.1km','ヤングケアラー','山')">📖</div>
-      <div class="pin pin-r" style="top:75%;left:72%" onclick="openMatch('高槻市 / 木村さん','夫の通院に同行できる方を探しています。','elder','4.9','3.4km','スコア88','木')">🏥</div>
-      <div class="pin pin-p" style="top:50%;left:62%" onclick="openMatch('高槻市 / 林さん','子の食事準備を週2でお願いします。','parent','5.0','1.8km','ひとり親','林')">🍱</div>
-
-      <!-- My location -->
-      <div class="pin pin-me" style="top:48%;left:50%" title="あなた">YOU</div>
-    </div>
   </div>
-
   <div class="map-list">
     <div class="map-list-h">高槻市内 / 半径3km以内 <b>5件</b> の支援要請</div>
     <div class="match-list">
-      <div class="match-card" onclick="openMatch('高槻市 / 田中さん','高齢の母の通院付き添いを週1でお願いしたいです。','elder','5.0','1.2km','スコア92','田')">
-        <div class="mc-avatar green">田<span class="verified">✓</span></div>
+      <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。','1.2km','5.0','スコア92',92)">
+        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">田中 さん</div><div class="mc-dist">1.2km</div></div>
+          <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
           <div class="mc-desc">高齢の母の通院付き添い（週1）</div>
-          <div class="mc-meta">
-            <span class="mc-cat cat-elder">老老介護</span>
-            <span class="mc-stars">★★★★★</span>
-          </div>
+          <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
         </div>
       </div>
-      <div class="match-card" onclick="openMatch('高槻市 / 木村さん','夫の通院に同行できる方を探しています。','elder','4.9','3.4km','スコア88','木')">
-        <div class="mc-avatar green">木<span class="verified">✓</span></div>
+      <div class="match-card" onclick="openMatch('木村','elder','夫の通院に同行できる方を探しています。月2回程度。','3.4km','4.9','スコア88',88)">
+        <div class="avatar md green">木<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">木村 さん</div><div class="mc-dist">3.4km</div></div>
+          <div class="mc-row1"><div class="mc-name">木村 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>3.4km</div></div>
           <div class="mc-desc">夫の通院同行（月2回）</div>
-          <div class="mc-meta">
-            <span class="mc-cat cat-elder">老老介護</span>
-            <span class="mc-stars">★★★★★</span>
-          </div>
+          <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>4.9</span></div>
+        </div>
+      </div>
+      <div class="match-card" onclick="openMatch('林','parent','子の食事準備を週2でお願いします。','1.8km','5.0','ひとり親',91)">
+        <div class="avatar md pink">林<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="mc-body">
+          <div class="mc-row1"><div class="mc-name">林 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.8km</div></div>
+          <div class="mc-desc">子の食事準備（週2）</div>
+          <div class="mc-meta"><span class="mc-cat cat-parent">ひとり親</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============================================
-     6. POST
-============================================ -->
-<div class="screen" id="screen-post">
+<!-- POST -->
+<div class="screen no-nav" id="screen-post">
   <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>新しい投稿</div>
-    <div class="app-h-actions">
-      <button class="icon-btn" onclick="navTo('home')">×</button>
-    </div>
+    <div class="app-h-back" onclick="navTo('home')"><svg class="ic"><use href="#i-back"/></svg>新しい投稿</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="navTo('home')"><svg class="ic"><use href="#i-close"/></svg></button></div>
   </div>
-
   <div class="post-screen">
     <div class="post-toggle">
-      <button class="pt-btn on" onclick="togglePost(this,0)">🤝 支援したい</button>
-      <button class="pt-btn" onclick="togglePost(this,1)">🌱 助けを求める</button>
+      <button class="pt-btn on" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-provider"/></svg>支援したい</button>
+      <button class="pt-btn" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-receiver"/></svg>助けを求める</button>
     </div>
-
-    <div class="post-field">
-      <label class="post-label">タイトル</label>
-      <input type="text" class="post-input" placeholder="例：高槻市内で買い物代行できます">
-    </div>
-
+    <div class="post-field"><label class="post-label">タイトル</label><input type="text" class="post-input" placeholder="例：高槻市内で買い物代行できます"></div>
     <div class="post-field">
       <label class="post-label">カテゴリ</label>
       <div class="cat-pick">
-        <div class="cat-opt on" onclick="selectCat(this)">
-          <div class="cat-opt-icon">👵</div>老老介護
-        </div>
-        <div class="cat-opt" onclick="selectCat(this)">
-          <div class="cat-opt-icon">👨‍👧</div>ひとり親
-        </div>
-        <div class="cat-opt" onclick="selectCat(this)">
-          <div class="cat-opt-icon">📖</div>ヤングケアラー
-        </div>
-        <div class="cat-opt" onclick="selectCat(this)">
-          <div class="cat-opt-icon">🆘</div>緊急
-        </div>
+        <div class="cat-opt on" onclick="selectCat(this)"><svg class="cat-illust ic"><use href="#il-elder"/></svg>老老介護</div>
+        <div class="cat-opt" onclick="selectCat(this)"><svg class="cat-illust ic"><use href="#il-parent"/></svg>ひとり親</div>
+        <div class="cat-opt" onclick="selectCat(this)"><svg class="cat-illust ic"><use href="#il-young"/></svg>ヤングケアラー</div>
+        <div class="cat-opt" onclick="selectCat(this)"><svg class="cat-illust ic ic-fill"><use href="#il-emerg"/></svg>緊急</div>
       </div>
     </div>
-
-    <div class="post-field">
-      <label class="post-label">詳細</label>
-      <textarea class="post-textarea" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。"></textarea>
-    </div>
-
+    <div class="post-field"><label class="post-label">詳細</label><textarea class="post-textarea" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。"></textarea></div>
     <div class="post-field">
       <label class="post-label">写真（任意）</label>
-      <div class="photo-upload" onclick="toast('写真ライブラリを開きました')">
-        <div class="photo-upload-icon">📷</div>
-        <div class="photo-upload-text">タップして写真を追加<br><span style="opacity:.6">支援の質を担保するため、状況がわかる写真の提示を推奨</span></div>
+      <div class="photo-upload" onclick="openPhotoPicker()">
+        <svg class="ic"><use href="#i-camera"/></svg>
+        <div class="photo-upload-text">タップして写真を追加<br><small>支援の質を担保するため、状況がわかる写真の提示を推奨</small></div>
       </div>
     </div>
-
     <button class="btn-primary" onclick="submitPost()" style="margin-top:8px">投稿する</button>
   </div>
 </div>
 
-<!-- ============================================
-     7. MESSAGES
-============================================ -->
+<!-- MESSAGES -->
 <div class="screen" id="screen-msg">
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>メッセージ</div>
-    <div class="app-h-actions">
-      <button class="icon-btn" onclick="toast('新しいメッセージ')">✏️</button>
-    </div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('新しいメッセージは「マップ」から相手を選んでください')"><svg class="ic"><use href="#i-edit"/></svg></button></div>
   </div>
-
   <div class="msg-screen">
-    <div class="msg-search">
-      <span style="font-size:.85rem;color:var(--tl)">🔍</span>
-      <input type="text" placeholder="メッセージを検索">
-    </div>
-
+    <div class="msg-search"><svg class="ic"><use href="#i-search"/></svg><input type="text" placeholder="メッセージを検索"></div>
     <div class="msg-list">
-      <div class="msg-item" onclick="toast('チャットを開きました')">
-        <div class="mc-avatar green">田<span class="verified">✓</span></div>
+      <div class="msg-item" onclick="openChat('鈴木','green','鈴')">
+        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1">
-            <div class="msg-name">田中 さん<span class="msg-unread">2</span></div>
-            <div class="msg-time">14:32</div>
-          </div>
+          <div class="msg-row1"><div class="msg-name">鈴木 さん <span class="msg-unread">2</span></div><div class="msg-time">14:32</div></div>
           <div class="msg-preview">明日の14時に駅前で待ち合わせで大丈夫ですか？</div>
         </div>
       </div>
-      <div class="msg-item" onclick="toast('チャットを開きました')">
-        <div class="mc-avatar pink">佐<span class="verified">✓</span></div>
+      <div class="msg-item" onclick="openChat('佐藤','pink','佐')">
+        <div class="avatar md pink">佐<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1">
-            <div class="msg-name">佐藤 さん</div>
-            <div class="msg-time">昨日</div>
-          </div>
-          <div class="msg-preview">本当にありがとうございました。助かりました🙏</div>
+          <div class="msg-row1"><div class="msg-name">佐藤 さん</div><div class="msg-time">昨日</div></div>
+          <div class="msg-preview">本当にありがとうございました。助かりました。</div>
         </div>
       </div>
-      <div class="msg-item" onclick="toast('チャットを開きました')">
-        <div class="mc-avatar">山<span class="verified">✓</span></div>
+      <div class="msg-item" onclick="openChat('山田','sky','山')">
+        <div class="avatar md sky">山<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1">
-            <div class="msg-name">山田 さん</div>
-            <div class="msg-time">月曜</div>
-          </div>
+          <div class="msg-row1"><div class="msg-name">山田 さん</div><div class="msg-time">月曜</div></div>
           <div class="msg-preview">試験お疲れさまでした！結果はいかがでしたか？</div>
         </div>
       </div>
-      <div class="msg-item" onclick="toast('チャットを開きました')">
-        <div class="mc-avatar" style="background:linear-gradient(135deg,#a0a8c0,#7a82a0)">高<span class="verified" style="background:var(--sky)">★</span></div>
+      <div class="msg-item" onclick="openChat('高槻市役所 福祉課','gray','高')">
+        <div class="avatar md gray">高<span class="v" style="background:var(--sky2)"><svg class="ic" style="font-size:.6rem"><use href="#i-shield"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1">
-            <div class="msg-name">高槻市役所 福祉課</div>
-            <div class="msg-time">5/15</div>
-          </div>
+          <div class="msg-row1"><div class="msg-name">高槻市役所 福祉課</div><div class="msg-time">5/15</div></div>
           <div class="msg-preview">地域支援者表彰の対象となりました。詳細は…</div>
         </div>
       </div>
-      <div class="msg-item" onclick="toast('チャットを開きました')">
-        <div class="mc-avatar pink">林</div>
+      <div class="msg-item" onclick="openChat('林','pink','林')">
+        <div class="avatar md pink">林<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1">
-            <div class="msg-name">林 さん</div>
-            <div class="msg-time">5/13</div>
-          </div>
+          <div class="msg-row1"><div class="msg-name">林 さん</div><div class="msg-time">5/13</div></div>
           <div class="msg-preview">来週もよろしくお願いします</div>
         </div>
       </div>
@@ -985,180 +781,473 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
-<!-- ============================================
-     8. PROFILE
-============================================ -->
-<div class="screen profile-screen" id="screen-profile">
+<!-- CHAT -->
+<div class="screen no-nav chat-screen" id="screen-chat">
   <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>プロフィール</div>
-    <div class="app-h-actions">
-      <button class="icon-btn" onclick="toast('設定を開きました')">⚙️</button>
-      <button class="icon-btn" onclick="logout()">↩</button>
+    <div class="app-h-back" onclick="navTo('msg')"><svg class="ic"><use href="#i-back"/></svg></div>
+    <div style="flex:1;display:flex;align-items:center;gap:10px;padding:0 8px;cursor:pointer" onclick="navTo('uprof')">
+      <div class="avatar sm" id="chat-avatar">＿</div>
+      <div>
+        <div style="font-size:.92rem;font-weight:500" id="chat-name">—</div>
+        <div style="font-size:.66rem;color:var(--sage2);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--sage2)"></span>オンライン</div>
+      </div>
+    </div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="navTo('uprof')"><svg class="ic"><use href="#i-info"/></svg></button></div>
+  </div>
+  <div class="chat-thread" id="chat-thread">
+    <div class="chat-meta">今日 14:00</div>
+    <div class="bubble-wrap">
+      <div class="avatar sm bub1">＿</div>
+      <div><div class="bubble">はじめまして。投稿をご覧いただきありがとうございます。</div><div class="bubble-time">14:02</div></div>
+    </div>
+    <div class="bubble-wrap me"><div><div class="bubble">こちらこそありがとうございます。明日14時に駅前で大丈夫ですか？</div><div class="bubble-time">14:25</div></div></div>
+    <div class="bubble-wrap">
+      <div class="avatar sm bub1">＿</div>
+      <div><div class="bubble">はい、大丈夫です。よろしくお願いします。</div><div class="bubble-time">14:32</div></div>
+    </div>
+    <div class="bubble-wrap">
+      <div class="avatar sm bub1">＿</div>
+      <div><div class="bubble">当日もし遅れる場合はこちらから連絡します。</div><div class="bubble-time">14:32</div></div>
     </div>
   </div>
+  <div class="chat-input">
+    <button class="icon-btn" onclick="toast('添付メニューを開きました')"><svg class="ic"><use href="#i-plus"/></svg></button>
+    <input type="text" class="chat-input-field" placeholder="メッセージを入力" id="chat-field" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()"><svg class="ic"><use href="#i-send"/></svg></button>
+  </div>
+</div>
 
+<!-- NOTIFICATIONS -->
+<div class="screen no-nav" id="screen-notif">
+  <div class="app-header">
+    <div class="app-h-back" onclick="navTo('home')"><svg class="ic"><use href="#i-back"/></svg>お知らせ</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="markAllRead()"><svg class="ic"><use href="#i-check"/></svg></button></div>
+  </div>
+  <div class="notif-list">
+    <div class="notif-group-h">新着</div>
+    <div class="notif-item unread" onclick="openChat('鈴木','green','鈴')">
+      <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-chat"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">鈴木さんから新しいメッセージ</div>
+        <div class="notif-desc">明日の14時に駅前で待ち合わせで大丈夫ですか？</div>
+        <div class="notif-time">2分前</div>
+      </div>
+    </div>
+    <div class="notif-item unread" onclick="navTo('profile')">
+      <div class="notif-illust gold"><svg class="ic ic-fill" style="width:18px;height:18px"><use href="#i-star"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">高橋さんから評価が届きました</div>
+        <div class="notif-desc">★5.0 「丁寧で安心できる方でした」</div>
+        <div class="notif-time">2時間前</div>
+      </div>
+    </div>
+    <div class="notif-item unread" onclick="navTo('profile')">
+      <div class="notif-illust sage"><svg class="ic" style="width:18px;height:18px"><use href="#i-medal"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">バッジを獲得しました</div>
+        <div class="notif-desc">「継続支援 8ヶ月」のバッジが追加されました</div>
+        <div class="notif-time">昨日 09:14</div>
+      </div>
+    </div>
+    <div class="notif-group-h">これまで</div>
+    <div class="notif-item" onclick="navTo('rewards')">
+      <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-gift"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">＆ポイントの引き換え完了</div>
+        <div class="notif-desc">高槻市内カフェクーポン（−500＆pt）</div>
+        <div class="notif-time">3日前</div>
+      </div>
+    </div>
+    <div class="notif-item" onclick="openChat('高槻市役所 福祉課','gray','高')">
+      <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-shield"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">高槻市役所からのお知らせ</div>
+        <div class="notif-desc">地域支援者表彰の対象となりました。詳細をご確認ください。</div>
+        <div class="notif-time">5/15</div>
+      </div>
+    </div>
+    <div class="notif-item">
+      <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-info"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">プライバシーポリシーが更新されました</div>
+        <div class="notif-desc">主要な変更点と新しい条項についてご確認ください。</div>
+        <div class="notif-time">5/10</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REWARDS -->
+<div class="screen" id="screen-rewards">
+  <div class="app-header">
+    <div class="app-h-logo"><span class="dot"></span>＆ポイント</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('利用履歴を表示します')"><svg class="ic"><use href="#i-info"/></svg></button></div>
+  </div>
+  <div class="rewards-screen">
+    <div class="rew-balance">
+      <div class="rew-balance-lbl">CURRENT BALANCE</div>
+      <div class="rew-balance-num">1,240<span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
+      <div class="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
+    </div>
+    <div class="rew-tabs">
+      <div class="rew-tab on" onclick="rewTab(this)">クーポン</div>
+      <div class="rew-tab" onclick="rewTab(this)">寄付</div>
+      <div class="rew-tab" onclick="rewTab(this)">サービス</div>
+      <div class="rew-tab" onclick="rewTab(this)">証明書発行</div>
+    </div>
+    <div class="rew-grid">
+      <div class="rew-card" onclick="redeem('カフェ ハコモリ クーポン','500')">
+        <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-gift"/></svg></div>
+        <div class="rew-cat">高槻市内・飲食</div>
+        <div class="rew-name">カフェ ハコモリ<br>500円クーポン</div>
+        <div class="rew-price">500<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('図書館エコバッグ','800')">
+        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
+        <div class="rew-cat">高槻市立図書館</div>
+        <div class="rew-name">オリジナル<br>エコバッグ</div>
+        <div class="rew-price">800<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('PRO機能1ヶ月体験','1200')">
+        <div class="rew-img gold"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-star"/></svg></div>
+        <div class="rew-cat">プレミアム</div>
+        <div class="rew-name">PRO機能<br>1ヶ月体験</div>
+        <div class="rew-price">1,200<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('商店街共通券','1000')">
+        <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-globe"/></svg></div>
+        <div class="rew-cat">高槻商店街連合</div>
+        <div class="rew-name">商店街<br>1,000円共通券</div>
+        <div class="rew-price">1,000<small>＆pt</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMUNITY -->
+<div class="screen" id="screen-comm">
+  <div class="app-header">
+    <div class="app-h-logo"><span class="dot"></span>コミュニティ</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('投稿を検索します')"><svg class="ic"><use href="#i-search"/></svg></button></div>
+  </div>
+  <div class="comm-screen">
+    <div class="comm-banner">
+      <div class="comm-banner-h">支援者・受援者が想いを綴る場所</div>
+      <div class="comm-banner-sub">活動の振り返り、感謝の言葉、課題の共有——みんなで支援の輪を育てる場所です。</div>
+    </div>
+    <div class="comm-post">
+      <div class="comm-post-h">
+        <div class="avatar md green">高<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">高橋 美佐子 さん</div><div class="cp-time">2時間前 ／ 高槻市</div></div>
+      </div>
+      <div class="cp-text">田中さんに母の付き添いをお願いして3ヶ月目になります。丁寧で頼りになる方で、母も「あの方が来てくれるのが楽しみ」と言っています。本当に出会えて良かった。</div>
+      <div class="cp-actions">
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>24</span></div>
+        <div class="cp-action" onclick="toast('コメントを開きました')"><svg class="ic"><use href="#i-comment"/></svg><span>5</span></div>
+        <div class="cp-action" onclick="toast('シェアメニュー')"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+      </div>
+    </div>
+    <div class="comm-post">
+      <div class="comm-post-h">
+        <div class="avatar md sky">中<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">中村 健 さん</div><div class="cp-time">5時間前 ／ 茨木市</div></div>
+      </div>
+      <div class="cp-text">ヤングケアラーとして家族を支える子たちに、もっと制度的なバックアップが必要だと感じます。学校との連携、行政の認識——変えていきたいことがたくさん。</div>
+      <div class="cp-actions">
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>47</span></div>
+        <div class="cp-action" onclick="toast('コメントを開きました')"><svg class="ic"><use href="#i-comment"/></svg><span>12</span></div>
+        <div class="cp-action" onclick="toast('シェアメニュー')"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+      </div>
+    </div>
+    <div class="comm-post">
+      <div class="comm-post-h">
+        <div class="avatar md gray">高<span class="v" style="background:var(--sky2)"><svg class="ic" style="font-size:.6rem"><use href="#i-shield"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">高槻市役所 福祉課</div><div class="cp-time">昨日 ／ 公式</div></div>
+      </div>
+      <div class="cp-text">6月から地域包括支援センターとYou&amp;i Spaceの連携実証を開始します。詳細は追って発表します。</div>
+      <div class="cp-actions">
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>132</span></div>
+        <div class="cp-action" onclick="toast('コメントを開きました')"><svg class="ic"><use href="#i-comment"/></svg><span>38</span></div>
+        <div class="cp-action" onclick="toast('シェアメニュー')"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen profile-screen" id="screen-profile">
+  <div class="app-header">
+    <div class="app-h-logo"><span class="dot"></span>マイページ</div>
+    <div class="app-h-actions">
+      <button class="icon-btn" onclick="navTo('settings')"><svg class="ic"><use href="#i-settings"/></svg></button>
+      <button class="icon-btn" onclick="logout()"><svg class="ic"><use href="#i-logout"/></svg></button>
+    </div>
+  </div>
   <div class="profile-hero">
-    <div class="prof-avatar">成<span class="v">✓</span></div>
-    <div class="prof-name">成 仁脩</div>
-    <div class="prof-bio">高槻市在住 / 大阪医科薬科大学医学部</div>
+    <div class="avatar xl" style="margin:0 auto">田<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
+    <div class="prof-name">田中 太郎</div>
+    <div class="prof-bio">高槻市在住 / 会社員</div>
     <div class="prof-roles">
       <span class="prof-role">＆ Provider</span>
       <span class="prof-role">＆ Receiver</span>
       <span class="prof-role">本人確認済</span>
     </div>
   </div>
-
   <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-num">782</div>
-      <div class="stat-label">TRUST SCORE</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">1,240<span class="pt">&amp;</span></div>
-      <div class="stat-label">＆ POINTS</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">42</div>
-      <div class="stat-label">支援実績</div>
-    </div>
+    <div class="stat-card"><div class="stat-num">782</div><div class="stat-label">TRUST SCORE</div></div>
+    <div class="stat-card"><div class="stat-num">1,240<span class="pt">＆</span></div><div class="stat-label">＆ POINTS</div></div>
+    <div class="stat-card"><div class="stat-num">42</div><div class="stat-label">支援実績</div></div>
   </div>
-
-  <!-- Trust Score Detail -->
   <div class="score-detail">
-    <div class="sd-h">
-      <div class="sd-title">信頼スコアの内訳</div>
-      <div class="sd-value">782</div>
-    </div>
+    <div class="sd-h"><div class="sd-title">信頼スコアの内訳</div><div class="sd-value">782</div></div>
     <div class="sd-bars">
-      <div class="sd-bar-row">
-        <div class="sd-bar-lbl">支援実績</div>
-        <div class="sd-bar-track"><div class="sd-bar-fill" style="width:88%"></div></div>
-        <div class="sd-bar-val">88</div>
-      </div>
-      <div class="sd-bar-row">
-        <div class="sd-bar-lbl">評価平均</div>
-        <div class="sd-bar-track"><div class="sd-bar-fill" style="width:96%"></div></div>
-        <div class="sd-bar-val">96</div>
-      </div>
-      <div class="sd-bar-row">
-        <div class="sd-bar-lbl">継続性</div>
-        <div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div>
-        <div class="sd-bar-val">72</div>
-      </div>
-      <div class="sd-bar-row">
-        <div class="sd-bar-lbl">人柄資本</div>
-        <div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div>
-        <div class="sd-bar-val">81</div>
-      </div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">支援実績</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:88%"></div></div><div class="sd-bar-val">88</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">評価平均</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:96%"></div></div><div class="sd-bar-val">96</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">継続性</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div><div class="sd-bar-val">72</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">人柄資本</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div><div class="sd-bar-val">81</div></div>
     </div>
   </div>
-
-  <!-- Certificates -->
   <div class="sec-block">
-    <div class="sec-h">
-      <div class="sec-h-title">デジタル証明書</div>
-      <div class="sec-h-more">すべて見る →</div>
-    </div>
+    <div class="sec-h"><div class="sec-h-title">デジタル証明書</div><div class="sec-h-more">すべて見る <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>
     <div class="cert-list">
-      <div class="cert">
-        <div class="cert-icon">🏅</div>
-        <div class="cert-body">
-          <div class="cert-title">継続支援バッジ（8ヶ月）</div>
-          <div class="cert-meta">2026.05.13 発行 ／ 高槻市内 老老介護支援</div>
-        </div>
-        <div class="cert-action" onclick="toast('証明書を表示します')">表示</div>
+      <div class="cert" onclick="openCert('継続支援バッジ（8ヶ月）','2026.05.13','高槻市内 老老介護支援','YIS-CER-2026-05-1042','gold','i-medal')">
+        <div class="cert-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-medal"/></svg></div>
+        <div class="cert-body"><div class="cert-title">継続支援バッジ（8ヶ月）</div><div class="cert-meta">2026.05.13 ／ 高槻市内 老老介護支援</div></div>
+        <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="cert">
-        <div class="cert-icon" style="background:linear-gradient(135deg,#cfe2ec,#9ecad8)">📜</div>
-        <div class="cert-body">
-          <div class="cert-title">ヤングケアラー支援認証</div>
-          <div class="cert-meta">2026.03.20 発行 ／ 高槻市役所 福祉課</div>
-        </div>
-        <div class="cert-action" onclick="toast('証明書を表示します')">表示</div>
+      <div class="cert" onclick="openCert('ヤングケアラー支援認証','2026.03.20','高槻市役所 福祉課発行','YIS-OFC-2026-03-0218','sky','i-shield')">
+        <div class="cert-illust sky"><svg class="ic" style="width:22px;height:22px"><use href="#i-shield"/></svg></div>
+        <div class="cert-body"><div class="cert-title">ヤングケアラー支援認証</div><div class="cert-meta">2026.03.20 ／ 高槻市役所 福祉課</div></div>
+        <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="cert">
-        <div class="cert-icon" style="background:linear-gradient(135deg,#e8d7f0,#c8b0d8)">🎖️</div>
-        <div class="cert-body">
-          <div class="cert-title">初回支援完了</div>
-          <div class="cert-meta">2025.09.15 発行</div>
-        </div>
-        <div class="cert-action" onclick="toast('証明書を表示します')">表示</div>
+      <div class="cert" onclick="openCert('初回支援完了','2025.09.15','You&amp;i Space システム発行','YIS-SYS-2025-09-0001','lav','i-star')">
+        <div class="cert-illust lav"><svg class="ic ic-fill" style="width:22px;height:22px"><use href="#i-star"/></svg></div>
+        <div class="cert-body"><div class="cert-title">初回支援完了</div><div class="cert-meta">2025.09.15 ／ You&amp;i Space 発行</div></div>
+        <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
     </div>
   </div>
-
-  <!-- & Points history preview -->
   <div class="sec-block">
-    <div class="sec-h">
-      <div class="sec-h-title">＆ポイント履歴</div>
-      <div class="sec-h-more" onclick="toast('履歴ページを開きます')">すべて見る →</div>
+    <div class="sec-h"><div class="sec-h-title">＆ポイント履歴</div><div class="sec-h-more" onclick="navTo('rewards')">すべて見る <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>
+    <div class="feed-item">
+      <div class="feed-h"><div class="feed-dot" style="background:var(--sage2)"></div><div class="feed-text">高橋さんから支援評価</div><div class="feed-time">2時間前</div></div>
+      <div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋12 ＆pt</span></div>
     </div>
     <div class="feed-item">
-      <div class="feed-h">
-        <div class="feed-dot" style="background:var(--sage)"></div>
-        <div class="feed-text">鈴木さんから支援評価</div>
-        <div class="feed-time">2時間前</div>
-      </div>
-      <div style="margin-left:18px"><span class="feed-point">＋12 ＆pt</span></div>
-    </div>
-    <div class="feed-item">
-      <div class="feed-h">
-        <div class="feed-dot" style="background:var(--gold)"></div>
-        <div class="feed-text">高槻市内カフェクーポンと交換</div>
-        <div class="feed-time">3日前</div>
-      </div>
-      <div style="margin-left:18px"><span class="feed-point" style="background:rgba(232,180,184,.12);color:#c07880">−500 ＆pt</span></div>
+      <div class="feed-h"><div class="feed-dot" style="background:var(--gold)"></div><div class="feed-text">高槻市内カフェクーポンと交換</div><div class="feed-time">3日前</div></div>
+      <div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−500 ＆pt</span></div>
     </div>
   </div>
 </div>
 
-<!-- ============================================
-     BOTTOM NAV
-============================================ -->
-<div class="bottom-nav" id="bottom-nav" style="display:none">
-  <button class="nav-item active" data-screen="home" onclick="navTo('home')">
-    <span class="ni-icon">🏠</span><span>ホーム</span>
-  </button>
-  <button class="nav-item" data-screen="map" onclick="navTo('map')">
-    <span class="ni-icon">🗺️</span><span>マップ</span>
-  </button>
-  <button class="nav-fab" onclick="navTo('post')">+</button>
-  <button class="nav-item" data-screen="msg" onclick="navTo('msg')">
-    <span class="ni-icon">💬</span><span>メッセージ</span>
-  </button>
-  <button class="nav-item" data-screen="profile" onclick="navTo('profile')">
-    <span class="ni-icon">👤</span><span>マイページ</span>
-  </button>
+<!-- OTHER USER PROFILE -->
+<div class="screen no-nav" id="screen-uprof">
+  <div class="app-header">
+    <div class="app-h-back" onclick="history.back()||navTo('msg')"><svg class="ic"><use href="#i-back"/></svg>プロフィール</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('通報フォームを開きました')"><svg class="ic"><use href="#i-alert"/></svg></button></div>
+  </div>
+  <div class="uprof-hero">
+    <div class="avatar xl green" style="margin:0 auto">鈴<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
+    <div class="prof-name">鈴木 智子 さん</div>
+    <div class="prof-bio">高槻市・3年前から母（85）を介護中</div>
+    <div class="prof-roles">
+      <span class="prof-role">＆ Receiver</span>
+      <span class="prof-role">本人確認済</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;padding:14px 18px 12px">
+    <div class="stat-card"><div class="stat-num">92</div><div class="stat-label">TRUST SCORE</div></div>
+    <div class="stat-card"><div class="stat-num">5.0</div><div class="stat-label">評価平均</div></div>
+    <div class="stat-card"><div class="stat-num">14</div><div class="stat-label">受援回数</div></div>
+  </div>
+  <div class="uprof-section">
+    <h4>自己紹介</h4>
+    <p>夫を亡くしてから、母と二人で暮らしています。母の通院や買い物のサポートを必要としており、温かい繋がりを求めています。</p>
+  </div>
+  <div class="uprof-section">
+    <h4>必要としている支援</h4>
+    <div class="uprof-skills">
+      <span class="uprof-skill">通院付き添い</span>
+      <span class="uprof-skill">買い物代行</span>
+      <span class="uprof-skill">話し相手</span>
+      <span class="uprof-skill">家事補助</span>
+    </div>
+  </div>
+  <div class="uprof-section">
+    <h4>これまでの評価（14件）</h4>
+    <div class="uprof-review">
+      <div class="uprof-review-h">
+        <div class="uprof-rev-name">前田 さん（支援者）</div>
+        <div class="uprof-rev-stars"><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg></div>
+      </div>
+      <div class="uprof-rev-text">いつも温かくお迎えくださり、こちらが励まされます。母娘の関係性も穏やかで素敵な方です。</div>
+    </div>
+    <div class="uprof-review">
+      <div class="uprof-review-h">
+        <div class="uprof-rev-name">井上 さん（支援者）</div>
+        <div class="uprof-rev-stars"><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg></div>
+      </div>
+      <div class="uprof-rev-text">明るく前向きな方で、初対面でも安心して関われました。お母様とのやり取りからも、深い愛情が伝わってきます。</div>
+    </div>
+  </div>
+  <div style="padding:0 18px 80px"><button class="btn-primary" onclick="openChat('鈴木','green','鈴')">メッセージを送る</button></div>
 </div>
 
-<!-- ============================================
-     MATCH DETAIL MODAL
-============================================ -->
-<div class="modal" id="match-modal" onclick="closeModal(event)">
+<!-- SETTINGS -->
+<div class="screen no-nav" id="screen-settings">
+  <div class="app-header">
+    <div class="app-h-back" onclick="navTo('profile')"><svg class="ic"><use href="#i-back"/></svg>設定</div>
+  </div>
+  <div class="set-screen">
+    <div class="set-section-h">アカウント</div>
+    <div class="set-section">
+      <div class="set-item" onclick="toast('プロフィール編集を開きました')">
+        <div class="set-icon"><svg class="ic"><use href="#i-user"/></svg></div>
+        <div class="set-label">プロフィール編集</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="toast('メールアドレス変更')">
+        <div class="set-icon"><svg class="ic"><use href="#i-mail"/></svg></div>
+        <div class="set-label">メールアドレス</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="toast('パスワード変更')">
+        <div class="set-icon"><svg class="ic"><use href="#i-lock"/></svg></div>
+        <div class="set-label">パスワード変更</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+    </div>
+    <div class="set-section-h">通知</div>
+    <div class="set-section">
+      <div class="set-item">
+        <div class="set-icon"><svg class="ic"><use href="#i-bell"/></svg></div>
+        <div class="set-label">プッシュ通知</div>
+        <div class="set-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="set-item">
+        <div class="set-icon"><svg class="ic"><use href="#i-mail"/></svg></div>
+        <div class="set-label">メール通知</div>
+        <div class="set-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="set-item">
+        <div class="set-icon"><svg class="ic"><use href="#i-location"/></svg></div>
+        <div class="set-label">位置情報の利用</div>
+        <div class="set-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+    <div class="set-section-h">プライバシー・サポート</div>
+    <div class="set-section">
+      <div class="set-item" onclick="toast('プライバシーポリシー')">
+        <div class="set-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
+        <div class="set-label">プライバシーポリシー</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="toast('利用規約')">
+        <div class="set-icon"><svg class="ic"><use href="#i-info"/></svg></div>
+        <div class="set-label">利用規約</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="toast('ヘルプセンター')">
+        <div class="set-icon"><svg class="ic"><use href="#i-help"/></svg></div>
+        <div class="set-label">ヘルプセンター</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+    </div>
+    <div class="set-section-h">アカウント操作</div>
+    <div class="set-section">
+      <div class="set-item" onclick="logout()">
+        <div class="set-icon" style="color:#c07880;background:linear-gradient(135deg,rgba(232,180,184,.2),rgba(232,180,184,.1))"><svg class="ic"><use href="#i-logout"/></svg></div>
+        <div class="set-label" style="color:#c07880">ログアウト</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
+      You&amp;i Space v0.1.0 — DEMO<br>© 2026 You&amp;i（結）
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav" style="display:none">
+  <button class="nav-item active" data-screen="home" onclick="navTo('home')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>ホーム</span></button>
+  <button class="nav-item" data-screen="map" onclick="navTo('map')"><svg class="ni-icon ic"><use href="#i-map"/></svg><span>マップ</span></button>
+  <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
+  <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
+  <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
+</div>
+
+<!-- MATCH MODAL -->
+<div class="modal" id="match-modal" onclick="closeModal(event,'match-modal')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-h">
-      <div class="mc-avatar" id="mm-avatar">＿<span class="verified">✓</span></div>
-      <div style="flex:1">
+      <div class="avatar md" id="mm-avatar">＿<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div style="flex:1;min-width:0">
         <div class="modal-title" id="mm-title">—</div>
-        <div style="font-size:.72rem;color:var(--tl)" id="mm-meta">—</div>
+        <div class="modal-meta" id="mm-meta">—</div>
       </div>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="modal-close" onclick="closeModal(null,'match-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
     </div>
     <div class="modal-tags" id="mm-tags"></div>
     <div class="modal-content" id="mm-content">—</div>
     <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
-      <div style="font-size:.72rem;color:var(--tl);margin-bottom:4px">この方の信頼スコア</div>
+      <div style="font-size:.7rem;color:var(--tl);margin-bottom:4px">この方の信頼スコア</div>
       <div style="display:flex;align-items:center;gap:8px">
-        <div style="flex:1;height:6px;background:rgba(184,175,214,.18);border-radius:3px;overflow:hidden">
-          <div id="mm-score-bar" style="height:100%;width:78%;background:linear-gradient(to right,var(--lav),var(--sky))"></div>
-        </div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--lav2)" id="mm-score">92</div>
+        <div style="flex:1;height:6px;background:rgba(184,175,214,.18);border-radius:3px;overflow:hidden"><div id="mm-score-bar" style="height:100%;width:78%;background:linear-gradient(to right,var(--lav),var(--sky))"></div></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--lav3)" id="mm-score">92</div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal();toast('プロフィールを開きました')">プロフィール</button>
-      <button class="btn-primary" onclick="closeModal();toast('連絡を送信しました');setTimeout(()=>navTo('msg'),600)">連絡する</button>
+      <button class="btn-secondary" onclick="closeModal(null,'match-modal');navTo('uprof')">プロフィール</button>
+      <button class="btn-primary" id="mm-contact-btn">連絡する</button>
+    </div>
+  </div>
+</div>
+
+<!-- CERT MODAL -->
+<div class="modal" id="cert-modal" onclick="closeModal(event,'cert-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="modal-title">デジタル証明書</div>
+      <button class="modal-close" onclick="closeModal(null,'cert-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="cert-detail" id="cert-detail">
+      <svg class="cert-detail-illust ic" id="cd-icon"><use href="#i-medal"/></svg>
+      <div class="cert-detail-name" id="cd-name">—</div>
+      <div class="cert-detail-id" id="cd-id">—</div>
+    </div>
+    <div class="cert-info">
+      <div><b>発行日</b><span id="cd-date">—</span></div>
+      <div><b>発行元</b><span id="cd-issuer">—</span></div>
+      <div><b>所有者</b><span>田中 太郎</span></div>
+      <div><b>検証</b><span>ブロックチェーン署名済</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="toast('証明書を共有します')">共有</button>
+      <button class="btn-primary" onclick="toast('ダウンロードを開始しました')">ダウンロード</button>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO MODAL -->
+<div class="modal" id="photo-modal" onclick="closeModal(event,'photo-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="modal-title">写真を追加</div>
+      <button class="modal-close" onclick="closeModal(null,'photo-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="set-section">
+      <div class="set-item" onclick="closeModal(null,'photo-modal');toast('カメラを起動しました')">
+        <div class="set-icon"><svg class="ic"><use href="#i-camera"/></svg></div>
+        <div class="set-label">カメラで撮影</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="closeModal(null,'photo-modal');toast('ライブラリから選択しました')">
+        <div class="set-icon"><svg class="ic"><use href="#i-bookmark"/></svg></div>
+        <div class="set-label">ライブラリから選ぶ</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1166,10 +1255,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <!-- Toast -->
 <div class="toast" id="toast">—</div>
 
-</div> <!-- /phone -->
-</div> <!-- /app-wrap -->
+</div>
+</div>
 
 <script>
+let mapInited=false, mapInstance=null;
+
 function goScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
@@ -1182,76 +1273,117 @@ function navTo(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const ni=document.querySelector('.nav-item[data-screen="'+name+'"]');
   if(ni) ni.classList.add('active');
+  if(name==='map'){
+    if(!mapInited) initMap();
+    if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),100);
+  }
 }
-function login(){
-  navTo('home');
-  setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300);
-}
-function logout(){
-  goScreen('login');
-}
-function selectRole(el){
-  el.parentNode.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-}
+function login(){navTo('home');setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300)}
+function logout(){goScreen('login')}
+function selectRole(el){el.parentNode.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected')}
 function verifyId(){
   const c=document.getElementById('verify-card');
   c.classList.add('done');
-  c.querySelector('.verify-icon').textContent='✅';
   c.querySelector('.verify-title').textContent='身分証 確認完了';
+  c.querySelector('.verify-sub').textContent='正常にアップロードされました';
 }
 function verifySelf(){
   const c=document.getElementById('selfie-card');
   c.classList.add('done');
-  c.querySelector('.verify-icon').textContent='✅';
   c.querySelector('.verify-title').textContent='セルフィー認証 完了';
+  c.querySelector('.verify-sub').textContent='本人確認が完了しました';
 }
-function completeOnboard(){
-  login();
+function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+function selectCat(el){el.parentNode.querySelectorAll('.cat-opt').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
+function submitPost(){toast('投稿しました。マッチングを開始します');setTimeout(()=>navTo('home'),900)}
+function toggleFilter(el){el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
+function rewTab(el){el.parentNode.querySelectorAll('.rew-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');toast('表示を更新しました')}
+function redeem(name,pt){toast(name+' を '+pt+'＆pt で引き換えました')}
+function cpLike(el){
+  const span=el.querySelector('span');
+  if(!el.classList.contains('liked')){
+    el.classList.add('liked');
+    span.textContent=(parseInt(span.textContent)||0)+1;
+  } else {
+    el.classList.remove('liked');
+    span.textContent=Math.max(0,(parseInt(span.textContent)||0)-1);
+  }
 }
-function togglePost(el,i){
-  el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
+function markAllRead(){
+  document.querySelectorAll('.notif-item.unread').forEach(n=>n.classList.remove('unread'));
+  toast('すべて既読にしました');
 }
-function selectCat(el){
-  el.parentNode.querySelectorAll('.cat-opt').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');
-}
-function submitPost(){
-  toast('投稿しました。マッチングを開始します');
-  setTimeout(()=>navTo('home'),800);
-}
-function toggleFilter(el){
-  el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');
-}
-function openMatch(title,content,cat,stars,dist,meta,initial){
+
+function openMatch(initial,cat,content,dist,stars,meta,score){
   const m=document.getElementById('match-modal');
-  document.getElementById('mm-title').textContent=title;
-  document.getElementById('mm-meta').textContent=dist+' ／ '+meta;
-  document.getElementById('mm-content').textContent=content;
   const av=document.getElementById('mm-avatar');
-  av.innerHTML=initial+'<span class="verified">✓</span>';
-  av.className='mc-avatar';
+  av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span>';
+  av.className='avatar md';
   if(cat==='elder') av.classList.add('green');
   if(cat==='parent') av.classList.add('pink');
+  if(cat==='young') av.classList.add('sky');
+  document.getElementById('mm-title').textContent=initial+' さん';
+  document.getElementById('mm-meta').textContent=dist+' ／ '+meta;
+  document.getElementById('mm-content').textContent=content;
   const tagMap={elder:['老老介護','cat-elder'],parent:['ひとり親','cat-parent'],young:['ヤングケアラー','cat-young']};
   const tags=document.getElementById('mm-tags');
   tags.innerHTML='';
   if(tagMap[cat]){
     const t=document.createElement('span');t.className='mc-cat '+tagMap[cat][1];t.textContent=tagMap[cat][0];tags.appendChild(t);
   }
-  const s=document.createElement('span');s.className='mc-stars';s.textContent=stars==='—'?'評価なし（新規）':'★ '+stars;s.style.fontSize='.78rem';tags.appendChild(s);
-  // random score 78-95
-  const score=stars==='—'?Math.floor(Math.random()*15+60):Math.floor(Math.random()*17+78);
+  const s=document.createElement('span');s.className='mc-stars';
+  s.innerHTML=stars==='—'?'新規メンバー':'<svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg> '+stars;
+  s.style.fontSize='.78rem';tags.appendChild(s);
   document.getElementById('mm-score').textContent=score;
   document.getElementById('mm-score-bar').style.width=score+'%';
+  const color=cat==='elder'?'green':(cat==='parent'?'pink':'sky');
+  document.getElementById('mm-contact-btn').onclick=function(){
+    closeModal(null,'match-modal');
+    openChat(initial,color,initial.charAt(0));
+  };
   m.classList.add('show');
 }
-function closeModal(e){
-  if(e&&e.target!==e.currentTarget) return;
-  document.getElementById('match-modal').classList.remove('show');
+function closeModal(e,id){
+  if(e&&e.target!==e.currentTarget)return;
+  document.getElementById(id).classList.remove('show');
 }
+
+function openChat(name,color,initial){
+  document.getElementById('chat-name').textContent=name+(name.includes('役所')?'':' さん');
+  const av=document.getElementById('chat-avatar');
+  av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
+  av.className='avatar sm '+color;
+  document.querySelectorAll('#chat-thread .bub1').forEach(a=>{
+    a.innerHTML=initial;
+    a.className='avatar sm bub1 '+color;
+  });
+  goScreen('chat');
+}
+function sendChat(){
+  const f=document.getElementById('chat-field');
+  if(!f.value.trim()) return;
+  const thread=document.getElementById('chat-thread');
+  const div=document.createElement('div');
+  div.className='bubble-wrap me';
+  div.innerHTML='<div><div class="bubble">'+escapeHtml(f.value)+'</div><div class="bubble-time">今</div></div>';
+  thread.appendChild(div);
+  f.value='';
+  thread.scrollTop=thread.scrollHeight;
+}
+function escapeHtml(t){return t.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
+
+function openCert(name,date,issuer,id,style,icon){
+  const d=document.getElementById('cert-detail');
+  d.className='cert-detail '+(style||'');
+  document.getElementById('cd-icon').innerHTML='<use href="#'+icon+'"/>';
+  document.getElementById('cd-name').textContent=name;
+  document.getElementById('cd-id').textContent=id;
+  document.getElementById('cd-date').textContent=date;
+  document.getElementById('cd-issuer').textContent=issuer;
+  document.getElementById('cert-modal').classList.add('show');
+}
+function openPhotoPicker(){document.getElementById('photo-modal').classList.add('show')}
+
 let toastTimer=null;
 function toast(text){
   const t=document.getElementById('toast');
@@ -1260,6 +1392,36 @@ function toast(text){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
+
+function initMap(){
+  if(mapInited) return;
+  mapInited=true;
+  mapInstance=L.map('leaflet-map',{zoomControl:false,attributionControl:true}).setView([34.8485,135.6178],14);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains:'abcd',maxZoom:19
+  }).addTo(mapInstance);
+
+  const makeIcon=(color,initial)=>L.divIcon({
+    html:'<div class="user-marker '+color+'">'+initial+'</div>',
+    className:'',iconSize:[42,42],iconAnchor:[21,21]
+  });
+  const meIcon=L.divIcon({html:'<div class="me-marker"></div>',className:'',iconSize:[22,22],iconAnchor:[11,11]});
+
+  const markers=[
+    {lat:34.8495,lng:135.6135,c:'green',i:'鈴',n:'鈴木',cat:'elder',t:'高齢の母の通院付き添いを週1でお願いしたいです。',d:'1.2km',s:'5.0',m:'スコア92',sc:92},
+    {lat:34.8460,lng:135.6210,c:'pink', i:'佐',n:'佐藤',cat:'parent',t:'上の子の保育園お迎えを15時に1時間だけお願いしたいです。',d:'0.8km',s:'4.8',m:'ひとり親',sc:86},
+    {lat:34.8530,lng:135.6250,c:'sky',  i:'山',n:'山田',cat:'young', t:'試験前だけ夕食準備を手伝ってもらえる方を探しています。',d:'2.1km',s:'—',m:'ヤングケアラー',sc:74},
+    {lat:34.8420,lng:135.6300,c:'green',i:'木',n:'木村',cat:'elder', t:'夫の通院に同行できる方を探しています。',d:'3.4km',s:'4.9',m:'スコア88',sc:88},
+    {lat:34.8520,lng:135.6080,c:'pink', i:'林',n:'林',  cat:'parent',t:'子の食事準備を週2でお願いします。',d:'1.8km',s:'5.0',m:'ひとり親',sc:91},
+  ];
+  markers.forEach(m=>{
+    L.marker([m.lat,m.lng],{icon:makeIcon(m.c,m.i)}).addTo(mapInstance)
+      .on('click',()=>openMatch(m.n,m.cat,m.t,m.d,m.s,m.m,m.sc));
+  });
+  L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
+}
+function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);toast('現在地に戻りました')}}
 </script>
 </body>
 </html>
