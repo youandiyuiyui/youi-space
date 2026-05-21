@@ -490,7 +490,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .nav-fab:active{transform:scale(.95)}
 
 /* Modal */
-.modal{position:absolute;inset:0;background:rgba(40,30,60,.4);display:none;align-items:flex-end;z-index:200;animation:modalFade .25s ease}
+.modal{position:absolute;inset:0;background:rgba(40,30,60,.4);display:none;align-items:flex-end;z-index:1000;animation:modalFade .25s ease}
 .modal.show{display:flex}
 @keyframes modalFade{from{background:rgba(40,30,60,0)}}
 .modal-sheet{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:22px 18px 28px;max-height:82%;overflow-y:auto;animation:modalSlide .3s ease}
@@ -1679,8 +1679,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>メイン</span></button>
   <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
   <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
-  <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
   <button class="nav-item" data-screen="rewards" onclick="navTo('rewards')"><svg class="ni-icon ic"><use href="#i-gift"/></svg><span>＆ポイント</span></button>
+  <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
 </div>
 
 <!-- MATCH MODAL -->
