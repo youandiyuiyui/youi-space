@@ -940,104 +940,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <!-- /MAP PANEL -->
 </div>
 
-<!-- HOME (deprecated, kept for fallback) -->
-<div class="screen home-screen" id="screen-home">
-  <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>You&amp;i Space</div>
-    <div class="app-h-actions">
-      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
-      <button class="icon-btn" onclick="navTo('profile')"><svg class="ic"><use href="#i-user"/></svg></button>
-    </div>
-  </div>
-  <div class="greeting">
-    <div class="greet-time">こんにちは、今日もありがとうございます</div>
-    <div class="greet-name">田中 太郎 さん</div>
-  </div>
-  <div class="score-card">
-    <div class="score-row">
-      <div><div class="score-label">TRUST SCORE</div><div class="score-num">782<span class="score-delta">+12</span></div></div>
-      <div class="score-right"><div class="score-label">＆ POINTS</div><div class="score-num" style="font-size:1.7rem;color:#fceea8">1,240<span style="font-size:.9rem;opacity:.7;margin-left:2px">＆</span></div></div>
-    </div>
-    <div class="score-bar"><div class="score-fill"></div></div>
-    <div class="score-tags">
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支援実績 42</span>
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-comment"/></svg>評価 38</span>
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>継続 8ヶ月</span>
-    </div>
-  </div>
-  <div class="qa-grid">
-    <div class="qa" onclick="navTo('map')"><div class="qa-illust"><svg class="ic"><use href="#i-map"/></svg></div><div class="qa-label">マップ</div></div>
-    <div class="qa" onclick="navTo('post')"><div class="qa-illust"><svg class="ic"><use href="#i-edit"/></svg></div><div class="qa-label">投稿</div></div>
-    <div class="qa" onclick="navTo('rewards')"><div class="qa-illust"><svg class="ic"><use href="#i-gift"/></svg></div><div class="qa-label">交換</div></div>
-    <div class="qa" onclick="navTo('comm')"><div class="qa-illust"><svg class="ic"><use href="#i-globe"/></svg></div><div class="qa-label">コミュニティ</div></div>
-  </div>
-
-  <div class="sec-block">
-    <div class="sec-h">
-      <div class="sec-h-title">あなたの近くの支援要請</div>
-      <div class="sec-h-more" onclick="navTo('map')">マップ <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
-    </div>
-    <div class="match-list">
-      <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。歩行が少し不安定なので、近くにいてくれるだけで安心できます。','1.2km','5.0','3年前から介護中・スコア92',92)">
-        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
-          <div class="mc-desc">高齢の母の通院付き添いを週1で…</div>
-          <div class="mc-meta">
-            <span class="mc-cat cat-elder">老老介護</span>
-            <span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span>
-          </div>
-        </div>
-      </div>
-      <div class="match-card" onclick="openMatch('佐藤','parent','下の子が熱を出してしまい、上の子の保育園のお迎えに行けません。15時頃に1時間だけお願いできる方を探しています。','0.8km','4.8','ひとり親家庭支援を受給中',86)">
-        <div class="avatar md pink">佐<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">佐藤 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>0.8km</div></div>
-          <div class="mc-desc">上の子の保育園お迎え（15時〜1時間）</div>
-          <div class="mc-meta">
-            <span class="mc-cat cat-parent">ひとり親</span>
-            <span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>4.8</span>
-          </div>
-        </div>
-      </div>
-      <div class="match-card" onclick="openMatch('山田','young','母の介護をしている中学2年です。試験前だけ、夕方の食事準備を手伝ってもらえると助かります。','2.1km','—','ヤングケアラー支援対象',74)">
-        <div class="avatar md sky">山<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">山田 さん（14）</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>2.1km</div></div>
-          <div class="mc-desc">試験前だけ夕食の準備を手伝って…</div>
-          <div class="mc-meta">
-            <span class="mc-cat cat-young">ヤングケアラー</span>
-            <span class="mc-stars">新規メンバー</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sec-block">
-    <div class="sec-h"><div class="sec-h-title">最近の活動</div></div>
-    <div class="feed-item">
-      <div class="feed-h"><div class="feed-dot"></div><div class="feed-text"><b>高橋さん</b>があなたを評価しました</div><div class="feed-time">2時間前</div></div>
-      <div class="feed-text" style="margin-left:18px">「丁寧で安心できる方でした。また是非お願いしたいです。」</div>
-      <div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋12 ＆pt</span></div>
-    </div>
-    <div class="feed-item">
-      <div class="feed-h"><div class="feed-dot" style="background:var(--lav)"></div><div class="feed-text"><b>支援実績バッジ</b>「継続支援8ヶ月」を獲得</div><div class="feed-time">昨日</div></div>
-    </div>
-    <div class="feed-item">
-      <div class="feed-h"><div class="feed-dot" style="background:var(--gold)"></div><div class="feed-text">＆ポイントで<b>高槻市内カフェクーポン</b>と交換</div><div class="feed-time">3日前</div></div>
-      <div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−500 ＆pt</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- (Map moved into screen-main as a panel) -->
+<!-- (旧 home/map スクリーンは screen-main に統合済み) -->
 
 <!-- POST -->
 <div class="screen no-nav" id="screen-post">
   <div class="app-header">
-    <div class="app-h-back" onclick="navTo('home')"><svg class="ic"><use href="#i-back"/></svg>新しい投稿</div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="navTo('home')"><svg class="ic"><use href="#i-close"/></svg></button></div>
+    <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>新しい投稿</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="navTo('main')"><svg class="ic"><use href="#i-close"/></svg></button></div>
   </div>
   <div class="post-screen">
     <div class="post-toggle">
@@ -1133,7 +1042,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div style="font-size:.66rem;color:var(--sage2);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--sage2)"></span>オンライン</div>
       </div>
     </div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="navTo('uprof')"><svg class="ic"><use href="#i-info"/></svg></button></div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('チャット設定を開きました')"><svg class="ic"><use href="#i-settings"/></svg></button></div>
   </div>
   <div class="chat-thread" id="chat-thread">
     <div class="chat-meta">今日 14:00</div>
@@ -1161,7 +1070,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <!-- NOTIFICATIONS -->
 <div class="screen no-nav" id="screen-notif">
   <div class="app-header">
-    <div class="app-h-back" onclick="navTo('home')"><svg class="ic"><use href="#i-back"/></svg>お知らせ</div>
+    <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>お知らせ</div>
     <div class="app-h-actions"><button class="icon-btn" onclick="markAllRead()"><svg class="ic"><use href="#i-check"/></svg></button></div>
   </div>
   <div class="notif-list">
@@ -1418,7 +1327,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>マイページ</div>
     <div class="app-h-actions">
-      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="navTo('settings')"><svg class="ic"><use href="#i-settings"/></svg></button>
       <button class="icon-btn" onclick="logout()"><svg class="ic"><use href="#i-logout"/></svg></button>
     </div>
@@ -1914,8 +1822,7 @@ function verifySelf(){
   c.querySelector('.verify-sub').textContent='本人確認が完了しました';
 }
 function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
-function selectCat(el){el.parentNode.querySelectorAll('.cat-opt').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
-function submitPost(){toast('投稿しました。マッチングを開始します');setTimeout(()=>navTo('home'),900)}
+function submitPost(){toast('投稿しました。マッチングを開始します');setTimeout(()=>navTo('main'),900)}
 function toggleFilter(el){el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
 function rewTab(el,key){
   el.parentNode.querySelectorAll('.rew-tab').forEach(t=>t.classList.remove('on'));
