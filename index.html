@@ -64,7 +64,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 @media(min-width:480px){.phone{border-radius:36px;border:8px solid #1a1a25}}
 @media(max-width:479px){.phone{max-height:100%;height:100%;border-radius:0}}
 
-.screen{flex:1;overflow-y:auto;overflow-x:hidden;display:none;animation:fadeIn .3s ease;padding-bottom:calc(100px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;display:none;animation:fadeIn .3s ease;padding-bottom:calc(120px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 .screen.active{display:block}
 .screen.no-nav{padding-bottom:0}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -1434,20 +1434,27 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
-  <!-- 信頼スコア & ＆ポイント カード（ホーム画面要素） -->
-  <div class="score-card" style="margin:16px 18px">
-    <div class="score-row">
-      <div>
-        <div class="score-label">TRUST SCORE</div>
-        <div class="score-num">782<span class="score-delta">+12</span></div>
+  <!-- 信頼スコア & ＆ポイント カード -->
+  <div class="score-card" style="margin:16px 18px;padding:24px 22px">
+    <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:center;position:relative;z-index:1">
+      <div style="text-align:center">
+        <div class="score-label" style="margin-bottom:8px">TRUST SCORE</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fff">782</div>
+        <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(200,232,212,.22);color:#c8e8d4;font-size:.7rem;font-weight:500">
+          <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg>+12 今月
+        </div>
       </div>
-      <div class="score-right">
-        <div class="score-label">＆ POINTS</div>
-        <div class="score-num" style="font-size:1.7rem;color:#fceea8">1,240<span style="font-size:.9rem;opacity:.7;margin-left:2px">＆</span></div>
+      <div style="width:1px;height:74px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.35),transparent);justify-self:center"></div>
+      <div style="text-align:center">
+        <div class="score-label" style="margin-bottom:8px">＆ POINTS</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">1,240</div>
+        <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(252,238,168,.18);color:#fceea8;font-size:.7rem;font-weight:500">
+          <svg class="ic" style="font-size:.85em"><use href="#i-gift"/></svg>使える
+        </div>
       </div>
     </div>
-    <div class="score-bar"><div class="score-fill"></div></div>
-    <div class="score-tags">
+    <div class="score-bar" style="margin-top:22px"><div class="score-fill"></div></div>
+    <div class="score-tags" style="margin-top:14px;justify-content:center">
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支援実績 42</span>
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-comment"/></svg>評価 38</span>
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>継続 8ヶ月</span>
@@ -1456,9 +1463,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
   <!-- クイックアクション -->
   <div class="qa-grid" style="padding:0 18px">
-    <div class="qa" onclick="navTo('rewards')">
-      <div class="qa-illust"><svg class="ic"><use href="#i-gift"/></svg></div>
-      <div class="qa-label">＆ポイント交換</div>
+    <div class="qa" onclick="navTo('notif')">
+      <div class="qa-illust"><svg class="ic"><use href="#i-bell"/></svg></div>
+      <div class="qa-label">お知らせ</div>
     </div>
     <div class="qa" onclick="toast('支援実績一覧へ')">
       <div class="qa-illust"><svg class="ic"><use href="#i-trophy"/></svg></div>
@@ -1551,7 +1558,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <!-- OTHER USER PROFILE -->
 <div class="screen no-nav" id="screen-uprof">
   <div class="app-header">
-    <div class="app-h-back" onclick="history.back()||navTo('msg')"><svg class="ic"><use href="#i-back"/></svg>プロフィール</div>
+    <div class="app-h-back" onclick="goBackFromUprof()"><svg class="ic"><use href="#i-back"/></svg>プロフィール</div>
     <div class="app-h-actions"><button class="icon-btn" onclick="toast('通報フォームを開きました')"><svg class="ic"><use href="#i-alert"/></svg></button></div>
   </div>
   <div class="uprof-hero">
@@ -1768,16 +1775,29 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
 <script>
 let mapInited=false, mapInstance=null;
+let prevScreen='main';  // track previous screen for back button
 
 function goScreen(name){
+  const target=document.getElementById('screen-'+name);
+  if(!target) return;  // null guard
+  // remember previous active screen
+  const curActive=document.querySelector('.screen.active');
+  if(curActive) prevScreen=curActive.id.replace('screen-','');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
+  target.classList.add('active');
   document.getElementById('bottom-nav').style.display='none';
 }
 function navTo(name){
+  const target=document.getElementById('screen-'+name);
+  if(!target) return;  // null guard
+  // remember previous active screen
+  const curActive=document.querySelector('.screen.active');
+  if(curActive) prevScreen=curActive.id.replace('screen-','');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  document.getElementById('bottom-nav').style.display='flex';
+  target.classList.add('active');
+  // Hide bottom-nav on no-nav screens (post, chat, notif, settings, etc.)
+  const showNav=!target.classList.contains('no-nav');
+  document.getElementById('bottom-nav').style.display=showNav?'flex':'none';
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const ni=document.querySelector('.nav-item[data-screen="'+name+'"]');
   if(ni) ni.classList.add('active');
@@ -1806,6 +1826,13 @@ function switchMainTab(el,which){
 
 // Post: multi-select category
 function selectCatMulti(el){el.classList.toggle('on')}
+
+// Back from other-user profile: return to where we came from
+function goBackFromUprof(){
+  const back=(prevScreen && prevScreen!=='uprof')?prevScreen:'msg';
+  if(back==='chat') goScreen('chat');
+  else navTo(back);
+}
 
 // Providers list filters
 let curRegion='高槻市', curCat='all';
