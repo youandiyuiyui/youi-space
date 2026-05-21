@@ -202,6 +202,48 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .feed-point{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:14px;background:rgba(200,184,122,.14);color:var(--gold2);font-size:.7rem;font-weight:500}
 .feed-point.minus{background:rgba(232,180,184,.14);color:var(--blush2)}
 
+/* Main page (Providers list + Receiver Map combined) */
+.main-hero{
+  padding:18px 18px 14px;
+  background:linear-gradient(135deg,rgba(184,175,214,.18) 0%,rgba(232,180,184,.14) 50%,rgba(200,184,122,.12) 100%);
+  position:relative;overflow:hidden;
+}
+.main-hero::before{
+  content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;
+  background:radial-gradient(circle,rgba(184,175,214,.3),transparent 70%);border-radius:50%;
+}
+.main-hero::after{
+  content:'';position:absolute;bottom:-40px;left:-30px;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(158,202,216,.25),transparent 70%);border-radius:50%;
+}
+.main-hero-row{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1}
+.main-hero-greet{font-size:.74rem;color:var(--lav3);letter-spacing:.06em;margin-bottom:3px;font-weight:500}
+.main-hero-name{font-family:'Noto Serif JP',serif;font-size:1.2rem;font-weight:500;color:var(--ink);margin-bottom:8px}
+.main-hero-stats{display:flex;gap:12px;margin-top:6px}
+.mh-stat{font-size:.7rem;color:var(--tl);display:flex;align-items:center;gap:4px}
+.mh-stat b{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--lav3);line-height:1}
+.mh-stat .ic{color:var(--lav2);font-size:.85rem}
+
+.main-tabs{
+  display:flex;gap:6px;padding:14px 18px 12px;background:var(--bg);
+  position:sticky;top:0;z-index:40;
+  border-bottom:1px solid rgba(184,175,214,.1);
+}
+.main-tab{
+  flex:1;padding:11px 14px;border-radius:14px;border:1px solid var(--border);
+  background:var(--card);color:var(--tl);font-family:inherit;font-size:.84rem;
+  font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .25s;
+}
+.main-tab.on{
+  background:linear-gradient(135deg,var(--lav),var(--sky));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(184,175,214,.35);
+}
+.main-tab .ic{font-size:1.05rem}
+.main-panel{padding-top:0}
+.main-panel#main-panel-map{padding-top:0}
+
 /* Providers list */
 .prov-screen{padding:14px 0 0}
 .prov-search{margin:0 18px 12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px}
@@ -279,6 +321,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .post-input:focus,.post-textarea:focus{outline:none;border-color:var(--lav)}
 .post-textarea{min-height:90px;line-height:1.8}
 .cat-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.cat-pick-3{grid-template-columns:repeat(3,1fr);gap:8px}
+.cat-pick-3 .cat-opt{padding:13px 6px;font-size:.74rem;gap:5px}
+.cat-pick-3 .cat-illust{width:22px;height:22px}
 .cat-opt{padding:14px 10px;border:1.5px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;font-size:.82rem;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px}
 .cat-opt.on{border-color:var(--lav);background:rgba(184,175,214,.06);color:var(--lav3);font-weight:500}
 .cat-illust{width:24px;height:24px;color:var(--lav2)}
@@ -488,6 +533,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.5V19l4 2v-8.5L22 3z"/></symbol>
 <symbol id="i-sort" viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></symbol>
 <symbol id="i-chevron-d" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+<symbol id="i-medical" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M12 11v6M9 14h6"/></symbol>
+<symbol id="i-shopping" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+<symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17h14M5 17l-2-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2l-2 5M5 17v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2M16 17v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2"/><circle cx="7" cy="14" r="1" fill="currentColor"/><circle cx="17" cy="14" r="1" fill="currentColor"/></symbol>
+<symbol id="i-house" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
 <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2h16l-2-2zM10 21h4"/></symbol>
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
 <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
@@ -604,15 +655,36 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
-<!-- PROVIDERS LIST (main page 1) -->
-<div class="screen" id="screen-providers">
+<!-- MAIN PAGE (Providers list + Receiver Map combined) -->
+<div class="screen" id="screen-main">
   <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>支援者を探す</div>
+    <div class="app-h-logo"><span class="dot"></span>You&amp;i Space</div>
     <div class="app-h-actions">
       <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="navTo('profile')"><svg class="ic"><use href="#i-user"/></svg></button>
     </div>
   </div>
+
+  <div class="main-hero">
+    <div class="main-hero-row">
+      <div>
+        <div class="main-hero-greet">こんにちは</div>
+        <div class="main-hero-name">田中 太郎 さん</div>
+        <div class="main-hero-stats">
+          <div class="mh-stat"><svg class="ic"><use href="#i-users"/></svg><b>12</b>人がアクティブ</div>
+          <div class="mh-stat"><svg class="ic"><use href="#i-location"/></svg><b>8</b>件の要請</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-tabs">
+    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-users"/></svg>支援者リスト</button>
+    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>受援者マップ</button>
+  </div>
+
+  <!-- LIST PANEL -->
+  <div class="main-panel" id="main-panel-list">
   <div class="prov-screen">
     <div class="prov-search">
       <svg class="ic"><use href="#i-search"/></svg>
@@ -813,9 +885,62 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <button class="btn-secondary" onclick="toast('さらに読み込みました')">もっと見る</button>
     </div>
   </div>
+  </div>
+  <!-- /LIST PANEL -->
+
+  <!-- MAP PANEL -->
+  <div class="main-panel" id="main-panel-map" style="display:none">
+    <div class="map-container">
+      <div id="leaflet-map"></div>
+      <div class="map-search">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input type="text" placeholder="地域・条件で探す" value="高槻市">
+      </div>
+      <div class="map-filter">
+        <div class="filter-chip on" onclick="toggleFilter(this)">すべて</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">老老介護</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">ひとり親</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">ヤングケアラー</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">緊急</div>
+      </div>
+    </div>
+    <div class="map-list">
+      <div class="map-list-h" style="display:flex;justify-content:space-between;align-items:center">
+        <div>高槻市内 / 半径3km以内 <b>5件</b> の支援要請</div>
+        <button class="icon-btn" onclick="centerMap()" style="width:32px;height:32px"><svg class="ic" style="font-size:.95rem"><use href="#i-target"/></svg></button>
+      </div>
+      <div class="match-list">
+        <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。','1.2km','5.0','スコア92',92)">
+          <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+          <div class="mc-body">
+            <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
+            <div class="mc-desc">高齢の母の通院付き添い（週1）</div>
+            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
+          </div>
+        </div>
+        <div class="match-card" onclick="openMatch('木村','elder','夫の通院に同行できる方を探しています。月2回程度。','3.4km','4.9','スコア88',88)">
+          <div class="avatar md green">木<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+          <div class="mc-body">
+            <div class="mc-row1"><div class="mc-name">木村 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>3.4km</div></div>
+            <div class="mc-desc">夫の通院同行（月2回）</div>
+            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>4.9</span></div>
+          </div>
+        </div>
+        <div class="match-card" onclick="openMatch('林','parent','子の食事準備を週2でお願いします。','1.8km','5.0','ひとり親',91)">
+          <div class="avatar md pink">林<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+          <div class="mc-body">
+            <div class="mc-row1"><div class="mc-name">林 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.8km</div></div>
+            <div class="mc-desc">子の食事準備（週2）</div>
+            <div class="mc-meta"><span class="mc-cat cat-parent">ひとり親</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /MAP PANEL -->
 </div>
 
-<!-- HOME -->
+<!-- HOME (deprecated, kept for fallback) -->
 <div class="screen home-screen" id="screen-home">
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>You&amp;i Space</div>
@@ -906,59 +1031,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
-<!-- MAP (main page 2) -->
-<div class="screen map-screen" id="screen-map">
-  <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>受援者マップ</div>
-    <div class="app-h-actions">
-      <button class="icon-btn" onclick="centerMap()"><svg class="ic"><use href="#i-target"/></svg></button>
-      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
-    </div>
-  </div>
-  <div class="map-container">
-    <div id="leaflet-map"></div>
-    <div class="map-search">
-      <svg class="ic"><use href="#i-search"/></svg>
-      <input type="text" placeholder="地域・条件で探す" value="高槻市">
-    </div>
-    <div class="map-filter">
-      <div class="filter-chip on" onclick="toggleFilter(this)">すべて</div>
-      <div class="filter-chip" onclick="toggleFilter(this)">老老介護</div>
-      <div class="filter-chip" onclick="toggleFilter(this)">ひとり親</div>
-      <div class="filter-chip" onclick="toggleFilter(this)">ヤングケアラー</div>
-      <div class="filter-chip" onclick="toggleFilter(this)">緊急</div>
-    </div>
-  </div>
-  <div class="map-list">
-    <div class="map-list-h">高槻市内 / 半径3km以内 <b>5件</b> の支援要請</div>
-    <div class="match-list">
-      <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。','1.2km','5.0','スコア92',92)">
-        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
-          <div class="mc-desc">高齢の母の通院付き添い（週1）</div>
-          <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
-        </div>
-      </div>
-      <div class="match-card" onclick="openMatch('木村','elder','夫の通院に同行できる方を探しています。月2回程度。','3.4km','4.9','スコア88',88)">
-        <div class="avatar md green">木<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">木村 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>3.4km</div></div>
-          <div class="mc-desc">夫の通院同行（月2回）</div>
-          <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>4.9</span></div>
-        </div>
-      </div>
-      <div class="match-card" onclick="openMatch('林','parent','子の食事準備を週2でお願いします。','1.8km','5.0','ひとり親',91)">
-        <div class="avatar md pink">林<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="mc-body">
-          <div class="mc-row1"><div class="mc-name">林 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.8km</div></div>
-          <div class="mc-desc">子の食事準備（週2）</div>
-          <div class="mc-meta"><span class="mc-cat cat-parent">ひとり親</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- (Map moved into screen-main as a panel) -->
 
 <!-- POST -->
 <div class="screen no-nav" id="screen-post">
@@ -973,12 +1046,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="post-field"><label class="post-label">タイトル</label><input type="text" class="post-input" placeholder="例：高槻市内で買い物代行できます"></div>
     <div class="post-field">
-      <label class="post-label">カテゴリ</label>
-      <div class="cat-pick">
-        <div class="cat-opt on" onclick="selectCat(this)"><svg class="cat-illust ic"><use href="#il-elder"/></svg>老老介護</div>
-        <div class="cat-opt" onclick="selectCat(this)"><svg class="cat-illust ic"><use href="#il-parent"/></svg>ひとり親</div>
-        <div class="cat-opt" onclick="selectCat(this)"><svg class="cat-illust ic"><use href="#il-young"/></svg>ヤングケアラー</div>
-        <div class="cat-opt" onclick="selectCat(this)"><svg class="cat-illust ic ic-fill"><use href="#il-emerg"/></svg>緊急</div>
+      <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（複数選択可）</span></label>
+      <div class="cat-pick cat-pick-3">
+        <div class="cat-opt on" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-elder"/></svg>老老介護</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-parent"/></svg>ひとり親</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-young"/></svg>ヤングケアラー</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-medical"/></svg>通院付き添い</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shopping"/></svg>買い物代行</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-house"/></svg>家事・育児</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-book"/></svg>学習サポート</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-chat"/></svg>話し相手</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-car"/></svg>移動支援</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic ic-fill"><use href="#il-emerg"/></svg>緊急</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shield"/></svg>災害支援</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>その他</div>
       </div>
     </div>
     <div class="post-field"><label class="post-label">詳細</label><textarea class="post-textarea" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。"></textarea></div>
@@ -1137,11 +1218,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
-<!-- REWARDS (accessed via Profile) -->
-<div class="screen no-nav" id="screen-rewards">
+<!-- REWARDS -->
+<div class="screen" id="screen-rewards">
   <div class="app-header">
-    <div class="app-h-back" onclick="navTo('profile')"><svg class="ic"><use href="#i-back"/></svg>＆ポイント</div>
+    <div class="app-h-logo"><span class="dot"></span>＆ポイント</div>
     <div class="app-h-actions">
+      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="toast('利用履歴を表示します')"><svg class="ic"><use href="#i-info"/></svg></button>
     </div>
   </div>
@@ -1594,11 +1676,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav" style="display:none">
-  <button class="nav-item active" data-screen="providers" onclick="navTo('providers')"><svg class="ni-icon ic"><use href="#i-users"/></svg><span>支援者</span></button>
-  <button class="nav-item" data-screen="map" onclick="navTo('map')"><svg class="ni-icon ic"><use href="#i-map"/></svg><span>マップ</span></button>
-  <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
+  <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>メイン</span></button>
   <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
+  <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
   <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
+  <button class="nav-item" data-screen="rewards" onclick="navTo('rewards')"><svg class="ni-icon ic"><use href="#i-gift"/></svg><span>＆ポイント</span></button>
 </div>
 
 <!-- MATCH MODAL -->
@@ -1699,12 +1781,31 @@ function navTo(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const ni=document.querySelector('.nav-item[data-screen="'+name+'"]');
   if(ni) ni.classList.add('active');
-  if(name==='map'){
-    if(!mapInited) initMap();
-    if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),100);
+  if(name==='main'){
+    // Re-init map if user is on map tab
+    const mapPanel=document.getElementById('main-panel-map');
+    if(mapPanel && mapPanel.style.display!=='none'){
+      if(!mapInited) initMap();
+      if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),120);
+    }
   }
 }
-function login(){navTo('providers');setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300)}
+function login(){navTo('main');setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300)}
+
+// Main page: tab switching between list and map
+function switchMainTab(el,which){
+  el.parentNode.querySelectorAll('.main-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('main-panel-list').style.display=(which==='list'?'':'none');
+  document.getElementById('main-panel-map').style.display=(which==='map'?'':'none');
+  if(which==='map'){
+    if(!mapInited) initMap();
+    if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),120);
+  }
+}
+
+// Post: multi-select category
+function selectCatMulti(el){el.classList.toggle('on')}
 
 // Providers list filters
 let curRegion='高槻市', curCat='all';
@@ -1895,10 +1996,11 @@ function toast(text){
 function initMap(){
   if(mapInited) return;
   mapInited=true;
-  mapInstance=L.map('leaflet-map',{zoomControl:false,attributionControl:true}).setView([34.8485,135.6178],14);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains:'abcd',maxZoom:19
+  mapInstance=L.map('leaflet-map',{zoomControl:false,attributionControl:true}).setView([34.8485,135.6178],15);
+  // 国土地理院（GSI）淡色地図タイル：日本語ラベル対応
+  L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',{
+    attribution:'<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>',
+    maxZoom:18,minZoom:5
   }).addTo(mapInstance);
 
   const makeIcon=(color,initial)=>L.divIcon({
