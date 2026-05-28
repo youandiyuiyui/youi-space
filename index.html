@@ -602,7 +602,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
         <button class="btn-primary" onclick="login()">ログイン</button>
         <div style="height:10px"></div>
-        <button class="btn-secondary" onclick="goScreen('onboard')">新規登録</button>
+        <button class="btn-secondary" onclick="goScreen('acctype')">新規会員登録</button>
         <div style="text-align:center;margin-top:18px"><button class="btn-link" onclick="toast('パスワードリセットのメールを送信しました')">パスワードをお忘れですか？</button></div>
       </div>
       <div class="login-divider">または</div>
@@ -611,36 +611,84 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
-<!-- ONBOARDING -->
-<div class="screen no-nav" id="screen-onboard">
+<!-- ACCOUNT TYPE -->
+<div class="screen no-nav" id="screen-acctype">
   <div class="onb-screen">
     <button class="onb-back" onclick="goScreen('login')"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
-    <div class="onb-step">STEP 1 / 2</div>
-    <h1 class="onb-h">あなたの<br>立場を教えてください</h1>
-    <p class="onb-sub">いつでも変更できます。複数選択も可能です。</p>
+    <div class="onb-step">アカウント種別</div>
+    <h1 class="onb-h">どちらで<br>登録しますか？</h1>
+    <p class="onb-sub">登録後に変更したい場合は、サポートまでご連絡ください。</p>
     <div class="role-grid">
-      <div class="role-card selected" onclick="selectRole(this)">
-        <div class="role-illust"><svg class="ic" style="width:30px;height:30px"><use href="#il-provider"/></svg></div>
-        <div><div class="role-title">＆ Provider（支援者）</div><div class="role-desc">時間・スキル・経験を使って、誰かを支えたい</div></div>
-      </div>
-      <div class="role-card" onclick="selectRole(this)">
+      <div class="role-card selected" onclick="selectAcctype(this,'personal')">
         <div class="role-illust"><svg class="ic" style="width:30px;height:30px"><use href="#il-receiver"/></svg></div>
-        <div><div class="role-title">＆ Receiver（受援者）</div><div class="role-desc">支えを必要としている。家族や自分のために</div></div>
+        <div>
+          <div class="role-title">個人として参加</div>
+          <div class="role-desc">支援者または受援者として、地域のつながりに加わる</div>
+        </div>
       </div>
-      <div class="role-card" onclick="selectRole(this)">
+      <div class="role-card" onclick="selectAcctype(this,'org')">
         <div class="role-illust"><svg class="ic" style="width:30px;height:30px"><use href="#il-org"/></svg></div>
-        <div><div class="role-title">団体・行政として参加</div><div class="role-desc">NPO・自治体・福祉施設として活動する</div></div>
+        <div>
+          <div class="role-title">団体・行政として参加</div>
+          <div class="role-desc">NPO・自治体・福祉施設として活動する</div>
+        </div>
       </div>
     </div>
-    <button class="btn-primary" onclick="goScreen('verify')">次へ</button>
+    <button class="btn-primary" onclick="goScreen('signup')">次へ</button>
   </div>
 </div>
+
+<!-- SIGNUP (email + password) -->
+<div class="screen no-nav" id="screen-signup">
+  <div class="onb-screen">
+    <button class="onb-back" onclick="goScreen('acctype')"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
+    <div class="onb-step" id="signup-step-label">アカウント情報</div>
+    <h1 class="onb-h">アカウント情報を<br>入力してください</h1>
+    <p class="onb-sub">ご登録のメールに確認用リンクをお送りします。</p>
+
+    <div class="input-group" id="su-orgname-field" style="display:none">
+      <label class="input-label">団体・組織名</label>
+      <input type="text" class="input" id="su-orgname" placeholder="例：認定NPO法人 ○○の会">
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" id="su-name-label">お名前</label>
+      <input type="text" class="input" id="su-name" placeholder="例：田中 太郎">
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">メールアドレス</label>
+      <input type="email" class="input" id="su-email" placeholder="example@email.com">
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">パスワード <span style="font-weight:400;color:var(--tl);font-size:.7rem">（8文字以上）</span></label>
+      <input type="password" class="input" id="su-pass" placeholder="••••••••">
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">パスワード（確認）</label>
+      <input type="password" class="input" id="su-pass2" placeholder="同じパスワードを入力">
+    </div>
+
+    <label style="display:flex;gap:8px;align-items:flex-start;margin:14px 0 18px;cursor:pointer">
+      <input type="checkbox" id="su-agree" checked style="margin-top:3px;accent-color:var(--lav)">
+      <span style="font-size:.78rem;color:var(--tl);line-height:1.7">
+        <a style="color:var(--lav2);text-decoration:underline">利用規約</a>と<a style="color:var(--lav2);text-decoration:underline">プライバシーポリシー</a>に同意する
+      </span>
+    </label>
+
+    <button class="btn-primary" onclick="completeSignup()">アカウントを作成</button>
+  </div>
+</div>
+
+<!-- (関わり方選択は削除しました) -->
 
 <!-- VERIFY -->
 <div class="screen no-nav" id="screen-verify">
   <div class="onb-screen">
-    <button class="onb-back" onclick="goScreen('onboard')"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
-    <div class="onb-step">STEP 2 / 2</div>
+    <button class="onb-back" onclick="backFromVerify()"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
+    <div class="onb-step">本人確認</div>
     <h1 class="onb-h">本人確認をお願いします</h1>
     <p class="onb-sub">信頼の輪を守るため、すべての方に本人確認をお願いしています。提出情報は暗号化され、マッチングのためにのみ使われます。</p>
     <div class="verify-card" id="verify-card" onclick="verifyId()">
@@ -1718,7 +1766,92 @@ function navTo(name){
     }
   }
 }
-function login(){navTo('main');setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300)}
+// ============================================
+//  ACCOUNT & AUTH
+// ============================================
+let accountType='personal';
+
+function getStoredUser(){
+  try{return JSON.parse(localStorage.getItem('youi_user')||'null')}catch(e){return null}
+}
+function setStoredUser(u){localStorage.setItem('youi_user',JSON.stringify(u))}
+
+function applyUserToUI(){
+  const u=getStoredUser();
+  if(!u) return;
+  const displayName=u.type==='org'?(u.orgName||u.name):u.name;
+  const shortName=u.type==='org'?(u.orgName||u.name):(u.name+' さん');
+  const initial=displayName.charAt(0);
+
+  const heroName=document.querySelector('#screen-main .main-hero-name');
+  if(heroName) heroName.textContent=shortName;
+  const profName=document.querySelector('#screen-profile .prof-name');
+  if(profName) profName.textContent=displayName;
+  const profBio=document.querySelector('#screen-profile .prof-bio');
+  if(profBio && u.bio) profBio.textContent=u.bio;
+  const profAvatar=document.querySelector('#screen-profile .avatar.xl');
+  if(profAvatar){
+    const firstNode=profAvatar.childNodes[0];
+    if(firstNode && firstNode.nodeType===3) firstNode.nodeValue=initial;
+  }
+  const roleChips=document.querySelectorAll('#screen-profile .prof-role');
+  if(u.type==='org' && roleChips.length>=2){
+    roleChips[0].textContent='団体・行政';
+    roleChips[1].textContent='公式アカウント';
+  }
+}
+
+function selectAcctype(el,type){
+  el.parentNode.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  accountType=type;
+  const orgField=document.getElementById('su-orgname-field');
+  const nameLabel=document.getElementById('su-name-label');
+  if(orgField) orgField.style.display=(type==='org'?'block':'none');
+  if(nameLabel) nameLabel.textContent=(type==='org'?'担当者名':'お名前');
+}
+
+function completeSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const pass=document.getElementById('su-pass').value;
+  const pass2=document.getElementById('su-pass2').value;
+  const agree=document.getElementById('su-agree').checked;
+  const orgEl=document.getElementById('su-orgname');
+  const orgName=orgEl?orgEl.value.trim():'';
+
+  if(!name){toast('お名前を入力してください');return}
+  if(accountType==='org' && !orgName){toast('団体名を入力してください');return}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('正しいメールアドレスを入力してください');return}
+  if(pass.length<8){toast('パスワードは8文字以上で入力してください');return}
+  if(pass!==pass2){toast('パスワードが一致しません');return}
+  if(!agree){toast('利用規約への同意が必要です');return}
+
+  const user={type:accountType,name:name,email:email,createdAt:new Date().toISOString()};
+  if(accountType==='org'){
+    user.orgName=orgName;
+    user.bio='公式アカウント';
+  } else {
+    user.bio='高槻市在住';
+  }
+  setStoredUser(user);
+  toast('アカウントを作成しました');
+  setTimeout(()=>goScreen('verify'),500);
+}
+
+function backFromVerify(){goScreen('signup')}
+
+function login(){
+  const emailInput=document.querySelector('#screen-login input[type="email"]');
+  const inputEmail=emailInput?emailInput.value.trim():'';
+  const stored=getStoredUser();
+  if(stored){
+    // Demo: if email matches stored, log in as that user
+    if(!inputEmail || stored.email===inputEmail) applyUserToUI();
+  }
+  navTo('main');
+  setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300);
+}
 
 // Main page: tab switching between list and map
 function switchMainTab(el,which){
@@ -1808,7 +1941,6 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   m.classList.add('show');
 }
 function logout(){goScreen('login')}
-function selectRole(el){el.parentNode.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected')}
 function verifyId(){
   const c=document.getElementById('verify-card');
   c.classList.add('done');
