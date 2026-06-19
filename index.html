@@ -718,7 +718,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div>
         <div class="main-hero-greet">こんにちは</div>
         <div class="main-hero-name">田中 太郎 さん</div>
-        <div class="main-hero-stats">
+        <div class="main-hero-stats demo-only">
           <div class="mh-stat"><svg class="ic"><use href="#i-users"/></svg><b>12</b>人がアクティブ</div>
           <div class="mh-stat"><svg class="ic"><use href="#i-location"/></svg><b>8</b>件の要請</div>
         </div>
@@ -761,7 +761,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
       </div>
     </div>
-    <div class="prov-meta">
+    <div class="prov-meta demo-only">
       <div id="prov-count-info"><span id="prov-region-label">高槻市内</span> / <b id="prov-count">8</b>人が登録中</div>
       <div class="prov-sort" onclick="toast('並び順を変更：アクティブ順')"><svg class="ic" style="font-size:.85em"><use href="#i-sort"/></svg>アクティブ順<svg class="ic" style="font-size:.8em"><use href="#i-chevron-d"/></svg></div>
     </div>
@@ -772,7 +772,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>
     </div>
 
-    <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>おすすめの支援者 <span class="prov-count">3</span></div>
+    <div id="demo-providers" class="demo-only">
+    <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>おすすめの支援者（サンプル） <span class="prov-count">3</span></div>
     <div class="prov-list" id="prov-list-active">
       <div class="prov-card featured" data-region="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
         <div class="avatar md green">高<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
@@ -938,6 +939,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div style="padding:8px 18px 24px;text-align:center">
       <button class="btn-secondary" onclick="toast('さらに読み込みました')">もっと見る</button>
     </div>
+    </div><!-- /demo-providers -->
   </div>
   </div>
   <!-- /LIST PANEL -->
@@ -960,10 +962,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="map-list">
       <div class="map-list-h" style="display:flex;justify-content:space-between;align-items:center">
-        <div>高槻市内 / 半径3km以内 <b>5件</b> の支援要請</div>
+        <div class="demo-only">高槻市内 / 半径3km以内 <b>5件</b> の支援要請</div>
         <button class="icon-btn" onclick="centerMap()" style="width:32px;height:32px"><svg class="ic" style="font-size:.95rem"><use href="#i-target"/></svg></button>
       </div>
-      <div class="match-list">
+      <div class="match-list demo-only">
         <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。','1.2km','5.0','スコア92',92)">
           <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
           <div class="mc-body">
@@ -989,6 +991,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           </div>
         </div>
       </div>
+      <div id="map-empty" style="display:none;padding:24px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">近くの支援要請はまだありません。<br>投稿が増えると、ここに表示されます。</div>
     </div>
   </div>
   <!-- /MAP PANEL -->
@@ -1046,6 +1049,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="msg-screen">
     <div class="msg-search"><svg class="ic"><use href="#i-search"/></svg><input type="text" placeholder="メッセージを検索"></div>
     <div class="msg-list">
+      <div id="msg-empty" style="display:none;padding:30px 20px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.9">まだメッセージがありません。<br>投稿からマッチングが成立すると、<br>ここでやり取りできます。</div>
+      <div id="msg-demo" class="demo-only">
       <div class="msg-item" onclick="openChat('鈴木','green','鈴')">
         <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
@@ -1081,6 +1086,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           <div class="msg-preview">来週もよろしくお願いします</div>
         </div>
       </div>
+      </div><!-- /msg-demo -->
     </div>
   </div>
 </div>
@@ -1847,7 +1853,14 @@ function applyUserToUI(){
     roleChips[0].textContent='団体・行政';
     roleChips[1].textContent='公式アカウント';
   }
-  if(u.uid){ zeroOutNewAccount(); if(u.verified) markVerifiedUI(); }
+  if(u.uid){ zeroOutNewAccount(); hideDemoContent(); if(u.verified) markVerifiedUI(); }
+}
+
+/* 実アカウントではデモ用の投稿・支援者・メッセージを隠す（ゲストは従来どおり表示） */
+function hideDemoContent(){
+  document.querySelectorAll('.demo-only').forEach(function(e){e.style.display='none';});
+  var me=document.getElementById('msg-empty'); if(me) me.style.display='';
+  var mp=document.getElementById('map-empty'); if(mp) mp.style.display='';
 }
 
 /* 新規アカウントは投稿・ポイント・実績を0から表示 */
@@ -2386,10 +2399,13 @@ function initMap(){
     {lat:34.8420,lng:135.6300,c:'green',i:'木',n:'木村',cat:'elder', t:'夫の通院に同行できる方を探しています。',d:'3.4km',s:'4.9',m:'スコア88',sc:88},
     {lat:34.8520,lng:135.6080,c:'pink', i:'林',n:'林',  cat:'parent',t:'子の食事準備を週2でお願いします。',d:'1.8km',s:'5.0',m:'ひとり親',sc:91},
   ];
-  markers.forEach(m=>{
-    L.marker([m.lat,m.lng],{icon:makeIcon(m.c,m.i)}).addTo(mapInstance)
-      .on('click',()=>openMatch(m.n,m.cat,m.t,m.d,m.s,m.m,m.sc));
-  });
+  // デモのピンはゲスト時のみ表示（実アカウントでは出さない）
+  if(!(currentProfile && currentProfile.uid)){
+    markers.forEach(m=>{
+      L.marker([m.lat,m.lng],{icon:makeIcon(m.c,m.i)}).addTo(mapInstance)
+        .on('click',()=>openMatch(m.n,m.cat,m.t,m.d,m.s,m.m,m.sc));
+    });
+  }
   L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
 }
 function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);toast('現在地に戻りました')}}
