@@ -678,7 +678,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </span>
     </label>
 
-    <button class="btn-primary" onclick="completeSignup()">アカウントを作成</button>
+    <button class="btn-primary" onclick="completeSignup()">登録を完了する</button>
   </div>
 </div>
 
@@ -690,7 +690,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <button class="onb-back" onclick="backFromVerify()"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
     <div class="onb-step">本人確認</div>
     <h1 class="onb-h">本人確認をお願いします</h1>
-    <p class="onb-sub">信頼の輪を守るため、すべての方に本人確認をお願いしています。提出情報は暗号化され、マッチングのためにのみ使われます。</p>
+    <p class="onb-sub">安心して支え合えるよう、本人確認をお願いしています（任意・後からでもOK）。提出情報は暗号化され、マッチングのためにのみ使われます。</p>
     <div class="verify-card" id="verify-card" onclick="verifyId()">
       <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-id-card"/></svg></div>
       <div class="verify-body"><div class="verify-title">身分証をアップロード</div><div class="verify-sub">運転免許証 / マイナンバーカード / 健康保険証</div></div>
@@ -699,7 +699,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-camera"/></svg></div>
       <div class="verify-body"><div class="verify-title">セルフィー認証</div><div class="verify-sub">なりすまし防止のため、顔写真を撮影</div></div>
     </div>
-    <div style="margin-top:24px"><button class="btn-primary" onclick="login()">登録を完了する</button></div>
+    <div style="margin-top:24px"><button class="btn-primary" onclick="completeVerify()">本人確認を完了する</button></div>
   </div>
 </div>
 
@@ -766,7 +766,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="prov-sort" onclick="toast('並び順を変更：アクティブ順')"><svg class="ic" style="font-size:.85em"><use href="#i-sort"/></svg>アクティブ順<svg class="ic" style="font-size:.8em"><use href="#i-chevron-d"/></svg></div>
     </div>
 
-    <div class="prov-group-h"><span class="online-dot-h"></span>今アクティブ <span class="prov-count">3</span></div>
+    <!-- みんなの投稿（Firestoreリアルタイム） -->
+    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>みんなの投稿 <span class="prov-count" id="live-count">0</span></div>
+    <div class="prov-list" id="live-posts">
+      <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>
+    </div>
+
+    <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>おすすめの支援者 <span class="prov-count">3</span></div>
     <div class="prov-list" id="prov-list-active">
       <div class="prov-card featured" data-region="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
         <div class="avatar md green">高<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
@@ -1001,7 +1007,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <button class="pt-btn on" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-provider"/></svg>支援したい</button>
       <button class="pt-btn" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-receiver"/></svg>助けを求める</button>
     </div>
-    <div class="post-field"><label class="post-label">タイトル</label><input type="text" class="post-input" placeholder="例：高槻市内で買い物代行できます"></div>
+    <div class="post-field"><label class="post-label">タイトル</label><input type="text" class="post-input" id="post-title" placeholder="例：高槻市内で買い物代行できます"></div>
     <div class="post-field">
       <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（複数選択可）</span></label>
       <div class="cat-pick cat-pick-3">
@@ -1019,7 +1025,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>その他</div>
       </div>
     </div>
-    <div class="post-field"><label class="post-label">詳細</label><textarea class="post-textarea" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。"></textarea></div>
+    <div class="post-field"><label class="post-label">詳細</label><textarea class="post-textarea" id="post-detail" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。"></textarea></div>
     <div class="post-field">
       <label class="post-label">写真（任意）</label>
       <div class="photo-upload" onclick="openPhotoPicker()">
@@ -1187,8 +1193,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="rewards-screen">
     <div class="rew-balance">
       <div class="rew-balance-lbl">CURRENT BALANCE</div>
-      <div class="rew-balance-num">1,240<span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
-      <div class="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
+      <div class="rew-balance-num"><span id="rew-balance-num">1,240</span><span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
+      <div class="rew-balance-sub" id="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
     </div>
     <div class="rew-tabs">
       <div class="rew-tab on" onclick="rewTab(this,'coupon')">クーポン</div>
@@ -1380,13 +1386,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
   <div class="profile-hero">
-    <div class="avatar xl" style="margin:0 auto">田<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
+    <div class="avatar xl" style="margin:0 auto">田<span class="v" id="prof-verify-badge"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
     <div class="prof-name">田中 太郎</div>
     <div class="prof-bio">高槻市在住 / 会社員</div>
     <div class="prof-roles">
       <span class="prof-role">＆ Provider</span>
       <span class="prof-role">＆ Receiver</span>
-      <span class="prof-role">本人確認済</span>
+      <span class="prof-role" id="prof-verify-chip">本人確認済</span>
     </div>
   </div>
 
@@ -1395,22 +1401,22 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:center;position:relative;z-index:1">
       <div style="text-align:center">
         <div class="score-label" style="margin-bottom:8px">TRUST SCORE</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fff">782</div>
-        <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(200,232,212,.22);color:#c8e8d4;font-size:.7rem;font-weight:500">
+        <div id="prof-trust" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fff">782</div>
+        <div id="prof-trust-chip" style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(200,232,212,.22);color:#c8e8d4;font-size:.7rem;font-weight:500">
           <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg>+12 今月
         </div>
       </div>
       <div style="width:1px;height:74px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.35),transparent);justify-self:center"></div>
       <div style="text-align:center">
         <div class="score-label" style="margin-bottom:8px">＆ POINTS</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">1,240</div>
+        <div id="prof-points" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">1,240</div>
         <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(252,238,168,.18);color:#fceea8;font-size:.7rem;font-weight:500">
           <svg class="ic" style="font-size:.85em"><use href="#i-gift"/></svg>使える
         </div>
       </div>
     </div>
     <div class="score-bar" style="margin-top:22px"><div class="score-fill"></div></div>
-    <div class="score-tags" style="margin-top:14px;justify-content:center">
+    <div class="score-tags" id="prof-badges" style="margin-top:14px;justify-content:center">
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支援実績 42</span>
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-comment"/></svg>評価 38</span>
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>継続 8ヶ月</span>
@@ -1438,7 +1444,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 
   <!-- 最近の活動 -->
-  <div class="sec-block">
+  <div class="sec-block" id="prof-activity">
     <div class="sec-h">
       <div class="sec-h-title">最近の活動</div>
     </div>
@@ -1469,15 +1475,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 
   <div class="score-detail" style="margin-top:18px">
-    <div class="sd-h"><div class="sd-title">信頼スコアの内訳</div><div class="sd-value">782</div></div>
-    <div class="sd-bars">
+    <div class="sd-h"><div class="sd-title">信頼スコアの内訳</div><div class="sd-value" id="prof-trust2">782</div></div>
+    <div class="sd-bars" id="prof-scorebars">
       <div class="sd-bar-row"><div class="sd-bar-lbl">支援実績</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:88%"></div></div><div class="sd-bar-val">88</div></div>
       <div class="sd-bar-row"><div class="sd-bar-lbl">評価平均</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:96%"></div></div><div class="sd-bar-val">96</div></div>
       <div class="sd-bar-row"><div class="sd-bar-lbl">継続性</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div><div class="sd-bar-val">72</div></div>
       <div class="sd-bar-row"><div class="sd-bar-lbl">人柄資本</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div><div class="sd-bar-val">81</div></div>
     </div>
   </div>
-  <div class="sec-block">
+  <div class="sec-block" id="prof-certs">
     <div class="sec-h"><div class="sec-h-title">デジタル証明書</div><div class="sec-h-more">すべて見る <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>
     <div class="cert-list">
       <div class="cert" onclick="openCert('継続支援バッジ（8ヶ月）','2026.05.13','高槻市内 老老介護支援','YIS-CER-2026-05-1042','gold','i-medal')">
@@ -1585,6 +1591,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="set-item" onclick="openPasswordChange()">
         <div class="set-icon"><svg class="ic"><use href="#i-lock"/></svg></div>
         <div class="set-label">パスワード変更</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="goScreen('verify')">
+        <div class="set-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
+        <div class="set-label">本人確認</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
     </div>
@@ -1836,6 +1847,33 @@ function applyUserToUI(){
     roleChips[0].textContent='団体・行政';
     roleChips[1].textContent='公式アカウント';
   }
+  if(u.uid){ zeroOutNewAccount(); if(u.verified) markVerifiedUI(); }
+}
+
+/* 新規アカウントは投稿・ポイント・実績を0から表示 */
+function zeroOutNewAccount(){
+  var s=function(id,v){var el=document.getElementById(id); if(el) el.textContent=v;};
+  s('prof-trust','0'); s('prof-trust2','0'); s('prof-points','0'); s('rew-balance-num','0');
+  var sub=document.getElementById('rew-balance-sub'); if(sub) sub.textContent='獲得：0pt ／ 使用：0pt';
+  var chip=document.getElementById('prof-trust-chip'); if(chip) chip.style.display='none';
+  var badges=document.getElementById('prof-badges'); if(badges) badges.innerHTML='<span class="score-tag">これから実績を積みましょう</span>';
+  var bars=document.getElementById('prof-scorebars');
+  if(bars){ bars.querySelectorAll('.sd-bar-fill').forEach(function(b){b.style.width='0%';}); bars.querySelectorAll('.sd-bar-val').forEach(function(v){v.textContent='0';}); }
+  var act=document.getElementById('prof-activity'); if(act) act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>支援したり助けを求めると、ここに記録されます。</div>';
+  var certs=document.getElementById('prof-certs'); if(certs) certs.innerHTML='<div class="sec-h"><div class="sec-h-title">デジタル証明書</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem">まだ証明書がありません。</div>';
+  var vchip=document.getElementById('prof-verify-chip'); if(vchip){vchip.textContent='本人確認 未完了'; vchip.style.opacity='.55';}
+  var vbadge=document.getElementById('prof-verify-badge'); if(vbadge) vbadge.style.display='none';
+}
+function markVerifiedUI(){
+  var vchip=document.getElementById('prof-verify-chip'); if(vchip){vchip.textContent='本人確認済'; vchip.style.opacity='1';}
+  var vbadge=document.getElementById('prof-verify-badge'); if(vbadge) vbadge.style.display='';
+}
+function completeVerify(){
+  markVerifiedUI();
+  if(currentProfile){currentProfile.verified=true; setStoredUser(currentProfile);}
+  if(fbReady&&fbAuth.currentUser){fbDb.collection('users').doc(fbAuth.currentUser.uid).update({verified:true}).catch(function(){});}
+  toast('本人確認が完了しました');
+  setTimeout(function(){goScreen('settings');},600);
 }
 
 function selectAcctype(el,type){
@@ -1867,20 +1905,22 @@ function completeSignup(){
   const user={type:accountType,name:name,email:email,createdAt:new Date().toISOString()};
   if(accountType==='org'){user.orgName=orgName;user.bio='公式アカウント';}else{user.bio='高槻市在住';}
 
-  if(!fbReady){ setStoredUser(user); toast('アカウントを作成しました'); setTimeout(()=>goScreen('verify'),500); return; }
+  if(!fbReady){ var le0=document.getElementById('login-email'); if(le0) le0.value=email; toast('アカウントを作成しました。ログインしてください'); setTimeout(()=>goScreen('login'),700); return; }
 
   fbAuth.createUserWithEmailAndPassword(email,pass)
-    .then(function(cred){
-      return fbDb.collection('users').doc(cred.user.uid).set(user).then(function(){
-        setStoredUser(Object.assign({uid:cred.user.uid},user));
-        toast('アカウントを作成しました');
-        setTimeout(()=>goScreen('verify'),500);
-      });
+    .then(function(cred){ return fbDb.collection('users').doc(cred.user.uid).set(user); })
+    .then(function(){ return fbAuth.signOut(); })
+    .then(function(){
+      currentProfile=null;
+      var le=document.getElementById('login-email'); if(le) le.value=email;
+      var lp=document.getElementById('login-pass'); if(lp) lp.value='';
+      toast('アカウントを作成しました。ログインしてください');
+      setTimeout(()=>goScreen('login'),700);
     })
     .catch(function(e){ toast(authErrMsg(e)); });
 }
 
-function backFromVerify(){goScreen('signup')}
+function backFromVerify(){goScreen('settings')}
 
 function login(){
   const em=((document.getElementById('login-email')||{}).value||'').trim();
@@ -2014,7 +2054,79 @@ function verifySelf(){
   c.querySelector('.verify-sub').textContent='本人確認が完了しました';
 }
 function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
-function submitPost(){toast('投稿しました。マッチングを開始します');setTimeout(()=>navTo('main'),900)}
+/* ===== マッチング掲示板（Firestore posts） ===== */
+function submitPost(){
+  var typeBtn=document.querySelector('#screen-post .pt-btn.on');
+  var type=(typeBtn && typeBtn.textContent.indexOf('助け')>=0)?'receive':'provide';
+  var title=((document.getElementById('post-title')||{}).value||'').trim();
+  var detail=((document.getElementById('post-detail')||{}).value||'').trim();
+  var cats=[].map.call(document.querySelectorAll('#screen-post .cat-opt.on'),function(e){return e.textContent.trim();});
+  if(!title){toast('タイトルを入力してください');return}
+  if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
+  var u=getStoredUser()||{};
+  var post={type:type,title:title,detail:detail,categories:cats,uid:fbAuth.currentUser.uid,
+    authorName:(u.type==='org'?(u.orgName||u.name):u.name)||'利用者',
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+  fbDb.collection('posts').add(post).then(function(){
+    var t=document.getElementById('post-title'); if(t)t.value='';
+    var d=document.getElementById('post-detail'); if(d)d.value='';
+    toast('投稿しました。マッチングを開始します');
+    setTimeout(()=>navTo('main'),700);
+  }).catch(function(e){toast(authErrMsg(e));});
+}
+
+var postsUnsub=null;
+function subscribePosts(){
+  if(!fbReady||postsUnsub) return;
+  postsUnsub=fbDb.collection('posts').orderBy('createdAt','desc').limit(50).onSnapshot(function(snap){
+    var el=document.getElementById('live-posts'); if(!el) return;
+    var lc=document.getElementById('live-count');
+    if(snap.empty){ el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>'; if(lc)lc.textContent='0'; return; }
+    window.__posts=window.__posts||{};
+    var html='';
+    snap.forEach(function(doc){ var p=doc.data(); p.id=doc.id; window.__posts[doc.id]=p; html+=renderPostCard(p); });
+    el.innerHTML=html; if(lc) lc.textContent=String(snap.size);
+  },function(err){ console.warn('posts listen error',err);
+    var el=document.getElementById('live-posts'); if(el&&(err.code==='permission-denied')) el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.78rem">投稿の表示にはログインが必要です。</div>';
+  });
+}
+function renderPostCard(p){
+  var isR=p.type==='receive';
+  var color=isR?'pink':'green';
+  var initial=(p.authorName||'?').charAt(0);
+  var badge=isR
+    ?'<span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(232,180,184,.25);color:#c07880">助けて</span>'
+    :'<span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(168,196,176,.3);color:#5a9a6a">支援</span>';
+  var cats=(p.categories||[]).slice(0,3).map(function(c){return '<span style="font-size:.64rem;padding:2px 7px;border-radius:8px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:4px">'+escapeHtml(c)+'</span>';}).join('');
+  return '<div class="prov-card" onclick="openPostDetail(\''+p.id+'\')">'+
+    '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
+    '<div class="prov-body">'+
+      '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
+      (p.detail?'<div style="font-size:.76rem;color:var(--tl);margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
+      (cats?'<div style="margin-top:6px">'+cats+'</div>':'')+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:5px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+'</div>'+
+    '</div>'+
+  '</div>';
+}
+function openPostDetail(id){
+  var p=(window.__posts||{})[id]; if(!p) return;
+  var isR=p.type==='receive';
+  var cats=(p.categories||[]).map(function(c){return '<span style="font-size:.7rem;padding:3px 9px;border-radius:9px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:5px">'+escapeHtml(c)+'</span>';}).join('');
+  openSheet(isR?'助けてほしい':'支援したい',
+    '<div style="font-weight:600;font-size:1.02rem;margin-bottom:8px">'+escapeHtml(p.title||'')+'</div>'+
+    (p.detail?'<div style="font-size:.86rem;color:var(--ink);line-height:1.85;margin-bottom:12px">'+escapeHtml(p.detail)+'</div>':'')+
+    (cats?'<div style="margin-bottom:12px">'+cats+'</div>':'')+
+    '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+'</div>'+
+    '<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>');
+}
+function timeAgo(ts){
+  if(!ts||!ts.toDate) return 'たった今';
+  var s=(Date.now()-ts.toDate().getTime())/1000;
+  if(s<60) return 'たった今';
+  if(s<3600) return Math.floor(s/60)+'分前';
+  if(s<86400) return Math.floor(s/3600)+'時間前';
+  return Math.floor(s/86400)+'日前';
+}
 function toggleFilter(el){el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
 function rewTab(el,key){
   el.parentNode.querySelectorAll('.rew-tab').forEach(t=>t.classList.remove('on'));
@@ -2228,14 +2340,16 @@ function copyShareLink(){
 
 /* 履歴・実績・お気に入り */
 function openHistory(kind){
+  var isNew = currentProfile && currentProfile.uid;
   if(kind==='support'){
-    openSheet('支援実績',histList([['買い物の付き添い','2026/06/10','＋15 ＆P'],['話し相手・見守り','2026/06/03','＋10 ＆P'],['子どもの送迎','2026/05/28','＋20 ＆P']]));
+    openSheet('支援実績', isNew?emptyHist('まだ支援実績がありません。'):histList([['買い物の付き添い','2026/06/10','＋15 ＆P'],['話し相手・見守り','2026/06/03','＋10 ＆P'],['子どもの送迎','2026/05/28','＋20 ＆P']]));
   }else if(kind==='fav'){
-    openSheet('お気に入り',histList([['鈴木 みどり さん','支援者',''],['高槻ボランティアの会','団体・行政','']]));
+    openSheet('お気に入り', isNew?emptyHist('お気に入りはまだありません。'):histList([['鈴木 みどり さん','支援者',''],['高槻ボランティアの会','団体・行政','']]));
   }else{
-    openSheet('利用履歴',histList([['＆ポイント利用：カフェドリンク','2026/06/09','−30 ＆P'],['支援を受けた：買い物代行','2026/06/01',''],['アカウント作成','2026/05/30','']]));
+    openSheet('利用履歴', isNew?emptyHist('まだ利用履歴がありません。'):histList([['＆ポイント利用：カフェドリンク','2026/06/09','−30 ＆P'],['支援を受けた：買い物代行','2026/06/01',''],['アカウント作成','2026/05/30','']]));
   }
 }
+function emptyHist(msg){return '<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">'+escapeHtml(msg)+'</div>';}
 function histList(rows){
   return '<div class="set-section">'+rows.map(function(r){return '<div class="set-item"><div style="flex:1"><div class="set-label">'+escapeHtml(r[0])+'</div><div style="font-size:.72rem;color:var(--tl);margin-top:2px">'+escapeHtml(r[1])+'</div></div>'+(r[2]?'<div style="font-size:.78rem;font-weight:600;color:#5a9a6a">'+escapeHtml(r[2])+'</div>':'')+'</div>'}).join('')+'</div>';
 }
@@ -2284,6 +2398,7 @@ function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);
 if(fbReady){
   fbAuth.onAuthStateChanged(function(user){
     if(!user) return;
+    subscribePosts();
     fbDb.collection('users').doc(user.uid).get().then(function(doc){
       var p = doc.exists ? doc.data() : {type:'individual',name:(user.email||'利用者'),bio:''};
       p.email=user.email; p.uid=user.uid; setStoredUser(p);
