@@ -594,19 +594,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="login-sub">支援の輪を、つづけましょう。</div>
         <div class="input-group">
           <label class="input-label">メールアドレス</label>
-          <input type="email" class="input" value="taro.tanaka@example.com">
+          <input type="email" class="input" id="login-email" placeholder="example@email.com" autocomplete="username">
         </div>
         <div class="input-group">
           <label class="input-label">パスワード</label>
-          <input type="password" class="input" value="••••••••">
+          <input type="password" class="input" id="login-pass" placeholder="パスワード" autocomplete="current-password">
         </div>
         <button class="btn-primary" onclick="login()">ログイン</button>
         <div style="height:10px"></div>
         <button class="btn-secondary" onclick="goScreen('acctype')">新規会員登録</button>
-        <div style="text-align:center;margin-top:18px"><button class="btn-link" onclick="toast('パスワードリセットのメールを送信しました')">パスワードをお忘れですか？</button></div>
+        <div style="text-align:center;margin-top:18px"><button class="btn-link" onclick="resetPassword()">パスワードをお忘れですか？</button></div>
       </div>
       <div class="login-divider">または</div>
-      <button class="btn-secondary" onclick="login()" style="background:rgba(255,255,255,.55);border-color:rgba(184,175,214,.3)">ゲストとしてデモを試す</button>
+      <button class="btn-secondary" onclick="guestDemo()" style="background:rgba(255,255,255,.55);border-color:rgba(184,175,214,.3)">ゲストとしてデモを試す</button>
     </div>
   </div>
 </div>
@@ -1181,7 +1181,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="app-h-logo"><span class="dot"></span>＆ポイント</div>
     <div class="app-h-actions">
       <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
-      <button class="icon-btn" onclick="toast('利用履歴を表示します')"><svg class="ic"><use href="#i-info"/></svg></button>
+      <button class="icon-btn" onclick="openHistory('use')"><svg class="ic"><use href="#i-info"/></svg></button>
     </div>
   </div>
   <div class="rewards-screen">
@@ -1309,7 +1309,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
 
-    <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px;display:flex;gap:10px;align-items:center;cursor:pointer" onclick="toast('利用履歴ページへ')">
+    <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px;display:flex;gap:10px;align-items:center;cursor:pointer" onclick="openHistory('use')">
       <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2)"><svg class="ic"><use href="#i-info"/></svg></div>
       <div style="flex:1">
         <div style="font-size:.86rem;font-weight:500">利用履歴を見る</div>
@@ -1339,8 +1339,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="cp-text">田中さんに母の付き添いをお願いして3ヶ月目になります。丁寧で頼りになる方で、母も「あの方が来てくれるのが楽しみ」と言っています。本当に出会えて良かった。</div>
       <div class="cp-actions">
         <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>24</span></div>
-        <div class="cp-action" onclick="toast('コメントを開きました')"><svg class="ic"><use href="#i-comment"/></svg><span>5</span></div>
-        <div class="cp-action" onclick="toast('シェアメニュー')"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>5</span></div>
+        <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
     <div class="comm-post">
@@ -1351,8 +1351,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="cp-text">ヤングケアラーとして家族を支える子たちに、もっと制度的なバックアップが必要だと感じます。学校との連携、行政の認識——変えていきたいことがたくさん。</div>
       <div class="cp-actions">
         <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>47</span></div>
-        <div class="cp-action" onclick="toast('コメントを開きました')"><svg class="ic"><use href="#i-comment"/></svg><span>12</span></div>
-        <div class="cp-action" onclick="toast('シェアメニュー')"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>12</span></div>
+        <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
     <div class="comm-post">
@@ -1363,8 +1363,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="cp-text">6月から地域包括支援センターとYou&amp;i Spaceの連携実証を開始します。詳細は追って発表します。</div>
       <div class="cp-actions">
         <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>132</span></div>
-        <div class="cp-action" onclick="toast('コメントを開きました')"><svg class="ic"><use href="#i-comment"/></svg><span>38</span></div>
-        <div class="cp-action" onclick="toast('シェアメニュー')"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>38</span></div>
+        <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
   </div>
@@ -1423,7 +1423,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="qa-illust"><svg class="ic"><use href="#i-bell"/></svg></div>
       <div class="qa-label">お知らせ</div>
     </div>
-    <div class="qa" onclick="toast('支援実績一覧へ')">
+    <div class="qa" onclick="openHistory('support')">
       <div class="qa-illust"><svg class="ic"><use href="#i-trophy"/></svg></div>
       <div class="qa-label">支援実績</div>
     </div>
@@ -1431,7 +1431,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="qa-illust"><svg class="ic"><use href="#i-globe"/></svg></div>
       <div class="qa-label">コミュニティ</div>
     </div>
-    <div class="qa" onclick="toast('お気に入りページへ')">
+    <div class="qa" onclick="openHistory('fav')">
       <div class="qa-illust"><svg class="ic"><use href="#i-bookmark"/></svg></div>
       <div class="qa-label">お気に入り</div>
     </div>
@@ -1572,17 +1572,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="set-screen">
     <div class="set-section-h">アカウント</div>
     <div class="set-section">
-      <div class="set-item" onclick="toast('プロフィール編集を開きました')">
+      <div class="set-item" onclick="openProfileEdit()">
         <div class="set-icon"><svg class="ic"><use href="#i-user"/></svg></div>
         <div class="set-label">プロフィール編集</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="set-item" onclick="toast('メールアドレス変更')">
+      <div class="set-item" onclick="openEmailChange()">
         <div class="set-icon"><svg class="ic"><use href="#i-mail"/></svg></div>
         <div class="set-label">メールアドレス</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="set-item" onclick="toast('パスワード変更')">
+      <div class="set-item" onclick="openPasswordChange()">
         <div class="set-icon"><svg class="ic"><use href="#i-lock"/></svg></div>
         <div class="set-label">パスワード変更</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
@@ -1608,17 +1608,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="set-section-h">プライバシー・サポート</div>
     <div class="set-section">
-      <div class="set-item" onclick="toast('プライバシーポリシー')">
+      <div class="set-item" onclick="openLegal('privacy')">
         <div class="set-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
         <div class="set-label">プライバシーポリシー</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="set-item" onclick="toast('利用規約')">
+      <div class="set-item" onclick="openLegal('terms')">
         <div class="set-icon"><svg class="ic"><use href="#i-info"/></svg></div>
         <div class="set-label">利用規約</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="set-item" onclick="toast('ヘルプセンター')">
+      <div class="set-item" onclick="openLegal('help')">
         <div class="set-icon"><svg class="ic"><use href="#i-help"/></svg></div>
         <div class="set-label">ヘルプセンター</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
@@ -1723,15 +1723,51 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
+<!-- 汎用コンテンツシート -->
+<div class="modal" id="sheet-modal" onclick="closeModal(event,'sheet-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-h">
+      <div style="flex:1"><div class="modal-title" id="sheet-title">—</div></div>
+      <button class="modal-close" onclick="closeModal(null,'sheet-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="modal-content" id="sheet-content">—</div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast">—</div>
 
 </div>
 </div>
 
+<!-- Firebase SDK (compat / CDN・ビルド不要) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA6EppsUrzoeXv5NIjO7bs6hnK_ctT0m84",
+    authDomain: "you-i-space.firebaseapp.com",
+    projectId: "you-i-space",
+    storageBucket: "you-i-space.firebasestorage.app",
+    messagingSenderId: "291664672141",
+    appId: "1:291664672141:web:8fcf6bca80675d819c79c4",
+    measurementId: "G-N6SSV7R6DT"
+  };
+  var fbReady=false, fbAuth=null, fbDb=null;
+  try{
+    firebase.initializeApp(firebaseConfig);
+    fbAuth=firebase.auth();
+    fbDb=firebase.firestore();
+    fbReady=true;
+  }catch(e){ console.warn('Firebase init failed', e); }
+</script>
+
 <script>
 let mapInited=false, mapInstance=null;
 let prevScreen='main';  // track previous screen for back button
+let currentProfile=null;  // ログイン中ユーザーのプロフィール（Firebase）
 
 function goScreen(name){
   const target=document.getElementById('screen-'+name);
@@ -1772,9 +1808,10 @@ function navTo(name){
 let accountType='personal';
 
 function getStoredUser(){
+  if(currentProfile) return currentProfile;
   try{return JSON.parse(localStorage.getItem('youi_user')||'null')}catch(e){return null}
 }
-function setStoredUser(u){localStorage.setItem('youi_user',JSON.stringify(u))}
+function setStoredUser(u){currentProfile=u;localStorage.setItem('youi_user',JSON.stringify(u))}
 
 function applyUserToUI(){
   const u=getStoredUser();
@@ -1828,29 +1865,52 @@ function completeSignup(){
   if(!agree){toast('利用規約への同意が必要です');return}
 
   const user={type:accountType,name:name,email:email,createdAt:new Date().toISOString()};
-  if(accountType==='org'){
-    user.orgName=orgName;
-    user.bio='公式アカウント';
-  } else {
-    user.bio='高槻市在住';
-  }
-  setStoredUser(user);
-  toast('アカウントを作成しました');
-  setTimeout(()=>goScreen('verify'),500);
+  if(accountType==='org'){user.orgName=orgName;user.bio='公式アカウント';}else{user.bio='高槻市在住';}
+
+  if(!fbReady){ setStoredUser(user); toast('アカウントを作成しました'); setTimeout(()=>goScreen('verify'),500); return; }
+
+  fbAuth.createUserWithEmailAndPassword(email,pass)
+    .then(function(cred){
+      return fbDb.collection('users').doc(cred.user.uid).set(user).then(function(){
+        setStoredUser(Object.assign({uid:cred.user.uid},user));
+        toast('アカウントを作成しました');
+        setTimeout(()=>goScreen('verify'),500);
+      });
+    })
+    .catch(function(e){ toast(authErrMsg(e)); });
 }
 
 function backFromVerify(){goScreen('signup')}
 
 function login(){
-  const emailInput=document.querySelector('#screen-login input[type="email"]');
-  const inputEmail=emailInput?emailInput.value.trim():'';
-  const stored=getStoredUser();
-  if(stored){
-    // Demo: if email matches stored, log in as that user
-    if(!inputEmail || stored.email===inputEmail) applyUserToUI();
-  }
-  navTo('main');
-  setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300);
+  const em=((document.getElementById('login-email')||{}).value||'').trim();
+  const pass=(document.getElementById('login-pass')||{}).value||'';
+  if(!fbReady){ navTo('main'); setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300); return; }
+  if(!em||!pass){ toast('メールアドレスとパスワードを入力してください'); return; }
+  fbAuth.signInWithEmailAndPassword(em,pass).catch(function(e){ toast(authErrMsg(e)); });
+  // 成功時は onAuthStateChanged が main へ自動遷移
+}
+
+function guestDemo(){ currentProfile=null; navTo('main'); setTimeout(()=>toast('ゲストとしてデモを開始しました'),300); }
+
+function resetPassword(){
+  const em=((document.getElementById('login-email')||{}).value||'').trim();
+  if(!fbReady){ toast('パスワードリセットのメールを送信しました'); return; }
+  if(!em){ toast('先にメールアドレスを入力してください'); return; }
+  fbAuth.sendPasswordResetEmail(em).then(()=>toast('パスワードリセットのメールを送信しました')).catch(e=>toast(authErrMsg(e)));
+}
+
+function authErrMsg(e){
+  var c=(e&&e.code)||'';
+  if(c==='auth/email-already-in-use') return 'このメールアドレスは既に登録されています';
+  if(c==='auth/invalid-email') return '正しいメールアドレスを入力してください';
+  if(c==='auth/weak-password') return 'パスワードは6文字以上にしてください';
+  if(c==='auth/wrong-password'||c==='auth/invalid-credential') return 'メールアドレスまたはパスワードが違います';
+  if(c==='auth/user-not-found') return 'アカウントが見つかりません';
+  if(c==='auth/too-many-requests') return '試行が多すぎます。しばらく待ってください';
+  if(c==='auth/network-request-failed') return 'ネットワークエラーが発生しました';
+  if(c==='auth/requires-recent-login') return 'セキュリティのため再ログインが必要です';
+  return (e&&e.message)||'エラーが発生しました';
 }
 
 // Main page: tab switching between list and map
@@ -1940,7 +2000,7 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   };
   m.classList.add('show');
 }
-function logout(){goScreen('login')}
+function logout(){if(fbReady&&fbAuth.currentUser){fbAuth.signOut();}currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');}
 function verifyId(){
   const c=document.getElementById('verify-card');
   c.classList.add('done');
@@ -2050,6 +2110,136 @@ function openCert(name,date,issuer,id,style,icon){
 }
 function openPhotoPicker(){document.getElementById('photo-modal').classList.add('show')}
 
+/* ===== 汎用シート ＆ 各機能（旧スタブの作り込み） ===== */
+function openSheet(title,html){
+  document.getElementById('sheet-title').textContent=title;
+  document.getElementById('sheet-content').innerHTML=html;
+  document.getElementById('sheet-modal').classList.add('show');
+}
+function closeSheet(){closeModal(null,'sheet-modal')}
+
+/* プロフィール編集（実際に保存される） */
+function openProfileEdit(){
+  const u=getStoredUser()||{name:'田中 太郎',bio:'高槻市在住'};
+  openSheet('プロフィール編集',
+    '<div class="input-group"><label class="input-label">お名前</label><input id="pe-name" class="input" value="'+escapeHtml(u.name||'')+'"></div>'+
+    '<div class="input-group"><label class="input-label">自己紹介</label><textarea id="pe-bio" class="input" rows="3" style="resize:vertical;font-family:inherit">'+escapeHtml(u.bio||'')+'</textarea></div>'+
+    '<button class="btn-primary" onclick="saveProfileEdit()">保存する</button>');
+}
+function saveProfileEdit(){
+  const name=document.getElementById('pe-name').value.trim();
+  const bio=document.getElementById('pe-bio').value.trim();
+  if(!name){toast('お名前を入力してください');return}
+  const u=getStoredUser()||{type:'individual'};
+  u.name=name;u.bio=bio;setStoredUser(u);applyUserToUI();
+  closeSheet();toast('プロフィールを保存しました');
+  if(fbReady&&fbAuth.currentUser){fbDb.collection('users').doc(fbAuth.currentUser.uid).update({name:name,bio:bio}).catch(function(){});}
+}
+
+/* メールアドレス変更 */
+function openEmailChange(){
+  const u=getStoredUser()||{};
+  openSheet('メールアドレスの変更',
+    '<div style="font-size:.82rem;color:var(--tl);margin-bottom:12px">現在：'+escapeHtml(u.email||'未設定')+'</div>'+
+    '<div class="input-group"><label class="input-label">新しいメールアドレス</label><input id="ec-email" type="email" class="input" placeholder="example@email.com"></div>'+
+    '<button class="btn-primary" onclick="saveEmailChange()">変更する</button>');
+}
+function saveEmailChange(){
+  const v=document.getElementById('ec-email').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){toast('正しいメールアドレスを入力してください');return}
+  if(fbReady&&fbAuth.currentUser){
+    fbAuth.currentUser.updateEmail(v).then(function(){var u=getStoredUser()||{};u.email=v;setStoredUser(u);closeSheet();toast('メールアドレスを変更しました');}).catch(function(e){toast(authErrMsg(e));});
+    return;
+  }
+  const u=getStoredUser()||{};u.email=v;setStoredUser(u);
+  closeSheet();toast('メールアドレスを変更しました');
+}
+
+/* パスワード変更 */
+function openPasswordChange(){
+  openSheet('パスワードの変更',
+    '<div class="input-group"><label class="input-label">現在のパスワード</label><input id="pc-old" type="password" class="input"></div>'+
+    '<div class="input-group"><label class="input-label">新しいパスワード（8文字以上）</label><input id="pc-new" type="password" class="input"></div>'+
+    '<div class="input-group"><label class="input-label">新しいパスワード（確認）</label><input id="pc-new2" type="password" class="input"></div>'+
+    '<button class="btn-primary" onclick="savePasswordChange()">変更する</button>');
+}
+function savePasswordChange(){
+  const n=document.getElementById('pc-new').value,n2=document.getElementById('pc-new2').value;
+  if(n.length<8){toast('パスワードは8文字以上で入力してください');return}
+  if(n!==n2){toast('パスワードが一致しません');return}
+  if(fbReady&&fbAuth.currentUser){
+    fbAuth.currentUser.updatePassword(n).then(function(){closeSheet();toast('パスワードを変更しました');}).catch(function(e){toast(authErrMsg(e));});
+    return;
+  }
+  closeSheet();toast('パスワードを変更しました');
+}
+
+/* 規約・ポリシー・ヘルプ */
+function openLegal(kind){
+  if(kind==='privacy'){
+    openSheet('プライバシーポリシー',
+      '<p style="margin-bottom:10px">You&i Space（以下「本サービス」）は、利用者の個人情報を適切に取り扱います。本ページは実証デモ版の内容です。</p>'+
+      '<p style="margin-bottom:10px">■ 取得する情報：お名前・メールアドレス・地域・支援に関する投稿内容。</p>'+
+      '<p style="margin-bottom:10px">■ 利用目的：支援者と受援者のマッチング、安全な運営、サービス改善。</p>'+
+      '<p>■ 第三者提供：法令に基づく場合を除き、本人の同意なく行いません。位置情報は概略エリアのみ利用します。</p>');
+  }else if(kind==='terms'){
+    openSheet('利用規約',
+      '<p style="margin-bottom:10px">本規約は、You&i Space（実証デモ版）の利用条件を定めるものです。</p>'+
+      '<p style="margin-bottom:10px">■ 本サービスは、地域の相互扶助を支援する非営利の取り組みです。</p>'+
+      '<p style="margin-bottom:10px">■ 利用者は、他者を尊重し、安全に配慮して支援を行うものとします。</p>'+
+      '<p>■ 金銭の授受を伴う取引、迷惑行為、虚偽情報の登録を禁止します。トラブル時は運営へご連絡ください。</p>');
+  }else{
+    openSheet('ヘルプセンター',
+      legalQA('＆ポイントとは？','支援への感謝が可視化されたポイントです。マイページから交換できます。')+
+      legalQA('マッチングの仕組みは？','「支援したい」「助けてほしい」の投稿が、地域と内容でつながります。')+
+      legalQA('安全に使うには？','本人確認と相互評価（信頼スコア）で、安心して関われる設計です。')+
+      '<button class="btn-primary" style="margin-top:6px" onclick="closeSheet();navTo(\'msg\')">運営に問い合わせる</button>');
+  }
+}
+function legalQA(q,a){return '<div style="margin-bottom:14px"><div style="font-weight:600;font-size:.85rem;color:#5d4d8c">Q. '+escapeHtml(q)+'</div><div style="font-size:.82rem;color:var(--ink);margin-top:3px;line-height:1.8">'+escapeHtml(a)+'</div></div>'}
+
+/* コメント */
+function openComments(){
+  openSheet('コメント',
+    '<div id="cmt-list">'+cmtItem('佐藤','ありがとうございます、本当に助かりました！')+cmtItem('山田','私も近所なのでお手伝いできます。')+'</div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px"><input id="cmt-in" class="input" placeholder="コメントを入力" style="flex:1;margin:0"><button class="btn-primary" style="width:auto;padding:0 18px;margin:0" onclick="addComment()">送信</button></div>');
+}
+function cmtItem(name,text){return '<div style="padding:10px 0;border-bottom:1px solid rgba(184,175,214,.15)"><div style="font-size:.78rem;font-weight:600;color:#7c6fa3">'+escapeHtml(name)+'</div><div style="font-size:.85rem;color:var(--ink);margin-top:2px">'+escapeHtml(text)+'</div></div>'}
+function addComment(){
+  const i=document.getElementById('cmt-in');const v=i.value.trim();if(!v)return;
+  document.getElementById('cmt-list').insertAdjacentHTML('beforeend',cmtItem('あなた',v));
+  i.value='';i.focus();
+}
+
+/* シェア */
+function openShare(){
+  openSheet('シェア',
+    '<div class="set-section">'+
+      shareItem('リンクをコピー','i-share','copyShareLink()')+
+      shareItem('メッセージで送る','i-comment','closeSheet();navTo(\'msg\')')+
+    '</div>');
+}
+function shareItem(label,icon,act){return '<div class="set-item" onclick="'+act+'"><div class="set-icon"><svg class="ic"><use href="#'+icon+'"/></svg></div><div class="set-label">'+label+'</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>'}
+function copyShareLink(){
+  const url=location.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){closeSheet();toast('リンクをコピーしました')},function(){closeSheet();toast('リンクをコピーしました')})}
+  else{closeSheet();toast('リンクをコピーしました')}
+}
+
+/* 履歴・実績・お気に入り */
+function openHistory(kind){
+  if(kind==='support'){
+    openSheet('支援実績',histList([['買い物の付き添い','2026/06/10','＋15 ＆P'],['話し相手・見守り','2026/06/03','＋10 ＆P'],['子どもの送迎','2026/05/28','＋20 ＆P']]));
+  }else if(kind==='fav'){
+    openSheet('お気に入り',histList([['鈴木 みどり さん','支援者',''],['高槻ボランティアの会','団体・行政','']]));
+  }else{
+    openSheet('利用履歴',histList([['＆ポイント利用：カフェドリンク','2026/06/09','−30 ＆P'],['支援を受けた：買い物代行','2026/06/01',''],['アカウント作成','2026/05/30','']]));
+  }
+}
+function histList(rows){
+  return '<div class="set-section">'+rows.map(function(r){return '<div class="set-item"><div style="flex:1"><div class="set-label">'+escapeHtml(r[0])+'</div><div style="font-size:.72rem;color:var(--tl);margin-top:2px">'+escapeHtml(r[1])+'</div></div>'+(r[2]?'<div style="font-size:.78rem;font-weight:600;color:#5a9a6a">'+escapeHtml(r[2])+'</div>':'')+'</div>'}).join('')+'</div>';
+}
+
 let toastTimer=null;
 function toast(text){
   const t=document.getElementById('toast');
@@ -2089,6 +2279,20 @@ function initMap(){
   L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
 }
 function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);toast('現在地に戻りました')}}
+
+/* ===== Firebase 認証状態の監視（ログイン保持・自動遷移） ===== */
+if(fbReady){
+  fbAuth.onAuthStateChanged(function(user){
+    if(!user) return;
+    fbDb.collection('users').doc(user.uid).get().then(function(doc){
+      var p = doc.exists ? doc.data() : {type:'individual',name:(user.email||'利用者'),bio:''};
+      p.email=user.email; p.uid=user.uid; setStoredUser(p);
+      if(typeof applyUserToUI==='function') applyUserToUI();
+      var active=document.querySelector('.screen.active');
+      if(active && active.id==='screen-login'){ navTo('main'); setTimeout(function(){toast('ようこそ、You&i Spaceへ');},300); }
+    }).catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
