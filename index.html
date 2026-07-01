@@ -742,12 +742,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="filter-section">
         <div class="filter-section-label">地域で絞り込み</div>
         <div class="filter-row" id="region-filters">
-          <div class="filter-chip on" onclick="filterRegion(this,'高槻市')">高槻市</div>
-          <div class="filter-chip" onclick="filterRegion(this,'茨木市')">茨木市</div>
-          <div class="filter-chip" onclick="filterRegion(this,'吹田市')">吹田市</div>
-          <div class="filter-chip" onclick="filterRegion(this,'大阪市内')">大阪市内</div>
-          <div class="filter-chip" onclick="filterRegion(this,'京都市内')">京都市内</div>
-          <div class="filter-chip" onclick="filterRegion(this,'all')">すべて</div>
+          <select id="region-select" onchange="filterRegionSelect(this.value)" style="width:100%;padding:11px 34px 11px 13px;border:1px solid rgba(184,175,214,.3);border-radius:12px;background-color:#fff;font-family:inherit;font-size:.85rem;color:var(--ink);-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b6b7a%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 12px center">
+            <option value="all">すべての地域（全国）</option>
+          </select>
         </div>
       </div>
       <div class="filter-section">
@@ -950,7 +947,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div id="leaflet-map"></div>
       <div class="map-search">
         <svg class="ic"><use href="#i-search"/></svg>
-        <input type="text" placeholder="地域・条件で探す" value="高槻市">
+        <input type="text" placeholder="地域・条件で探す（全国）" value="">
       </div>
       <div class="map-filter">
         <div class="filter-chip on" onclick="toggleFilter(this)">すべて</div>
@@ -1011,6 +1008,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <button class="pt-btn" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-receiver"/></svg>助けを求める</button>
     </div>
     <div class="post-field"><label class="post-label">タイトル</label><input type="text" class="post-input" id="post-title" placeholder="例：高槻市内で買い物代行できます"></div>
+    <div class="post-field"><label class="post-label">地域 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（大まかで大丈夫です）</span></label>
+      <select class="post-input" id="post-pref" style="-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b6b7a%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:34px">
+        <option value="">都道府県を選択（任意）</option>
+      </select>
+    </div>
+    <div class="post-field"><label class="post-label">市区町村・エリア <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-area" placeholder="例：高槻市 ○○駅周辺（番地は不要）"></div>
     <div class="post-field">
       <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（複数選択可）</span></label>
       <div class="cat-pick cat-pick-3">
@@ -1044,12 +1047,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="screen" id="screen-msg">
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>メッセージ</div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="toast('新しいメッセージは「マップ」から相手を選んでください')"><svg class="ic"><use href="#i-edit"/></svg></button></div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('気になる投稿を開いて「メッセージを送る」から会話を始められます')"><svg class="ic"><use href="#i-edit"/></svg></button></div>
   </div>
   <div class="msg-screen">
-    <div class="msg-search"><svg class="ic"><use href="#i-search"/></svg><input type="text" placeholder="メッセージを検索"></div>
+    <div class="msg-search"><svg class="ic"><use href="#i-search"/></svg><input type="text" placeholder="メッセージを検索" oninput="filterConvs(this.value)"></div>
     <div class="msg-list">
-      <div id="msg-empty" style="display:none;padding:30px 20px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.9">まだメッセージがありません。<br>投稿からマッチングが成立すると、<br>ここでやり取りできます。</div>
+      <div id="msg-empty" style="display:none;padding:30px 20px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.9">まだメッセージがありません。<br>気になる投稿を開いて<br>「メッセージを送る」から会話を始めましょう。</div>
+      <div id="conv-list"></div>
       <div id="msg-demo" class="demo-only">
       <div class="msg-item" onclick="openChat('鈴木','green','鈴')">
         <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
@@ -1095,7 +1099,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="screen no-nav chat-screen" id="screen-chat">
   <div class="app-header">
     <div class="app-h-back" onclick="navTo('msg')"><svg class="ic"><use href="#i-back"/></svg></div>
-    <div style="flex:1;display:flex;align-items:center;gap:10px;padding:0 8px;cursor:pointer" onclick="navTo('uprof')">
+    <div style="flex:1;display:flex;align-items:center;gap:10px;padding:0 8px;cursor:pointer" onclick="openChatPartner()">
       <div class="avatar sm" id="chat-avatar">＿</div>
       <div>
         <div style="font-size:.92rem;font-weight:500" id="chat-name">—</div>
@@ -1446,6 +1450,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="qa" onclick="openHistory('fav')">
       <div class="qa-illust"><svg class="ic"><use href="#i-bookmark"/></svg></div>
       <div class="qa-label">お気に入り</div>
+    </div>
+  </div>
+
+  <!-- 自分の投稿の管理 -->
+  <div class="set-section" style="margin:14px 18px 0">
+    <div class="set-item" onclick="openMyPosts()">
+      <div class="set-icon"><svg class="ic"><use href="#i-edit"/></svg></div>
+      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">支援・受援の投稿を編集／削除</div></div>
+      <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
     </div>
   </div>
 
@@ -1815,7 +1828,7 @@ function navTo(name){
     const mapPanel=document.getElementById('main-panel-map');
     if(mapPanel && mapPanel.style.display!=='none'){
       if(!mapInited) initMap();
-      if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),120);
+      if(mapInstance) setTimeout(()=>{mapInstance.invalidateSize();updateMapPins();},120);
     }
   }
 }
@@ -1974,7 +1987,7 @@ function switchMainTab(el,which){
   document.getElementById('main-panel-map').style.display=(which==='map'?'':'none');
   if(which==='map'){
     if(!mapInited) initMap();
-    if(mapInstance) setTimeout(()=>mapInstance.invalidateSize(),120);
+    if(mapInstance) setTimeout(()=>{mapInstance.invalidateSize();updateMapPins();},120);
   }
 }
 
@@ -1988,41 +2001,65 @@ function goBackFromUprof(){
   else navTo(back);
 }
 
-// Providers list filters
-let curRegion='高槻市', curCat='all';
-function filterRegion(el,region){
-  el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');
-  curRegion=region;
-  document.getElementById('prov-region-label').textContent=region==='all'?'すべての地域':(region+'内');
+// ===== 全国対応：都道府県データ・位置（大まかな中心座標） =====
+var PREFS=["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+var PREF_LL={"北海道":[43.06,141.35],"青森県":[40.82,140.74],"岩手県":[39.70,141.15],"宮城県":[38.27,140.87],"秋田県":[39.72,140.10],"山形県":[38.24,140.36],"福島県":[37.75,140.47],"茨城県":[36.34,140.45],"栃木県":[36.57,139.88],"群馬県":[36.39,139.06],"埼玉県":[35.86,139.65],"千葉県":[35.61,140.12],"東京都":[35.69,139.69],"神奈川県":[35.45,139.64],"新潟県":[37.90,139.02],"富山県":[36.70,137.21],"石川県":[36.59,136.63],"福井県":[36.07,136.22],"山梨県":[35.66,138.57],"長野県":[36.65,138.18],"岐阜県":[35.39,136.72],"静岡県":[34.98,138.38],"愛知県":[35.18,136.91],"三重県":[34.73,136.51],"滋賀県":[35.00,135.87],"京都府":[35.02,135.76],"大阪府":[34.69,135.52],"兵庫県":[34.69,135.18],"奈良県":[34.69,135.83],"和歌山県":[34.23,135.17],"鳥取県":[35.50,134.24],"島根県":[35.47,133.05],"岡山県":[34.66,133.93],"広島県":[34.40,132.46],"山口県":[34.19,131.47],"徳島県":[34.07,134.56],"香川県":[34.34,134.04],"愛媛県":[33.84,132.77],"高知県":[33.56,133.53],"福岡県":[33.61,130.42],"佐賀県":[33.25,130.30],"長崎県":[32.74,129.87],"熊本県":[32.79,130.74],"大分県":[33.24,131.61],"宮崎県":[31.91,131.42],"鹿児島県":[31.56,130.56],"沖縄県":[26.21,127.68]};
+
+function prefOptions(sel){
+  var o='<option value="">都道府県を選択（任意）</option>';
+  PREFS.forEach(function(p){ o+='<option value="'+p+'"'+(p===sel?' selected':'')+'>'+p+'</option>'; });
+  return o;
+}
+function initPrefSelects(){
+  var rs=document.getElementById('region-select');
+  if(rs){ var o='<option value="all">すべての地域（全国）</option>'; PREFS.forEach(function(p){o+='<option value="'+p+'">'+p+'</option>';}); rs.innerHTML=o; rs.value='all'; }
+  var ps=document.getElementById('post-pref');
+  if(ps) ps.innerHTML=prefOptions('');
+}
+
+// 投稿カテゴリ → フィルタ用トークン
+function catTokens(cats){
+  var map={'老老介護':'elder','ひとり親':'parent','ヤングケアラー':'young'};
+  var set={};
+  (cats||[]).forEach(function(c){ set[map[c]||'daily']=1; });
+  return Object.keys(set);
+}
+function firstCatToken(cats){ var t=catTokens(cats); return t.length?t[0]:'daily'; }
+function catColor(tok){ return tok==='elder'?'green':(tok==='parent'?'pink':(tok==='young'?'sky':'lav')); }
+
+// Providers list filters（全国・都道府県ベース）
+let curRegion='all', curCat='all';
+function filterRegionSelect(region){
+  curRegion=region||'all';
+  var lbl=document.getElementById('prov-region-label');
+  if(lbl) lbl.textContent=(curRegion==='all')?'すべての地域':curRegion;
   applyProvFilters();
 }
+function filterRegion(el,region){ curRegion=region; applyProvFilters(); }  /* 旧チップ後方互換 */
 function filterCat(el,cat){
-  el.parentNode.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
+  el.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('on');});
   el.classList.add('on');
   curCat=cat;
   applyProvFilters();
 }
 function applyProvFilters(){
-  const cards=document.querySelectorAll('.prov-card');
-  let count=0;
-  cards.forEach(card=>{
-    const r=card.dataset.region, c=card.dataset.cat;
-    const matchR=(curRegion==='all'||r===curRegion);
-    const matchC=(curCat==='all'||c===curCat);
-    if(matchR && matchC){card.style.display='';count++}
+  var count=0;
+  document.querySelectorAll('.prov-card').forEach(function(card){
+    var isLive=card.hasAttribute('data-live');
+    var r=card.dataset.region||'', c=card.dataset.cat||'';
+    // ライブ投稿は地域/カテゴリ未設定なら常に表示（ユーザー投稿を勝手に隠さない）
+    var matchR=(curRegion==='all'|| r===curRegion || (isLive && !r));
+    var matchC=(curCat==='all'|| c.split(' ').indexOf(curCat)>=0 || (isLive && !c));
+    if(matchR && matchC){card.style.display='';count++;}
     else card.style.display='none';
   });
-  // Hide empty groups
-  document.querySelectorAll('.prov-list').forEach(list=>{
-    const visible=Array.from(list.children).some(c=>c.style.display!=='none');
-    const groupH=list.previousElementSibling;
-    if(groupH && groupH.classList.contains('prov-group-h')){
-      groupH.style.display=visible?'':'none';
-    }
+  document.querySelectorAll('.prov-list').forEach(function(list){
+    var visible=Array.prototype.slice.call(list.children).some(function(c){return c.style.display!=='none';});
+    var groupH=list.previousElementSibling;
+    if(groupH && groupH.classList.contains('prov-group-h')) groupH.style.display=visible?'':'none';
     list.style.display=visible?'':'none';
   });
-  document.getElementById('prov-count').textContent=count;
+  var pc=document.getElementById('prov-count'); if(pc) pc.textContent=count;
 }
 
 // Provider detail (uses same modal as match)
@@ -2053,7 +2090,14 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   };
   m.classList.add('show');
 }
-function logout(){if(fbReady&&fbAuth.currentUser){fbAuth.signOut();}currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');}
+function logout(){
+  if(fbReady&&fbAuth.currentUser){fbAuth.signOut();}
+  if(convListUnsub){convListUnsub();convListUnsub=null;}
+  if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
+  if(postsUnsub){postsUnsub();postsUnsub=null;}
+  currentConv=null; window.__convs={};
+  currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');
+}
 function verifyId(){
   const c=document.getElementById('verify-card');
   c.classList.add('done');
@@ -2074,15 +2118,19 @@ function submitPost(){
   var title=((document.getElementById('post-title')||{}).value||'').trim();
   var detail=((document.getElementById('post-detail')||{}).value||'').trim();
   var cats=[].map.call(document.querySelectorAll('#screen-post .cat-opt.on'),function(e){return e.textContent.trim();});
+  var pref=((document.getElementById('post-pref')||{}).value||'');
+  var area=((document.getElementById('post-area')||{}).value||'').trim();
   if(!title){toast('タイトルを入力してください');return}
   if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
   var u=getStoredUser()||{};
-  var post={type:type,title:title,detail:detail,categories:cats,uid:fbAuth.currentUser.uid,
+  var post={type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,uid:fbAuth.currentUser.uid,
     authorName:(u.type==='org'?(u.orgName||u.name):u.name)||'利用者',
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
     var t=document.getElementById('post-title'); if(t)t.value='';
     var d=document.getElementById('post-detail'); if(d)d.value='';
+    var pa=document.getElementById('post-area'); if(pa)pa.value='';
+    var pp=document.getElementById('post-pref'); if(pp)pp.value='';
     toast('投稿しました。マッチングを開始します');
     setTimeout(()=>navTo('main'),700);
   }).catch(function(e){toast(authErrMsg(e));});
@@ -2097,8 +2145,11 @@ function subscribePosts(){
     if(snap.empty){ el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>'; if(lc)lc.textContent='0'; return; }
     window.__posts=window.__posts||{};
     var html='';
+    window.__posts={};
     snap.forEach(function(doc){ var p=doc.data(); p.id=doc.id; window.__posts[doc.id]=p; html+=renderPostCard(p); });
     el.innerHTML=html; if(lc) lc.textContent=String(snap.size);
+    if(curRegion!=='all'||curCat!=='all') applyProvFilters();
+    if(mapInited) updateMapPins();
   },function(err){ console.warn('posts listen error',err);
     var el=document.getElementById('live-posts'); if(el&&(err.code==='permission-denied')) el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.78rem">投稿の表示にはログインが必要です。</div>';
   });
@@ -2111,26 +2162,134 @@ function renderPostCard(p){
     ?'<span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(232,180,184,.25);color:#c07880">助けて</span>'
     :'<span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(168,196,176,.3);color:#5a9a6a">支援</span>';
   var cats=(p.categories||[]).slice(0,3).map(function(c){return '<span style="font-size:.64rem;padding:2px 7px;border-radius:8px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:4px">'+escapeHtml(c)+'</span>';}).join('');
-  return '<div class="prov-card" onclick="openPostDetail(\''+p.id+'\')">'+
+  var locText=[p.pref,p.area].filter(Boolean).join(' ');
+  var loc=locText?'<div style="font-size:.7rem;color:var(--lav2);margin-top:5px;display:flex;align-items:center;gap:3px"><svg class="ic" style="width:11px;height:11px"><use href="#i-location"/></svg>'+escapeHtml(locText)+'</div>':'';
+  return '<div class="prov-card" data-live="1" data-region="'+escapeHtml(p.pref||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'" onclick="openPostDetail(\''+p.id+'\')">'+
     '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
     '<div class="prov-body">'+
       '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
       (p.detail?'<div style="font-size:.76rem;color:var(--tl);margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
       (cats?'<div style="margin-top:6px">'+cats+'</div>':'')+
-      '<div style="font-size:.7rem;color:var(--tl);margin-top:5px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+'</div>'+
+      loc+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:5px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+(isMyPost(p)?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
     '</div>'+
   '</div>';
 }
+/* この投稿がログイン中の自分のものか */
+function isMyPost(p){ return !!(fbReady && fbAuth.currentUser && p && p.uid===fbAuth.currentUser.uid); }
+
 function openPostDetail(id){
   var p=(window.__posts||{})[id]; if(!p) return;
   var isR=p.type==='receive';
+  var mine=isMyPost(p);
   var cats=(p.categories||[]).map(function(c){return '<span style="font-size:.7rem;padding:3px 9px;border-radius:9px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:5px">'+escapeHtml(c)+'</span>';}).join('');
+  var actions;
+  if(mine){
+    actions='<div style="display:flex;gap:10px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="editPost(\''+id+'\')">編集する</button>'+
+      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="confirmDeletePost(\''+id+'\')">削除する</button>'+
+    '</div>';
+  }else if(fbReady && fbAuth.currentUser){
+    actions='<button class="btn-primary" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button>';
+  }else{
+    actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
+  }
+  var locText=[p.pref,p.area].filter(Boolean).join(' ');
+  var loc=locText?'<div style="font-size:.82rem;color:var(--lav2);margin-bottom:12px;display:flex;align-items:center;gap:4px"><svg class="ic" style="width:13px;height:13px"><use href="#i-location"/></svg>'+escapeHtml(locText)+'</div>':'';
   openSheet(isR?'助けてほしい':'支援したい',
     '<div style="font-weight:600;font-size:1.02rem;margin-bottom:8px">'+escapeHtml(p.title||'')+'</div>'+
     (p.detail?'<div style="font-size:.86rem;color:var(--ink);line-height:1.85;margin-bottom:12px">'+escapeHtml(p.detail)+'</div>':'')+
     (cats?'<div style="margin-bottom:12px">'+cats+'</div>':'')+
-    '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+'</div>'+
-    '<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>');
+    loc+
+    '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+(mine?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
+    actions);
+}
+
+/* 投稿から相手に実メッセージを送る */
+function messageFromPost(id){
+  var p=(window.__posts||{})[id]; if(!p) return;
+  closeSheet();
+  openConversation(p.uid,p.authorName||'利用者',colorForUid(p.uid));
+}
+
+/* 自分の投稿一覧（管理シート） */
+function openMyPosts(){
+  if(!fbReady||!fbAuth.currentUser){ toast('投稿の管理にはログインが必要です'); return; }
+  var me=fbAuth.currentUser.uid;
+  var all=window.__posts||{};
+  var mine=Object.keys(all).map(function(k){return all[k];}).filter(function(p){return p.uid===me;});
+  mine.sort(function(a,b){
+    var ta=(a.createdAt&&a.createdAt.toDate)?a.createdAt.toDate().getTime():0;
+    var tb=(b.createdAt&&b.createdAt.toDate)?b.createdAt.toDate().getTime():0;
+    return tb-ta;
+  });
+  var body;
+  if(!mine.length){
+    body='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">まだ投稿がありません。<br>右下の＋ボタンから支援・受援を投稿できます。</div>';
+  }else{
+    body=mine.map(function(p){
+      var isR=p.type==='receive';
+      var badge=isR
+        ?'<span style="font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(232,180,184,.25);color:#c07880">助けて</span>'
+        :'<span style="font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(168,196,176,.3);color:#5a9a6a">支援</span>';
+      return '<div style="padding:12px 0;border-bottom:1px solid rgba(184,175,214,.15)">'+
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
+        (p.detail?'<div style="font-size:.76rem;color:var(--tl);line-height:1.6;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
+        '<div style="font-size:.68rem;color:var(--tl);margin-bottom:8px">'+timeAgo(p.createdAt)+'</div>'+
+        '<div style="display:flex;gap:8px">'+
+          '<button class="btn-secondary" style="flex:1;padding:8px;font-size:.8rem" onclick="editPost(\''+p.id+'\')">編集</button>'+
+          '<button class="btn-primary" style="flex:1;padding:8px;font-size:.8rem;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:none" onclick="confirmDeletePost(\''+p.id+'\')">削除</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+  openSheet('自分の投稿',body);
+}
+
+/* 投稿の編集 */
+var editType='provide';
+function editPost(id){
+  var p=(window.__posts||{})[id]; if(!p) return;
+  var isR=p.type==='receive';
+  editType=p.type||'provide';
+  openSheet('投稿を編集',
+    '<div class="post-toggle" style="margin-bottom:16px">'+
+      '<button type="button" class="pt-btn'+(!isR?' on':'')+'" onclick="setEditType(this,\'provide\')">支援したい</button>'+
+      '<button type="button" class="pt-btn'+(isR?' on':'')+'" onclick="setEditType(this,\'receive\')">助けを求める</button>'+
+    '</div>'+
+    '<div class="input-group"><label class="input-label">タイトル</label><input id="ep-title" class="input" value="'+escapeHtml(p.title||'')+'"></div>'+
+    '<div class="input-group"><label class="input-label">地域（都道府県）</label><select id="ep-pref" class="input">'+prefOptions(p.pref||'')+'</select></div>'+
+    '<div class="input-group"><label class="input-label">市区町村・エリア（任意）</label><input id="ep-area" class="input" value="'+escapeHtml(p.area||'')+'" placeholder="例：高槻市 ○○駅周辺"></div>'+
+    '<div class="input-group"><label class="input-label">詳細</label><textarea id="ep-detail" class="input" rows="4" style="resize:vertical;font-family:inherit">'+escapeHtml(p.detail||'')+'</textarea></div>'+
+    '<button class="btn-primary" onclick="saveEditPost(\''+id+'\')">保存する</button>');
+}
+function setEditType(el,t){ el.parentNode.querySelectorAll('.pt-btn').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); editType=t; }
+function saveEditPost(id){
+  var title=((document.getElementById('ep-title')||{}).value||'').trim();
+  var detail=((document.getElementById('ep-detail')||{}).value||'').trim();
+  var pref=((document.getElementById('ep-pref')||{}).value||'');
+  var area=((document.getElementById('ep-area')||{}).value||'').trim();
+  if(!title){toast('タイトルを入力してください');return;}
+  if(!fbReady||!fbAuth.currentUser){toast('ログインが必要です');return;}
+  fbDb.collection('posts').doc(id).update({type:editType,title:title,detail:detail,pref:pref,area:area})
+    .then(function(){ closeSheet(); toast('投稿を更新しました'); })
+    .catch(function(e){ console.warn('update post fail',e); toast('更新できませんでした'); });
+}
+
+/* 投稿の削除（確認つき） */
+function confirmDeletePost(id){
+  openSheet('投稿を削除',
+    '<p style="font-size:.9rem;color:var(--ink);line-height:1.85;margin-bottom:18px">この投稿を削除しますか？<br>一度削除すると元に戻せません。</p>'+
+    '<div style="display:flex;gap:10px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">キャンセル</button>'+
+      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="doDeletePost(\''+id+'\')">削除する</button>'+
+    '</div>');
+}
+function doDeletePost(id){
+  if(!fbReady||!fbAuth.currentUser){toast('ログインが必要です');return;}
+  fbDb.collection('posts').doc(id).delete()
+    .then(function(){ if(window.__posts)delete window.__posts[id]; closeSheet(); toast('投稿を削除しました'); })
+    .catch(function(e){ console.warn('delete post fail',e); toast('削除できませんでした'); });
 }
 function timeAgo(ts){
   if(!ts||!ts.toDate) return 'たった今';
@@ -2199,7 +2358,137 @@ function closeModal(e,id){
   document.getElementById(id).classList.remove('show');
 }
 
+/* ============================================
+   メッセージ（Firestore・実データ）
+   - conversations/{cid}                : {participants:[uidA,uidB], names:{}, lastMessage, lastSender, updatedAt}
+   - conversations/{cid}/messages/{mid} : {senderId, text, createdAt}
+   cid は2人のuidをソートして連結（同じ相手なら常に同じスレッド）
+   ============================================ */
+var currentConv=null;     // 実会話 {id, otherUid, otherName, color}
+var chatMsgsUnsub=null;   // 現在のチャットの購読解除
+var convListUnsub=null;   // 会話一覧の購読解除
+
+function convIdFor(a,b){ return [a,b].sort().join('_'); }
+function colorForUid(uid){
+  var cs=['lav','green','pink','sky','gold'], n=0, s=uid||'';
+  for(var i=0;i<s.length;i++) n+=s.charCodeAt(i);
+  return cs[n%cs.length];
+}
+function chatTime(ts){
+  if(!ts||!ts.toDate) return '今';
+  var d=ts.toDate(), now=new Date();
+  var hm=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+  if(d.toDateString()===now.toDateString()) return hm;
+  return (d.getMonth()+1)+'/'+d.getDate();
+}
+
+/* 相手を指定して実会話を開く（投稿の「メッセージを送る」等から） */
+function openConversation(otherUid,otherName,color){
+  if(!fbReady||!fbAuth.currentUser){ toast('メッセージのご利用にはログインが必要です'); return; }
+  var me=fbAuth.currentUser.uid;
+  if(!otherUid){ toast('相手が見つかりませんでした'); return; }
+  if(otherUid===me){ toast('自分の投稿にはメッセージを送れません'); return; }
+  color=color||colorForUid(otherUid);
+  var cid=convIdFor(me,otherUid);
+  currentConv={id:cid, otherUid:otherUid, otherName:otherName||'利用者', color:color};
+  var initial=(otherName||'?').charAt(0);
+  document.getElementById('chat-name').textContent=(otherName||'利用者')+' さん';
+  var av=document.getElementById('chat-avatar');
+  av.innerHTML=escapeHtml(initial)+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
+  av.className='avatar sm '+color;
+  subscribeChatMessages(cid,initial,color);
+  goScreen('chat');
+}
+/* 会話一覧の項目から開く（uidをキーに __convs から名前・色を復元） */
+function openConvById(uid){ var c=(window.__convs||{})[uid]||{}; openConversation(uid,c.name,c.color); }
+
+/* チャットヘッダーの相手名タップ：実会話では相手名を確認（デモ時のみプロフィールへ） */
+function openChatPartner(){
+  if(currentConv && currentConv.id){ toast((currentConv.otherName||'相手')+' さんとの会話'); return; }
+  navTo('uprof');
+}
+
+/* 現在のチャットのメッセージを購読して描画 */
+function subscribeChatMessages(cid,initial,color){
+  if(chatMsgsUnsub){ chatMsgsUnsub(); chatMsgsUnsub=null; }
+  var thread=document.getElementById('chat-thread');
+  thread.innerHTML='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.8rem">読み込み中…</div>';
+  var me=fbAuth.currentUser.uid;
+  chatMsgsUnsub=fbDb.collection('conversations').doc(cid).collection('messages')
+    .orderBy('createdAt','asc').limit(300).onSnapshot(function(snap){
+      if(snap.empty){
+        thread.innerHTML='<div style="padding:34px 20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.9">まだメッセージはありません。<br>最初のメッセージを送ってみましょう。</div>';
+        return;
+      }
+      var html='';
+      snap.forEach(function(doc){
+        var m=doc.data();
+        var mine=m.senderId===me;
+        if(mine){
+          html+='<div class="bubble-wrap me"><div><div class="bubble">'+escapeHtml(m.text||'')+'</div><div class="bubble-time">'+chatTime(m.createdAt)+'</div></div></div>';
+        }else{
+          html+='<div class="bubble-wrap"><div class="avatar sm bub1 '+(color||'lav')+'">'+escapeHtml(initial||'?')+'</div><div><div class="bubble">'+escapeHtml(m.text||'')+'</div><div class="bubble-time">'+chatTime(m.createdAt)+'</div></div></div>';
+        }
+      });
+      thread.innerHTML=html;
+      thread.scrollTop=thread.scrollHeight;
+    },function(err){ console.warn('messages listen error',err);
+      thread.innerHTML='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.8rem">メッセージを読み込めませんでした。</div>';
+    });
+}
+
+/* 会話一覧を購読（自分が参加している会話をリアルタイム表示） */
+function subscribeConversations(){
+  if(!fbReady||!fbAuth.currentUser||convListUnsub) return;
+  var me=fbAuth.currentUser.uid;
+  convListUnsub=fbDb.collection('conversations').where('participants','array-contains',me)
+    .onSnapshot(function(snap){
+      var list=document.getElementById('conv-list');
+      var empty=document.getElementById('msg-empty');
+      if(!list) return;
+      var items=[];
+      snap.forEach(function(doc){ var c=doc.data(); c.id=doc.id; items.push(c); });
+      items.sort(function(a,b){
+        var ta=(a.updatedAt&&a.updatedAt.toDate)?a.updatedAt.toDate().getTime():0;
+        var tb=(b.updatedAt&&b.updatedAt.toDate)?b.updatedAt.toDate().getTime():0;
+        return tb-ta;
+      });
+      if(!items.length){ list.innerHTML=''; if(empty) empty.style.display=''; return; }
+      if(empty) empty.style.display='none';
+      window.__convs=window.__convs||{};
+      var html='';
+      items.forEach(function(c){
+        var other=(c.participants||[]).filter(function(u){return u!==me;})[0]||'';
+        var name=(c.names&&c.names[other])||'利用者';
+        var color=colorForUid(other);
+        var initial=name.charAt(0);
+        window.__convs[other]={name:name,color:color};
+        var preview=(c.lastSender===me?'あなた: ':'')+(c.lastMessage||'');
+        html+='<div class="msg-item" onclick="openConvById(\''+other+'\')">'+
+          '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
+          '<div class="mc-body">'+
+            '<div class="msg-row1"><div class="msg-name">'+escapeHtml(name)+' さん</div><div class="msg-time">'+chatTime(c.updatedAt)+'</div></div>'+
+            '<div class="msg-preview">'+escapeHtml(preview)+'</div>'+
+          '</div>'+
+        '</div>';
+      });
+      list.innerHTML=html;
+    },function(err){ console.warn('conversations listen error',err); });
+}
+
+/* メッセージ検索（会話一覧を絞り込み） */
+function filterConvs(q){
+  q=(q||'').trim();
+  var list=document.getElementById('conv-list'); if(!list) return;
+  list.querySelectorAll('.msg-item').forEach(function(it){
+    it.style.display=(!q||it.textContent.indexOf(q)>=0)?'':'none';
+  });
+}
+
+/* デモ（ゲスト）用の擬似チャット。実会話ではない */
 function openChat(name,color,initial){
+  currentConv=null;
+  if(chatMsgsUnsub){ chatMsgsUnsub(); chatMsgsUnsub=null; }
   document.getElementById('chat-name').textContent=name+(name.includes('役所')?'':' さん');
   const av=document.getElementById('chat-avatar');
   av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
@@ -2210,13 +2499,39 @@ function openChat(name,color,initial){
   });
   goScreen('chat');
 }
+
 function sendChat(){
   const f=document.getElementById('chat-field');
-  if(!f.value.trim()) return;
+  const text=f.value.trim();
+  if(!text) return;
+  // 実会話：Firestore に保存（相手にもリアルタイムで届く）
+  if(currentConv && currentConv.id && fbReady && fbAuth.currentUser){
+    const me=fbAuth.currentUser.uid;
+    const u=getStoredUser()||{};
+    const myName=(u.type==='org'?(u.orgName||u.name):u.name)||'利用者';
+    f.value='';
+    const cid=currentConv.id;
+    const names={}; names[me]=myName; names[currentConv.otherUid]=currentConv.otherName;
+    const convRef=fbDb.collection('conversations').doc(cid);
+    convRef.set({
+      participants:[me,currentConv.otherUid],
+      names:names,
+      lastMessage:text,
+      lastSender:me,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    },{merge:true}).then(function(){
+      return convRef.collection('messages').add({
+        senderId:me, text:text,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }).catch(function(e){ console.warn('send message fail',e); toast('送信できませんでした'); });
+    return;
+  }
+  // デモ（ゲスト）：ローカルに追加するだけ
   const thread=document.getElementById('chat-thread');
   const div=document.createElement('div');
   div.className='bubble-wrap me';
-  div.innerHTML='<div><div class="bubble">'+escapeHtml(f.value)+'</div><div class="bubble-time">今</div></div>';
+  div.innerHTML='<div><div class="bubble">'+escapeHtml(text)+'</div><div class="bubble-time">今</div></div>';
   thread.appendChild(div);
   f.value='';
   thread.scrollTop=thread.scrollHeight;
@@ -2376,20 +2691,55 @@ function toast(text){
   toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
+function makeUserIcon(color,initial){
+  return L.divIcon({html:'<div class="user-marker '+(color||'lav')+'">'+initial+'</div>',className:'',iconSize:[42,42],iconAnchor:[21,21]});
+}
+// 投稿IDから決定的な微小ジッター（同一県の投稿が重ならないように）
+function jitter(id){
+  var n=0; id=id||''; for(var i=0;i<id.length;i++) n=(n*31+id.charCodeAt(i))>>>0;
+  return [((n%1000)/1000-0.5)*0.18, (((n>>>10)%1000)/1000-0.5)*0.18];
+}
+function prefLatLng(pref){ return PREF_LL[pref]||null; }
+
+var postMarkers=[];
+/* 受援（助けを求める）投稿を、大まかな都道府県の位置にマップ表示 */
+function updateMapPins(){
+  if(!mapInstance) return;
+  postMarkers.forEach(function(m){ mapInstance.removeLayer(m); });
+  postMarkers=[];
+  var posts=window.__posts||{}, bounds=[];
+  Object.keys(posts).forEach(function(k){
+    var p=posts[k];
+    if(p.type!=='receive') return;              // 受援者マップ＝助けを求める投稿
+    var ll=prefLatLng(p.pref); if(!ll) return;  // 地域未設定の投稿はピンにしない（リストには出る）
+    var j=jitter(p.id), lat=ll[0]+j[0], lng=ll[1]+j[1];
+    var tok=firstCatToken(p.categories);
+    var initial=(p.authorName||p.title||'?').charAt(0);
+    var mk=L.marker([lat,lng],{icon:makeUserIcon(catColor(tok),initial)}).addTo(mapInstance)
+      .on('click',(function(id){return function(){openPostDetail(id);};})(p.id));
+    postMarkers.push(mk); bounds.push([lat,lng]);
+  });
+  // 実アカウントのみ：投稿があれば全体が収まるようズーム、無ければ空表示
+  if(currentProfile && currentProfile.uid){
+    var me=document.getElementById('map-empty');
+    if(bounds.length){ if(me) me.style.display='none'; try{mapInstance.fitBounds(bounds,{padding:[50,50],maxZoom:11});}catch(e){} }
+    else if(me){ me.style.display=''; }
+  }
+}
+
 function initMap(){
   if(mapInited) return;
   mapInited=true;
-  mapInstance=L.map('leaflet-map',{zoomControl:false,attributionControl:true}).setView([34.8485,135.6178],15);
+  var isGuest=!(currentProfile && currentProfile.uid);
+  // ゲストは高槻のデモ表示、実アカウントは全国表示から開始
+  var center=isGuest?[34.8485,135.6178]:[37.5,137.0], zoom=isGuest?15:5;
+  mapInstance=L.map('leaflet-map',{zoomControl:false,attributionControl:true}).setView(center,zoom);
   // 国土地理院（GSI）淡色地図タイル：日本語ラベル対応
   L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',{
     attribution:'<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>',
-    maxZoom:18,minZoom:5
+    maxZoom:18,minZoom:4
   }).addTo(mapInstance);
 
-  const makeIcon=(color,initial)=>L.divIcon({
-    html:'<div class="user-marker '+color+'">'+initial+'</div>',
-    className:'',iconSize:[42,42],iconAnchor:[21,21]
-  });
   const meIcon=L.divIcon({html:'<div class="me-marker"></div>',className:'',iconSize:[22,22],iconAnchor:[11,11]});
 
   const markers=[
@@ -2399,22 +2749,27 @@ function initMap(){
     {lat:34.8420,lng:135.6300,c:'green',i:'木',n:'木村',cat:'elder', t:'夫の通院に同行できる方を探しています。',d:'3.4km',s:'4.9',m:'スコア88',sc:88},
     {lat:34.8520,lng:135.6080,c:'pink', i:'林',n:'林',  cat:'parent',t:'子の食事準備を週2でお願いします。',d:'1.8km',s:'5.0',m:'ひとり親',sc:91},
   ];
-  // デモのピンはゲスト時のみ表示（実アカウントでは出さない）
-  if(!(currentProfile && currentProfile.uid)){
+  // デモのピン・現在地はゲスト時のみ表示（実アカウントでは実投稿ピンのみ）
+  if(isGuest){
     markers.forEach(m=>{
-      L.marker([m.lat,m.lng],{icon:makeIcon(m.c,m.i)}).addTo(mapInstance)
+      L.marker([m.lat,m.lng],{icon:makeUserIcon(m.c,m.i)}).addTo(mapInstance)
         .on('click',()=>openMatch(m.n,m.cat,m.t,m.d,m.s,m.m,m.sc));
     });
+    L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
   }
-  L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
+  updateMapPins();
 }
 function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);toast('現在地に戻りました')}}
+
+/* 都道府県セレクト（地域フィルター・投稿フォーム）を全国対応で生成 */
+initPrefSelects();
 
 /* ===== Firebase 認証状態の監視（ログイン保持・自動遷移） ===== */
 if(fbReady){
   fbAuth.onAuthStateChanged(function(user){
     if(!user) return;
     subscribePosts();
+    subscribeConversations();
     fbDb.collection('users').doc(user.uid).get().then(function(doc){
       var p = doc.exists ? doc.data() : {type:'individual',name:(user.email||'利用者'),bio:''};
       p.email=user.email; p.uid=user.uid; setStoredUser(p);
