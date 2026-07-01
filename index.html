@@ -1866,7 +1866,7 @@ function applyUserToUI(){
     roleChips[0].textContent='団体・行政';
     roleChips[1].textContent='公式アカウント';
   }
-  if(u.uid){ zeroOutNewAccount(); hideDemoContent(); if(u.verified) markVerifiedUI(); }
+  if(u.uid){ window.__profileApplied=true; zeroOutNewAccount(); hideDemoContent(); if(u.verified) markVerifiedUI(); }
 }
 
 /* 実アカウントではデモ用の投稿・支援者・メッセージを隠す（ゲストは従来どおり表示） */
@@ -1913,6 +1913,7 @@ function selectAcctype(el,type){
 }
 
 function completeSignup(){
+  try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   const name=document.getElementById('su-name').value.trim();
   const email=document.getElementById('su-email').value.trim();
   const pass=document.getElementById('su-pass').value;
@@ -1949,6 +1950,7 @@ function completeSignup(){
 function backFromVerify(){goScreen('settings')}
 
 function login(){
+  try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   const em=((document.getElementById('login-email')||{}).value||'').trim();
   const pass=(document.getElementById('login-pass')||{}).value||'';
   if(!fbReady){ navTo('main'); setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300); return; }
@@ -1957,7 +1959,21 @@ function login(){
   // 成功時は onAuthStateChanged が main へ自動遷移
 }
 
-function guestDemo(){ currentProfile=null; navTo('main'); setTimeout(()=>toast('ゲストとしてデモを開始しました'),300); }
+function guestDemo(){
+  // 実アカウントの痕跡（ログインセッション・localStorage・書き換え済みの画面）が
+  // ある場合は、サインアウトしてクリーンな状態で再読込 → まっさらなゲストにする
+  var hadSession=(fbReady&&fbAuth&&fbAuth.currentUser)||!!localStorage.getItem('youi_user')||window.__profileApplied;
+  if(!hadSession){
+    window.__guest=true; currentProfile=null;
+    navTo('main'); setTimeout(function(){toast('ゲストとしてデモを開始しました');},300);
+    return;
+  }
+  try{ sessionStorage.setItem('youi_guest','1'); }catch(e){}
+  localStorage.removeItem('youi_user'); currentProfile=null;
+  var done=function(){ location.reload(); };
+  if(fbReady&&fbAuth&&fbAuth.currentUser){ fbAuth.signOut().then(done).catch(done); }
+  else { done(); }
+}
 
 function resetPassword(){
   const em=((document.getElementById('login-email')||{}).value||'').trim();
@@ -2096,6 +2112,7 @@ function logout(){
   if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
   if(postsUnsub){postsUnsub();postsUnsub=null;}
   currentConv=null; window.__convs={};
+  try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');
 }
 function verifyId(){
@@ -2765,9 +2782,13 @@ function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);
 initPrefSelects();
 
 /* ===== Firebase 認証状態の監視（ログイン保持・自動遷移） ===== */
+function isGuestMode(){ try{ return sessionStorage.getItem('youi_guest')==='1'; }catch(e){ return false; } }
 if(fbReady){
   fbAuth.onAuthStateChanged(function(user){
     if(!user) return;
+    // ゲストモード中に古いログインセッションが残っていたら、必ずサインアウトしてゲストを優先
+    if(isGuestMode()){ fbAuth.signOut(); return; }
+    window.__guest=false;
     subscribePosts();
     subscribeConversations();
     fbDb.collection('users').doc(user.uid).get().then(function(doc){
@@ -2778,6 +2799,13 @@ if(fbReady){
       if(active && active.id==='screen-login'){ navTo('main'); setTimeout(function(){toast('ようこそ、You&i Spaceへ');},300); }
     }).catch(function(){});
   });
+}
+
+/* ゲストモードで再読込された場合：クリーンな状態でデモのメイン画面へ */
+if(isGuestMode()){
+  window.__guest=true; currentProfile=null;
+  navTo('main');
+  setTimeout(function(){toast('ゲストとしてデモを開始しました');},400);
 }
 </script>
 </body>
