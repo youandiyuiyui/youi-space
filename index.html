@@ -594,11 +594,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="login-sub">支援の輪を、つづけましょう。</div>
         <div class="input-group">
           <label class="input-label">メールアドレス</label>
-          <input type="email" class="input" id="login-email" placeholder="example@email.com" autocomplete="username">
+          <input type="email" class="input" id="login-email" placeholder="example@email.com" autocomplete="username" onkeydown="if(event.key==='Enter')login()">
         </div>
         <div class="input-group">
           <label class="input-label">パスワード</label>
-          <input type="password" class="input" id="login-pass" placeholder="パスワード" autocomplete="current-password">
+          <input type="password" class="input" id="login-pass" placeholder="パスワード" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()">
         </div>
         <button class="btn-primary" onclick="login()">ログイン</button>
         <div style="height:10px"></div>
@@ -607,6 +607,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
       <div class="login-divider">または</div>
       <button class="btn-secondary" onclick="guestDemo()" style="background:rgba(255,255,255,.55);border-color:rgba(184,175,214,.3)">ゲストとしてデモを試す</button>
+      <div style="text-align:center;margin-top:16px;font-size:.68rem;color:var(--tl);line-height:1.8">
+        本サービスは、同意を得た限定参加者による実証運用中です。<br>
+        <a style="color:var(--lav2);text-decoration:underline;cursor:pointer" onclick="openLegal('terms')">利用規約</a>　<a style="color:var(--lav2);text-decoration:underline;cursor:pointer" onclick="openLegal('privacy')">プライバシーポリシー</a>　<a style="color:var(--lav2);text-decoration:underline;cursor:pointer" onclick="openLegal('safety')">安全ガイド</a>
+      </div>
     </div>
   </div>
 </div>
@@ -648,17 +652,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="input-group" id="su-orgname-field" style="display:none">
       <label class="input-label">団体・組織名</label>
-      <input type="text" class="input" id="su-orgname" placeholder="例：認定NPO法人 ○○の会">
+      <input type="text" class="input" id="su-orgname" maxlength="60" placeholder="例：認定NPO法人 ○○の会">
     </div>
 
     <div class="input-group">
       <label class="input-label" id="su-name-label">お名前</label>
-      <input type="text" class="input" id="su-name" placeholder="例：田中 太郎">
+      <input type="text" class="input" id="su-name" maxlength="40" placeholder="例：田中 太郎" autocomplete="name">
     </div>
 
     <div class="input-group">
       <label class="input-label">メールアドレス</label>
-      <input type="email" class="input" id="su-email" placeholder="example@email.com">
+      <input type="email" class="input" id="su-email" placeholder="example@email.com" autocomplete="email">
     </div>
 
     <div class="input-group">
@@ -672,9 +676,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
 
     <label style="display:flex;gap:8px;align-items:flex-start;margin:14px 0 18px;cursor:pointer">
-      <input type="checkbox" id="su-agree" checked style="margin-top:3px;accent-color:var(--lav)">
+      <input type="checkbox" id="su-agree" style="margin-top:3px;accent-color:var(--lav)">
       <span style="font-size:.78rem;color:var(--tl);line-height:1.7">
-        <a style="color:var(--lav2);text-decoration:underline">利用規約</a>と<a style="color:var(--lav2);text-decoration:underline">プライバシーポリシー</a>に同意する
+        <a style="color:var(--lav2);text-decoration:underline" onclick="event.preventDefault();openLegal('terms')">利用規約</a>と<a style="color:var(--lav2);text-decoration:underline" onclick="event.preventDefault();openLegal('privacy')">プライバシーポリシー</a>を読んで、同意する
       </span>
     </label>
 
@@ -690,16 +694,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <button class="onb-back" onclick="backFromVerify()"><svg class="ic"><use href="#i-back"/></svg> 戻る</button>
     <div class="onb-step">本人確認</div>
     <h1 class="onb-h">本人確認をお願いします</h1>
-    <p class="onb-sub">安心して支え合えるよう、本人確認をお願いしています（任意・後からでもOK）。提出情報は暗号化され、マッチングのためにのみ使われます。</p>
-    <div class="verify-card" id="verify-card" onclick="verifyId()">
+    <p class="onb-sub">安心して支え合えるよう、本人確認をお願いしています（任意・後からでもOK）。実証期間中は、運営がおひとりずつ丁寧に確認しています。</p>
+    <div class="verify-card" id="verify-card">
       <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-id-card"/></svg></div>
-      <div class="verify-body"><div class="verify-title">身分証をアップロード</div><div class="verify-sub">運転免許証 / マイナンバーカード / 健康保険証</div></div>
+      <div class="verify-body"><div class="verify-title">1. 申請する</div><div class="verify-sub">下のボタンから申請すると、運営からご登録のメールに連絡が届きます</div></div>
     </div>
-    <div class="verify-card" id="selfie-card" onclick="verifySelf()">
-      <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-camera"/></svg></div>
-      <div class="verify-body"><div class="verify-title">セルフィー認証</div><div class="verify-sub">なりすまし防止のため、顔写真を撮影</div></div>
+    <div class="verify-card" id="selfie-card">
+      <div class="verify-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-shield"/></svg></div>
+      <div class="verify-body"><div class="verify-title">2. 運営が確認</div><div class="verify-sub">対面またはオンラインで身分証を提示（画像はアプリに保存されません）。確認後「本人確認済み」マークが付きます</div></div>
     </div>
-    <div style="margin-top:24px"><button class="btn-primary" onclick="completeVerify()">本人確認を完了する</button></div>
+    <div id="verify-status" style="margin-top:18px;font-size:.82rem;color:var(--lav3);line-height:1.8;text-align:center"></div>
+    <div style="margin-top:12px"><button class="btn-primary" id="verify-request-btn" onclick="requestVerify()">本人確認を申請する</button></div>
   </div>
 </div>
 
@@ -1007,13 +1012,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <button class="pt-btn on" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-provider"/></svg>支援したい</button>
       <button class="pt-btn" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-receiver"/></svg>助けを求める</button>
     </div>
-    <div class="post-field"><label class="post-label">タイトル</label><input type="text" class="post-input" id="post-title" placeholder="例：高槻市内で買い物代行できます"></div>
+    <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物代行できます"></div>
     <div class="post-field"><label class="post-label">地域 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（大まかで大丈夫です）</span></label>
       <select class="post-input" id="post-pref" style="-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b6b7a%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:34px">
         <option value="">都道府県を選択（任意）</option>
       </select>
     </div>
-    <div class="post-field"><label class="post-label">市区町村・エリア <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-area" placeholder="例：高槻市 ○○駅周辺（番地は不要）"></div>
+    <div class="post-field"><label class="post-label">市区町村・エリア <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-area" maxlength="40" placeholder="例：高槻市 ○○駅周辺（番地は不要）"></div>
     <div class="post-field">
       <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（複数選択可）</span></label>
       <div class="cat-pick cat-pick-3">
@@ -1031,7 +1036,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>その他</div>
       </div>
     </div>
-    <div class="post-field"><label class="post-label">詳細</label><textarea class="post-textarea" id="post-detail" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。"></textarea></div>
+    <div class="post-field"><label class="post-label">詳細 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（800文字まで）</span></label><textarea class="post-textarea" id="post-detail" maxlength="800" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。※電話番号・番地などの個人情報は書かず、マッチング後のメッセージで伝えましょう。"></textarea></div>
     <div class="post-field">
       <label class="post-label">写真（任意）</label>
       <div class="photo-upload" onclick="openPhotoPicker()">
@@ -1103,11 +1108,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="avatar sm" id="chat-avatar">＿</div>
       <div>
         <div style="font-size:.92rem;font-weight:500" id="chat-name">—</div>
-        <div style="font-size:.66rem;color:var(--sage2);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--sage2)"></span>オンライン</div>
+        <div style="font-size:.66rem;color:var(--sage2);display:flex;align-items:center;gap:4px" id="chat-presence"><span style="width:6px;height:6px;border-radius:50%;background:var(--sage2)"></span>オンライン</div>
       </div>
     </div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="toast('チャット設定を開きました')"><svg class="ic"><use href="#i-settings"/></svg></button></div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="openChatMenu()"><svg class="ic"><use href="#i-settings"/></svg></button></div>
   </div>
+  <div id="chat-safety" style="display:none;padding:9px 16px;background:rgba(200,184,122,.14);border-bottom:1px solid rgba(200,184,122,.25);font-size:.68rem;color:#8a7a45;line-height:1.6">はじめての相手とは、日中・人通りのある場所で会いましょう。金銭の要求・外部サービスへの誘導があったら、右上の <svg class="ic" style="width:11px;height:11px;vertical-align:-1px"><use href="#i-settings"/></svg> から通報できます。<a style="text-decoration:underline;cursor:pointer" onclick="openLegal('safety')">安全ガイド</a></div>
   <div class="chat-thread" id="chat-thread">
     <div class="chat-meta">今日 14:00</div>
     <div class="bubble-wrap">
@@ -1138,6 +1144,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="app-h-actions"><button class="icon-btn" onclick="markAllRead()"><svg class="ic"><use href="#i-check"/></svg></button></div>
   </div>
   <div class="notif-list">
+    <div id="notif-empty" style="display:none;padding:34px 20px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.9">新しいお知らせはありません。<br>メッセージが届いたり、マッチングが成立すると<br>ここに表示されます。</div>
+    <div class="demo-only">
     <div class="notif-group-h">新着</div>
     <div class="notif-item unread" onclick="openChat('鈴木','green','鈴')">
       <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-chat"/></svg></div>
@@ -1188,6 +1196,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="notif-time">5/10</div>
       </div>
     </div>
+    </div><!-- /demo-only -->
   </div>
 </div>
 
@@ -1612,9 +1621,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="set-label">パスワード変更</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="set-item" onclick="goScreen('verify')">
+      <div class="set-item" onclick="goScreen('verify');updateVerifyScreen()">
         <div class="set-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
         <div class="set-label">本人確認</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="resendVerifyEmail()">
+        <div class="set-icon"><svg class="ic"><use href="#i-send"/></svg></div>
+        <div class="set-label">確認メールを再送する</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
     </div>
@@ -1623,21 +1637,31 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="set-item">
         <div class="set-icon"><svg class="ic"><use href="#i-bell"/></svg></div>
         <div class="set-label">プッシュ通知</div>
-        <div class="set-toggle on" onclick="this.classList.toggle('on')"></div>
+        <div class="set-toggle on" id="set-toggle-push" onclick="toggleSetting(this,'push')"></div>
       </div>
       <div class="set-item">
         <div class="set-icon"><svg class="ic"><use href="#i-mail"/></svg></div>
         <div class="set-label">メール通知</div>
-        <div class="set-toggle" onclick="this.classList.toggle('on')"></div>
+        <div class="set-toggle" id="set-toggle-mail" onclick="toggleSetting(this,'mail')"></div>
       </div>
       <div class="set-item">
         <div class="set-icon"><svg class="ic"><use href="#i-location"/></svg></div>
         <div class="set-label">位置情報の利用</div>
-        <div class="set-toggle on" onclick="this.classList.toggle('on')"></div>
+        <div class="set-toggle on" id="set-toggle-loc" onclick="toggleSetting(this,'loc')"></div>
       </div>
     </div>
-    <div class="set-section-h">プライバシー・サポート</div>
+    <div class="set-section-h">安全・プライバシー</div>
     <div class="set-section">
+      <div class="set-item" onclick="openLegal('safety')">
+        <div class="set-icon"><svg class="ic"><use href="#i-heart"/></svg></div>
+        <div class="set-label">安全ガイド</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+      <div class="set-item" onclick="openBlockList()">
+        <div class="set-icon"><svg class="ic"><use href="#i-lock"/></svg></div>
+        <div class="set-label">ブロックしたユーザー</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
       <div class="set-item" onclick="openLegal('privacy')">
         <div class="set-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
         <div class="set-label">プライバシーポリシー</div>
@@ -1653,6 +1677,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="set-label">ヘルプセンター</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
+      <div class="set-item" onclick="contactSupport()">
+        <div class="set-icon"><svg class="ic"><use href="#i-mail"/></svg></div>
+        <div class="set-label">運営に問い合わせる</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
     </div>
     <div class="set-section-h">アカウント操作</div>
     <div class="set-section">
@@ -1660,9 +1689,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="set-icon" style="color:#c07880;background:linear-gradient(135deg,rgba(232,180,184,.2),rgba(232,180,184,.1))"><svg class="ic"><use href="#i-logout"/></svg></div>
         <div class="set-label" style="color:#c07880">ログアウト</div>
       </div>
+      <div class="set-item" onclick="openDeleteAccount()">
+        <div class="set-icon" style="color:#c07880;background:linear-gradient(135deg,rgba(232,180,184,.2),rgba(232,180,184,.1))"><svg class="ic"><use href="#i-close"/></svg></div>
+        <div class="set-label" style="color:#c07880">退会（アカウント削除）</div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.1.0 — DEMO<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.2.0 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -1739,12 +1773,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <button class="modal-close" onclick="closeModal(null,'photo-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
     </div>
     <div class="set-section">
-      <div class="set-item" onclick="closeModal(null,'photo-modal');toast('カメラを起動しました')">
+      <div class="set-item" onclick="closeModal(null,'photo-modal');toast('写真の添付は実証版では準備中です')">
         <div class="set-icon"><svg class="ic"><use href="#i-camera"/></svg></div>
         <div class="set-label">カメラで撮影</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="set-item" onclick="closeModal(null,'photo-modal');toast('ライブラリから選択しました')">
+      <div class="set-item" onclick="closeModal(null,'photo-modal');toast('写真の添付は実証版では準備中です')">
         <div class="set-icon"><svg class="ic"><use href="#i-bookmark"/></svg></div>
         <div class="set-label">ライブラリから選ぶ</div>
         <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
@@ -1798,6 +1832,28 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 let mapInited=false, mapInstance=null;
 let prevScreen='main';  // track previous screen for back button
 let currentProfile=null;  // ログイン中ユーザーのプロフィール（Firebase）
+
+/* ===== 実証運用の共通ヘルパー ===== */
+var MAXLEN={title:60,detail:800,area:40,name:40,org:60,bio:200,msg:500,report:500};
+function tooLong(v,key,label){
+  if((v||'').length>MAXLEN[key]){ toast(label+'は'+MAXLEN[key]+'文字以内で入力してください'); return true; }
+  return false;
+}
+/* 二重送信ガード：同じ操作を一定時間ブロック */
+var __busy={};
+function busy(key,ms){
+  if(__busy[key]) return true;
+  __busy[key]=true;
+  setTimeout(function(){__busy[key]=false;},ms||1800);
+  return false;
+}
+/* サポート窓口（メールは難読化のため文字コードで生成） */
+function supportEmail(){
+  return [121,111,117,97,110,100,105,46,121,117,105,121,117,105,64,103,109,97,105,108,46,99,111,109].map(function(c){return String.fromCharCode(c);}).join('');
+}
+function contactSupport(){
+  location.href='mailto:'+supportEmail()+'?subject='+encodeURIComponent('【You&i Space】お問い合わせ');
+}
 
 function goScreen(name){
   const target=document.getElementById('screen-'+name);
@@ -1866,7 +1922,11 @@ function applyUserToUI(){
     roleChips[0].textContent='団体・行政';
     roleChips[1].textContent='公式アカウント';
   }
-  if(u.uid){ window.__profileApplied=true; zeroOutNewAccount(); hideDemoContent(); if(u.verified) markVerifiedUI(); }
+  if(u.uid){
+    window.__profileApplied=true; zeroOutNewAccount(); hideDemoContent();
+    if(u.verified) markVerifiedUI(); else if(u.verifyRequested) markVerifyPendingUI();
+    updateVerifyScreen();
+  }
 }
 
 /* 実アカウントではデモ用の投稿・支援者・メッセージを隠す（ゲストは従来どおり表示） */
@@ -1874,6 +1934,8 @@ function hideDemoContent(){
   document.querySelectorAll('.demo-only').forEach(function(e){e.style.display='none';});
   var me=document.getElementById('msg-empty'); if(me) me.style.display='';
   var mp=document.getElementById('map-empty'); if(mp) mp.style.display='';
+  var ne=document.getElementById('notif-empty'); if(ne) ne.style.display='';
+  var nb=document.querySelector('#screen-main .icon-btn .badge'); if(nb) nb.style.display='none';
 }
 
 /* 新規アカウントは投稿・ポイント・実績を0から表示 */
@@ -1894,12 +1956,45 @@ function markVerifiedUI(){
   var vchip=document.getElementById('prof-verify-chip'); if(vchip){vchip.textContent='本人確認済'; vchip.style.opacity='1';}
   var vbadge=document.getElementById('prof-verify-badge'); if(vbadge) vbadge.style.display='';
 }
-function completeVerify(){
-  markVerifiedUI();
-  if(currentProfile){currentProfile.verified=true; setStoredUser(currentProfile);}
-  if(fbReady&&fbAuth.currentUser){fbDb.collection('users').doc(fbAuth.currentUser.uid).update({verified:true}).catch(function(){});}
-  toast('本人確認が完了しました');
-  setTimeout(function(){goScreen('settings');},600);
+function markVerifyPendingUI(){
+  var vchip=document.getElementById('prof-verify-chip'); if(vchip){vchip.textContent='本人確認 申請中'; vchip.style.opacity='.8';}
+  var vbadge=document.getElementById('prof-verify-badge'); if(vbadge) vbadge.style.display='none';
+}
+/* 本人確認は申請制：申請を記録し、運営が確認後に「確認済み」を付与する
+   （アプリが勝手に確認済みにする従来のデモ挙動は廃止） */
+function requestVerify(){
+  if(!fbReady||!fbAuth.currentUser){ toast('ゲスト（デモ）では申請できません。アカウント登録後にご利用ください'); return; }
+  var u=getStoredUser()||{};
+  if(u.verified){ toast('すでに本人確認済みです'); return; }
+  if(u.verifyRequested){ toast('申請済みです。運営からの連絡をお待ちください'); return; }
+  if(busy('verify')) return;
+  fbDb.collection('users').doc(fbAuth.currentUser.uid)
+    .update({verifyRequested:true,verifyRequestedAt:firebase.firestore.FieldValue.serverTimestamp()})
+    .then(function(){
+      if(currentProfile){currentProfile.verifyRequested=true; setStoredUser(currentProfile);}
+      markVerifyPendingUI(); updateVerifyScreen();
+      toast('申請を受け付けました。運営からメールでご連絡します');
+      setTimeout(function(){goScreen('settings');},900);
+    })
+    .catch(function(){ toast('申請できませんでした。通信環境をご確認ください'); });
+}
+function updateVerifyScreen(){
+  var st=document.getElementById('verify-status'), btn=document.getElementById('verify-request-btn');
+  if(!st||!btn) return;
+  var u=getStoredUser()||{};
+  if(!u.uid){ st.textContent='ゲスト（デモ）では本人確認は行えません。'; btn.style.display='none'; return; }
+  if(u.verified){ st.textContent='本人確認済みです。ご協力ありがとうございました。'; btn.style.display='none'; }
+  else if(u.verifyRequested){ st.textContent='申請を受け付けています。運営からの連絡をお待ちください。'; btn.style.display='none'; }
+  else { st.textContent=''; btn.style.display=''; }
+}
+/* 登録メールアドレスの確認メールを再送 */
+function resendVerifyEmail(){
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(fbAuth.currentUser.emailVerified){ toast('メールアドレスは確認済みです'); return; }
+  if(busy('vmail',5000)) return;
+  fbAuth.currentUser.sendEmailVerification()
+    .then(function(){ toast('確認メールを再送しました。受信箱をご確認ください'); })
+    .catch(function(e){ toast(authErrMsg(e)); });
 }
 
 function selectAcctype(el,type){
@@ -1923,26 +2018,32 @@ function completeSignup(){
   const orgName=orgEl?orgEl.value.trim():'';
 
   if(!name){toast('お名前を入力してください');return}
+  if(tooLong(name,'name','お名前'))return;
   if(accountType==='org' && !orgName){toast('団体名を入力してください');return}
+  if(tooLong(orgName,'org','団体名'))return;
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('正しいメールアドレスを入力してください');return}
   if(pass.length<8){toast('パスワードは8文字以上で入力してください');return}
   if(pass!==pass2){toast('パスワードが一致しません');return}
-  if(!agree){toast('利用規約への同意が必要です');return}
+  if(!agree){toast('利用規約とプライバシーポリシーへの同意が必要です');return}
+  if(busy('signup',4000))return;
 
   const user={type:accountType,name:name,email:email,createdAt:new Date().toISOString()};
-  if(accountType==='org'){user.orgName=orgName;user.bio='公式アカウント';}else{user.bio='高槻市在住';}
+  if(accountType==='org'){user.orgName=orgName;user.bio='公式アカウント';}else{user.bio='';}
 
   if(!fbReady){ var le0=document.getElementById('login-email'); if(le0) le0.value=email; toast('アカウントを作成しました。ログインしてください'); setTimeout(()=>goScreen('login'),700); return; }
 
   fbAuth.createUserWithEmailAndPassword(email,pass)
-    .then(function(cred){ return fbDb.collection('users').doc(cred.user.uid).set(user); })
+    .then(function(cred){
+      try{ cred.user.sendEmailVerification(); }catch(e){}
+      return fbDb.collection('users').doc(cred.user.uid).set(user);
+    })
     .then(function(){ return fbAuth.signOut(); })
     .then(function(){
       currentProfile=null;
       var le=document.getElementById('login-email'); if(le) le.value=email;
       var lp=document.getElementById('login-pass'); if(lp) lp.value='';
-      toast('アカウントを作成しました。ログインしてください');
-      setTimeout(()=>goScreen('login'),700);
+      toast('確認メールをお送りしました。ログインしてご利用ください');
+      setTimeout(()=>goScreen('login'),900);
     })
     .catch(function(e){ toast(authErrMsg(e)); });
 }
@@ -2111,21 +2212,9 @@ function logout(){
   if(convListUnsub){convListUnsub();convListUnsub=null;}
   if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
   if(postsUnsub){postsUnsub();postsUnsub=null;}
-  currentConv=null; window.__convs={};
+  currentConv=null; window.__convs={}; window.__blocked={}; window.__rawPosts=[]; window.__rawConvs=[];
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');
-}
-function verifyId(){
-  const c=document.getElementById('verify-card');
-  c.classList.add('done');
-  c.querySelector('.verify-title').textContent='身分証 確認完了';
-  c.querySelector('.verify-sub').textContent='正常にアップロードされました';
-}
-function verifySelf(){
-  const c=document.getElementById('selfie-card');
-  c.classList.add('done');
-  c.querySelector('.verify-title').textContent='セルフィー認証 完了';
-  c.querySelector('.verify-sub').textContent='本人確認が完了しました';
 }
 function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
 /* ===== マッチング掲示板（Firestore posts） ===== */
@@ -2138,10 +2227,14 @@ function submitPost(){
   var pref=((document.getElementById('post-pref')||{}).value||'');
   var area=((document.getElementById('post-area')||{}).value||'').trim();
   if(!title){toast('タイトルを入力してください');return}
+  if(tooLong(title,'title','タイトル'))return;
+  if(tooLong(detail,'detail','詳細'))return;
+  if(tooLong(area,'area','エリア'))return;
   if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
+  if(busy('post',3000))return;
   var u=getStoredUser()||{};
   var post={type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,uid:fbAuth.currentUser.uid,
-    authorName:(u.type==='org'?(u.orgName||u.name):u.name)||'利用者',
+    authorName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
     var t=document.getElementById('post-title'); if(t)t.value='';
@@ -2157,19 +2250,31 @@ var postsUnsub=null;
 function subscribePosts(){
   if(!fbReady||postsUnsub) return;
   postsUnsub=fbDb.collection('posts').orderBy('createdAt','desc').limit(50).onSnapshot(function(snap){
-    var el=document.getElementById('live-posts'); if(!el) return;
-    var lc=document.getElementById('live-count');
-    if(snap.empty){ el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>'; if(lc)lc.textContent='0'; return; }
-    window.__posts=window.__posts||{};
-    var html='';
-    window.__posts={};
-    snap.forEach(function(doc){ var p=doc.data(); p.id=doc.id; window.__posts[doc.id]=p; html+=renderPostCard(p); });
-    el.innerHTML=html; if(lc) lc.textContent=String(snap.size);
-    if(curRegion!=='all'||curCat!=='all') applyProvFilters();
-    if(mapInited) updateMapPins();
+    var raw=[];
+    snap.forEach(function(doc){ var p=doc.data(); p.id=doc.id; raw.push(p); });
+    window.__rawPosts=raw;
+    renderLivePosts();
   },function(err){ console.warn('posts listen error',err);
     var el=document.getElementById('live-posts'); if(el&&(err.code==='permission-denied')) el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.78rem">投稿の表示にはログインが必要です。</div>';
   });
+}
+/* 掲示板を描画（ブロック中ユーザーの投稿は除外）。ブロック直後の再描画にも使う */
+function renderLivePosts(){
+  var el=document.getElementById('live-posts'); if(!el) return;
+  var lc=document.getElementById('live-count');
+  var items=(window.__rawPosts||[]).filter(function(p){ return !(p.uid&&isBlocked(p.uid)); });
+  window.__posts={};
+  if(!items.length){
+    el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>';
+    if(lc)lc.textContent='0';
+    if(mapInited) updateMapPins();
+    return;
+  }
+  var html='';
+  items.forEach(function(p){ window.__posts[p.id]=p; html+=renderPostCard(p); });
+  el.innerHTML=html; if(lc) lc.textContent=String(items.length);
+  if(curRegion!=='all'||curCat!=='all') applyProvFilters();
+  if(mapInited) updateMapPins();
 }
 function renderPostCard(p){
   var isR=p.type==='receive';
@@ -2207,7 +2312,8 @@ function openPostDetail(id){
       '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="confirmDeletePost(\''+id+'\')">削除する</button>'+
     '</div>';
   }else if(fbReady && fbAuth.currentUser){
-    actions='<button class="btn-primary" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button>';
+    actions='<button class="btn-primary" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button>'+
+      '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem" onclick="openReport(\'post\',\''+id+'\',\''+escapeHtml(p.uid||'')+'\',\'この投稿\')">この投稿を通報する</button></div>';
   }else{
     actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
   }
@@ -2287,7 +2393,11 @@ function saveEditPost(id){
   var pref=((document.getElementById('ep-pref')||{}).value||'');
   var area=((document.getElementById('ep-area')||{}).value||'').trim();
   if(!title){toast('タイトルを入力してください');return;}
+  if(tooLong(title,'title','タイトル'))return;
+  if(tooLong(detail,'detail','詳細'))return;
+  if(tooLong(area,'area','エリア'))return;
   if(!fbReady||!fbAuth.currentUser){toast('ログインが必要です');return;}
+  if(busy('editpost',3000))return;
   fbDb.collection('posts').doc(id).update({type:editType,title:title,detail:detail,pref:pref,area:area})
     .then(function(){ closeSheet(); toast('投稿を更新しました'); })
     .catch(function(e){ console.warn('update post fail',e); toast('更新できませんでした'); });
@@ -2325,7 +2435,11 @@ function rewTab(el,key){
     if(g) g.style.display=(k===key?'grid':'none');
   });
 }
-function redeem(name,pt){toast(name+' を '+pt+'＆pt で引き換えました')}
+function redeem(name,pt){
+  // 実アカウント：実証期間中の交換は未提供（誤解を招く偽の成功表示はしない）
+  if(currentProfile&&currentProfile.uid){ toast('＆ポイントの交換は実証期間中は準備中です'); return; }
+  toast(name+' を '+pt+'＆pt で引き換えました（デモ）');
+}
 function cpLike(el){
   const span=el.querySelector('span');
   if(!el.classList.contains('liked')){
@@ -2405,6 +2519,7 @@ function openConversation(otherUid,otherName,color){
   var me=fbAuth.currentUser.uid;
   if(!otherUid){ toast('相手が見つかりませんでした'); return; }
   if(otherUid===me){ toast('自分の投稿にはメッセージを送れません'); return; }
+  if(isBlocked(otherUid)){ toast('ブロック中の相手です。設定の「ブロックしたユーザー」から解除できます'); return; }
   color=color||colorForUid(otherUid);
   var cid=convIdFor(me,otherUid);
   currentConv={id:cid, otherUid:otherUid, otherName:otherName||'利用者', color:color};
@@ -2413,6 +2528,8 @@ function openConversation(otherUid,otherName,color){
   var av=document.getElementById('chat-avatar');
   av.innerHTML=escapeHtml(initial)+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
   av.className='avatar sm '+color;
+  var sb=document.getElementById('chat-safety'); if(sb) sb.style.display='';
+  var pr=document.getElementById('chat-presence'); if(pr) pr.style.display='none';
   subscribeChatMessages(cid,initial,color);
   goScreen('chat');
 }
@@ -2460,37 +2577,47 @@ function subscribeConversations(){
   var me=fbAuth.currentUser.uid;
   convListUnsub=fbDb.collection('conversations').where('participants','array-contains',me)
     .onSnapshot(function(snap){
-      var list=document.getElementById('conv-list');
-      var empty=document.getElementById('msg-empty');
-      if(!list) return;
       var items=[];
       snap.forEach(function(doc){ var c=doc.data(); c.id=doc.id; items.push(c); });
-      items.sort(function(a,b){
-        var ta=(a.updatedAt&&a.updatedAt.toDate)?a.updatedAt.toDate().getTime():0;
-        var tb=(b.updatedAt&&b.updatedAt.toDate)?b.updatedAt.toDate().getTime():0;
-        return tb-ta;
-      });
-      if(!items.length){ list.innerHTML=''; if(empty) empty.style.display=''; return; }
-      if(empty) empty.style.display='none';
-      window.__convs=window.__convs||{};
-      var html='';
-      items.forEach(function(c){
-        var other=(c.participants||[]).filter(function(u){return u!==me;})[0]||'';
-        var name=(c.names&&c.names[other])||'利用者';
-        var color=colorForUid(other);
-        var initial=name.charAt(0);
-        window.__convs[other]={name:name,color:color};
-        var preview=(c.lastSender===me?'あなた: ':'')+(c.lastMessage||'');
-        html+='<div class="msg-item" onclick="openConvById(\''+other+'\')">'+
-          '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
-          '<div class="mc-body">'+
-            '<div class="msg-row1"><div class="msg-name">'+escapeHtml(name)+' さん</div><div class="msg-time">'+chatTime(c.updatedAt)+'</div></div>'+
-            '<div class="msg-preview">'+escapeHtml(preview)+'</div>'+
-          '</div>'+
-        '</div>';
-      });
-      list.innerHTML=html;
+      window.__rawConvs=items;
+      renderConvList();
     },function(err){ console.warn('conversations listen error',err); });
+}
+/* 会話一覧を描画（ブロック中の相手は除外）。ブロック直後の再描画にも使う */
+function renderConvList(){
+  if(!fbReady||!fbAuth.currentUser) return;
+  var me=fbAuth.currentUser.uid;
+  var list=document.getElementById('conv-list');
+  var empty=document.getElementById('msg-empty');
+  if(!list) return;
+  var items=(window.__rawConvs||[]).slice();
+  items.sort(function(a,b){
+    var ta=(a.updatedAt&&a.updatedAt.toDate)?a.updatedAt.toDate().getTime():0;
+    var tb=(b.updatedAt&&b.updatedAt.toDate)?b.updatedAt.toDate().getTime():0;
+    return tb-ta;
+  });
+  window.__convs=window.__convs||{};
+  var html='', count=0;
+  items.forEach(function(c){
+    var other=(c.participants||[]).filter(function(u){return u!==me;})[0]||'';
+    if(other&&isBlocked(other)) return;
+    var name=(c.names&&c.names[other])||'利用者';
+    var color=colorForUid(other);
+    var initial=name.charAt(0);
+    window.__convs[other]={name:name,color:color};
+    var preview=(c.lastSender===me?'あなた: ':'')+(c.lastMessage||'');
+    count++;
+    html+='<div class="msg-item" onclick="openConvById(\''+other+'\')">'+
+      '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
+      '<div class="mc-body">'+
+        '<div class="msg-row1"><div class="msg-name">'+escapeHtml(name)+' さん</div><div class="msg-time">'+chatTime(c.updatedAt)+'</div></div>'+
+        '<div class="msg-preview">'+escapeHtml(preview)+'</div>'+
+      '</div>'+
+    '</div>';
+  });
+  if(!count){ list.innerHTML=''; if(empty) empty.style.display=''; return; }
+  if(empty) empty.style.display='none';
+  list.innerHTML=html;
 }
 
 /* メッセージ検索（会話一覧を絞り込み） */
@@ -2506,6 +2633,8 @@ function filterConvs(q){
 function openChat(name,color,initial){
   currentConv=null;
   if(chatMsgsUnsub){ chatMsgsUnsub(); chatMsgsUnsub=null; }
+  var sb=document.getElementById('chat-safety'); if(sb) sb.style.display='none';
+  var pr=document.getElementById('chat-presence'); if(pr) pr.style.display='';
   document.getElementById('chat-name').textContent=name+(name.includes('役所')?'':' さん');
   const av=document.getElementById('chat-avatar');
   av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
@@ -2521,6 +2650,7 @@ function sendChat(){
   const f=document.getElementById('chat-field');
   const text=f.value.trim();
   if(!text) return;
+  if(tooLong(text,'msg','メッセージ'))return;
   // 実会話：Firestore に保存（相手にもリアルタイムで届く）
   if(currentConv && currentConv.id && fbReady && fbAuth.currentUser){
     const me=fbAuth.currentUser.uid;
@@ -2555,6 +2685,166 @@ function sendChat(){
 }
 function escapeHtml(t){return t.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
 
+/* ============================================
+   安全機能：通報・ブロック（実証運用の要）
+   - reports コレクション：運営のみがコンソールで確認（ルールで読み取り禁止）
+   - ブロック：users/{自分}.blocked（{uid:表示名} のマップ）に保存
+   ============================================ */
+var reportCtx=null;
+function openReport(targetType,targetId,targetUid,targetLabel){
+  if(!fbReady||!fbAuth.currentUser){ toast('通報にはログインが必要です'); return; }
+  reportCtx={type:targetType,id:targetId,uid:targetUid,label:targetLabel||'この内容'};
+  closeSheet();
+  openSheet('運営に通報する',
+    '<p style="font-size:.82rem;color:var(--tl);line-height:1.85;margin-bottom:14px">'+escapeHtml(reportCtx.label)+'を運営に通報します。内容は運営だけが確認し、相手には通知されません。</p>'+
+    '<div class="input-group"><label class="input-label">理由</label><select id="rp-reason" class="input">'+
+      '<option value="金銭の要求・営業や勧誘">金銭の要求・営業や勧誘</option>'+
+      '<option value="危険・不快な言動">危険・不快な言動</option>'+
+      '<option value="虚偽の内容・なりすまし">虚偽の内容・なりすまし</option>'+
+      '<option value="出会い目的などの規約違反">出会い目的などの規約違反</option>'+
+      '<option value="その他">その他</option>'+
+    '</select></div>'+
+    '<div class="input-group"><label class="input-label">詳細（任意・500文字まで）</label><textarea id="rp-detail" class="input" rows="3" maxlength="500" style="resize:vertical;font-family:inherit" placeholder="いつ・どこで・何があったかを書いていただけると、対応しやすくなります"></textarea></div>'+
+    '<button class="btn-primary" onclick="submitReport()">通報を送信する</button>');
+}
+function submitReport(){
+  if(!reportCtx){ closeSheet(); return; }
+  if(!fbReady||!fbAuth.currentUser){ toast('通報にはログインが必要です'); return; }
+  var reason=((document.getElementById('rp-reason')||{}).value||'その他');
+  var detail=((document.getElementById('rp-detail')||{}).value||'').trim();
+  if(tooLong(detail,'report','詳細'))return;
+  if(busy('report',4000))return;
+  fbDb.collection('reports').add({
+    targetType:reportCtx.type, targetId:reportCtx.id||'', targetUid:reportCtx.uid||'',
+    reason:reason, detail:detail,
+    reporterUid:fbAuth.currentUser.uid,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){
+    reportCtx=null; closeSheet();
+    toast('通報を受け付けました。運営が確認します。ご協力ありがとうございます');
+  }).catch(function(e){ console.warn('report fail',e); toast('送信できませんでした。時間をおいてお試しください'); });
+}
+
+/* ブロック */
+function myBlocks(){ return window.__blocked||{}; }
+function isBlocked(uid){ return !!myBlocks()[uid]; }
+var blockCtx=null;
+function confirmBlock(uid,name){
+  if(!fbReady||!fbAuth.currentUser){ toast('ブロックにはログインが必要です'); return; }
+  blockCtx={uid:uid,name:name||'利用者'};
+  closeSheet();
+  openSheet('ブロックする',
+    '<p style="font-size:.88rem;color:var(--ink);line-height:1.9;margin-bottom:18px">'+escapeHtml(blockCtx.name)+' さんをブロックしますか？<br><span style="font-size:.8rem;color:var(--tl)">相手の投稿が表示されなくなり、メッセージのやりとりもできなくなります。相手に通知はされません。設定からいつでも解除できます。</span></p>'+
+    '<div style="display:flex;gap:10px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">キャンセル</button>'+
+      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="doBlock()">ブロックする</button>'+
+    '</div>');
+}
+function doBlock(){
+  if(!blockCtx||!fbReady||!fbAuth.currentUser) return;
+  if(busy('block',3000))return;
+  var uid=blockCtx.uid, name=blockCtx.name;
+  var upd={}; upd['blocked.'+uid]=name;
+  fbDb.collection('users').doc(fbAuth.currentUser.uid).update(upd).then(function(){
+    window.__blocked=window.__blocked||{}; window.__blocked[uid]=name;
+    blockCtx=null; closeSheet();
+    if(currentConv&&currentConv.otherUid===uid){
+      if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
+      currentConv=null; navTo('msg');
+    }
+    renderLivePosts(); renderConvList();
+    toast(name+' さんをブロックしました');
+  }).catch(function(e){ console.warn('block fail',e); toast('ブロックできませんでした'); });
+}
+function unblockUser(uid){
+  if(!fbReady||!fbAuth.currentUser) return;
+  var name=(myBlocks()[uid])||'利用者';
+  var upd={}; upd['blocked.'+uid]=firebase.firestore.FieldValue.delete();
+  fbDb.collection('users').doc(fbAuth.currentUser.uid).update(upd).then(function(){
+    if(window.__blocked) delete window.__blocked[uid];
+    renderLivePosts(); renderConvList();
+    openBlockList();
+    toast(name+' さんのブロックを解除しました');
+  }).catch(function(){ toast('解除できませんでした'); });
+}
+function openBlockList(){
+  if(!fbReady||!fbAuth.currentUser){ toast('ゲスト（デモ）ではご利用いただけません'); return; }
+  var b=myBlocks(); var uids=Object.keys(b);
+  var body;
+  if(!uids.length){
+    body='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">ブロック中のユーザーはいません。</div>';
+  }else{
+    body='<div class="set-section">'+uids.map(function(uid){
+      return '<div class="set-item"><div style="flex:1"><div class="set-label">'+escapeHtml(b[uid]||'利用者')+' さん</div></div>'+
+        '<button class="btn-secondary" style="width:auto;padding:7px 14px;font-size:.78rem;margin:0" onclick="unblockUser(\''+escapeHtml(uid)+'\')">解除</button></div>';
+    }).join('')+'</div>';
+  }
+  openSheet('ブロックしたユーザー',body);
+}
+
+/* チャット右上メニュー：安全ガイド・通報・ブロック */
+function openChatMenu(){
+  var real=!!(currentConv&&currentConv.id);
+  var html='<div class="set-section">'+
+    '<div class="set-item" onclick="closeSheet();openLegal(\'safety\')"><div class="set-icon"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">安全ガイド</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
+  if(real){
+    html+='<div class="set-item" onclick="openReport(\'user\',\'\',window.__reportUid,window.__reportName+\' さん\')"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-alert"/></svg></div><div class="set-label">この相手を通報する</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>'+
+      '<div class="set-item" onclick="confirmBlock(window.__reportUid,window.__reportName)"><div class="set-icon" style="color:#c07880;background:linear-gradient(135deg,rgba(232,180,184,.2),rgba(232,180,184,.1))"><svg class="ic"><use href="#i-lock"/></svg></div><div class="set-label" style="color:#c07880">この相手をブロックする</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
+    window.__reportUid=currentConv.otherUid; window.__reportName=currentConv.otherName||'相手';
+  }
+  html+='</div>';
+  if(!real) html+='<p style="font-size:.74rem;color:var(--tl);margin-top:10px;line-height:1.7">デモ会話では通報・ブロックは使えません。実際の会話でご利用いただけます。</p>';
+  openSheet('チャット設定',html);
+}
+
+/* ============================================
+   退会（アカウント削除）：再認証 → 投稿・プロフィール削除 → 認証アカウント削除
+   ============================================ */
+function openDeleteAccount(){
+  if(!fbReady||!fbAuth.currentUser){ toast('ゲスト（デモ）にはアカウントがありません'); return; }
+  openSheet('退会（アカウント削除）',
+    '<p style="font-size:.86rem;color:var(--ink);line-height:1.9;margin-bottom:14px">退会すると、プロフィールとあなたの投稿はすべて削除され、元に戻せません。＆ポイント・実績も失われます。</p>'+
+    '<p style="font-size:.76rem;color:var(--tl);line-height:1.8;margin-bottom:16px">※メッセージの履歴は、相手の方の記録を守るため相手側には残ります。完全な削除をご希望の場合は、設定の「運営に問い合わせる」からご連絡ください。</p>'+
+    '<div class="input-group"><label class="input-label">確認のため、パスワードを入力してください</label><input id="da-pass" type="password" class="input" autocomplete="current-password"></div>'+
+    '<div style="display:flex;gap:10px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">キャンセル</button>'+
+      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="deleteAccount()">退会する</button>'+
+    '</div>');
+}
+function deleteAccount(){
+  var pass=((document.getElementById('da-pass')||{}).value||'');
+  if(!pass){ toast('パスワードを入力してください'); return; }
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(busy('delacct',6000))return;
+  var user=fbAuth.currentUser;
+  var cred=firebase.auth.EmailAuthProvider.credential(user.email,pass);
+  user.reauthenticateWithCredential(cred).then(function(){
+    // 先に購読を止めてから消す（権限エラーの警告を避ける）
+    if(convListUnsub){convListUnsub();convListUnsub=null;}
+    if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
+    if(postsUnsub){postsUnsub();postsUnsub=null;}
+    return fbDb.collection('posts').where('uid','==',user.uid).get();
+  }).then(function(snap){
+    var batch=fbDb.batch();
+    snap.forEach(function(d){ batch.delete(d.ref); });
+    batch.delete(fbDb.collection('users').doc(user.uid));
+    return batch.commit();
+  }).then(function(){
+    return user.delete();
+  }).then(function(){
+    currentConv=null; window.__convs={}; window.__blocked={}; window.__rawPosts=[]; window.__rawConvs=[];
+    currentProfile=null; localStorage.removeItem('youi_user');
+    try{ sessionStorage.removeItem('youi_guest'); }catch(e){}
+    closeSheet(); goScreen('login');
+    toast('退会が完了しました。ご利用ありがとうございました');
+  }).catch(function(e){
+    console.warn('delete account fail',e);
+    toast(authErrMsg(e));
+    // 途中で失敗した場合に備え、購読を復旧
+    if(fbReady&&fbAuth.currentUser){ subscribePosts(); subscribeConversations(); }
+  });
+}
+
 function openCert(name,date,issuer,id,style,icon){
   const d=document.getElementById('cert-detail');
   d.className='cert-detail '+(style||'');
@@ -2579,14 +2869,16 @@ function closeSheet(){closeModal(null,'sheet-modal')}
 function openProfileEdit(){
   const u=getStoredUser()||{name:'田中 太郎',bio:'高槻市在住'};
   openSheet('プロフィール編集',
-    '<div class="input-group"><label class="input-label">お名前</label><input id="pe-name" class="input" value="'+escapeHtml(u.name||'')+'"></div>'+
-    '<div class="input-group"><label class="input-label">自己紹介</label><textarea id="pe-bio" class="input" rows="3" style="resize:vertical;font-family:inherit">'+escapeHtml(u.bio||'')+'</textarea></div>'+
+    '<div class="input-group"><label class="input-label">お名前</label><input id="pe-name" class="input" maxlength="40" value="'+escapeHtml(u.name||'')+'"></div>'+
+    '<div class="input-group"><label class="input-label">自己紹介 <span style="font-weight:400;color:var(--tl);font-size:.7rem">（200文字まで・住所や電話番号は書かないでください）</span></label><textarea id="pe-bio" class="input" rows="3" maxlength="200" style="resize:vertical;font-family:inherit">'+escapeHtml(u.bio||'')+'</textarea></div>'+
     '<button class="btn-primary" onclick="saveProfileEdit()">保存する</button>');
 }
 function saveProfileEdit(){
   const name=document.getElementById('pe-name').value.trim();
   const bio=document.getElementById('pe-bio').value.trim();
   if(!name){toast('お名前を入力してください');return}
+  if(tooLong(name,'name','お名前'))return;
+  if(tooLong(bio,'bio','自己紹介'))return;
   const u=getStoredUser()||{type:'individual'};
   u.name=name;u.bio=bio;setStoredUser(u);applyUserToUI();
   closeSheet();toast('プロフィールを保存しました');
@@ -2605,7 +2897,13 @@ function saveEmailChange(){
   const v=document.getElementById('ec-email').value.trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){toast('正しいメールアドレスを入力してください');return}
   if(fbReady&&fbAuth.currentUser){
-    fbAuth.currentUser.updateEmail(v).then(function(){var u=getStoredUser()||{};u.email=v;setStoredUser(u);closeSheet();toast('メールアドレスを変更しました');}).catch(function(e){toast(authErrMsg(e));});
+    var cu=fbAuth.currentUser;
+    // 新しいアドレスに確認メールを送り、リンククリックで変更を確定（乗っ取り防止）
+    if(cu.verifyBeforeUpdateEmail){
+      cu.verifyBeforeUpdateEmail(v).then(function(){closeSheet();toast('確認メールを送信しました。新しいアドレスのリンクを開くと変更が完了します');}).catch(function(e){toast(authErrMsg(e));});
+    }else{
+      cu.updateEmail(v).then(function(){var u=getStoredUser()||{};u.email=v;setStoredUser(u);closeSheet();toast('メールアドレスを変更しました');}).catch(function(e){toast(authErrMsg(e));});
+    }
     return;
   }
   const u=getStoredUser()||{};u.email=v;setStoredUser(u);
@@ -2631,26 +2929,52 @@ function savePasswordChange(){
   closeSheet();toast('パスワードを変更しました');
 }
 
-/* 規約・ポリシー・ヘルプ */
+/* 規約・ポリシー・安全ガイド・ヘルプ（限定実証版の正式文面） */
+function legalSec(h,body){return '<div style="margin-bottom:14px"><div style="font-weight:600;font-size:.85rem;color:#5d4d8c">'+h+'</div><div style="font-size:.8rem;color:var(--ink);margin-top:4px;line-height:1.9">'+body+'</div></div>'}
 function openLegal(kind){
   if(kind==='privacy'){
     openSheet('プライバシーポリシー',
-      '<p style="margin-bottom:10px">You&i Space（以下「本サービス」）は、利用者の個人情報を適切に取り扱います。本ページは実証デモ版の内容です。</p>'+
-      '<p style="margin-bottom:10px">■ 取得する情報：お名前・メールアドレス・地域・支援に関する投稿内容。</p>'+
-      '<p style="margin-bottom:10px">■ 利用目的：支援者と受援者のマッチング、安全な運営、サービス改善。</p>'+
-      '<p>■ 第三者提供：法令に基づく場合を除き、本人の同意なく行いません。位置情報は概略エリアのみ利用します。</p>');
+      '<p style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-bottom:14px">You&i（結）（以下「運営」）は、You&i Space（以下「本サービス」）における個人情報を、個人情報保護法その他の法令に従い、次のとおり取り扱います。</p>'+
+      legalSec('1. 取得する情報','①お名前（ニックネーム可）・メールアドレス　②地域情報（都道府県・任意入力のエリア。番地などの詳細な住所は取得しません）　③投稿・メッセージの内容　④本人確認の申請状況（身分証の画像は保存しません）　⑤利用状況の記録（アクセス解析）')+
+      legalSec('2. 利用目的','①支援したい人と助けを求める人のマッチング　②通報への対応・不正利用の防止など安全な運営　③運営からの連絡　④サービスの改善・統計作成（個人を特定しない形に加工します）')+
+      legalSec('3. 保存先','データは Google 社のクラウドサービス（Firebase）に保存されます。データは国外のサーバーで保管されることがあります。通信は暗号化されています。')+
+      legalSec('4. 第三者提供','ご本人の同意なく第三者に提供しません。ただし、法令に基づく場合、人の生命・身体・財産の保護のために必要がある場合を除きます。')+
+      legalSec('5. 開示・訂正・削除','ご自身の情報の開示・訂正・削除は、設定の「運営に問い合わせる」からご請求ください。退会は設定の「退会」からいつでも行えます。')+
+      legalSec('6. 退会時の取り扱い','退会すると、プロフィールと投稿は削除されます。メッセージの履歴は、相手の方の記録を守るため相手側に残ることがあります。完全な削除をご希望の場合はご連絡ください。')+
+      legalSec('7. 改定','本ポリシーは必要に応じて改定します。重要な変更は本サービス上でお知らせします。')+
+      '<p style="font-size:.72rem;color:var(--tl);margin-top:16px">制定日：2026年7月7日<br>運営：You&i（結）（お問い合わせ：設定 →「運営に問い合わせる」）</p>');
   }else if(kind==='terms'){
     openSheet('利用規約',
-      '<p style="margin-bottom:10px">本規約は、You&i Space（実証デモ版）の利用条件を定めるものです。</p>'+
-      '<p style="margin-bottom:10px">■ 本サービスは、地域の相互扶助を支援する非営利の取り組みです。</p>'+
-      '<p style="margin-bottom:10px">■ 利用者は、他者を尊重し、安全に配慮して支援を行うものとします。</p>'+
-      '<p>■ 金銭の授受を伴う取引、迷惑行為、虚偽情報の登録を禁止します。トラブル時は運営へご連絡ください。</p>');
+      '<p style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-bottom:14px">本規約は、You&i（結）（以下「運営」）が提供する You&i Space（以下「本サービス」）の利用条件を定めるものです。登録・利用をもって、本規約に同意したものとみなします。</p>'+
+      legalSec('第1条（本サービスと実証運用）','本サービスは、地域の相互扶助を支える非営利の取り組みです。現在は<b>同意を得た限定参加者による実証運用中</b>であり、内容の変更・一時停止・終了があり得ます。')+
+      legalSec('第2条（アカウント）','①登録情報は正確に入力してください　②アカウントはひとり1つ・本人のみ利用できます　③パスワードはご自身で管理してください')+
+      legalSec('第3条（支援活動の性質）','本サービスでの支援は、利用者同士の合意にもとづく<b>無償の助け合い</b>です。運営はマッチングの場を提供するもので、個々の支援の当事者にはなりません。支援の実施にあたっては、お互いの安全と体調を最優先してください。')+
+      legalSec('第4条（禁止事項）','次の行為を禁止します。<br>・金銭の授受・貸し借り、物品の販売、報酬の要求<br>・宗教・政治・営業目的の勧誘<br>・出会い・交際を目的とする利用<br>・差別、誹謗中傷、嫌がらせ、つきまとい<br>・他人へのなりすまし、虚偽の投稿<br>・相手の個人情報を本人の同意なく集める・広める行為<br>・その他、法令や公序良俗に反する行為')+
+      legalSec('第5条（＆ポイント）','＆ポイントは感謝を見えるようにする仕組みであり、<b>金銭的価値・換金性はありません</b>。譲渡・売買はできず、実証運用の終了時に消滅することがあります。')+
+      legalSec('第6条（本人確認・通報と利用停止）','本人確認は任意ですが、安心のため推奨します。通報があった場合、運営は事実関係を確認し、投稿の削除・利用停止などの措置をとることがあります。')+
+      legalSec('第7条（免責）','利用者間のトラブルは当事者間で解決いただくことを原則とします。運営は誠実に対応しますが、法令で認められる範囲で、損害賠償の責任を負わないものとします。犯罪被害のおそれがあるときは、ためらわず警察（相談 #9110・緊急 110）へ連絡してください。')+
+      legalSec('第8条（規約の変更）','本規約は必要に応じて変更します。重要な変更は本サービス上でお知らせします。')+
+      legalSec('第9条（準拠法・管轄）','本規約は日本法に準拠し、紛争が生じた場合は大阪地方裁判所を第一審の専属的合意管轄裁判所とします。')+
+      '<p style="font-size:.72rem;color:var(--tl);margin-top:16px">制定日：2026年7月7日<br>運営：You&i（結）</p>');
+  }else if(kind==='safety'){
+    openSheet('安全ガイド',
+      '<p style="font-size:.82rem;color:var(--ink);line-height:1.9;margin-bottom:14px">You&i Space は「支える人も、支えられる」場所です。お互いが安心して関われるよう、次のことを守ってご利用ください。</p>'+
+      legalSec('はじめて会う前に','・まずはアプリ内のメッセージで、内容・日時・場所をきちんと決めましょう<br>・待ち合わせは<b>日中・人通りのある場所</b>で。初回から自宅に上がる／上げるのは避けましょう<br>・家族や身近な人に、予定（誰と・どこで・何時）を伝えておきましょう')+
+      legalSec('お金・貴重品について','・本サービスでの支援は無償です。<b>金銭の授受・貸し借りは禁止</b>されています<br>・現金・キャッシュカード・口座・暗証番号の話が出たら、その場で断り、通報してください')+
+      legalSec('個人情報について','・番地までの住所・電話番号などは、投稿には書かず、必要になってから信頼できる相手にだけ伝えましょう<br>・相手の個人情報も同じように大切に扱ってください')+
+      legalSec('困ったとき・怖いと感じたとき','・無理に続けず、その場を離れてかまいません<br>・チャット右上のメニューから<b>通報・ブロック</b>ができます<br>・犯罪の心配があるときは、警察相談専用電話 <b>#9110</b>（緊急時は110）へ<br>・体調の急変など緊急時は <b>119</b> へ')+
+      '<button class="btn-primary" style="margin-top:6px" onclick="contactSupport()">運営に相談する</button>');
   }else{
     openSheet('ヘルプセンター',
-      legalQA('＆ポイントとは？','支援への感謝が可視化されたポイントです。マイページから交換できます。')+
-      legalQA('マッチングの仕組みは？','「支援したい」「助けてほしい」の投稿が、地域と内容でつながります。')+
-      legalQA('安全に使うには？','本人確認と相互評価（信頼スコア）で、安心して関われる設計です。')+
-      '<button class="btn-primary" style="margin-top:6px" onclick="closeSheet();navTo(\'msg\')">運営に問い合わせる</button>');
+      legalQA('＆ポイントとは？','支援への感謝が見えるようになるポイントです。金銭的な価値や換金性はありません。実証期間中、交換メニューは準備中です。')+
+      legalQA('マッチングの仕組みは？','「支援したい」「助けてほしい」の投稿が、地域と内容でつながります。気になる投稿を開いて「メッセージを送る」から会話を始められます。')+
+      legalQA('安全に使うには？','本人確認・通報・ブロックの仕組みがあります。はじめて会う前に「安全ガイド」をご覧ください。')+
+      legalQA('本人確認はどうやりますか？','設定 → 本人確認 から申請すると、運営からメールでご連絡します。実証期間中は、運営がおひとりずつ確認しています。')+
+      legalQA('退会したいときは？','設定 → 退会（アカウント削除）からいつでも退会できます。プロフィールと投稿は削除されます。')+
+      '<div style="display:flex;gap:10px;margin-top:6px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="closeSheet();openLegal(\'safety\')">安全ガイド</button>'+
+      '<button class="btn-primary" style="flex:1" onclick="contactSupport()">運営に問い合わせる</button>'+
+      '</div>');
   }
 }
 function legalQA(q,a){return '<div style="margin-bottom:14px"><div style="font-weight:600;font-size:.85rem;color:#5d4d8c">Q. '+escapeHtml(q)+'</div><div style="font-size:.82rem;color:var(--ink);margin-top:3px;line-height:1.8">'+escapeHtml(a)+'</div></div>'}
@@ -2781,6 +3105,20 @@ function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);
 /* 都道府県セレクト（地域フィルター・投稿フォーム）を全国対応で生成 */
 initPrefSelects();
 
+/* ===== 通知などの設定トグル（端末に保存） ===== */
+function toggleSetting(el,key){
+  el.classList.toggle('on');
+  try{ localStorage.setItem('youi_set_'+key, el.classList.contains('on')?'1':'0'); }catch(e){}
+}
+(function initSettingToggles(){
+  [['push','set-toggle-push','1'],['mail','set-toggle-mail','0'],['loc','set-toggle-loc','1']].forEach(function(s){
+    var el=document.getElementById(s[1]); if(!el) return;
+    var v; try{ v=localStorage.getItem('youi_set_'+s[0]); }catch(e){ v=null; }
+    if(v===null) v=s[2];
+    el.classList.toggle('on', v==='1');
+  });
+})();
+
 /* ===== Firebase 認証状態の監視（ログイン保持・自動遷移） ===== */
 function isGuestMode(){ try{ return sessionStorage.getItem('youi_guest')==='1'; }catch(e){ return false; } }
 if(fbReady){
@@ -2789,15 +3127,21 @@ if(fbReady){
     // ゲストモード中に古いログインセッションが残っていたら、必ずサインアウトしてゲストを優先
     if(isGuestMode()){ fbAuth.signOut(); return; }
     window.__guest=false;
-    subscribePosts();
-    subscribeConversations();
     fbDb.collection('users').doc(user.uid).get().then(function(doc){
       var p = doc.exists ? doc.data() : {type:'individual',name:(user.email||'利用者'),bio:''};
       p.email=user.email; p.uid=user.uid; setStoredUser(p);
+      // ブロックリストを復元してから購読（投稿・会話の描画で除外に使う）
+      window.__blocked=(p.blocked&&typeof p.blocked==='object')?p.blocked:{};
+      subscribePosts();
+      subscribeConversations();
       if(typeof applyUserToUI==='function') applyUserToUI();
       var active=document.querySelector('.screen.active');
-      if(active && active.id==='screen-login'){ navTo('main'); setTimeout(function(){toast('ようこそ、You&i Spaceへ');},300); }
-    }).catch(function(){});
+      if(active && active.id==='screen-login'){
+        navTo('main');
+        setTimeout(function(){toast('ようこそ、You&i Spaceへ');},300);
+        if(user.emailVerified===false){ setTimeout(function(){toast('メールアドレスの確認が未完了です。設定から再送できます');},2900); }
+      }
+    }).catch(function(){ subscribePosts(); subscribeConversations(); });
   });
 }
 
