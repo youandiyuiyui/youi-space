@@ -481,6 +481,41 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .uprof-rev-text{font-size:.78rem;color:var(--tl);line-height:1.8}
 
 /* Bottom nav */
+/* ===== v0.3.0：三つの入口・縁側・結モード ===== */
+.entry-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 2px}
+.entry-btn{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:13px 5px 11px;text-align:center;cursor:pointer;transition:all .2s}
+.entry-btn:active{transform:scale(.97)}
+.entry-ic{width:34px;height:34px;border-radius:12px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
+.entry-lbl{font-size:.78rem;font-weight:600;color:var(--ink)}
+.entry-sub{font-size:.6rem;color:var(--tl);margin-top:2px;line-height:1.4}
+.ptype{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.ptype.share{background:rgba(200,184,122,.3);color:#8a7530}
+.ptype.tsuide{background:rgba(158,202,216,.32);color:#3f7f92}
+.ptype.can{background:rgba(168,196,176,.34);color:#4f8a60}
+.ptype.need{background:rgba(232,180,184,.3);color:#c07880}
+.stage-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:14px;background:rgba(184,175,214,.18);color:#7c6fa3;font-size:.66rem;font-weight:600;font-family:'Noto Sans JP',sans-serif;letter-spacing:0}
+.thanks-tag{display:inline-block;padding:7px 13px;border-radius:20px;border:1px solid rgba(184,175,214,.32);background:#fff;font-size:.78rem;color:var(--ink);cursor:pointer;margin:0 6px 8px 0;font-family:inherit}
+.thanks-tag.on{background:var(--lav);color:#fff;border-color:var(--lav)}
+.pt-choice{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:22px}
+.pt-card{border:1px solid rgba(184,175,214,.28);background:#fff;border-radius:14px;padding:12px 12px;text-align:left;cursor:pointer;font-family:inherit;transition:all .2s}
+.pt-card.on{border-color:var(--lav);background:rgba(184,175,214,.12);box-shadow:var(--shadow)}
+.pt-card b{display:block;font-size:.86rem;color:var(--ink);font-weight:600}
+.pt-card small{display:block;font-size:.64rem;color:var(--tl);margin-top:3px;line-height:1.5}
+.yui-banner{background:linear-gradient(135deg,#c8b87a,#ad9550);color:#fff;padding:11px 18px;display:flex;align-items:center;gap:9px;font-size:.78rem;letter-spacing:.02em}
+.yui-safety{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 6px}
+.yui-btn{padding:17px 10px;border-radius:16px;border:none;font-family:inherit;font-size:.92rem;font-weight:600;cursor:pointer;color:#fff}
+.yui-ok{background:linear-gradient(135deg,#a8c4b0,#87ad96)}
+.yui-help{background:linear-gradient(135deg,#e8b4b8,#d99aa0)}
+.kai-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.kai-from{font-size:.66rem;color:var(--lav3);font-weight:600;letter-spacing:.04em}
+.kai-title{font-size:.9rem;font-weight:600;margin-top:3px}
+.kai-body{font-size:.78rem;color:var(--tl);line-height:1.8;margin-top:5px}
+.kai-read{margin-top:10px;padding:7px 14px;border-radius:20px;border:1px solid rgba(184,175,214,.3);background:#fff;font-family:inherit;font-size:.74rem;color:var(--lav3);cursor:pointer}
+.kai-read.on{background:var(--lav);color:#fff;border-color:var(--lav)}
+.comm-tabs{display:flex;gap:8px;margin-bottom:16px}
+.comm-tab{flex:1;padding:9px;border-radius:12px;border:1px solid rgba(184,175,214,.25);background:#fff;font-family:inherit;font-size:.8rem;color:var(--tl);cursor:pointer}
+.comm-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.map-note{font-size:.68rem;color:var(--tl);line-height:1.7;padding:9px 14px;background:rgba(184,175,214,.1);border-radius:12px;margin:10px 18px 0}
 .bottom-nav{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(24px);border-top:1px solid rgba(184,175,214,.12);display:flex;padding:6px 8px calc(10px + env(safe-area-inset-bottom));justify-content:space-around;align-items:center;z-index:60}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 6px;color:var(--ttl);font-family:inherit;font-size:.62rem;letter-spacing:.02em;flex:1;transition:color .2s}
 .nav-item.active{color:var(--lav3)}
@@ -713,6 +748,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>You&amp;i Space</div>
     <div class="app-h-actions">
+      <button class="icon-btn" onclick="enterYuiMode()" title="結モード（災害時）"><svg class="ic"><use href="#i-shield"/></svg></button>
       <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="navTo('profile')"><svg class="ic"><use href="#i-user"/></svg></button>
     </div>
@@ -724,16 +760,31 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="main-hero-greet">こんにちは</div>
         <div class="main-hero-name">田中 太郎 さん</div>
         <div class="main-hero-stats demo-only">
-          <div class="mh-stat"><svg class="ic"><use href="#i-users"/></svg><b>12</b>人がアクティブ</div>
-          <div class="mh-stat"><svg class="ic"><use href="#i-location"/></svg><b>8</b>件の要請</div>
+          <div class="mh-stat"><svg class="ic"><use href="#i-users"/></svg>この町の結び目 <b>34</b></div>
+          <div class="mh-stat"><svg class="ic"><use href="#i-location"/></svg><b>12</b>世帯とつながっています</div>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="entry-row">
+    <div class="entry-btn" onclick="openPostWith('share')">
+      <div class="entry-ic" style="background:rgba(200,184,122,.22);color:#8a7530"><svg class="ic"><use href="#i-gift"/></svg></div>
+      <div class="entry-lbl">おすそわけ</div><div class="entry-sub">余ったものを<br>分ける</div>
+    </div>
+    <div class="entry-btn" onclick="openPostWith('tsuide')">
+      <div class="entry-ic" style="background:rgba(158,202,216,.26);color:#3f7f92"><svg class="ic"><use href="#i-car"/></svg></div>
+      <div class="entry-lbl">ついで</div><div class="entry-sub">用事のついでに<br>できること</div>
+    </div>
+    <div class="entry-btn" onclick="openPostWith('need')">
+      <div class="entry-ic" style="background:rgba(232,180,184,.26);color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div>
+      <div class="entry-lbl">困りごと</div><div class="entry-sub">助けを<br>求める</div>
+    </div>
+  </div>
+
   <div class="main-tabs">
-    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-users"/></svg>支援者リスト</button>
-    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>受援者マップ</button>
+    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-home"/></svg>縁側</button>
+    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>縁側マップ</button>
   </div>
 
   <!-- LIST PANEL -->
@@ -741,9 +792,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="prov-screen">
     <div class="prov-search">
       <svg class="ic"><use href="#i-search"/></svg>
-      <input type="text" placeholder="名前・スキルで支援者を探す">
+      <input type="text" placeholder="おすそわけ・ついで・困りごとを探す">
     </div>
     <div class="prov-filters">
+      <div class="filter-section">
+        <div class="filter-section-label">種類</div>
+        <div class="filter-row" id="type-filters">
+          <div class="filter-chip on" onclick="filterType(this,'all')">すべて</div>
+          <div class="filter-chip" onclick="filterType(this,'share')">おすそわけ</div>
+          <div class="filter-chip" onclick="filterType(this,'tsuide')">ついで</div>
+          <div class="filter-chip" onclick="filterType(this,'can')">できること</div>
+          <div class="filter-chip" onclick="filterType(this,'need')">困りごと</div>
+        </div>
+      </div>
       <div class="filter-section">
         <div class="filter-section-label">地域で絞り込み</div>
         <div class="filter-row" id="region-filters">
@@ -764,25 +825,25 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div class="prov-meta demo-only">
-      <div id="prov-count-info"><span id="prov-region-label">高槻市内</span> / <b id="prov-count">8</b>人が登録中</div>
+      <div id="prov-count-info"><span id="prov-region-label">高槻市内</span> / <b id="prov-count">8</b>件</div>
       <div class="prov-sort" onclick="toast('並び順を変更：アクティブ順')"><svg class="ic" style="font-size:.85em"><use href="#i-sort"/></svg>アクティブ順<svg class="ic" style="font-size:.8em"><use href="#i-chevron-d"/></svg></div>
     </div>
 
     <!-- みんなの投稿（Firestoreリアルタイム） -->
-    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>みんなの投稿 <span class="prov-count" id="live-count">0</span></div>
+    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>縁側のようす <span class="prov-count" id="live-count">0</span></div>
     <div class="prov-list" id="live-posts">
-      <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>
+      <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ何もありません。<br>「おすそわけ」から始めてみませんか。</div>
     </div>
 
     <div id="demo-providers" class="demo-only">
-    <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>おすすめの支援者（サンプル） <span class="prov-count">3</span></div>
+    <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>ご近所の「できること札」（サンプル） <span class="prov-count">3</span></div>
     <div class="prov-list" id="prov-list-active">
-      <div class="prov-card featured" data-region="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
+      <div class="prov-card featured" data-type="can" data-region="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
         <div class="avatar md green">高<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">高橋 美佐子 <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust">91<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">老老介護</span>
@@ -790,18 +851,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">話し相手</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>5.0<small>(18件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>18回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 0.5km</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card featured" data-region="高槻市" data-cat="daily" onclick="openProvider('前田 健太郎','sky','前',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
+      <div class="prov-card featured" data-type="can" data-region="高槻市" data-cat="daily" onclick="openProvider('前田 健太郎','sky','前',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
         <div class="avatar md sky">前<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">前田 健太郎 <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust">88<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag skill">買い物代行</span>
@@ -809,18 +870,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">家事補助</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.9<small>(24件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>24回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 0.8km</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card featured" data-region="大阪市内" data-cat="parent" onclick="openProvider('加藤 千夏','pink','加',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
+      <div class="prov-card featured" data-type="can" data-region="大阪市内" data-cat="parent" onclick="openProvider('加藤 千夏','pink','加',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
         <div class="avatar md pink">加<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">加藤 千夏 <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust">94<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">結い手</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag parent">子育て支援</span>
@@ -828,7 +889,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">保育</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>5.0<small>(32件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>32回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>大阪市内 4.2km</span>
           </div>
         </div>
@@ -837,31 +898,31 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="prov-group-h">本日中</div>
     <div class="prov-list">
-      <div class="prov-card" data-region="茨木市" data-cat="young" onclick="openProvider('中村 健','sky','中',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
+      <div class="prov-card" data-type="can" data-region="茨木市" data-cat="young" onclick="openProvider('中村 健','sky','中',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
         <div class="avatar md sky">中<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">中村 健</div>
-            <div class="prov-trust">85<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">あわじ結び</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag young">ヤングケアラー支援</span>
             <span class="prov-tag skill">学習サポート</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.8<small>(12件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>12回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>茨木市 3.4km</span>
             <span class="prov-time">30分前</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card" data-region="高槻市" data-cat="elder" onclick="openProvider('渡辺 由美','green','渡',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
+      <div class="prov-card" data-type="can" data-region="高槻市" data-cat="elder" onclick="openProvider('渡辺 由美','green','渡',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
         <div class="avatar md green">渡<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">渡辺 由美</div>
-            <div class="prov-trust">89<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">老老介護</span>
@@ -869,19 +930,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">調理</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.9<small>(21件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>21回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 1.2km</span>
             <span class="prov-time">2時間前</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card" data-region="茨木市" data-cat="parent" onclick="openProvider('井上 真理','pink','井',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
+      <div class="prov-card" data-type="can" data-region="茨木市" data-cat="parent" onclick="openProvider('井上 真理','pink','井',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
         <div class="avatar md pink">井<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">井上 真理</div>
-            <div class="prov-trust">93<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">結い手</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag parent">ひとり親支援</span>
@@ -889,7 +950,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">送り迎え</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>5.0<small>(28件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>28回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>茨木市 3.0km</span>
             <span class="prov-time">4時間前</span>
           </div>
@@ -899,38 +960,38 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="prov-group-h">最近</div>
     <div class="prov-list">
-      <div class="prov-card" data-region="高槻市" data-cat="daily" onclick="openProvider('山本 太一','green','山',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
+      <div class="prov-card" data-type="can" data-region="高槻市" data-cat="daily" onclick="openProvider('山本 太一','green','山',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
         <div class="avatar md green">山<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">山本 太一</div>
-            <div class="prov-trust">82<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">あわじ結び</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag skill">買い物代行</span>
             <span class="prov-tag skill">移動支援</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.7<small>(15件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>15回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 2.1km</span>
             <span class="prov-time">昨日</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card" data-region="高槻市" data-cat="elder" onclick="openProvider('小林 英樹','sky','小',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
+      <div class="prov-card" data-type="can" data-region="高槻市" data-cat="elder" onclick="openProvider('小林 英樹','sky','小',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
         <div class="avatar md sky">小<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">小林 英樹</div>
-            <div class="prov-trust">78<small>TRUST</small></div>
+            <div class="prov-trust"><span class="stage-chip">ひと結び</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">多目的支援</span>
             <span class="prov-tag skill">話し相手</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.6<small>(9件)</small></span>
+            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>9回</small></span>
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 1.8km</span>
             <span class="prov-time">3日前</span>
           </div>
@@ -952,19 +1013,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div id="leaflet-map"></div>
       <div class="map-search">
         <svg class="ic"><use href="#i-search"/></svg>
-        <input type="text" placeholder="地域・条件で探す（全国）" value="">
+        <input type="text" placeholder="町の名前で探す" value="">
       </div>
       <div class="map-filter">
-        <div class="filter-chip on" onclick="toggleFilter(this)">すべて</div>
-        <div class="filter-chip" onclick="toggleFilter(this)">老老介護</div>
-        <div class="filter-chip" onclick="toggleFilter(this)">ひとり親</div>
-        <div class="filter-chip" onclick="toggleFilter(this)">ヤングケアラー</div>
-        <div class="filter-chip" onclick="toggleFilter(this)">緊急</div>
+        <div class="filter-chip on" onclick="filterMapType(this,'all')">すべて</div>
+        <div class="filter-chip" onclick="filterMapType(this,'share')">おすそわけ</div>
+        <div class="filter-chip" onclick="filterMapType(this,'tsuide')">ついで</div>
+        <div class="filter-chip" onclick="filterMapType(this,'can')">できること</div>
+        <div class="filter-chip" onclick="filterMapType(this,'need')">困りごと</div>
       </div>
     </div>
+    <div class="map-note">個人のお住まいは表示しません。町丁目までのおおまかな位置と、公民館・お店などの拠点だけを出しています。<br>助けを求める側は名前を伏せられます。応える側だけが顔を見せます。</div>
     <div class="map-list">
       <div class="map-list-h" style="display:flex;justify-content:space-between;align-items:center">
-        <div class="demo-only">高槻市内 / 半径3km以内 <b>5件</b> の支援要請</div>
+        <div class="demo-only">高槻市内 / このあたりの <b>5件</b></div>
         <button class="icon-btn" onclick="centerMap()" style="width:32px;height:32px"><svg class="ic" style="font-size:.95rem"><use href="#i-target"/></svg></button>
       </div>
       <div class="match-list demo-only">
@@ -973,7 +1035,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           <div class="mc-body">
             <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
             <div class="mc-desc">高齢の母の通院付き添い（週1）</div>
-            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
+            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span></div>
           </div>
         </div>
         <div class="match-card" onclick="openMatch('木村','elder','夫の通院に同行できる方を探しています。月2回程度。','3.4km','4.9','スコア88',88)">
@@ -981,7 +1043,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           <div class="mc-body">
             <div class="mc-row1"><div class="mc-name">木村 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>3.4km</div></div>
             <div class="mc-desc">夫の通院同行（月2回）</div>
-            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>4.9</span></div>
+            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span></div>
           </div>
         </div>
         <div class="match-card" onclick="openMatch('林','parent','子の食事準備を週2でお願いします。','1.8km','5.0','ひとり親',91)">
@@ -989,11 +1051,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           <div class="mc-body">
             <div class="mc-row1"><div class="mc-name">林 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.8km</div></div>
             <div class="mc-desc">子の食事準備（週2）</div>
-            <div class="mc-meta"><span class="mc-cat cat-parent">ひとり親</span><span class="mc-stars"><svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg>5.0</span></div>
+            <div class="mc-meta"><span class="mc-cat cat-parent">ひとり親</span></div>
           </div>
         </div>
       </div>
-      <div id="map-empty" style="display:none;padding:24px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">近くの支援要請はまだありません。<br>投稿が増えると、ここに表示されます。</div>
+      <div id="map-empty" style="display:none;padding:24px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">このあたりには、まだ何もありません。<br>おすそわけやついでが出ると、ここに並びます。</div>
     </div>
   </div>
   <!-- /MAP PANEL -->
@@ -1004,15 +1066,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <!-- POST -->
 <div class="screen no-nav" id="screen-post">
   <div class="app-header">
-    <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>新しい投稿</div>
+    <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>縁側に出す</div>
     <div class="app-h-actions"><button class="icon-btn" onclick="navTo('main')"><svg class="ic"><use href="#i-close"/></svg></button></div>
   </div>
   <div class="post-screen">
-    <div class="post-toggle">
-      <button class="pt-btn on" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-provider"/></svg>支援したい</button>
-      <button class="pt-btn" onclick="togglePost(this)"><svg class="ic" style="font-size:1em"><use href="#il-receiver"/></svg>助けを求める</button>
+    <div class="pt-choice" id="pt-choice">
+      <div class="pt-card" data-type="share" onclick="setPostType(this,'share')"><b>おすそわけ</b><small>余ったもの・いただきものを分ける</small></div>
+      <div class="pt-card" data-type="tsuide" onclick="setPostType(this,'tsuide')"><b>ついで</b><small>自分の用事のついでにできること</small></div>
+      <div class="pt-card on" data-type="can" onclick="setPostType(this,'can')"><b>できること札</b><small>ふだんからできること。縁側マップに並びます</small></div>
+      <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>困りごと</b><small>助けてほしいことを書く</small></div>
     </div>
-    <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物代行できます"></div>
+    <div id="pt-hint" style="font-size:.74rem;color:var(--lav3);line-height:1.8;background:rgba(184,175,214,.1);border-radius:12px;padding:11px 14px;margin-bottom:20px"></div>
+    <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物のついでに寄れます"></div>
+    <div class="post-field" id="post-when-field" style="display:none"><label class="post-label">いつ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（ついでの予定。任意）</span></label><input type="text" class="post-input" id="post-when" maxlength="40" placeholder="例：今日15時ごろ／土曜の午前"></div>
     <div class="post-field"><label class="post-label">地域 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（大まかで大丈夫です）</span></label>
       <select class="post-input" id="post-pref" style="-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b6b7a%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:34px">
         <option value="">都道府県を選択（任意）</option>
@@ -1033,10 +1099,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-car"/></svg>移動支援</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic ic-fill"><use href="#il-emerg"/></svg>緊急</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shield"/></svg>災害支援</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-gift"/></svg>おすそわけ</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-house"/></svg>貸し借り・共同作業</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>その他</div>
       </div>
     </div>
-    <div class="post-field"><label class="post-label">詳細 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（800文字まで）</span></label><textarea class="post-textarea" id="post-detail" maxlength="800" placeholder="どんな支援か、いつ、どこで、どんな状況か——できるだけ具体的に書くと、マッチングしやすくなります。※電話番号・番地などの個人情報は書かず、マッチング後のメッセージで伝えましょう。"></textarea></div>
+    <div class="post-field"><label class="post-label">詳細 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（800文字まで）</span></label><textarea class="post-textarea" id="post-detail" maxlength="800" placeholder="いつ・どこで・どんなことか、ふだんの言葉で大丈夫です。※電話番号・番地などは書かず、やりとりが始まってからメッセージで伝えましょう。"></textarea></div>
+    <div class="post-field" id="post-anon-field" style="display:none">
+      <label style="display:flex;align-items:flex-start;gap:9px;font-size:.8rem;color:var(--ink);line-height:1.7;cursor:pointer">
+        <input type="checkbox" id="post-anon" style="margin-top:3px;accent-color:var(--lav)">
+        <span>名前を伏せて出す<br><small style="color:var(--tl);font-size:.7rem;font-weight:400">「ご近所の方」として表示されます。応える人の名前は表示されるので、安心して頼めます。</small></span>
+      </label>
+    </div>
     <div class="post-field">
       <label class="post-label">写真（任意）</label>
       <div class="photo-upload" onclick="openPhotoPicker()">
@@ -1044,7 +1118,41 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="photo-upload-text">タップして写真を追加<br><small>支援の質を担保するため、状況がわかる写真の提示を推奨</small></div>
       </div>
     </div>
-    <button class="btn-primary" onclick="submitPost()" style="margin-top:8px">投稿する</button>
+    <button class="btn-primary" onclick="submitPost()" style="margin-top:8px" id="post-submit-btn">縁側に出す</button>
+  </div>
+</div>
+
+<!-- 結モード（災害時） -->
+<div class="screen" id="screen-yui">
+  <div class="app-header">
+    <div class="app-h-logo"><span class="dot" style="background:var(--gold)"></span>結モード</div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="exitYuiMode()"><svg class="ic"><use href="#i-close"/></svg></button></div>
+  </div>
+  <div class="yui-banner"><svg class="ic"><use href="#i-shield"/></svg>災害時の画面に切り替わっています。ふだんの縁側は下のボタンから戻れます。</div>
+  <div style="padding:18px 18px 0">
+    <div style="font-family:'Noto Serif JP',serif;font-size:1.05rem;font-weight:500">まず、あなたの無事を知らせましょう</div>
+    <div style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-top:5px">ご近所の「できること札」を出していた人に届きます。</div>
+  </div>
+  <div class="yui-safety">
+    <button class="yui-btn yui-ok" onclick="reportSafety('ok')">無事です</button>
+    <button class="yui-btn yui-help" onclick="reportSafety('help')">手助けが要ります</button>
+  </div>
+  <div id="yui-safety-state" style="padding:0 18px;font-size:.78rem;color:var(--lav3);line-height:1.8"></div>
+
+  <div class="sec-block" style="margin-top:18px">
+    <div class="sec-h"><div class="sec-h-title">いま動ける人（できること札）</div></div>
+    <div style="font-size:.74rem;color:var(--tl);line-height:1.8;padding:0 18px 10px">平時に登録された札が、そのまま支援できる人の一覧になります。新しく集める必要はありません。</div>
+    <div class="prov-list" id="yui-can-list"></div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-h"><div class="sec-h-title">もやい（出せるもの・使える場所）</div></div>
+    <div style="font-size:.74rem;color:var(--tl);line-height:1.8;padding:0 18px 10px">ふだん共有していたものが、そのまま供出できる資源になります。</div>
+    <div class="prov-list" id="yui-moyai-list"></div>
+  </div>
+
+  <div style="padding:8px 18px 28px">
+    <button class="btn-secondary" onclick="exitYuiMode()">ふだんの縁側に戻る</button>
   </div>
 </div>
 
@@ -1211,9 +1319,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
   <div class="rewards-screen">
     <div class="rew-balance">
-      <div class="rew-balance-lbl">CURRENT BALANCE</div>
+      <div class="rew-balance-lbl">いま持っている ＆ポイント</div>
       <div class="rew-balance-num"><span id="rew-balance-num">1,240</span><span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
       <div class="rew-balance-sub" id="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
+    </div>
+    <div style="background:rgba(184,175,214,.1);border:1px solid rgba(184,175,214,.22);border-radius:14px;padding:14px 16px;margin-bottom:16px">
+      <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">町の講（こう）</div>
+      <div style="font-size:.74rem;color:var(--tl);line-height:1.85">手渡しで動いた＆ポイントの一部は、町ごとの積み立てに貯まります。貯まると、結の日や防災訓練、子どもの行事の原資になります。<br>個人と個人の貸し借りが、そのまま町の資産に変わっていきます。</div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:9px">
+        <div style="flex:1;height:6px;background:rgba(184,175,214,.2);border-radius:3px;overflow:hidden"><div style="height:100%;width:42%;background:linear-gradient(to right,var(--lav),var(--gold))"></div></div>
+        <div style="font-size:.72rem;color:var(--lav3);font-weight:600;white-space:nowrap">4,200 / 10,000 pt</div>
+      </div>
     </div>
     <div class="rew-tabs">
       <div class="rew-tab on" onclick="rewTab(this,'coupon')">クーポン</div>
@@ -1352,9 +1468,41 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="app-h-actions"><button class="icon-btn" onclick="toast('投稿を検索します')"><svg class="ic"><use href="#i-search"/></svg></button></div>
   </div>
   <div class="comm-screen">
+    <div class="comm-tabs">
+      <button class="comm-tab on" onclick="switchCommTab(this,'kai')">回覧板</button>
+      <button class="comm-tab" onclick="switchCommTab(this,'voice')">みんなの声</button>
+    </div>
+
+    <div id="comm-kai">
+      <div class="comm-banner">
+        <div class="comm-banner-h">デジタル回覧板</div>
+        <div class="comm-banner-sub">自治会・自主防災会からのお知らせが届きます。回して待つ必要はありません。読んだら「見ました」を押すだけです。</div>
+      </div>
+      <div class="kai-item">
+        <div class="kai-from">高槻○○町 自治会</div>
+        <div class="kai-title">8月の資源ごみ回収について</div>
+        <div class="kai-body">今月の回収日は8月14日（金）です。集積所は第2公園前に変更になりました。段ボールはひもで束ねてお出しください。</div>
+        <button class="kai-read" onclick="markKaiRead(this)">見ました</button>
+      </div>
+      <div class="kai-item">
+        <div class="kai-from">○○地区 自主防災会</div>
+        <div class="kai-title">防災訓練のお知らせ（9月1日）</div>
+        <div class="kai-body">9月1日（火）午前9時から、第2公園で防災訓練を行います。参加された方には＆ポイントをお渡しします。ご都合のつく方はどなたでもご参加ください。</div>
+        <button class="kai-read" onclick="markKaiRead(this)">見ました</button>
+      </div>
+      <div class="kai-item">
+        <div class="kai-from">高槻○○町 自治会</div>
+        <div class="kai-title">夏祭りの片付けを手伝ってくださる方</div>
+        <div class="kai-body">8月17日の午前中、テントの片付けをお手伝いいただける方を探しています。30分ほどで終わります。「ついで」に立ち寄れる方がいれば助かります。</div>
+        <button class="kai-read" onclick="markKaiRead(this)">見ました</button>
+      </div>
+      <div style="font-size:.72rem;color:var(--tl);line-height:1.8;padding:6px 4px 20px">※ 回覧板は自治会の役員さんが出したお知らせを、そのまま各戸へ届ける機能です。You&amp;i Space は会員名簿をお預かりしません。</div>
+    </div>
+
+    <div id="comm-voice" style="display:none">
     <div class="comm-banner">
-      <div class="comm-banner-h">支援者・受援者が想いを綴る場所</div>
-      <div class="comm-banner-sub">活動の振り返り、感謝の言葉、課題の共有——みんなで支援の輪を育てる場所です。</div>
+      <div class="comm-banner-h">ご近所のみんなが想いを綴る場所</div>
+      <div class="comm-banner-sub">日々のこと、ありがとうの言葉、気になっていること——顔の見える関係を育てる場所です。</div>
     </div>
     <div class="comm-post">
       <div class="comm-post-h">
@@ -1392,6 +1540,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
+    </div><!-- /comm-voice -->
   </div>
 </div>
 
@@ -1409,8 +1558,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="prof-name">田中 太郎</div>
     <div class="prof-bio">高槻市在住 / 会社員</div>
     <div class="prof-roles">
-      <span class="prof-role">＆ Provider</span>
-      <span class="prof-role">＆ Receiver</span>
+      <span class="prof-role">手を貸せます</span>
+      <span class="prof-role">頼れます</span>
       <span class="prof-role" id="prof-verify-chip">本人確認済</span>
     </div>
   </div>
@@ -1419,15 +1568,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="score-card" style="margin:16px 18px;padding:24px 22px">
     <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:center;position:relative;z-index:1">
       <div style="text-align:center">
-        <div class="score-label" style="margin-bottom:8px">TRUST SCORE</div>
-        <div id="prof-trust" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fff">782</div>
+        <div class="score-label" style="margin-bottom:8px">信頼の段階</div>
+        <div id="prof-trust" style="font-family:'Noto Serif JP',serif;font-size:1.15rem;font-weight:500;line-height:1.5;color:#fff;white-space:nowrap">梅結び</div>
         <div id="prof-trust-chip" style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(200,232,212,.22);color:#c8e8d4;font-size:.7rem;font-weight:500">
-          <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg>+12 今月
+          感謝 38 回
         </div>
       </div>
       <div style="width:1px;height:74px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.35),transparent);justify-self:center"></div>
       <div style="text-align:center">
-        <div class="score-label" style="margin-bottom:8px">＆ POINTS</div>
+        <div class="score-label" style="margin-bottom:8px">＆ポイント</div>
         <div id="prof-points" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">1,240</div>
         <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(252,238,168,.18);color:#fceea8;font-size:.7rem;font-weight:500">
           <svg class="ic" style="font-size:.85em"><use href="#i-gift"/></svg>使える
@@ -1436,8 +1585,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="score-bar" style="margin-top:22px"><div class="score-fill"></div></div>
     <div class="score-tags" id="prof-badges" style="margin-top:14px;justify-content:center">
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支援実績 42</span>
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-comment"/></svg>評価 38</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支え合い 42回</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-heart"/></svg>感謝 38回</span>
       <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>継続 8ヶ月</span>
     </div>
   </div>
@@ -1450,7 +1599,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="qa" onclick="openHistory('support')">
       <div class="qa-illust"><svg class="ic"><use href="#i-trophy"/></svg></div>
-      <div class="qa-label">支援実績</div>
+      <div class="qa-label">支え合い</div>
     </div>
     <div class="qa" onclick="navTo('comm')">
       <div class="qa-illust"><svg class="ic"><use href="#i-globe"/></svg></div>
@@ -1466,7 +1615,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="set-section" style="margin:14px 18px 0">
     <div class="set-item" onclick="openMyPosts()">
       <div class="set-icon"><svg class="ic"><use href="#i-edit"/></svg></div>
-      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">支援・受援の投稿を編集／削除</div></div>
+      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">おすそわけ・ついで・できること札・困りごとを編集／削除</div></div>
       <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
     </div>
   </div>
@@ -1503,13 +1652,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 
   <div class="score-detail" style="margin-top:18px">
-    <div class="sd-h"><div class="sd-title">信頼スコアの内訳</div><div class="sd-value" id="prof-trust2">782</div></div>
+    <div class="sd-h"><div class="sd-title">信頼の段階の内訳</div><div class="sd-value" id="prof-trust2" style="font-family:'Noto Serif JP',serif;font-size:.95rem">梅結び</div></div>
     <div class="sd-bars" id="prof-scorebars">
-      <div class="sd-bar-row"><div class="sd-bar-lbl">支援実績</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:88%"></div></div><div class="sd-bar-val">88</div></div>
-      <div class="sd-bar-row"><div class="sd-bar-lbl">評価平均</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:96%"></div></div><div class="sd-bar-val">96</div></div>
-      <div class="sd-bar-row"><div class="sd-bar-lbl">継続性</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div><div class="sd-bar-val">72</div></div>
-      <div class="sd-bar-row"><div class="sd-bar-lbl">人柄資本</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div><div class="sd-bar-val">81</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">本人確認</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:100%"></div></div><div class="sd-bar-val">済</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">支え合い</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:88%"></div></div><div class="sd-bar-val">42</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">継続</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div><div class="sd-bar-val">8ヶ月</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">感謝</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div><div class="sd-bar-val">38</div></div>
     </div>
+    <div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">助けを求めることにも、段階の条件はありません。求めた回数も「支え合い」に数えます。信頼は、＆ポイントでもお金でも買えません。</div>
   </div>
   <div class="sec-block" id="prof-certs">
     <div class="sec-h"><div class="sec-h-title">デジタル証明書</div><div class="sec-h-more">すべて見る <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>
@@ -1545,6 +1695,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 </div>
 
+<!-- (結モードの入口は設定画面から) -->
 <!-- OTHER USER PROFILE -->
 <div class="screen no-nav" id="screen-uprof">
   <div class="app-header">
@@ -1583,14 +1734,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="uprof-review">
       <div class="uprof-review-h">
         <div class="uprof-rev-name">前田 さん（支援者）</div>
-        <div class="uprof-rev-stars"><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg></div>
+        <div class="uprof-rev-stars" style="color:#c07880"><span class="ptype can" style="margin-right:4px">ていねいだった</span><span class="ptype can">また会いたい</span></div>
       </div>
       <div class="uprof-rev-text">いつも温かくお迎えくださり、こちらが励まされます。母娘の関係性も穏やかで素敵な方です。</div>
     </div>
     <div class="uprof-review">
       <div class="uprof-review-h">
         <div class="uprof-rev-name">井上 さん（支援者）</div>
-        <div class="uprof-rev-stars"><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg><svg class="ic ic-fill"><use href="#i-star"/></svg></div>
+        <div class="uprof-rev-stars" style="color:#c07880"><span class="ptype can" style="margin-right:4px">ていねいだった</span><span class="ptype can">また会いたい</span></div>
       </div>
       <div class="uprof-rev-text">明るく前向きな方で、初対面でも安心して関われました。お母様とのやり取りからも、深い愛情が伝わってきます。</div>
     </div>
@@ -1650,6 +1801,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="set-toggle on" id="set-toggle-loc" onclick="toggleSetting(this,'loc')"></div>
       </div>
     </div>
+    <div class="set-section-h">災害時</div>
+    <div class="set-section">
+      <div class="set-item" onclick="enterYuiMode()">
+        <div class="set-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
+        <div class="set-label">結モードを試す<div style="font-size:.7rem;color:var(--tl);margin-top:2px">平時の「できること札」が、そのまま動ける人の一覧になります</div></div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
+      </div>
+    </div>
     <div class="set-section-h">安全・プライバシー</div>
     <div class="set-section">
       <div class="set-item" onclick="openLegal('safety')">
@@ -1703,7 +1862,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav" style="display:none">
-  <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>メイン</span></button>
+  <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>縁側</span></button>
   <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
   <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
   <button class="nav-item" data-screen="rewards" onclick="navTo('rewards')"><svg class="ni-icon ic"><use href="#i-gift"/></svg><span>＆ポイント</span></button>
@@ -1728,7 +1887,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div style="font-size:.7rem;color:var(--tl);margin-bottom:4px">この方の信頼スコア</div>
       <div style="display:flex;align-items:center;gap:8px">
         <div style="flex:1;height:6px;background:rgba(184,175,214,.18);border-radius:3px;overflow:hidden"><div id="mm-score-bar" style="height:100%;width:78%;background:linear-gradient(to right,var(--lav),var(--sky))"></div></div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--lav3)" id="mm-score">92</div>
+        <div style="font-family:'Noto Serif JP',serif;font-size:.92rem;font-weight:500;color:var(--lav3);white-space:nowrap" id="mm-score">あわじ結び</div>
       </div>
     </div>
     <div class="modal-actions">
@@ -1879,6 +2038,8 @@ function navTo(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const ni=document.querySelector('.nav-item[data-screen="'+name+'"]');
   if(ni) ni.classList.add('active');
+  if(name==='yui'){ renderYuiLists(); }
+  if(name==='post'){ setPostType(null,curPostType||'can'); }
   if(name==='main'){
     // Re-init map if user is on map tab
     const mapPanel=document.getElementById('main-panel-map');
@@ -1941,10 +2102,11 @@ function hideDemoContent(){
 /* 新規アカウントは投稿・ポイント・実績を0から表示 */
 function zeroOutNewAccount(){
   var s=function(id,v){var el=document.getElementById(id); if(el) el.textContent=v;};
-  s('prof-trust','0'); s('prof-trust2','0'); s('prof-points','0'); s('rew-balance-num','0');
-  var sub=document.getElementById('rew-balance-sub'); if(sub) sub.textContent='獲得：0pt ／ 使用：0pt';
-  var chip=document.getElementById('prof-trust-chip'); if(chip) chip.style.display='none';
-  var badges=document.getElementById('prof-badges'); if(badges) badges.innerHTML='<span class="score-tag">これから実績を積みましょう</span>';
+  s('prof-trust','はじめの結び'); s('prof-trust2','はじめの結び');
+  s('prof-points',String(myPoints())); s('rew-balance-num',String(myPoints()));
+  var sub=document.getElementById('rew-balance-sub'); if(sub) sub.textContent='登録のお祝いに 300pt をお渡ししています';
+  var chip=document.getElementById('prof-trust-chip'); if(chip){ chip.style.display=''; chip.textContent='感謝 0 回'; }
+  var badges=document.getElementById('prof-badges'); if(badges) badges.innerHTML='<span class="score-tag">まずは、おすそわけから</span>';
   var bars=document.getElementById('prof-scorebars');
   if(bars){ bars.querySelectorAll('.sd-bar-fill').forEach(function(b){b.style.width='0%';}); bars.querySelectorAll('.sd-bar-val').forEach(function(v){v.textContent='0';}); }
   var act=document.getElementById('prof-activity'); if(act) act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>支援したり助けを求めると、ここに記録されます。</div>';
@@ -2145,7 +2307,15 @@ function firstCatToken(cats){ var t=catTokens(cats); return t.length?t[0]:'daily
 function catColor(tok){ return tok==='elder'?'green':(tok==='parent'?'pink':(tok==='young'?'sky':'lav')); }
 
 // Providers list filters（全国・都道府県ベース）
-let curRegion='all', curCat='all';
+let curRegion='all', curCat='all', curType='all', curMapType='all';
+function filterType(el,t){
+  el.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on'); curType=t; applyProvFilters();
+}
+function filterMapType(el,t){
+  el.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on'); curMapType=t; if(mapInited) updateMapPins();
+}
 function filterRegionSelect(region){
   curRegion=region||'all';
   var lbl=document.getElementById('prov-region-label');
@@ -2165,9 +2335,11 @@ function applyProvFilters(){
     var isLive=card.hasAttribute('data-live');
     var r=card.dataset.region||'', c=card.dataset.cat||'';
     // ライブ投稿は地域/カテゴリ未設定なら常に表示（ユーザー投稿を勝手に隠さない）
+    var ty=card.dataset.type||'';
     var matchR=(curRegion==='all'|| r===curRegion || (isLive && !r));
     var matchC=(curCat==='all'|| c.split(' ').indexOf(curCat)>=0 || (isLive && !c));
-    if(matchR && matchC){card.style.display='';count++;}
+    var matchT=(curType==='all'|| ty===curType || (!isLive && !ty));
+    if(matchR && matchC && matchT){card.style.display='';count++;}
     else card.style.display='none';
   });
   document.querySelectorAll('.prov-list').forEach(function(list){
@@ -2197,9 +2369,10 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
     tags.appendChild(t);
   });
   const s=document.createElement('span');s.className='mc-stars';
-  s.innerHTML='<svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg> '+stars+' ('+reviews+'件)';
+  s.style.color='#c07880';
+  s.innerHTML='<svg class="ic" style="font-size:.85em"><use href="#i-heart"/></svg> 感謝 '+reviews+'回';
   s.style.fontSize='.78rem';tags.appendChild(s);
-  document.getElementById('mm-score').textContent=trust;
+  document.getElementById('mm-score').textContent=stage_label_for(trust);
   document.getElementById('mm-score-bar').style.width=trust+'%';
   document.getElementById('mm-contact-btn').onclick=function(){
     closeModal(null,'match-modal');
@@ -2212,20 +2385,265 @@ function logout(){
   if(convListUnsub){convListUnsub();convListUnsub=null;}
   if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
   if(postsUnsub){postsUnsub();postsUnsub=null;}
-  currentConv=null; window.__convs={}; window.__blocked={}; window.__rawPosts=[]; window.__rawConvs=[];
+  if(thanksUnsub){thanksUnsub();thanksUnsub=null;}
+  currentConv=null; window.__convs={}; window.__blocked={}; window.__rawPosts=[]; window.__rawConvs=[]; window.__thanksIn=[];
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');
 }
 function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+
+/* ===================================================================
+   v0.3.0：三つの入口（おすそわけ／ついで／困りごと）＋できること札
+   正本＝戦略指針§5-1「三つの入口」／概念ノート§3「頼む前に、渡す」
+   =================================================================== */
+var POST_TYPES={
+  share :{label:'おすそわけ',  cls:'share', color:'lav',
+          hint:'余ったもの・いただきものを「どうぞ」で出しましょう。手渡しなので、一度は顔を合わせられます。',
+          ph:'例：家庭菜園のミニトマト、少しですがどうぞ', btn:'おすそわけを出す'},
+  tsuide:{label:'ついで',      cls:'tsuide', color:'sky',
+          hint:'「助けます」ではなく「ついで」。自分の予定を置いておくだけなので、気負わずに出せます。',
+          ph:'例：今日15時ごろスーパーに行きます', btn:'ついでを出す'},
+  can   :{label:'できること札', cls:'can',  color:'green',
+          hint:'ふだんからできることを、札にして置いておきます。縁側マップに並び、災害のときはそのまま「いま動ける人」の一覧になります。',
+          ph:'例：車を出せます／スマホの相談にのれます', btn:'できること札を出す'},
+  need  :{label:'困りごと',    cls:'need',  color:'pink',
+          hint:'名前を伏せて出すこともできます。＆ポイントの残高が0でも、遠慮なく頼んで大丈夫です。',
+          ph:'例：ゴミ出しを手伝ってくれる方を探しています', btn:'困りごとを出す'}
+};
+/* 旧データ（provide／receive）を新しい4分類に読み替える */
+/* デモ用：0-100の目安値を、水引の段階名に読み替える（生の数字は出さない） */
+function stage_label_for(v){ v=parseInt(v,10)||0; return v>=93?'結い手':(v>=87?'梅結び':(v>=80?'あわじ結び':'ひと結び')); }
+function normType(t){ if(t==='provide')return 'can'; if(t==='receive')return 'need'; return POST_TYPES[t]?t:'can'; }
+function typeInfo(t){ return POST_TYPES[normType(t)]; }
+function typeBadge(t){ var i=typeInfo(t); return '<span class="ptype '+i.cls+'">'+i.label+'</span>'; }
+function typeColor(t){ return typeInfo(t).color; }
+/* 困りごとで「名前を伏せる」が選ばれていたら、ご近所の方として表示（非対称の匿名性） */
+function postAuthor(p){ return (p&&p.anon)?'ご近所の方':((p&&p.authorName)||'利用者'); }
+
+var curPostType='can';
+function setPostType(el,t){
+  curPostType=t;
+  var cards=document.querySelectorAll('#pt-choice .pt-card');
+  for(var i=0;i<cards.length;i++){ cards[i].classList.toggle('on', cards[i].getAttribute('data-type')===t); }
+  var info=POST_TYPES[t]||POST_TYPES.can;
+  var h=document.getElementById('pt-hint'); if(h) h.textContent=info.hint;
+  var ti=document.getElementById('post-title'); if(ti) ti.placeholder=info.ph;
+  var b=document.getElementById('post-submit-btn'); if(b) b.textContent=info.btn;
+  var wf=document.getElementById('post-when-field'); if(wf) wf.style.display=(t==='tsuide')?'':'none';
+  var af=document.getElementById('post-anon-field'); if(af) af.style.display=(t==='need')?'':'none';
+}
+/* 縁側の3つの入口ボタンから、種類を選んだ状態で投稿画面へ */
+function openPostWith(t){ navTo('post'); setPostType(null,t); }
+
+/* ===== 信頼の段階（水引の結び名5段階。生の数字は出さない） ===== */
+var TRUST_STAGES=[
+  {name:'はじめの結び', need:0},
+  {name:'ひと結び',     need:3},
+  {name:'あわじ結び',   need:10},
+  {name:'梅結び',       need:25},
+  {name:'結い手',       need:50}
+];
+function stageIndexOf(cnt){ var k=0; for(var i=0;i<TRUST_STAGES.length;i++){ if((cnt||0)>=TRUST_STAGES[i].need) k=i; } return k; }
+function stageNameOf(cnt){ return TRUST_STAGES[stageIndexOf(cnt)].name; }
+function stageChip(cnt){ return '<span class="stage-chip"><svg class="ic" style="font-size:.9em"><use href="#i-medal"/></svg>'+stageNameOf(cnt)+'</span>'; }
+
+/* ===== 感謝タグ（星の点数評価は置かない） ===== */
+var THANKS_TAGS=['時間を守ってくれた','ていねいだった','話しやすかった','とても助かった','また会いたい'];
+var PT_CHOICES=[30,50,100];
+
+/* 自分の＆ポイント残高（登録時300pt・戦略指針§5-6の初期値） */
+function myPoints(){
+  var u=getStoredUser()||{};
+  return (typeof u.points==='number')?u.points:300;
+}
+function setMyPoints(v){
+  var u=getStoredUser(); if(!u) return;
+  u.points=Math.max(0,v); setStoredUser(u);
+  if(fbReady&&fbAuth.currentUser){ fbDb.collection('users').doc(fbAuth.currentUser.uid).update({points:u.points}).catch(function(){}); }
+  renderPointsUI();
+}
+function renderPointsUI(){
+  var u=getStoredUser(); if(!u||!u.uid) return;
+  var p=myPoints();
+  var a=document.getElementById('prof-points'); if(a) a.textContent=p.toLocaleString();
+  var b=document.getElementById('rew-balance-num'); if(b) b.textContent=p.toLocaleString();
+}
+
+/* 受け取った感謝を購読して、段階・回数・最近の活動に反映する */
+var thanksUnsub=null, thanksOutUnsub=null;
+function subscribeThanks(){
+  if(!fbReady||!fbAuth.currentUser||thanksUnsub) return;
+  var uid=fbAuth.currentUser.uid;
+  thanksUnsub=fbDb.collection('thanks').where('toUid','==',uid).onSnapshot(function(snap){
+    var arr=[]; snap.forEach(function(d){ var t=d.data(); t.id=d.id; arr.push(t); });
+    arr.sort(function(a,b){
+      var ta=(a.createdAt&&a.createdAt.toDate)?a.createdAt.toDate().getTime():0;
+      var tb=(b.createdAt&&b.createdAt.toDate)?b.createdAt.toDate().getTime():0;
+      return tb-ta;
+    });
+    window.__thanksIn=arr; renderTrustUI();
+  },function(e){ console.warn('thanks listen',e); });
+}
+function renderTrustUI(){
+  var u=getStoredUser(); if(!u||!u.uid) return;
+  var list=window.__thanksIn||[], cnt=list.length;
+  var t1=document.getElementById('prof-trust');  if(t1) t1.textContent=stageNameOf(cnt);
+  var t2=document.getElementById('prof-trust2'); if(t2) t2.textContent=stageNameOf(cnt);
+  var chip=document.getElementById('prof-trust-chip');
+  if(chip){ chip.style.display=''; chip.textContent='感謝 '+cnt+' 回'; }
+  var bars=document.getElementById('prof-scorebars');
+  if(bars){
+    var idx=stageIndexOf(cnt), nextNeed=(idx<TRUST_STAGES.length-1)?TRUST_STAGES[idx+1].need:TRUST_STAGES[idx].need;
+    var prog=nextNeed?Math.min(100,Math.round(cnt/nextNeed*100)):100;
+    bars.innerHTML=
+      '<div class="sd-bar-row"><div class="sd-bar-lbl">本人確認</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+(u.verified?100:0)+'%"></div></div><div class="sd-bar-val">'+(u.verified?'済':'—')+'</div></div>'+
+      '<div class="sd-bar-row"><div class="sd-bar-lbl">感謝</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+prog+'%"></div></div><div class="sd-bar-val">'+cnt+'</div></div>'+
+      '<div class="sd-bar-row"><div class="sd-bar-lbl">次の段階まで</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+prog+'%"></div></div><div class="sd-bar-val">'+(idx<TRUST_STAGES.length-1?Math.max(0,nextNeed-cnt):'—')+'</div></div>';
+  }
+  var badges=document.getElementById('prof-badges');
+  if(badges) badges.innerHTML='<span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-heart"/></svg>感謝 '+cnt+'回</span>';
+  var act=document.getElementById('prof-activity');
+  if(act){
+    var body=list.length? list.slice(0,6).map(function(t){
+      var tags=(t.tags||[]).map(function(x){return '<span class="ptype can" style="margin-right:4px">'+escapeHtml(x)+'</span>';}).join('');
+      return '<div class="feed-item"><div class="feed-h"><div class="feed-dot"></div>'+
+        '<div class="feed-text"><b>'+escapeHtml(t.fromName||'ご近所の方')+'</b>から感謝が届きました</div>'+
+        '<div class="feed-time">'+timeAgo(t.createdAt)+'</div></div>'+
+        (tags?'<div style="margin-left:18px;margin-top:5px">'+tags+'</div>':'')+
+        (t.note?'<div class="feed-text" style="margin-left:18px;margin-top:5px">「'+escapeHtml(t.note)+'」</div>':'')+
+        (t.points?'<div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋'+t.points+' ＆pt</span></div>':'')+
+      '</div>';
+    }).join('')
+    : '<div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>おすそわけやついでから始めてみましょう。</div>';
+    act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div>'+body;
+  }
+  renderPointsUI();
+}
+
+/* ===== 感謝を贈る（星評価なし・＆ポイントは手渡し・「お互いさま」で借りを閉じる） ===== */
+var thanksSel={tags:[],pts:50,to:null,toName:'',postId:''};
+function openThanks(toUid,toName,postId){
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(toUid===fbAuth.currentUser.uid){ toast('自分には贈れません'); return; }
+  thanksSel={tags:[],pts:50,to:toUid,toName:toName||'相手の方',postId:postId||''};
+  var bal=myPoints();
+  var tagHtml=THANKS_TAGS.map(function(t,i){ return '<span class="thanks-tag" onclick="toggleThanksTag(this,\''+i+'\')">'+t+'</span>'; }).join('');
+  var ptHtml=PT_CHOICES.map(function(v){
+    return '<span class="thanks-tag'+(v===50?' on':'')+'" data-pt="'+v+'" onclick="setThanksPt(this,'+v+')">'+v+' pt</span>';
+  }).join('')+'<span class="thanks-tag" data-pt="0" onclick="setThanksPt(this,0)">今回は渡さない</span>';
+  openSheet('お礼を伝える',
+    '<div style="font-size:.85rem;color:var(--ink);line-height:1.9;margin-bottom:16px">'+escapeHtml(thanksSel.toName)+'さんに、ありがとうを贈ります。<br><span style="font-size:.76rem;color:var(--tl)">点数はつけません。感じたことを選ぶだけで大丈夫です。</span></div>'+
+    '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">感謝タグ（いくつでも）</div>'+
+    '<div style="margin-bottom:18px">'+tagHtml+'</div>'+
+    '<div style="font-size:.78rem;font-weight:600;margin-bottom:7px">ひとこと（任意）</div>'+
+    '<textarea id="th-note" maxlength="200" class="input" rows="3" style="resize:vertical;font-family:inherit;margin-bottom:18px" placeholder="ありがとうございました。助かりました。"></textarea>'+
+    '<div style="font-size:.78rem;font-weight:600;margin-bottom:7px">＆ポイントを手渡す <span style="font-weight:400;color:var(--tl);font-size:.72rem">（いま '+bal+' pt）</span></div>'+
+    '<div style="margin-bottom:8px">'+ptHtml+'</div>'+
+    '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin-bottom:18px">＆ポイントは、その場で借りを返したことにするための道具です。運営が配るのではなく、受けた人から手渡すからこそ、負い目が残りません。</div>'+
+    '<button class="btn-primary" onclick="sendThanks()">「お互いさま」で贈る</button>');
+}
+function toggleThanksTag(el,i){
+  el.classList.toggle('on');
+  var t=THANKS_TAGS[parseInt(i,10)];
+  var k=thanksSel.tags.indexOf(t);
+  if(el.classList.contains('on')){ if(k<0) thanksSel.tags.push(t); } else if(k>=0){ thanksSel.tags.splice(k,1); }
+}
+function setThanksPt(el,v){
+  var sib=el.parentNode.querySelectorAll('[data-pt]');
+  for(var i=0;i<sib.length;i++) sib[i].classList.remove('on');
+  el.classList.add('on'); thanksSel.pts=v;
+}
+function sendThanks(){
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(!thanksSel.to){ toast('相手が特定できません'); return; }
+  if(!thanksSel.tags.length){ toast('感謝タグを1つ以上えらんでください'); return; }
+  var note=((document.getElementById('th-note')||{}).value||'').trim();
+  if(note.length>200){ toast('ひとことは200文字までです'); return; }
+  var pts=thanksSel.pts||0;
+  if(pts>myPoints()){ toast('＆ポイントが足りません。0ptでも贈れます'); return; }
+  if(busy('thanks',3000)) return;
+  var u=getStoredUser()||{};
+  fbDb.collection('thanks').add({
+    fromUid:fbAuth.currentUser.uid,
+    fromName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    toUid:thanksSel.to, toName:(thanksSel.toName||'').slice(0,60),
+    postId:thanksSel.postId||'', tags:thanksSel.tags.slice(0,5), note:note,
+    points:pts, createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){
+    if(pts>0) setMyPoints(myPoints()-pts);
+    closeSheet();
+    toast('お互いさま。貸し借りは、これでおしまいです');
+  }).catch(function(e){ console.warn('thanks fail',e); toast(authErrMsg(e)); });
+}
+
+/* ===== 結モード（災害時）：平時の札が、そのまま資源の台帳になる ===== */
+function enterYuiMode(){
+  openSheet('結モードに切り替えますか',
+    '<p style="font-size:.88rem;color:var(--ink);line-height:1.95;margin-bottom:16px">災害が起きたときの画面です。安否をワンタップで知らせ、ふだん出されていた「できること札」と「もやい（共有できるもの）」が、そのまま動ける人・出せるものの一覧に変わります。</p>'+
+    '<p style="font-size:.76rem;color:var(--tl);line-height:1.85;margin-bottom:18px">実際の運用では震度5弱以上などで自動的に切り替わる想定です（実証では手動）。いつでもふだんの縁側に戻れます。</p>'+
+    '<div style="display:flex;gap:10px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">やめる</button>'+
+      '<button class="btn-primary" style="flex:1" onclick="closeSheet();doEnterYui()">切り替える</button>'+
+    '</div>');
+}
+function doEnterYui(){ renderYuiLists(); navTo('yui'); toast('結モードに切り替えました'); }
+function exitYuiMode(){ navTo('main'); toast('ふだんの縁側に戻りました'); }
+function reportSafety(kind){
+  var el=document.getElementById('yui-safety-state'); if(!el) return;
+  el.innerHTML = (kind==='ok')
+    ? '「無事です」を知らせました。ご近所の12世帯に届いています。'
+    : '「手助けが要ります」を知らせました。近くで動ける方に届いています。まもなく連絡が入ります。';
+  toast(kind==='ok'?'無事を知らせました':'手助けの要請を知らせました');
+}
+function renderYuiLists(){
+  var posts=window.__posts||{}, can=[], moyai=[];
+  Object.keys(posts).forEach(function(k){
+    var p=posts[k], t=normType(p.type);
+    if(t==='can'||t==='tsuide') can.push(p);
+    if(t==='share'||(p.categories||[]).indexOf('貸し借り・共同作業')>=0) moyai.push(p);
+  });
+  var row=function(p){
+    return '<div class="prov-card" onclick="openPostDetail(\''+p.id+'\')">'+
+      '<div class="avatar md '+typeColor(p.type)+'">'+escapeHtml(postAuthor(p).charAt(0))+'</div>'+
+      '<div class="prov-body"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+typeBadge(p.type)+
+      '<span style="font-weight:600;font-size:.88rem">'+escapeHtml(p.title||'')+'</span></div>'+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:4px">'+escapeHtml(postAuthor(p))+
+      ([p.pref,p.area].filter(Boolean).length?' ・ '+escapeHtml([p.pref,p.area].filter(Boolean).join(' ')):'')+'</div></div></div>';
+  };
+  var empty=function(m){ return '<div style="padding:18px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.8">'+m+'</div>'; };
+  var a=document.getElementById('yui-can-list');
+  if(a) a.innerHTML = can.length ? can.map(row).join('')
+    : empty('平時に「できること札」や「ついで」が出ていると、<br>ここに動ける人が並びます。');
+  var b=document.getElementById('yui-moyai-list');
+  if(b) b.innerHTML = moyai.length ? moyai.map(row).join('')
+    : empty('「おすそわけ」や「貸し借り・共同作業」が出ていると、<br>ここに出せるものが並びます。');
+}
+
+/* ===== コミュニティ：デジタル回覧板 ===== */
+function switchCommTab(el,which){
+  var tabs=el.parentNode.querySelectorAll('.comm-tab');
+  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('on');
+  el.classList.add('on');
+  var k=document.getElementById('comm-kai'), v=document.getElementById('comm-voice');
+  if(k) k.style.display=(which==='kai')?'':'none';
+  if(v) v.style.display=(which==='voice')?'':'none';
+}
+function markKaiRead(el){
+  if(el.classList.contains('on')) return;
+  el.classList.add('on'); el.textContent='見ました ✓';
+  toast('回覧板に「見ました」を付けました');
+}
+
 /* ===== マッチング掲示板（Firestore posts） ===== */
 function submitPost(){
-  var typeBtn=document.querySelector('#screen-post .pt-btn.on');
-  var type=(typeBtn && typeBtn.textContent.indexOf('助け')>=0)?'receive':'provide';
+  var type=curPostType||'can';
   var title=((document.getElementById('post-title')||{}).value||'').trim();
   var detail=((document.getElementById('post-detail')||{}).value||'').trim();
   var cats=[].map.call(document.querySelectorAll('#screen-post .cat-opt.on'),function(e){return e.textContent.trim();});
   var pref=((document.getElementById('post-pref')||{}).value||'');
   var area=((document.getElementById('post-area')||{}).value||'').trim();
+  var when=((document.getElementById('post-when')||{}).value||'').trim();
+  var anon=!!((document.getElementById('post-anon')||{}).checked);
   if(!title){toast('タイトルを入力してください');return}
   if(tooLong(title,'title','タイトル'))return;
   if(tooLong(detail,'detail','詳細'))return;
@@ -2233,7 +2651,9 @@ function submitPost(){
   if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
   if(busy('post',3000))return;
   var u=getStoredUser()||{};
-  var post={type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,uid:fbAuth.currentUser.uid,
+  var post={type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,
+    when:(type==='tsuide')?when.slice(0,40):'', anon:(type==='need')?anon:false,
+    uid:fbAuth.currentUser.uid,
     authorName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
@@ -2241,7 +2661,9 @@ function submitPost(){
     var d=document.getElementById('post-detail'); if(d)d.value='';
     var pa=document.getElementById('post-area'); if(pa)pa.value='';
     var pp=document.getElementById('post-pref'); if(pp)pp.value='';
-    toast('投稿しました。マッチングを開始します');
+    var pw=document.getElementById('post-when'); if(pw)pw.value='';
+    var pan=document.getElementById('post-anon'); if(pan)pan.checked=false;
+    toast('縁側に出しました');
     setTimeout(()=>navTo('main'),700);
   }).catch(function(e){toast(authErrMsg(e));});
 }
@@ -2273,27 +2695,29 @@ function renderLivePosts(){
   var html='';
   items.forEach(function(p){ window.__posts[p.id]=p; html+=renderPostCard(p); });
   el.innerHTML=html; if(lc) lc.textContent=String(items.length);
-  if(curRegion!=='all'||curCat!=='all') applyProvFilters();
+  if(curRegion!=='all'||curCat!=='all'||curType!=='all') applyProvFilters();
   if(mapInited) updateMapPins();
+  var yui=document.getElementById('screen-yui');
+  if(yui && yui.classList.contains('active')) renderYuiLists();
 }
 function renderPostCard(p){
-  var isR=p.type==='receive';
-  var color=isR?'pink':'green';
-  var initial=(p.authorName||'?').charAt(0);
-  var badge=isR
-    ?'<span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(232,180,184,.25);color:#c07880">助けて</span>'
-    :'<span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(168,196,176,.3);color:#5a9a6a">支援</span>';
+  var t=normType(p.type);
+  var color=typeColor(t);
+  var initial=postAuthor(p).charAt(0);
+  var badge=typeBadge(t);
+  var whenHtml=(t==='tsuide'&&p.when)?'<div style="font-size:.72rem;color:#3f7f92;margin-top:4px;font-weight:600">🕒 '+escapeHtml(p.when)+'</div>':'';
   var cats=(p.categories||[]).slice(0,3).map(function(c){return '<span style="font-size:.64rem;padding:2px 7px;border-radius:8px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:4px">'+escapeHtml(c)+'</span>';}).join('');
   var locText=[p.pref,p.area].filter(Boolean).join(' ');
   var loc=locText?'<div style="font-size:.7rem;color:var(--lav2);margin-top:5px;display:flex;align-items:center;gap:3px"><svg class="ic" style="width:11px;height:11px"><use href="#i-location"/></svg>'+escapeHtml(locText)+'</div>':'';
-  return '<div class="prov-card" data-live="1" data-region="'+escapeHtml(p.pref||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'" onclick="openPostDetail(\''+p.id+'\')">'+
+  return '<div class="prov-card" data-live="1" data-type="'+t+'" data-region="'+escapeHtml(p.pref||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'" onclick="openPostDetail(\''+p.id+'\')">'+
     '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
     '<div class="prov-body">'+
       '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
       (p.detail?'<div style="font-size:.76rem;color:var(--tl);margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
+      whenHtml+
       (cats?'<div style="margin-top:6px">'+cats+'</div>':'')+
       loc+
-      '<div style="font-size:.7rem;color:var(--tl);margin-top:5px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+(isMyPost(p)?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:5px">'+escapeHtml(postAuthor(p))+' ・ '+timeAgo(p.createdAt)+(isMyPost(p)?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
     '</div>'+
   '</div>';
 }
@@ -2302,7 +2726,7 @@ function isMyPost(p){ return !!(fbReady && fbAuth.currentUser && p && p.uid===fb
 
 function openPostDetail(id){
   var p=(window.__posts||{})[id]; if(!p) return;
-  var isR=p.type==='receive';
+  var t=normType(p.type);
   var mine=isMyPost(p);
   var cats=(p.categories||[]).map(function(c){return '<span style="font-size:.7rem;padding:3px 9px;border-radius:9px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:5px">'+escapeHtml(c)+'</span>';}).join('');
   var actions;
@@ -2313,18 +2737,21 @@ function openPostDetail(id){
     '</div>';
   }else if(fbReady && fbAuth.currentUser){
     actions='<button class="btn-primary" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button>'+
+      '<div style="margin-top:10px"><button class="btn-secondary" onclick="closeSheet();openThanks(\''+escapeHtml(p.uid||'')+'\',\''+escapeHtml(postAuthor(p))+'\',\''+id+'\')">終わったら、お礼を伝える</button></div>'+
       '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem" onclick="openReport(\'post\',\''+id+'\',\''+escapeHtml(p.uid||'')+'\',\'この投稿\')">この投稿を通報する</button></div>';
   }else{
     actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
   }
   var locText=[p.pref,p.area].filter(Boolean).join(' ');
   var loc=locText?'<div style="font-size:.82rem;color:var(--lav2);margin-bottom:12px;display:flex;align-items:center;gap:4px"><svg class="ic" style="width:13px;height:13px"><use href="#i-location"/></svg>'+escapeHtml(locText)+'</div>':'';
-  openSheet(isR?'助けてほしい':'支援したい',
+  var whenBlk=(t==='tsuide'&&p.when)?'<div style="font-size:.84rem;color:#3f7f92;font-weight:600;margin-bottom:10px">🕒 '+escapeHtml(p.when)+'</div>':'';
+  openSheet(typeInfo(t).label,
     '<div style="font-weight:600;font-size:1.02rem;margin-bottom:8px">'+escapeHtml(p.title||'')+'</div>'+
+    whenBlk+
     (p.detail?'<div style="font-size:.86rem;color:var(--ink);line-height:1.85;margin-bottom:12px">'+escapeHtml(p.detail)+'</div>':'')+
     (cats?'<div style="margin-bottom:12px">'+cats+'</div>':'')+
     loc+
-    '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(p.authorName||'利用者')+' ・ '+timeAgo(p.createdAt)+(mine?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
+    '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(postAuthor(p))+' ・ '+timeAgo(p.createdAt)+(mine?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
     actions);
 }
 
@@ -2348,13 +2775,10 @@ function openMyPosts(){
   });
   var body;
   if(!mine.length){
-    body='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">まだ投稿がありません。<br>右下の＋ボタンから支援・受援を投稿できます。</div>';
+    body='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">まだ投稿がありません。<br>縁側の「おすそわけ」「ついで」「困りごと」から出せます。</div>';
   }else{
     body=mine.map(function(p){
-      var isR=p.type==='receive';
-      var badge=isR
-        ?'<span style="font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(232,180,184,.25);color:#c07880">助けて</span>'
-        :'<span style="font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:8px;background:rgba(168,196,176,.3);color:#5a9a6a">支援</span>';
+      var badge=typeBadge(p.type);
       return '<div style="padding:12px 0;border-bottom:1px solid rgba(184,175,214,.15)">'+
         '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
         (p.detail?'<div style="font-size:.76rem;color:var(--tl);line-height:1.6;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
@@ -2370,23 +2794,22 @@ function openMyPosts(){
 }
 
 /* 投稿の編集 */
-var editType='provide';
+var editType='can';
 function editPost(id){
   var p=(window.__posts||{})[id]; if(!p) return;
-  var isR=p.type==='receive';
-  editType=p.type||'provide';
+  editType=normType(p.type);
+  var cards=['share','tsuide','can','need'].map(function(k){
+    return '<div class="pt-card'+(editType===k?' on':'')+'" data-type="'+k+'" onclick="setEditType(this,\''+k+'\')"><b>'+POST_TYPES[k].label+'</b></div>';
+  }).join('');
   openSheet('投稿を編集',
-    '<div class="post-toggle" style="margin-bottom:16px">'+
-      '<button type="button" class="pt-btn'+(!isR?' on':'')+'" onclick="setEditType(this,\'provide\')">支援したい</button>'+
-      '<button type="button" class="pt-btn'+(isR?' on':'')+'" onclick="setEditType(this,\'receive\')">助けを求める</button>'+
-    '</div>'+
+    '<div class="pt-choice" id="ep-choice">'+cards+'</div>'+
     '<div class="input-group"><label class="input-label">タイトル</label><input id="ep-title" class="input" value="'+escapeHtml(p.title||'')+'"></div>'+
     '<div class="input-group"><label class="input-label">地域（都道府県）</label><select id="ep-pref" class="input">'+prefOptions(p.pref||'')+'</select></div>'+
     '<div class="input-group"><label class="input-label">市区町村・エリア（任意）</label><input id="ep-area" class="input" value="'+escapeHtml(p.area||'')+'" placeholder="例：高槻市 ○○駅周辺"></div>'+
     '<div class="input-group"><label class="input-label">詳細</label><textarea id="ep-detail" class="input" rows="4" style="resize:vertical;font-family:inherit">'+escapeHtml(p.detail||'')+'</textarea></div>'+
     '<button class="btn-primary" onclick="saveEditPost(\''+id+'\')">保存する</button>');
 }
-function setEditType(el,t){ el.parentNode.querySelectorAll('.pt-btn').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); editType=t; }
+function setEditType(el,t){ el.parentNode.querySelectorAll('.pt-card').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); editType=t; }
 function saveEditPost(id){
   var title=((document.getElementById('ep-title')||{}).value||'').trim();
   var detail=((document.getElementById('ep-detail')||{}).value||'').trim();
@@ -2473,9 +2896,9 @@ function openMatch(initial,cat,content,dist,stars,meta,score){
     const t=document.createElement('span');t.className='mc-cat '+tagMap[cat][1];t.textContent=tagMap[cat][0];tags.appendChild(t);
   }
   const s=document.createElement('span');s.className='mc-stars';
-  s.innerHTML=stars==='—'?'新規メンバー':'<svg class="ic ic-fill" style="font-size:.85em"><use href="#i-star"/></svg> '+stars;
+  s.innerHTML=stars==='—'?'新しく来た方':'';
   s.style.fontSize='.78rem';tags.appendChild(s);
-  document.getElementById('mm-score').textContent=score;
+  document.getElementById('mm-score').textContent=stage_label_for(score);
   document.getElementById('mm-score-bar').style.width=score+'%';
   const color=cat==='elder'?'green':(cat==='parent'?'pink':'sky');
   document.getElementById('mm-contact-btn').onclick=function(){
@@ -2963,11 +3386,14 @@ function openLegal(kind){
       legalSec('お金・貴重品について','・本サービスでの支援は無償です。<b>金銭の授受・貸し借りは禁止</b>されています<br>・現金・キャッシュカード・口座・暗証番号の話が出たら、その場で断り、通報してください')+
       legalSec('個人情報について','・番地までの住所・電話番号などは、投稿には書かず、必要になってから信頼できる相手にだけ伝えましょう<br>・相手の個人情報も同じように大切に扱ってください')+
       legalSec('困ったとき・怖いと感じたとき','・無理に続けず、その場を離れてかまいません<br>・チャット右上のメニューから<b>通報・ブロック</b>ができます<br>・犯罪の心配があるときは、警察相談専用電話 <b>#9110</b>（緊急時は110）へ<br>・体調の急変など緊急時は <b>119</b> へ')+
+      legalSec('見張り合う場所には、しません','昭和のご近所づきあいのあたたかさは取り戻したい。けれど、お互いを見張り合うことまで戻すつもりはありません。そのために、次のことを仕組みとして決めています。<br>・<b>投稿の主語は、いつも自分だけ</b>です。「不審な人がいた」「○○さんが」のように、他の人を主語にして書く機能はつくりません<br>・防犯や防災の注意喚起は、<b>自治体・警察の公式のお知らせだけ</b>をお伝えします。個人の目撃情報は流しません<br>・<b>お住まいは地図に出しません</b>。町丁目までのおおまかな場所と、公民館・お店などの拠点だけを表示します<br>・助けを求める側は<b>名前を伏せられます</b>。応える側だけが顔を見せます<br>・低い評価を公開する仕組みはありません。気になることは通報として運営が非公開でお預かりします')+
       '<button class="btn-primary" style="margin-top:6px" onclick="contactSupport()">運営に相談する</button>');
   }else{
     openSheet('ヘルプセンター',
-      legalQA('＆ポイントとは？','支援への感謝が見えるようになるポイントです。金銭的な価値や換金性はありません。実証期間中、交換メニューは準備中です。')+
-      legalQA('マッチングの仕組みは？','「支援したい」「助けてほしい」の投稿が、地域と内容でつながります。気になる投稿を開いて「メッセージを送る」から会話を始められます。')+
+      legalQA('どんなサービスですか？','ご近所どうしが顔の見える関係になるための場所です。災害のときだけのものではありません。ふだんの「おすそわけ」や「ついで」から始めて、いざというときに動ける関係を、日常のうちに育てておきます。')+
+      legalQA('「ついで」って何ですか？','「助けます」と手を挙げるのは、少し気が重いものです。そこで、自分の用事のついでにできることを置いておくだけにしました。頼む側も「ついでなら」と言えるので、お互いに気をつかわずにすみます。')+
+      legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。')+
+      legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
       legalQA('安全に使うには？','本人確認・通報・ブロックの仕組みがあります。はじめて会う前に「安全ガイド」をご覧ください。')+
       legalQA('本人確認はどうやりますか？','設定 → 本人確認 から申請すると、運営からメールでご連絡します。実証期間中は、運営がおひとりずつ確認しています。')+
       legalQA('退会したいときは？','設定 → 退会（アカウント削除）からいつでも退会できます。プロフィールと投稿は削除されます。')+
@@ -3043,7 +3469,8 @@ function jitter(id){
 function prefLatLng(pref){ return PREF_LL[pref]||null; }
 
 var postMarkers=[];
-/* 受援（助けを求める）投稿を、大まかな都道府県の位置にマップ表示 */
+/* 縁側マップ：おすそわけ・ついで・できること札・困りごとを、おおまかな位置に表示する
+   （個人宅は出さない＝戦略指針§5-1「縁側マップ」・ルールブック§5） */
 function updateMapPins(){
   if(!mapInstance) return;
   postMarkers.forEach(function(m){ mapInstance.removeLayer(m); });
@@ -3051,12 +3478,13 @@ function updateMapPins(){
   var posts=window.__posts||{}, bounds=[];
   Object.keys(posts).forEach(function(k){
     var p=posts[k];
-    if(p.type!=='receive') return;              // 受援者マップ＝助けを求める投稿
+    var t=normType(p.type);
+    if(curMapType!=='all' && t!==curMapType) return;
     var ll=prefLatLng(p.pref); if(!ll) return;  // 地域未設定の投稿はピンにしない（リストには出る）
+    // 都道府県の中心＋決定的なゆらぎ＝住まいを特定させない「ぼかし」表示
     var j=jitter(p.id), lat=ll[0]+j[0], lng=ll[1]+j[1];
-    var tok=firstCatToken(p.categories);
-    var initial=(p.authorName||p.title||'?').charAt(0);
-    var mk=L.marker([lat,lng],{icon:makeUserIcon(catColor(tok),initial)}).addTo(mapInstance)
+    var initial=(postAuthor(p)||p.title||'?').charAt(0);
+    var mk=L.marker([lat,lng],{icon:makeUserIcon(typeColor(t),initial)}).addTo(mapInstance)
       .on('click',(function(id){return function(){openPostDetail(id);};})(p.id));
     postMarkers.push(mk); bounds.push([lat,lng]);
   });
@@ -3097,6 +3525,16 @@ function initMap(){
         .on('click',()=>openMatch(m.n,m.cat,m.t,m.d,m.s,m.m,m.sc));
     });
     L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
+    // 拠点ピン：個人宅の代わりに、受け渡しに使える公共の場所を出す（戦略指針§5-1）
+    var hubIcon=function(t){ return L.divIcon({html:'<div class="user-marker" style="background:#fff;border:2px solid var(--gold);color:#8a7530;font-size:.6rem;line-height:1.15;text-align:center;display:flex;align-items:center;justify-content:center">'+t+'</div>',className:'',iconSize:[42,42],iconAnchor:[21,21]}); };
+    [
+      {lat:34.8508,lng:135.6152,t:'公民館',d:'受け渡しによく使われる場所です。'},
+      {lat:34.8462,lng:135.6165,t:'商店街',d:'協賛店があります。＆ポイントが使えます。'},
+      {lat:34.8501,lng:135.6238,t:'薬局',d:'見守りの拠点として協力いただいています。'}
+    ].forEach(function(h){
+      L.marker([h.lat,h.lng],{icon:hubIcon(h.t)}).addTo(mapInstance)
+        .on('click',(function(hh){return function(){ openSheet(hh.t,'<div style="font-size:.88rem;line-height:1.9;color:var(--ink)">'+hh.d+'</div><div style="font-size:.76rem;color:var(--tl);line-height:1.85;margin-top:12px">縁側マップに出るのは、こうした公共の拠点と、町丁目までのおおまかな位置だけです。個人のお住まいは表示しません。</div>'); };})(h));
+    });
   }
   updateMapPins();
 }
@@ -3134,6 +3572,7 @@ if(fbReady){
       window.__blocked=(p.blocked&&typeof p.blocked==='object')?p.blocked:{};
       subscribePosts();
       subscribeConversations();
+      subscribeThanks();
       if(typeof applyUserToUI==='function') applyUserToUI();
       var active=document.querySelector('.screen.active');
       if(active && active.id==='screen-login'){
