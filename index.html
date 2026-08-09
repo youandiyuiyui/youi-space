@@ -225,22 +225,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .mh-stat .ic{color:var(--lav2);font-size:.85rem}
 
 .main-tabs{
-  display:flex;gap:6px;padding:14px 18px 12px;background:var(--bg);
-  position:sticky;top:0;z-index:40;
-  border-bottom:1px solid rgba(184,175,214,.1);
+  display:flex;gap:3px;margin:12px 18px 2px;padding:3px;background:rgba(184,175,214,.12);
+  border-radius:12px;position:sticky;top:0;z-index:40;
 }
 .main-tab{
-  flex:1;padding:11px 14px;border-radius:14px;border:1px solid var(--border);
-  background:var(--card);color:var(--tl);font-family:inherit;font-size:.84rem;
-  font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
-  transition:all .25s;
+  flex:1;padding:8px 10px;border-radius:9px;border:none;
+  background:transparent;color:var(--tl);font-family:inherit;font-size:.8rem;
+  font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .2s;
 }
-.main-tab.on{
-  background:linear-gradient(135deg,var(--lav),var(--sky));
-  color:#fff;border-color:transparent;
-  box-shadow:0 4px 14px rgba(184,175,214,.35);
-}
-.main-tab .ic{font-size:1.05rem}
+.main-tab.on{ background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(42,42,53,.07); }
+.main-tab .ic{font-size:.95rem}
 .main-panel{padding-top:0}
 .main-panel#main-panel-map{padding-top:0}
 
@@ -250,6 +245,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .prov-search input{flex:1;border:none;outline:none;font-size:.85rem;background:none;font-family:inherit}
 .prov-search .ic{color:var(--tl)}
 .prov-filters{padding:0 18px 6px}
+.filter-bar{display:flex;gap:8px;align-items:center;padding:12px 18px 9px}
+.fb-search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:9px 14px}
+.fb-search input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:.82rem;color:var(--ink)}
+.fb-search .ic{color:var(--tl);flex-shrink:0}
+.fb-more{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:9px 14px;font-family:inherit;font-size:.78rem;color:var(--ink);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.fb-more.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.type-row{display:flex;gap:7px;overflow-x:auto;padding:0 18px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.type-row::-webkit-scrollbar{display:none}
+.type-row .filter-chip{flex-shrink:0}
 .filter-section{margin-bottom:10px}
 .filter-section-label{font-size:.66rem;letter-spacing:.15em;color:var(--tl);font-weight:500;margin-bottom:6px;text-transform:uppercase}
 .filter-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
@@ -290,7 +294,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
 /* Map */
 .map-screen{padding:0;background:var(--bg)}
-.map-container{position:relative;height:55vh;min-height:340px;overflow:hidden}
+.map-container{position:relative;z-index:0;isolation:isolate;height:46vh;min-height:300px;overflow:hidden}
 #leaflet-map{width:100%;height:100%;background:#e8eef0}
 .leaflet-container{font-family:'Noto Sans JP',sans-serif!important}
 .leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.85)!important}
@@ -483,7 +487,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 /* Bottom nav */
 /* ===== v0.3.0：三つの入口・縁側・結モード ===== */
 .entry-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 2px}
-.entry-btn{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:13px 5px 11px;text-align:center;cursor:pointer;transition:all .2s}
+.entry-btn{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 5px 10px;text-align:center;cursor:pointer;transition:all .2s}
 .entry-btn:active{transform:scale(.97)}
 .entry-ic{width:34px;height:34px;border-radius:12px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
 .entry-lbl{font-size:.78rem;font-weight:600;color:var(--ink)}
@@ -516,7 +520,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .comm-tab{flex:1;padding:9px;border-radius:12px;border:1px solid rgba(184,175,214,.25);background:#fff;font-family:inherit;font-size:.8rem;color:var(--tl);cursor:pointer}
 .comm-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .map-note{font-size:.68rem;color:var(--tl);line-height:1.7;padding:9px 14px;background:rgba(184,175,214,.1);border-radius:12px;margin:10px 18px 0}
-.bottom-nav{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(24px);border-top:1px solid rgba(184,175,214,.12);display:flex;padding:6px 8px calc(10px + env(safe-area-inset-bottom));justify-content:space-around;align-items:center;z-index:60}
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(24px);border-top:1px solid rgba(184,175,214,.12);display:flex;padding:6px 8px calc(10px + env(safe-area-inset-bottom));justify-content:space-around;align-items:center;z-index:1000}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 6px;color:var(--ttl);font-family:inherit;font-size:.62rem;letter-spacing:.02em;flex:1;transition:color .2s}
 .nav-item.active{color:var(--lav3)}
 .ni-icon{font-size:1.3rem;transition:transform .2s}
@@ -748,9 +752,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="app-header">
     <div class="app-h-logo"><span class="dot"></span>You&amp;i Space</div>
     <div class="app-h-actions">
-      <button class="icon-btn" onclick="enterYuiMode()" title="結モード（災害時）"><svg class="ic"><use href="#i-shield"/></svg></button>
       <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
-      <button class="icon-btn" onclick="navTo('profile')"><svg class="ic"><use href="#i-user"/></svg></button>
     </div>
   </div>
 
@@ -770,15 +772,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="entry-row">
     <div class="entry-btn" onclick="openPostWith('share')">
       <div class="entry-ic" style="background:rgba(200,184,122,.22);color:#8a7530"><svg class="ic"><use href="#i-gift"/></svg></div>
-      <div class="entry-lbl">おすそわけ</div><div class="entry-sub">余ったものを<br>分ける</div>
+      <div class="entry-lbl">おすそわけ</div><div class="entry-sub">余ったものを</div>
     </div>
     <div class="entry-btn" onclick="openPostWith('tsuide')">
       <div class="entry-ic" style="background:rgba(158,202,216,.26);color:#3f7f92"><svg class="ic"><use href="#i-car"/></svg></div>
-      <div class="entry-lbl">ついで</div><div class="entry-sub">用事のついでに<br>できること</div>
+      <div class="entry-lbl">ついで</div><div class="entry-sub">用事のついでに</div>
     </div>
     <div class="entry-btn" onclick="openPostWith('need')">
       <div class="entry-ic" style="background:rgba(232,180,184,.26);color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div>
-      <div class="entry-lbl">困りごと</div><div class="entry-sub">助けを<br>求める</div>
+      <div class="entry-lbl">困りごと</div><div class="entry-sub">助けてほしい</div>
     </div>
   </div>
 
@@ -790,44 +792,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <!-- LIST PANEL -->
   <div class="main-panel" id="main-panel-list">
   <div class="prov-screen">
-    <div class="prov-search">
-      <svg class="ic"><use href="#i-search"/></svg>
-      <input type="text" placeholder="おすそわけ・ついで・困りごとを探す">
-    </div>
-    <div class="prov-filters">
-      <div class="filter-section">
-        <div class="filter-section-label">種類</div>
-        <div class="filter-row" id="type-filters">
-          <div class="filter-chip on" onclick="filterType(this,'all')">すべて</div>
-          <div class="filter-chip" onclick="filterType(this,'share')">おすそわけ</div>
-          <div class="filter-chip" onclick="filterType(this,'tsuide')">ついで</div>
-          <div class="filter-chip" onclick="filterType(this,'can')">できること</div>
-          <div class="filter-chip" onclick="filterType(this,'need')">困りごと</div>
-        </div>
+    <div class="filter-bar">
+      <div class="fb-search">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input type="text" placeholder="おすそわけ・ついで・困りごとを探す">
       </div>
-      <div class="filter-section">
-        <div class="filter-section-label">地域で絞り込み</div>
-        <div class="filter-row" id="region-filters">
-          <select id="region-select" onchange="filterRegionSelect(this.value)" style="width:100%;padding:11px 34px 11px 13px;border:1px solid rgba(184,175,214,.3);border-radius:12px;background-color:#fff;font-family:inherit;font-size:.85rem;color:var(--ink);-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b6b7a%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 12px center">
-            <option value="all">すべての地域（全国）</option>
-          </select>
-        </div>
-      </div>
-      <div class="filter-section">
-        <div class="filter-section-label">カテゴリ</div>
-        <div class="filter-row" id="cat-filters">
-          <div class="filter-chip on" onclick="filterCat(this,'all')">すべて</div>
-          <div class="filter-chip" onclick="filterCat(this,'elder')">老老介護</div>
-          <div class="filter-chip" onclick="filterCat(this,'parent')">ひとり親</div>
-          <div class="filter-chip" onclick="filterCat(this,'young')">ヤングケアラー</div>
-          <div class="filter-chip" onclick="filterCat(this,'daily')">日常支援</div>
-        </div>
-      </div>
+      <button class="fb-more" id="fb-more" onclick="openFilterSheet()"><svg class="ic" style="font-size:.9em"><use href="#i-filter"/></svg><span id="fb-more-label">絞り込み</span></button>
     </div>
-    <div class="prov-meta demo-only">
-      <div id="prov-count-info"><span id="prov-region-label">高槻市内</span> / <b id="prov-count">8</b>件</div>
-      <div class="prov-sort" onclick="toast('並び順を変更：アクティブ順')"><svg class="ic" style="font-size:.85em"><use href="#i-sort"/></svg>アクティブ順<svg class="ic" style="font-size:.8em"><use href="#i-chevron-d"/></svg></div>
-    </div>
+    <select id="region-select" onchange="filterRegionSelect(this.value)" style="display:none"><option value="all">すべての地域（全国）</option></select>
 
     <!-- みんなの投稿（Firestoreリアルタイム） -->
     <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>縁側のようす <span class="prov-count" id="live-count">0</span></div>
@@ -1011,11 +983,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="main-panel" id="main-panel-map" style="display:none">
     <div class="map-container">
       <div id="leaflet-map"></div>
-      <div class="map-search">
-        <svg class="ic"><use href="#i-search"/></svg>
-        <input type="text" placeholder="町の名前で探す" value="">
-      </div>
-      <div class="map-filter">
+      <div class="map-filter" style="top:14px">
         <div class="filter-chip on" onclick="filterMapType(this,'all')">すべて</div>
         <div class="filter-chip" onclick="filterMapType(this,'share')">おすそわけ</div>
         <div class="filter-chip" onclick="filterMapType(this,'tsuide')">ついで</div>
@@ -1067,7 +1035,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="screen no-nav" id="screen-post">
   <div class="app-header">
     <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>縁側に出す</div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="navTo('main')"><svg class="ic"><use href="#i-close"/></svg></button></div>
   </div>
   <div class="post-screen">
     <div class="pt-choice" id="pt-choice">
@@ -1086,23 +1053,24 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="post-field"><label class="post-label">市区町村・エリア <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-area" maxlength="40" placeholder="例：高槻市 ○○駅周辺（番地は不要）"></div>
     <div class="post-field">
-      <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（複数選択可）</span></label>
+      <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意・いくつでも）</span></label>
       <div class="cat-pick cat-pick-3">
-        <div class="cat-opt on" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-elder"/></svg>老老介護</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shopping"/></svg>買い物</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-car"/></svg>移動・送迎</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-house"/></svg>家事・育児</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-chat"/></svg>話し相手</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-gift"/></svg>おすそわけ</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>貸し借り</div>
+      </div>
+      <div class="cat-pick cat-pick-3" id="cat-more" style="display:none;margin-top:9px">
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-elder"/></svg>老老介護</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-parent"/></svg>ひとり親</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#il-young"/></svg>ヤングケアラー</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-medical"/></svg>通院付き添い</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shopping"/></svg>買い物代行</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-house"/></svg>家事・育児</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-book"/></svg>学習サポート</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-chat"/></svg>話し相手</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-car"/></svg>移動支援</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic ic-fill"><use href="#il-emerg"/></svg>緊急</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shield"/></svg>災害支援</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-gift"/></svg>おすそわけ</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-house"/></svg>貸し借り・共同作業</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>その他</div>
+        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shield"/></svg>防災・見回り</div>
       </div>
+      <button type="button" id="cat-more-btn" onclick="toggleCatMore()" style="margin-top:10px;background:none;border:none;font-family:inherit;font-size:.78rem;color:var(--lav3);cursor:pointer;padding:4px 0;text-decoration:underline">ほかのカテゴリを見る</button>
     </div>
     <div class="post-field"><label class="post-label">詳細 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（800文字まで）</span></label><textarea class="post-textarea" id="post-detail" maxlength="800" placeholder="いつ・どこで・どんなことか、ふだんの言葉で大丈夫です。※電話番号・番地などは書かず、やりとりが始まってからメッセージで伝えましょう。"></textarea></div>
     <div class="post-field" id="post-anon-field" style="display:none">
@@ -1864,7 +1832,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="bottom-nav" id="bottom-nav" style="display:none">
   <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>縁側</span></button>
   <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
-  <button class="nav-fab" onclick="navTo('post')"><svg class="ic"><use href="#i-plus"/></svg></button>
   <button class="nav-item" data-screen="rewards" onclick="navTo('rewards')"><svg class="ni-icon ic"><use href="#i-gift"/></svg><span>＆ポイント</span></button>
   <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
 </div>
@@ -2272,6 +2239,14 @@ function switchMainTab(el,which){
 
 // Post: multi-select category
 function selectCatMulti(el){el.classList.toggle('on')}
+/* カテゴリは、よく使う6つだけを最初に出す（画面のボタンを減らすため） */
+function toggleCatMore(){
+  var m=document.getElementById('cat-more'), b=document.getElementById('cat-more-btn');
+  if(!m||!b) return;
+  var open=(m.style.display==='none');
+  m.style.display=open?'':'none';
+  b.textContent=open?'とじる':'ほかのカテゴリを見る';
+}
 
 // Back from other-user profile: return to where we came from
 function goBackFromUprof(){
@@ -2318,16 +2293,76 @@ function filterMapType(el,t){
 }
 function filterRegionSelect(region){
   curRegion=region||'all';
-  var lbl=document.getElementById('prov-region-label');
-  if(lbl) lbl.textContent=(curRegion==='all')?'すべての地域':curRegion;
   applyProvFilters();
+  if(typeof updateFilterButton==='function') updateFilterButton();
 }
 function filterRegion(el,region){ curRegion=region; applyProvFilters(); }  /* 旧チップ後方互換 */
 function filterCat(el,cat){
-  el.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('on');});
-  el.classList.add('on');
+  if(el&&el.parentNode) el.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('on');});
+  if(el) el.classList.add('on');
   curCat=cat;
   applyProvFilters();
+}
+
+/* ===== 絞り込みシート（地域・カテゴリをひとまとめにして、画面のボタンを減らす） ===== */
+var CAT_FILTERS=[['all','すべて'],['elder','老老介護'],['parent','ひとり親'],['young','ヤングケアラー'],['daily','日常支援']];
+var TYPE_FILTERS=[['all','すべて'],['share','おすそわけ'],['tsuide','ついで'],['can','できること札'],['need','困りごと']];
+var fsCat='all', fsPref='all', fsType='all';
+function openFilterSheet(){
+  fsCat=curCat; fsPref=curRegion; fsType=curType;
+  var opts='<option value="all">すべての地域（全国）</option>';
+  PREFS.forEach(function(p){ opts+='<option value="'+p+'"'+(p===curRegion?' selected':'')+'>'+p+'</option>'; });
+  var chips=CAT_FILTERS.map(function(c){
+    return '<span class="thanks-tag'+(curCat===c[0]?' on':'')+'" data-cat="'+c[0]+'" onclick="pickFsCat(this,\''+c[0]+'\')">'+c[1]+'</span>';
+  }).join('');
+  var tchips=TYPE_FILTERS.map(function(c){
+    return '<span class="thanks-tag'+(curType===c[0]?' on':'')+'" data-ty="'+c[0]+'" onclick="pickFsType(this,\''+c[0]+'\')">'+c[1]+'</span>';
+  }).join('');
+  openSheet('絞り込み',
+    '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">種類</div>'+
+    '<div style="margin-bottom:22px">'+tchips+'</div>'+
+    '<div style="font-size:.78rem;font-weight:600;margin-bottom:8px">地域</div>'+
+    '<select id="fs-pref" class="input" style="margin-bottom:22px;font-family:inherit">'+opts+'</select>'+
+    '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">カテゴリ</div>'+
+    '<div style="margin-bottom:24px">'+chips+'</div>'+
+    '<div style="display:flex;gap:10px">'+
+      '<button class="btn-secondary" style="flex:1" onclick="clearFilterSheet()">条件をなくす</button>'+
+      '<button class="btn-primary" style="flex:1" onclick="applyFilterSheet()">この条件で見る</button>'+
+    '</div>');
+}
+function pickFsCat(el,c){
+  el.parentNode.querySelectorAll('[data-cat]').forEach(function(x){x.classList.remove('on');});
+  el.classList.add('on'); fsCat=c;
+}
+function pickFsType(el,t){
+  el.parentNode.querySelectorAll('[data-ty]').forEach(function(x){x.classList.remove('on');});
+  el.classList.add('on'); fsType=t;
+}
+function applyFilterSheet(){
+  var sel=document.getElementById('fs-pref');
+  curRegion=(sel&&sel.value)||'all';
+  curCat=fsCat||'all'; curType=fsType||'all';
+  var rs=document.getElementById('region-select'); if(rs) rs.value=curRegion;
+  applyProvFilters(); updateFilterButton(); closeSheet();
+}
+function clearFilterSheet(){
+  curRegion='all'; curCat='all'; curType='all';
+  var rs=document.getElementById('region-select'); if(rs) rs.value='all';
+  applyProvFilters(); updateFilterButton(); closeSheet();
+  toast('絞り込みを解除しました');
+}
+/* 絞り込み中かどうかがひと目で分かるようにボタンの見た目を変える */
+function updateFilterButton(){
+  var btn=document.getElementById('fb-more'), lbl=document.getElementById('fb-more-label');
+  if(!btn||!lbl) return;
+  var on=(curRegion!=='all')||(curCat!=='all')||(curType!=='all');
+  btn.classList.toggle('on', on);
+  if(!on){ lbl.textContent='絞り込み'; return; }
+  var parts=[];
+  if(curType!=='all'){ TYPE_FILTERS.forEach(function(c){ if(c[0]===curType) parts.push(c[1]); }); }
+  if(curRegion!=='all') parts.push(curRegion);
+  if(curCat!=='all'){ CAT_FILTERS.forEach(function(c){ if(c[0]===curCat) parts.push(c[1]); }); }
+  lbl.textContent=parts.length>1?(parts[0]+' 他'):parts.join('');
 }
 function applyProvFilters(){
   var count=0;
