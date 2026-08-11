@@ -756,6 +756,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
+  <div id="disaster-banner" class="yui-banner" style="display:none"></div>
+  <div id="gate-banner" style="display:none;padding:11px 18px;background:rgba(184,175,214,.16);border-bottom:1px solid rgba(184,175,214,.25);font-size:.74rem;color:#5d4d8c;align-items:center;gap:10px"></div>
+
   <div class="main-hero">
     <div class="main-hero-row">
       <div>
@@ -770,8 +773,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 
   <div class="main-tabs">
-    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-home"/></svg>ご近所</button>
-    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>ご近所マップ</button>
+    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-users"/></svg>ついで</button>
+    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>困っていること</button>
   </div>
 
   <!-- LIST PANEL -->
@@ -787,15 +790,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <select id="region-select" onchange="filterRegionSelect(this.value)" style="display:none"><option value="all">すべての地域（全国）</option></select>
 
     <!-- みんなの投稿（Firestoreリアルタイム） -->
-    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>ご近所のようす <span class="prov-count" id="live-count">0</span></div>
+    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>いま出ている「ついで」 <span class="prov-count" id="live-count">0</span></div>
     <div class="prov-list" id="live-posts">
-      <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ何もありません。<br>「おすそわけ」から始めてみませんか。</div>
+      <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ「ついで」が出ていません。<br>下の＋から、手を貸せることを伝えてみませんか。</div>
     </div>
 
     <div id="demo-providers" class="demo-only">
     <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>ご近所の「できること札」（サンプル） <span class="prov-count">3</span></div>
     <div class="prov-list" id="prov-list-active">
-      <div class="prov-card featured" data-type="can" data-region="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
+      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
         <div class="avatar md green">高<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -808,13 +811,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">話し相手</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>18回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 0.5km</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card featured" data-type="can" data-region="高槻市" data-cat="daily" onclick="openProvider('前田 健太郎','sky','前',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
+      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="daily" onclick="openProvider('前田 健太郎','sky','前',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
         <div class="avatar md sky">前<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -827,13 +830,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">家事補助</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>24回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 0.8km</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card featured" data-type="can" data-region="大阪市内" data-cat="parent" onclick="openProvider('加藤 千夏','pink','加',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
+      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="大阪市" data-cat="parent" onclick="openProvider('加藤 千夏','pink','加',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
         <div class="avatar md pink">加<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -846,7 +849,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">保育</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>32回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>大阪市内 4.2km</span>
           </div>
         </div>
@@ -855,7 +858,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="prov-group-h">本日中</div>
     <div class="prov-list">
-      <div class="prov-card" data-type="can" data-region="茨木市" data-cat="young" onclick="openProvider('中村 健','sky','中',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="茨木市" data-cat="young" onclick="openProvider('中村 健','sky','中',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
         <div class="avatar md sky">中<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -867,14 +870,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">学習サポート</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>12回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>茨木市 3.4km</span>
             <span class="prov-time">30分前</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card" data-type="can" data-region="高槻市" data-cat="elder" onclick="openProvider('渡辺 由美','green','渡',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('渡辺 由美','green','渡',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
         <div class="avatar md green">渡<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -887,14 +890,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">調理</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>21回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 1.2km</span>
             <span class="prov-time">2時間前</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card" data-type="can" data-region="茨木市" data-cat="parent" onclick="openProvider('井上 真理','pink','井',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="茨木市" data-cat="parent" onclick="openProvider('井上 真理','pink','井',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
         <div class="avatar md pink">井<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -907,7 +910,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">送り迎え</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>28回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>茨木市 3.0km</span>
             <span class="prov-time">4時間前</span>
           </div>
@@ -917,7 +920,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="prov-group-h">最近</div>
     <div class="prov-list">
-      <div class="prov-card" data-type="can" data-region="高槻市" data-cat="daily" onclick="openProvider('山本 太一','green','山',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="daily" onclick="openProvider('山本 太一','green','山',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
         <div class="avatar md green">山<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -929,14 +932,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">移動支援</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>15回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 2.1km</span>
             <span class="prov-time">昨日</span>
           </div>
         </div>
       </div>
 
-      <div class="prov-card" data-type="can" data-region="高槻市" data-cat="elder" onclick="openProvider('小林 英樹','sky','小',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('小林 英樹','sky','小',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
         <div class="avatar md sky">小<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
@@ -948,7 +951,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
             <span class="prov-tag skill">話し相手</span>
           </div>
           <div class="prov-stats">
-            <span class="prov-rating" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg>感謝<small>9回</small></span>
+            
             <span class="prov-loc"><svg class="ic"><use href="#i-location"/></svg>高槻市 1.8km</span>
             <span class="prov-time">3日前</span>
           </div>
@@ -968,18 +971,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="main-panel" id="main-panel-map" style="display:none">
     <div class="map-container">
       <div id="leaflet-map"></div>
-      <div class="map-filter" style="top:14px">
-        <div class="filter-chip on" onclick="filterMapType(this,'all')">すべて</div>
-        <div class="filter-chip" onclick="filterMapType(this,'share')">おすそわけ</div>
-        <div class="filter-chip" onclick="filterMapType(this,'tsuide')">ついで</div>
-        <div class="filter-chip" onclick="filterMapType(this,'can')">できること</div>
-        <div class="filter-chip" onclick="filterMapType(this,'need')">困っていること</div>
-      </div>
     </div>
-    <div class="map-note">個人のお住まいは表示しません。町丁目までのおおまかな位置と、公民館・お店などの拠点だけを出しています。<br>助けを求める側は名前を伏せられます。応える側だけが顔を見せます。</div>
+    <div class="map-note">この地図には「困っていること」だけを出しています。行く場所が要る話なので、地図のほうが伝わるからです。<br>個人のお住まいは表示しません。ピンは市区町村の中心あたりに置いた「おおまかな位置」で、住所は特定できません。名前も伏せられます。</div>
     <div class="map-list">
       <div class="map-list-h" style="display:flex;justify-content:space-between;align-items:center">
         <div class="demo-only">高槻市内 / このあたりの <b>5件</b></div>
+        <div id="need-count" style="display:none">困っていること <b>0</b>件</div>
         <button class="icon-btn" onclick="centerMap()" style="width:32px;height:32px"><svg class="ic" style="font-size:.95rem"><use href="#i-target"/></svg></button>
       </div>
       <div class="match-list demo-only">
@@ -1008,7 +1005,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           </div>
         </div>
       </div>
-      <div id="map-empty" style="display:none;padding:24px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">このあたりには、まだ何もありません。<br>おすそわけやついでが出ると、ここに並びます。</div>
+      <div id="need-list"></div>
+      <div id="map-empty" style="display:none;padding:24px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">いま出ている「困っていること」はありません。<br>誰かが助けを求めると、ここと地図に出ます。</div>
     </div>
   </div>
   <!-- /MAP PANEL -->
@@ -1023,19 +1021,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
   <div class="post-screen">
     <div class="pt-choice" id="pt-choice" style="grid-template-columns:1fr">
-      <div class="pt-card on" data-type="share" onclick="setPostType(this,'share')"><b>おすそわけ</b><small>余ったもの・いただきものを分ける</small></div>
-      <div class="pt-card" data-type="tsuide" onclick="setPostType(this,'tsuide')"><b>ついで</b><small>自分の用事のついでにできること</small></div>
-      <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>困っていること</b><small>助けてほしいことを書く</small></div>
+      <div class="pt-card on" data-type="tsuide" onclick="setPostType(this,'tsuide')"><b>ついで</b><small>いま手を貸せることを伝える</small></div>
+      <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>困っていること</b><small>助けてほしいことを伝える</small></div>
     </div>
     <div id="pt-hint" style="font-size:.74rem;color:var(--lav3);line-height:1.8;background:rgba(184,175,214,.1);border-radius:12px;padding:11px 14px;margin-bottom:20px"></div>
     <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物のついでに寄れます"></div>
-    <div class="post-field" id="post-when-field" style="display:none"><label class="post-label">いつ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（ついでの予定。任意）</span></label><input type="text" class="post-input" id="post-when" maxlength="40" placeholder="例：今日15時ごろ／土曜の午前"></div>
+    <div class="post-field" id="post-when-field" style="display:none"><label class="post-label">いつ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-when" maxlength="40" placeholder="例：今日15時ごろ／土曜の午前／平日の夕方なら"></div>
     <div class="post-field"><label class="post-label">地域 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（大まかで大丈夫です）</span></label>
       <select class="post-input" id="post-pref" style="-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b6b7a%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:34px">
         <option value="">都道府県を選択（任意）</option>
       </select>
     </div>
-    <div class="post-field"><label class="post-label">市区町村・エリア <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-area" maxlength="40" placeholder="例：高槻市 ○○駅周辺（番地は不要）"></div>
+    <div class="post-field"><label class="post-label">市区町村・町名 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意・入れるのがおすすめ）</span></label><input type="text" class="post-input" id="post-area" maxlength="40" placeholder="例：高槻市 ○○町（番地は不要）"><div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:5px">町名まで入れると、歩いて行ける範囲の人に届きます。番地は書かないでください。</div></div>
     <div class="post-field">
       <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意・いくつでも）</span></label>
       <div class="cat-pick cat-pick-3">
@@ -1043,7 +1040,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-car"/></svg>移動・送迎</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-house"/></svg>家事・育児</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-chat"/></svg>話し相手</div>
-        <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-gift"/></svg>おすそわけ</div>
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-grid"/></svg>貸し借り</div>
       </div>
       <div class="cat-pick cat-pick-3" id="cat-more" style="display:none;margin-top:9px">
@@ -1171,7 +1167,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div style="font-size:.66rem;color:var(--sage2);display:flex;align-items:center;gap:4px" id="chat-presence"><span style="width:6px;height:6px;border-radius:50%;background:var(--sage2)"></span>オンライン</div>
       </div>
     </div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="openChatMenu()"><svg class="ic"><use href="#i-settings"/></svg></button></div>
+    <div class="app-h-actions">
+      <button class="icon-btn" onclick="openChatMenu()"><svg class="ic"><use href="#i-settings"/></svg></button>
+    </div>
+  </div>
+  <div id="chat-thanks-bar" style="display:none;padding:10px 16px;background:rgba(184,175,214,.12);border-bottom:1px solid rgba(184,175,214,.2);display:flex;align-items:center;gap:10px">
+    <div style="flex:1;font-size:.72rem;color:var(--lav3);line-height:1.6">支え合いが終わったら、記録しましょう。</div>
+    <button class="kai-read" style="margin:0;padding:6px 13px;font-size:.74rem;flex-shrink:0" onclick="closeDeal()">終わりました</button>
   </div>
   <div id="chat-safety" style="display:none;padding:9px 16px;background:rgba(200,184,122,.14);border-bottom:1px solid rgba(200,184,122,.25);font-size:.68rem;color:#8a7a45;line-height:1.6">はじめての相手とは、日中・人通りのある場所で会いましょう。金銭の要求・外部サービスへの誘導があったら、右上の <svg class="ic" style="width:11px;height:11px;vertical-align:-1px"><use href="#i-settings"/></svg> から通報できます。<a style="text-decoration:underline;cursor:pointer" onclick="openLegal('safety')">安全ガイド</a></div>
   <div class="chat-thread" id="chat-thread">
@@ -1562,6 +1564,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
+  <!-- 人柄資本（言葉のまま。数値にしない） -->
+  <div class="set-section" style="margin:14px 18px 0;padding:16px 18px">
+    <div style="font-size:.92rem;font-weight:600">よく言われること</div>
+    <div style="font-size:.72rem;color:var(--tl);line-height:1.85;margin-top:5px">贈られた言葉は、点数にしません。誰が書いたかも表示しません。</div>
+    <div id="prof-words" style="margin-top:11px"></div>
+    <div id="prof-notes" style="margin-top:12px"></div>
+  </div>
+
   <!-- できること札（ふだんからできること） -->
   <div class="set-section" style="margin:14px 18px 0;padding:16px 18px">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
@@ -1576,7 +1586,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="set-section" style="margin:14px 18px 0">
     <div class="set-item" onclick="openMyPosts()">
       <div class="set-icon"><svg class="ic"><use href="#i-edit"/></svg></div>
-      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">おすそわけ・ついで・困っていることを編集／削除</div></div>
+      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">ついで・困っていることを編集／削除</div></div>
       <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
     </div>
   </div>
@@ -1620,7 +1630,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="sd-bar-row"><div class="sd-bar-lbl">継続</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div><div class="sd-bar-val">8ヶ月</div></div>
       <div class="sd-bar-row"><div class="sd-bar-lbl">感謝</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div><div class="sd-bar-val">38</div></div>
     </div>
-    <div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">助けを求めることにも、段階の条件はありません。求めた回数も「支え合い」に数えます。信頼は、＆ポイントでもお金でも買えません。</div>
+    <div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">助けを求めることにも、段階の条件はありません。支えた回数と支えられた回数を、同じだけ「支え合い」に数えます。どちらか一方に偏っていても、段階は同じように上がります。信頼は、＆ポイントでもお金でも買えません。</div>
   </div>
   <div class="sec-block" id="prof-certs">
     <div class="sec-h"><div class="sec-h-title">デジタル証明書</div><div class="sec-h-more">すべて見る <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>
@@ -1813,7 +1823,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="bottom-nav" id="bottom-nav" style="display:none">
   <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>ホーム</span></button>
   <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
-  <button class="nav-fab" onclick="openPostWith('share')" title="投稿する"><svg class="ic"><use href="#i-plus"/></svg></button>
+  <button class="nav-fab" onclick="openPostWith('tsuide')" title="投稿する"><svg class="ic"><use href="#i-plus"/></svg></button>
   <button class="nav-item" data-screen="comm" onclick="navTo('comm')"><svg class="ni-icon ic"><use href="#i-globe"/></svg><span>コミュニティ</span></button>
   <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
 </div>
@@ -1833,7 +1843,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="modal-tags" id="mm-tags"></div>
     <div class="modal-content" id="mm-content">—</div>
     <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
-      <div style="font-size:.7rem;color:var(--tl);margin-bottom:4px">この方の信頼スコア</div>
+      <div style="font-size:.7rem;color:var(--tl);margin-bottom:4px">この方の信頼の段階</div>
       <div style="display:flex;align-items:center;gap:8px">
         <div style="flex:1;height:6px;background:rgba(184,175,214,.18);border-radius:3px;overflow:hidden"><div id="mm-score-bar" style="height:100%;width:78%;background:linear-gradient(to right,var(--lav),var(--sky))"></div></div>
         <div style="font-family:'Noto Serif JP',serif;font-size:.92rem;font-weight:500;color:var(--lav3);white-space:nowrap" id="mm-score">あわじ結び</div>
@@ -1991,7 +2001,7 @@ function navTo(name){
   if(ni) ni.classList.add('active');
   if(name==='yui'){ renderYuiLists(); }
   if(name==='profile'){ renderMyCards(); }
-  if(name==='post'){ setPostType(null,curPostType||'share'); }
+  if(name==='post'){ setPostType(null,curPostType||'tsuide'); }
   if(name==='main'){
     // Re-init map if user is on map tab
     const mapPanel=document.getElementById('main-panel-map');
@@ -2058,7 +2068,7 @@ function zeroOutNewAccount(){
   s('prof-points',String(myPoints())); s('rew-balance-num',String(myPoints()));
   var sub=document.getElementById('rew-balance-sub'); if(sub) sub.textContent='登録のお祝いに 300pt をお渡ししています';
   var chip=document.getElementById('prof-trust-chip'); if(chip){ chip.style.display=''; chip.textContent='感謝 0 回'; }
-  var badges=document.getElementById('prof-badges'); if(badges) badges.innerHTML='<span class="score-tag">まずは、おすそわけから</span>';
+  var badges=document.getElementById('prof-badges'); if(badges) badges.innerHTML='<span class="score-tag">まずは「ついで」から</span>';
   var bars=document.getElementById('prof-scorebars');
   if(bars){ bars.querySelectorAll('.sd-bar-fill').forEach(function(b){b.style.width='0%';}); bars.querySelectorAll('.sd-bar-val').forEach(function(v){v.textContent='0';}); }
   var act=document.getElementById('prof-activity'); if(act) act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>支援したり助けを求めると、ここに記録されます。</div>';
@@ -2267,7 +2277,7 @@ function firstCatToken(cats){ var t=catTokens(cats); return t.length?t[0]:'daily
 function catColor(tok){ return tok==='elder'?'green':(tok==='parent'?'pink':(tok==='young'?'sky':'lav')); }
 
 // Providers list filters（全国・都道府県ベース）
-let curRegion='all', curCat='all', curType='all', curMapType='all';
+let curRegion='all', curCat='all', curType='all', curMapType='all', curArea='';
 function filterType(el,t){
   el.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('on');});
   el.classList.add('on'); curType=t; applyProvFilters();
@@ -2291,7 +2301,7 @@ function filterCat(el,cat){
 
 /* ===== 絞り込みシート（地域・カテゴリをひとまとめにして、画面のボタンを減らす） ===== */
 var CAT_FILTERS=[['all','すべて'],['elder','老老介護'],['parent','ひとり親'],['young','ヤングケアラー'],['daily','日常支援']];
-var TYPE_FILTERS=[['all','すべて'],['share','おすそわけ'],['tsuide','ついで'],['can','できること札'],['need','困っていること']];
+var TYPE_FILTERS=[['all','すべて'],['tsuide','ついで'],['need','困っていること'],['can','できること札']];
 var fsCat='all', fsPref='all', fsType='all';
 function openFilterSheet(){
   fsCat=curCat; fsPref=curRegion; fsType=curType;
@@ -2300,14 +2310,11 @@ function openFilterSheet(){
   var chips=CAT_FILTERS.map(function(c){
     return '<span class="thanks-tag'+(curCat===c[0]?' on':'')+'" data-cat="'+c[0]+'" onclick="pickFsCat(this,\''+c[0]+'\')">'+c[1]+'</span>';
   }).join('');
-  var tchips=TYPE_FILTERS.map(function(c){
-    return '<span class="thanks-tag'+(curType===c[0]?' on':'')+'" data-ty="'+c[0]+'" onclick="pickFsType(this,\''+c[0]+'\')">'+c[1]+'</span>';
-  }).join('');
   openSheet('絞り込み',
-    '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">種類</div>'+
-    '<div style="margin-bottom:22px">'+tchips+'</div>'+
     '<div style="font-size:.78rem;font-weight:600;margin-bottom:8px">地域</div>'+
-    '<select id="fs-pref" class="input" style="margin-bottom:22px;font-family:inherit">'+opts+'</select>'+
+    '<select id="fs-pref" class="input" style="margin-bottom:10px;font-family:inherit">'+opts+'</select>'+
+    '<input id="fs-area" class="input" maxlength="40" placeholder="市区町村・町名（例：高槻市 ○○町）" value="'+escapeHtml(curArea)+'" style="margin-bottom:6px">'+
+    '<div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-bottom:22px">都道府県だけでは「ご近所」になりません。町名まで入れると、歩いて行ける範囲で絞れます。</div>'+
     '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">カテゴリ</div>'+
     '<div style="margin-bottom:24px">'+chips+'</div>'+
     '<div style="display:flex;gap:10px">'+
@@ -2326,12 +2333,13 @@ function pickFsType(el,t){
 function applyFilterSheet(){
   var sel=document.getElementById('fs-pref');
   curRegion=(sel&&sel.value)||'all';
-  curCat=fsCat||'all'; curType=fsType||'all';
+  curArea=(((document.getElementById('fs-area')||{}).value)||'').trim();
+  curCat=fsCat||'all';
   var rs=document.getElementById('region-select'); if(rs) rs.value=curRegion;
   applyProvFilters(); updateFilterButton(); closeSheet();
 }
 function clearFilterSheet(){
-  curRegion='all'; curCat='all'; curType='all';
+  curRegion='all'; curCat='all'; curType='all'; curArea='';
   var rs=document.getElementById('region-select'); if(rs) rs.value='all';
   applyProvFilters(); updateFilterButton(); closeSheet();
   toast('絞り込みを解除しました');
@@ -2340,12 +2348,12 @@ function clearFilterSheet(){
 function updateFilterButton(){
   var btn=document.getElementById('fb-more'), lbl=document.getElementById('fb-more-label');
   if(!btn||!lbl) return;
-  var on=(curRegion!=='all')||(curCat!=='all')||(curType!=='all');
+  var on=(curRegion!=='all')||(curCat!=='all')||!!curArea;
   btn.classList.toggle('on', on);
   if(!on){ lbl.textContent='絞り込み'; return; }
   var parts=[];
-  if(curType!=='all'){ TYPE_FILTERS.forEach(function(c){ if(c[0]===curType) parts.push(c[1]); }); }
-  if(curRegion!=='all') parts.push(curRegion);
+  if(curArea) parts.push(curArea);
+  else if(curRegion!=='all') parts.push(curRegion);
   if(curCat!=='all'){ CAT_FILTERS.forEach(function(c){ if(c[0]===curCat) parts.push(c[1]); }); }
   lbl.textContent=parts.length>1?(parts[0]+' 他'):parts.join('');
 }
@@ -2355,11 +2363,12 @@ function applyProvFilters(){
     var isLive=card.hasAttribute('data-live');
     var r=card.dataset.region||'', c=card.dataset.cat||'';
     // ライブ投稿は地域/カテゴリ未設定なら常に表示（ユーザー投稿を勝手に隠さない）
-    var ty=card.dataset.type||'';
+    var ty=card.dataset.type||'', ar=card.dataset.area||'';
     var matchR=(curRegion==='all'|| r===curRegion || (isLive && !r));
     var matchC=(curCat==='all'|| c.split(' ').indexOf(curCat)>=0 || (isLive && !c));
     var matchT=(curType==='all'|| ty===curType || (!isLive && !ty));
-    if(matchR && matchC && matchT){card.style.display='';count++;}
+    var matchA=(!curArea || ar.indexOf(curArea)>=0);
+    if(matchR && matchC && matchT && matchA){card.style.display='';count++;}
     else card.style.display='none';
   });
   document.querySelectorAll('.prov-list').forEach(function(list){
@@ -2379,7 +2388,7 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   av.className='avatar md '+color;
   document.getElementById('mm-title').textContent=name+' さん';
   document.getElementById('mm-meta').textContent=region+' / '+dist+' ／ '+(timeStatus==='active'?'今アクティブ':timeStatus);
-  document.getElementById('mm-content').textContent='【対応可能なサポート】\n'+skills.join('・')+'\n\n本人確認済み。これまでに'+reviews+'件の支援実績があります。';
+  document.getElementById('mm-content').textContent='【できること】\n'+skills.join('・')+'\n\n本人確認済みの方です。支え合った回数は表示していません（働きすぎが称賛される軸を作らないため）。';
   const tags=document.getElementById('mm-tags');
   tags.innerHTML='';
   skills.forEach(sk=>{
@@ -2389,8 +2398,8 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
     tags.appendChild(t);
   });
   const s=document.createElement('span');s.className='mc-stars';
-  s.style.color='#c07880';
-  s.innerHTML='<svg class="ic" style="font-size:.85em"><use href="#i-heart"/></svg> 感謝 '+reviews+'回';
+  s.style.color='var(--tl)';
+  s.innerHTML='';
   s.style.fontSize='.78rem';tags.appendChild(s);
   document.getElementById('mm-score').textContent=stage_label_for(trust);
   document.getElementById('mm-score-bar').style.width=trust+'%';
@@ -2406,6 +2415,10 @@ function logout(){
   if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
   if(postsUnsub){postsUnsub();postsUnsub=null;}
   if(thanksUnsub){thanksUnsub();thanksUnsub=null;}
+  if(thanksOutUnsub){thanksOutUnsub();thanksOutUnsub=null;}
+  if(dealsUnsub){dealsUnsub();dealsUnsub=null;}
+  if(decisionsUnsub){decisionsUnsub();decisionsUnsub=null;}
+  window.__thanksOut=[]; window.__deals=[]; window.__skipped={};
   currentConv=null; window.__convs={}; window.__blocked={}; window.__rawPosts=[]; window.__rawConvs=[]; window.__thanksIn=[];
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   currentProfile=null;localStorage.removeItem('youi_user');goScreen('login');
@@ -2418,11 +2431,11 @@ function togglePost(el){el.parentNode.querySelectorAll('.pt-btn').forEach(b=>b.c
    =================================================================== */
 var POST_TYPES={
   share :{label:'おすそわけ',  cls:'share', color:'lav',
-          hint:'余ったもの・いただきものを「どうぞ」で出しましょう。手渡しなので、一度は顔を合わせられます。',
-          ph:'例：家庭菜園のミニトマト、少しですがどうぞ', btn:'おすそわけを出す'},
+          hint:'（現在は使っていない種類です。過去の投稿の表示にだけ使われます）',
+          ph:'', btn:'投稿する'},
   tsuide:{label:'ついで',      cls:'tsuide', color:'sky',
-          hint:'「助けます」ではなく「ついで」。自分の予定を置いておくだけなので、気負わずに出せます。',
-          ph:'例：今日15時ごろスーパーに行きます', btn:'ついでを出す'},
+          hint:'いま手を貸せることを伝えます。用事のついででも、空いた時間でもかまいません。「助けます」と宣言しなくていいので、気負わずに出せます。',
+          ph:'例：今日15時ごろスーパーに行きます／土曜なら車を出せます', btn:'投稿する'},
   can   :{label:'できること札', cls:'can',  color:'green',
           hint:'ふだんからできることを書いておきます。ご近所マップに出て、災害のときはそのまま「いま動ける人」の一覧になります。',
           ph:'例：車を出せます／スマホの相談にのれます', btn:'できること札を出す'},
@@ -2440,12 +2453,12 @@ function typeColor(t){ return typeInfo(t).color; }
 /* 困りごとで「名前を伏せる」が選ばれていたら、ご近所の方として表示（非対称の匿名性） */
 function postAuthor(p){ return (p&&p.anon)?'ご近所の方':((p&&p.authorName)||'利用者'); }
 
-var curPostType='share';
+var curPostType='tsuide';
 function setPostType(el,t){
   curPostType=t;
   var cards=document.querySelectorAll('#pt-choice .pt-card');
   for(var i=0;i<cards.length;i++){ cards[i].classList.toggle('on', cards[i].getAttribute('data-type')===t); }
-  var info=POST_TYPES[t]||POST_TYPES.share;
+  var info=POST_TYPES[t]||POST_TYPES.tsuide;
   var h=document.getElementById('pt-hint'); if(h) h.textContent=info.hint;
   var ti=document.getElementById('post-title'); if(ti) ti.placeholder=info.ph;
   var b=document.getElementById('post-submit-btn'); if(b) b.textContent=info.btn;
@@ -2458,17 +2471,237 @@ function openPostWith(t){ navTo('post'); setPostType(null,t); }
 /* ===== 信頼の段階（水引の結び名5段階。生の数字は出さない） ===== */
 var TRUST_STAGES=[
   {name:'はじめの結び', need:0},
-  {name:'ひと結び',     need:3},
-  {name:'あわじ結び',   need:10},
-  {name:'梅結び',       need:25},
-  {name:'結い手',       need:50}
+  {name:'ひと結び',     need:20},
+  {name:'あわじ結び',   need:55},
+  {name:'梅結び',       need:110},
+  {name:'結い手',       need:200}
 ];
-function stageIndexOf(cnt){ var k=0; for(var i=0;i<TRUST_STAGES.length;i++){ if((cnt||0)>=TRUST_STAGES[i].need) k=i; } return k; }
-function stageNameOf(cnt){ return TRUST_STAGES[stageIndexOf(cnt)].name; }
-function stageChip(cnt){ return '<span class="stage-chip"><svg class="ic" style="font-size:.9em"><use href="#i-medal"/></svg>'+stageNameOf(cnt)+'</span>'; }
+function stageIndexOf(pt){ var k=0; for(var i=0;i<TRUST_STAGES.length;i++){ if((pt||0)>=TRUST_STAGES[i].need) k=i; } return k; }
+function stageNameOf(pt){ return TRUST_STAGES[stageIndexOf(pt)].name; }
+function stageChip(pt){ return '<span class="stage-chip"><svg class="ic" style="font-size:.9em"><use href="#i-medal"/></svg>'+stageNameOf(pt)+'</span>'; }
 
-/* ===== 感謝タグ（星の点数評価は置かない） ===== */
-var THANKS_TAGS=['時間を守ってくれた','ていねいだった','話しやすかった','とても助かった','また会いたい'];
+/* ===== 感謝タグ（星の点数評価は置かない。方向で語彙を分ける） ===== */
+var THANKS_TAGS_TO_HELPER=['すぐ来てくれた','ていねいだった','話しやすかった','安心できた','また会いたい'];
+var THANKS_TAGS_TO_ASKER =['声をかけてくれてうれしかった','話しやすかった','気持ちよく渡せた','また力になりたい'];
+var THANKS_TAGS=THANKS_TAGS_TO_HELPER;   // 後方互換
+
+/* ===================================================================
+   v0.4.0 評価経済（正本＝戦略指針§5-6）
+   ・信頼は「非金銭的資産（レベル）」と「人柄資本（言葉）」の2本立て
+   ・同じ相手からの2回目以降は逓減。人数が多いほど伸び、往復では伸びない
+   ・押されなかった事実は誰にも届かない（完全非開示）
+   ・有事は加点しない。記録だけ取る
+   =================================================================== */
+var WEIGHTS=[3.0, 2.0, 1.0, 0.5];        // 同一ペアの通算1・2・3・4回目以降
+var DEAL_PT=0.5, MONTH_PT=1, VERIFY_PT=5;
+var GATE_HOURS=72;
+
+function pairKeyOf(a,b){ return [a||'',b||''].sort().join('_'); }
+function tsMs(t){ return (t&&t.toDate)?t.toDate().getTime():(typeof t==='number'?t:0); }
+function ymOf(t){ var m=tsMs(t); if(!m) return null; var d=new Date(m); return d.getFullYear()+'-'+(d.getMonth()+1); }
+
+/* 自分に関わる感謝の全体（贈った・受け取ったの両方）を古い順に */
+function allMyThanks(){
+  var a=(window.__thanksIn||[]).concat(window.__thanksOut||[]);
+  var seen={}, out=[];
+  a.forEach(function(t){ if(t.id&&seen[t.id])return; if(t.id)seen[t.id]=1; out.push(t); });
+  out.sort(function(x,y){ return tsMs(x.createdAt)-tsMs(y.createdAt); });
+  return out;
+}
+
+/* 信頼の計算。表示するのはレベル名だけで、ptは運営内部の値 */
+function computeTrust(){
+  var u=getStoredUser()||{}, me=u.uid;
+  var list=allMyThanks(), deals=(window.__deals||[]);
+  var seq={}, pt=0, received=0, given=0, months={};
+  list.forEach(function(t){
+    if(t.disaster) return;                       // 有事の感謝は加点しない
+    var k=t.pairKey||pairKeyOf(t.fromUid,t.toUid);
+    seq[k]=(seq[k]||0)+1;
+    pt += WEIGHTS[Math.min(seq[k],WEIGHTS.length)-1];
+    if(t.toUid===me) received++; else given++;
+    var ym=ymOf(t.createdAt); if(ym) months[ym]=1;
+  });
+  var dealCount=0;
+  deals.forEach(function(d){
+    if(d.disaster) return;
+    dealCount++; pt += DEAL_PT;
+    var ym=ymOf(d.createdAt); if(ym) months[ym]=1;
+  });
+  var mn=Object.keys(months).length;
+  pt += mn*MONTH_PT;
+  if(u.verified) pt += VERIFY_PT;
+  return {pt:Math.round(pt*10)/10, received:received, given:given, deals:dealCount, months:mn,
+          level:stageIndexOf(pt)+1, name:stageNameOf(pt)};
+}
+
+/* 直近3か月に動きがあれば「活動中」。レベル（資格）とは混ぜない */
+function isActiveNow(){
+  var cut=Date.now()-90*24*3600*1000;
+  var hit=allMyThanks().some(function(t){ return tsMs(t.createdAt)>cut; });
+  if(hit) return true;
+  return (window.__deals||[]).some(function(d){ return tsMs(d.createdAt)>cut; });
+}
+
+/* ===== 災害モード（ゲート解除の4層のうち、第3層＝運営／第4層＝本人）===== */
+var disasterUnsub=null;
+function disasterActive(){ var d=window.__disaster; return !!(d&&d.active); }
+function gateOverrideActive(){
+  var u=getStoredUser()||{};
+  return !!(u.gateOverrideUntil && u.gateOverrideUntil>Date.now());
+}
+function subscribeDisaster(){
+  if(!fbReady||disasterUnsub) return;
+  disasterUnsub=fbDb.collection('config').doc('disasterMode').onSnapshot(function(doc){
+    window.__disaster=doc.exists?doc.data():null;
+    renderDisasterUI();
+  },function(e){ console.warn('disaster listen',e); });
+}
+function renderDisasterUI(){
+  var el=document.getElementById('disaster-banner'); if(!el) return;
+  var on=disasterActive();
+  el.style.display=on?'flex':'none';
+  if(on){
+    var sc=(window.__disaster&&window.__disaster.scope)||'all';
+    el.innerHTML='<svg class="ic"><use href="#i-shield"/></svg><div style="flex:1;line-height:1.6">'+
+      '災害モードです（'+escapeHtml(sc==='all'?'全域':sc)+'）。<br>'+
+      'お礼の確認はお休みし、記録だけ取ります。いまは支え合いを優先してください。</div>';
+  }
+  renderGateUI();
+}
+/* 第4層：本人が1タップで自分のゲートを外す。理由は聞かない */
+function selfOverrideGate(){
+  var u=getStoredUser(); if(!u||!u.uid){ toast('ログインが必要です'); return; }
+  var until=Date.now()+24*3600*1000;
+  u.gateOverrideUntil=until; setStoredUser(u);
+  if(fbReady&&fbAuth.currentUser){ fbDb.collection('users').doc(fbAuth.currentUser.uid).update({gateOverrideUntil:until}).catch(function(){}); }
+  closeSheet(); renderGateUI();
+  toast('24時間、お礼の確認をお休みします');
+}
+
+/* ===== ゲート：決めるまで、自分が次の依頼に進めない ===== */
+var dealsUnsub=null, decisionsUnsub=null;
+function subscribeDeals(){
+  if(!fbReady||!fbAuth.currentUser||dealsUnsub) return;
+  var uid=fbAuth.currentUser.uid;
+  dealsUnsub=fbDb.collection('deals').where('participants','array-contains',uid).onSnapshot(function(snap){
+    var arr=[]; snap.forEach(function(d){ var x=d.data(); x.id=d.id; arr.push(x); });
+    window.__deals=sortByNewest(arr); renderTrustUI(); renderGateUI();
+  },function(e){ console.warn('deals listen',e); });
+  decisionsUnsub=fbDb.collection('decisions').where('fromUid','==',uid).onSnapshot(function(snap){
+    var m={}; snap.forEach(function(d){ m[d.data().dealId]=1; });
+    window.__skipped=m; renderGateUI();
+  },function(e){ console.warn('decisions listen',e); });
+}
+/* この支え合いについて、自分はもう決めたか */
+function decidedByMe(dealId){
+  if((window.__skipped||{})[dealId]) return true;
+  return (window.__thanksOut||[]).some(function(t){ return t.dealId===dealId; });
+}
+/* まだ決めていない支え合い（72時間で自動的に閉じる） */
+function openDeals(){
+  var now=Date.now();
+  return (window.__deals||[]).filter(function(d){
+    var t=tsMs(d.createdAt); if(!t) return false;
+    if(now-t > GATE_HOURS*3600*1000) return false;   // 無回答のまま期限切れ＝記録しない
+    return !decidedByMe(d.id);
+  });
+}
+/* ゲートが閉じているか。安全のためではなくデータ品質のための仕組みなので、
+   迷ったら外す側に倒す（災害時・本人オーバーライド中は必ず外す） */
+function gateBlocked(){
+  if(disasterActive()) return false;
+  if(gateOverrideActive()) return false;
+  return openDeals().length>0;
+}
+function otherOf(d){
+  var me=(getStoredUser()||{}).uid;
+  var i=(d.participants||[]).indexOf(me);
+  return { uid:(d.participants||[])[i===0?1:0], name:(d.byUid===me?(d.otherName||'相手の方'):(d.byName||'相手の方')) };
+}
+function renderGateUI(){
+  var b=document.getElementById('gate-banner'); if(!b) return;
+  var n=openDeals().length;
+  var show=n>0 && !disasterActive() && !gateOverrideActive();
+  b.style.display=show?'flex':'none';
+  if(show){
+    b.innerHTML='<div style="flex:1;line-height:1.65">先日の支え合いについて、お礼を伝えるか決めていません（'+n+'件）。<br>'+
+      '<span style="font-size:.68rem;opacity:.85">決めるまで、あなたが新しく「困っていること」を出せません。</span></div>'+
+      '<button class="kai-read" style="margin:0;padding:6px 13px;font-size:.74rem;flex-shrink:0" onclick="openGateSheet()">決める</button>';
+  }
+}
+function openGateSheet(){
+  var list=openDeals();
+  if(!list.length){ toast('決めていない支え合いはありません'); return; }
+  var body=list.map(function(d){
+    var o=otherOf(d);
+    return '<div style="padding:14px 0;border-bottom:1px solid rgba(184,175,214,.15)">'+
+      '<div style="font-size:.9rem;font-weight:600">'+escapeHtml(o.name)+' さんとの支え合い</div>'+
+      (d.title?'<div style="font-size:.76rem;color:var(--tl);margin-top:3px">'+escapeHtml(d.title)+'</div>':'')+
+      '<div style="display:flex;gap:9px;margin-top:11px">'+
+        '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem" onclick="skipThanks(\''+d.id+'\',\''+escapeHtml(o.uid)+'\')">今回は伝えない</button>'+
+        '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem;color:var(--lav3);border-color:rgba(184,175,214,.55)" onclick="closeSheet();openThanks(\''+escapeHtml(o.uid)+'\',\''+escapeHtml(o.name)+'\',\'\',\''+d.id+'\')">ありがとうを伝える</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  openSheet('お礼を決める',
+    '<div style="font-size:.8rem;color:var(--tl);line-height:1.9;margin-bottom:6px">どちらを選んでも構いません。伝えないことを選んでも、相手には分かりません。</div>'+
+    body+
+    '<div style="margin-top:18px;font-size:.72rem;color:var(--tl);line-height:1.8">72時間で自動的に閉じます。いま決められない事情があるときは、下から外せます。</div>'+
+    '<div style="margin-top:10px"><button class="btn-secondary" onclick="selfOverrideGate()">いま急ぎです（24時間おやすみ）</button></div>');
+}
+function skipThanks(dealId, toUid){
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(busy('skip',2000)) return;
+  fbDb.collection('decisions').add({
+    dealId:dealId, fromUid:fbAuth.currentUser.uid, toUid:toUid,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){
+    closeSheet(); toast('わかりました。相手には伝わりません');
+  }).catch(function(e){ console.warn('skip fail',e); toast(authErrMsg(e)); });
+}
+/* 支え合いが終わったことを記録する（ゲートの起点・1件+0.5） */
+function closeDeal(){
+  if(!(currentConv&&currentConv.otherUid)){ toast('実際の会話から記録できます'); return; }
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(busy('deal',3000)) return;
+  var u=getStoredUser()||{};
+  var me=fbAuth.currentUser.uid;
+  fbDb.collection('deals').add({
+    participants:[me,currentConv.otherUid].sort(),
+    byUid:me, byName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    otherName:(currentConv.otherName||'相手の方').slice(0,60),
+    title:'', disaster:disasterActive(),
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){
+    closeSheet();
+    toast(disasterActive()?'記録しました（いまは加点しません）':'記録しました。お礼を伝えるか決めましょう');
+    if(!disasterActive()) setTimeout(openGateSheet,700);
+  }).catch(function(e){ console.warn('deal fail',e); toast(authErrMsg(e)); });
+}
+
+/* ===== 気になったこと（運営だけが見る。相手には通知されない） ===== */
+function openConcern(){
+  if(!(currentConv&&currentConv.otherUid)){ toast('実際の会話から送れます'); return; }
+  openSheet('少し気になった',
+    '<div style="font-size:.82rem;color:var(--ink);line-height:1.9;margin-bottom:14px">運営だけが読みます。<b>相手には通知されず、送ったこと自体も知られません。</b>公開の低評価にはなりません。</div>'+
+    '<div style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-bottom:14px">「通報するほどではないけれど、少し気になった」を受け取るための窓口です。運営が様子を見るために使います。</div>'+
+    '<textarea id="cn-note" maxlength="500" class="input" rows="4" style="resize:vertical;font-family:inherit;margin-bottom:16px" placeholder="よければ、気になったことを書いてください（任意）"></textarea>'+
+    '<button class="btn-primary" onclick="sendConcern()">運営に伝える</button>');
+}
+function sendConcern(){
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(!(currentConv&&currentConv.otherUid)){ toast('相手が特定できません'); return; }
+  if(busy('concern',3000)) return;
+  var note=((document.getElementById('cn-note')||{}).value||'').trim();
+  fbDb.collection('concerns').add({
+    fromUid:fbAuth.currentUser.uid, aboutUid:currentConv.otherUid,
+    dealId:'', note:note.slice(0,500),
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){ closeSheet(); toast('運営に伝えました。相手には分かりません'); })
+   .catch(function(e){ console.warn('concern fail',e); toast(authErrMsg(e)); });
+}
+
 var PT_CHOICES=[30,50,100];
 
 /* 自分の＆ポイント残高（登録時300pt・戦略指針§5-6の初期値） */
@@ -2491,63 +2724,165 @@ function renderPointsUI(){
 
 /* 受け取った感謝を購読して、段階・回数・最近の活動に反映する */
 var thanksUnsub=null, thanksOutUnsub=null;
+function sortByNewest(arr){
+  arr.sort(function(a,b){
+    var ta=(a.createdAt&&a.createdAt.toDate)?a.createdAt.toDate().getTime():0;
+    var tb=(b.createdAt&&b.createdAt.toDate)?b.createdAt.toDate().getTime():0;
+    return tb-ta;
+  });
+  return arr;
+}
 function subscribeThanks(){
   if(!fbReady||!fbAuth.currentUser||thanksUnsub) return;
   var uid=fbAuth.currentUser.uid;
+  // 受け取った感謝
   thanksUnsub=fbDb.collection('thanks').where('toUid','==',uid).onSnapshot(function(snap){
     var arr=[]; snap.forEach(function(d){ var t=d.data(); t.id=d.id; arr.push(t); });
-    arr.sort(function(a,b){
-      var ta=(a.createdAt&&a.createdAt.toDate)?a.createdAt.toDate().getTime():0;
-      var tb=(b.createdAt&&b.createdAt.toDate)?b.createdAt.toDate().getTime():0;
-      return tb-ta;
-    });
-    window.__thanksIn=arr; renderTrustUI();
-  },function(e){ console.warn('thanks listen',e); });
+    window.__thanksIn=sortByNewest(arr); renderTrustUI();
+  },function(e){ console.warn('thanks in listen',e); });
+  // 自分が贈った感謝＝助けを求めて、支えてもらった回数。
+  // 「受援も実績に数える」（戦略指針§5-6のガードレール）はこちらで実装する。
+  thanksOutUnsub=fbDb.collection('thanks').where('fromUid','==',uid).onSnapshot(function(snap){
+    var arr=[]; snap.forEach(function(d){ var t=d.data(); t.id=d.id; arr.push(t); });
+    window.__thanksOut=sortByNewest(arr); renderTrustUI();
+  },function(e){ console.warn('thanks out listen',e); });
 }
 function renderTrustUI(){
   var u=getStoredUser(); if(!u||!u.uid) return;
-  var list=window.__thanksIn||[], cnt=list.length;
-  var t1=document.getElementById('prof-trust');  if(t1) t1.textContent=stageNameOf(cnt);
-  var t2=document.getElementById('prof-trust2'); if(t2) t2.textContent=stageNameOf(cnt);
+  var t=computeTrust();
+  var inList=window.__thanksIn||[], out=window.__thanksOut||[];
+
+  // 表示するのはレベル名だけ。生のptは運営内部の値なので出さない
+  var t1=document.getElementById('prof-trust');  if(t1) t1.textContent=t.name;
+  var t2=document.getElementById('prof-trust2'); if(t2) t2.textContent=t.name;
+
+  // 回数ではなく「いま動いているか」を出す。レベル＝資格、活動中＝状態
   var chip=document.getElementById('prof-trust-chip');
-  if(chip){ chip.style.display=''; chip.textContent='感謝 '+cnt+' 回'; }
+  if(chip){
+    if(t.pt===0){ chip.style.display=''; chip.textContent='これから'; }
+    else if(isActiveNow()){ chip.style.display=''; chip.textContent='活動中'; }
+    else { chip.style.display='none'; }
+  }
+
   var bars=document.getElementById('prof-scorebars');
   if(bars){
-    var idx=stageIndexOf(cnt), nextNeed=(idx<TRUST_STAGES.length-1)?TRUST_STAGES[idx+1].need:TRUST_STAGES[idx].need;
-    var prog=nextNeed?Math.min(100,Math.round(cnt/nextNeed*100)):100;
+    var idx=t.level-1;
+    var last=(idx>=TRUST_STAGES.length-1);
+    var nextNeed=last?TRUST_STAGES[idx].need:TRUST_STAGES[idx+1].need;
+    var prog=last?100:Math.min(100,Math.round(t.pt/nextNeed*100));
+    var mx=Math.max(1,t.received,t.given);
+    var w=function(v){ return Math.round(v/mx*100); };
+    // 支えた／支えられたは内部で分けて持つ（権限の解錠は「支えた」だけで判定する）
     bars.innerHTML=
       '<div class="sd-bar-row"><div class="sd-bar-lbl">本人確認</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+(u.verified?100:0)+'%"></div></div><div class="sd-bar-val">'+(u.verified?'済':'—')+'</div></div>'+
-      '<div class="sd-bar-row"><div class="sd-bar-lbl">感謝</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+prog+'%"></div></div><div class="sd-bar-val">'+cnt+'</div></div>'+
-      '<div class="sd-bar-row"><div class="sd-bar-lbl">次の段階まで</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+prog+'%"></div></div><div class="sd-bar-val">'+(idx<TRUST_STAGES.length-1?Math.max(0,nextNeed-cnt):'—')+'</div></div>';
+      '<div class="sd-bar-row"><div class="sd-bar-lbl">支えた</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+w(t.received)+'%"></div></div><div class="sd-bar-val">'+(t.received||'—')+'</div></div>'+
+      '<div class="sd-bar-row"><div class="sd-bar-lbl">支えられた</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+w(t.given)+'%"></div></div><div class="sd-bar-val">'+(t.given||'—')+'</div></div>'+
+      '<div class="sd-bar-row"><div class="sd-bar-lbl">次の段階まで</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:'+prog+'%"></div></div><div class="sd-bar-val">'+(last?'—':(prog+'%'))+'</div></div>';
   }
+
   var badges=document.getElementById('prof-badges');
-  if(badges) badges.innerHTML='<span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-heart"/></svg>感謝 '+cnt+'回</span>';
-  var act=document.getElementById('prof-activity');
-  if(act){
-    var body=list.length? list.slice(0,6).map(function(t){
-      var tags=(t.tags||[]).map(function(x){return '<span class="ptype can" style="margin-right:4px">'+escapeHtml(x)+'</span>';}).join('');
-      return '<div class="feed-item"><div class="feed-h"><div class="feed-dot"></div>'+
-        '<div class="feed-text"><b>'+escapeHtml(t.fromName||'ご近所の方')+'</b>から感謝が届きました</div>'+
-        '<div class="feed-time">'+timeAgo(t.createdAt)+'</div></div>'+
-        (tags?'<div style="margin-left:18px;margin-top:5px">'+tags+'</div>':'')+
-        (t.note?'<div class="feed-text" style="margin-left:18px;margin-top:5px">「'+escapeHtml(t.note)+'」</div>':'')+
-        (t.points?'<div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋'+t.points+' ＆pt</span></div>':'')+
-      '</div>';
-    }).join('')
-    : '<div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>おすそわけやついでから始めてみましょう。</div>';
-    act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div>'+body;
+  if(badges){
+    badges.innerHTML = (t.pt===0)
+      ? '<span class="score-tag">まずは「ついで」から</span>'
+      : '<span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>'+t.name+'</span>'+
+        (isActiveNow()?'<span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-users"/></svg>活動中</span>':'')+
+        (u.verified?'<span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-check"/></svg>本人確認済</span>':'');
   }
+
+  renderWords();
+  renderActivity();
   renderPointsUI();
+  renderGateUI();
+}
+
+/* 人柄資本＝言葉のまま。数値にしないし、誰が書いたかも出さない */
+function renderWords(){
+  var box=document.getElementById('prof-words'), nb=document.getElementById('prof-notes');
+  var inList=(window.__thanksIn||[]);
+  if(box){
+    var tally={};
+    inList.forEach(function(t){ (t.tags||[]).forEach(function(x){ tally[x]=(tally[x]||0)+1; }); });
+    var keys=Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; }).slice(0,5);
+    box.innerHTML = keys.length
+      ? keys.map(function(k){ return '<span class="thanks-tag on" style="cursor:default">'+escapeHtml(k)+' <b style="opacity:.8">×'+tally[k]+'</b></span>'; }).join('')
+      : '<div style="font-size:.8rem;color:var(--tl);line-height:1.8">まだ言葉は届いていません。</div>';
+  }
+  if(nb){
+    var notes=inList.filter(function(t){ return t.note; }).slice(0,3);
+    nb.innerHTML = notes.length
+      ? notes.map(function(t){
+          return '<div style="border-left:2px solid rgba(184,175,214,.5);padding:2px 0 2px 11px;margin-bottom:9px;font-size:.84rem;color:var(--ink);line-height:1.85">「'+escapeHtml(t.note)+'」</div>';
+        }).join('')+'<div style="font-size:.68rem;color:var(--tl);margin-top:2px">送り主の名前は表示しません。</div>'
+      : '';
+  }
+}
+
+/* 最近の活動。届いた感謝は「週まとめ」で見せ、誰から届いたかは出さない。
+   個別に届いた瞬間を通知しないことで、「まだ来ない＝押されなかった」の推論を切る */
+function renderActivity(){
+  var act=document.getElementById('prof-activity'); if(!act) return;
+  var inList=(window.__thanksIn||[]), out=(window.__thanksOut||[]), deals=(window.__deals||[]);
+  var items=[];
+
+  // 受け取った感謝を週ごとにまとめる
+  var weeks={};
+  inList.forEach(function(t){
+    var ms=tsMs(t.createdAt); if(!ms) return;
+    var wk=Math.floor(ms/(7*24*3600*1000));
+    (weeks[wk]=weeks[wk]||{ms:ms,people:{},tags:{},pts:0}).ms=Math.max(weeks[wk].ms,ms);
+    if(t.fromUid) weeks[wk].people[t.fromUid]=1;
+    (t.tags||[]).forEach(function(x){ weeks[wk].tags[x]=1; });
+    weeks[wk].pts += (t.points||0);
+  });
+  Object.keys(weeks).forEach(function(k){
+    var w=weeks[k], n=Object.keys(w.people).length;
+    items.push({ms:w.ms, html:
+      '<div class="feed-item"><div class="feed-h"><div class="feed-dot"></div>'+
+      '<div class="feed-text">'+n+'人から、ありがとうが届きました</div>'+
+      '<div class="feed-time">'+timeAgo({toDate:function(){return new Date(w.ms);}})+'</div></div>'+
+      (Object.keys(w.tags).length?'<div style="margin-left:18px;margin-top:5px">'+Object.keys(w.tags).slice(0,4).map(function(x){return '<span class="ptype can" style="margin-right:4px">'+escapeHtml(x)+'</span>';}).join('')+'</div>':'')+
+      (w.pts?'<div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋'+w.pts+' ＆pt</span></div>':'')+
+      '</div>'});
+  });
+
+  // 自分が贈ったものは、自分の行動なので相手の名前を出してよい
+  out.forEach(function(t){
+    items.push({ms:tsMs(t.createdAt), html:
+      '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--lav)"></div>'+
+      '<div class="feed-text"><b>'+escapeHtml(t.toName||'ご近所の方')+'</b>にありがとうを贈りました</div>'+
+      '<div class="feed-time">'+timeAgo(t.createdAt)+'</div></div>'+
+      (t.points?'<div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−'+t.points+' ＆pt</span></div>':'')+
+      '</div>'});
+  });
+
+  deals.forEach(function(d){
+    items.push({ms:tsMs(d.createdAt), html:
+      '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--sage)"></div>'+
+      '<div class="feed-text">支え合いがひとつ、終わりました'+(d.disaster?'（災害モード中の記録）':'')+'</div>'+
+      '<div class="feed-time">'+timeAgo(d.createdAt)+'</div></div></div>'});
+  });
+
+  items.sort(function(a,b){ return b.ms-a.ms; });
+  var body=items.length? items.slice(0,8).map(function(x){return x.html;}).join('')
+    : '<div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>「ついで」から始めてみましょう。</div>';
+  act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div>'+body+
+    '<div style="padding:2px 18px 6px;font-size:.68rem;color:var(--tl);line-height:1.8">届いたありがとうは、まとめてお知らせしています。誰が送ったか・送らなかったかは表示しません。</div>';
 }
 
 /* ===== 感謝を贈る（星評価なし・＆ポイントは手渡し・「お互いさま」で借りを閉じる） ===== */
-var thanksSel={tags:[],pts:50,to:null,toName:'',postId:''};
-function openThanks(toUid,toName,postId){
+var thanksSel={tags:[],pts:50,to:null,toName:'',postId:'',dealId:''};
+function openThanks(toUid,toName,postId,dealId){
   if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
   if(toUid===fbAuth.currentUser.uid){ toast('自分には贈れません'); return; }
-  thanksSel={tags:[],pts:50,to:toUid,toName:toName||'相手の方',postId:postId||''};
+  thanksSel={tags:[],pts:50,to:toUid,toName:toName||'相手の方',postId:postId||'',dealId:dealId||''};
   var bal=myPoints();
-  var tagHtml=THANKS_TAGS.map(function(t,i){ return '<span class="thanks-tag" onclick="toggleThanksTag(this,\''+i+'\')">'+t+'</span>'; }).join('');
+  // 語彙は方向で分ける。どちらだったかは本人にしか分からないので、両方見せて選んでもらう
+  var grp=function(label,arr,off){
+    return '<div style="font-size:.7rem;color:var(--tl);margin:0 0 7px">'+label+'</div><div style="margin-bottom:14px">'+
+      arr.map(function(t,i){ return '<span class="thanks-tag" onclick="toggleThanksTag(this,\''+(off+i)+'\')">'+t+'</span>'; }).join('')+'</div>';
+  };
+  var tagHtml=grp('手を貸してもらったとき',THANKS_TAGS_TO_HELPER,0)+
+              grp('手を貸したとき',THANKS_TAGS_TO_ASKER,THANKS_TAGS_TO_HELPER.length);
   var ptHtml=PT_CHOICES.map(function(v){
     return '<span class="thanks-tag'+(v===50?' on':'')+'" data-pt="'+v+'" onclick="setThanksPt(this,'+v+')">'+v+' pt</span>';
   }).join('')+'<span class="thanks-tag" data-pt="0" onclick="setThanksPt(this,0)">今回は渡さない</span>';
@@ -2564,7 +2899,8 @@ function openThanks(toUid,toName,postId){
 }
 function toggleThanksTag(el,i){
   el.classList.toggle('on');
-  var t=THANKS_TAGS[parseInt(i,10)];
+  var all=THANKS_TAGS_TO_HELPER.concat(THANKS_TAGS_TO_ASKER);
+  var t=all[parseInt(i,10)];
   var k=thanksSel.tags.indexOf(t);
   if(el.classList.contains('on')){ if(k<0) thanksSel.tags.push(t); } else if(k>=0){ thanksSel.tags.splice(k,1); }
 }
@@ -2587,13 +2923,46 @@ function sendThanks(){
     fromUid:fbAuth.currentUser.uid,
     fromName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
     toUid:thanksSel.to, toName:(thanksSel.toName||'').slice(0,60),
-    postId:thanksSel.postId||'', tags:thanksSel.tags.slice(0,5), note:note,
+    postId:thanksSel.postId||'', dealId:thanksSel.dealId||'',
+    pairKey:pairKeyOf(fbAuth.currentUser.uid, thanksSel.to),
+    disaster:disasterActive(),
+    tags:thanksSel.tags.slice(0,5), note:note,
     points:pts, createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){
     if(pts>0) setMyPoints(myPoints()-pts);
     closeSheet();
     toast('お互いさま。貸し借りは、これでおしまいです');
   }).catch(function(e){ console.warn('thanks fail',e); toast(authErrMsg(e)); });
+}
+
+/* マップの下に「困っていること」の一覧を出す。
+   地域を入れていない投稿はピンにできないので、一覧が無いと消えてしまうため。 */
+function renderNeedList(){
+  var el=document.getElementById('need-list'); if(!el) return;
+  var items=window.__needPosts||[];
+  var cnt=document.getElementById('need-count');
+  var real=!!(currentProfile&&currentProfile.uid);
+  if(cnt){ cnt.style.display=real?'':'none'; cnt.innerHTML='困っていること <b>'+items.length+'</b>件'; }
+  var me=document.getElementById('map-empty');
+  if(!items.length){
+    el.innerHTML='';
+    if(me && real) me.style.display='';
+    return;
+  }
+  if(me) me.style.display='none';
+  el.innerHTML=items.map(function(p){
+    var loc=[p.pref,p.area].filter(Boolean).join(' ');
+    var pinned=postLatLng(p)?'':'<span style="font-size:.64rem;color:var(--tl);margin-left:6px">地図に出ていません（地域が未入力）</span>';
+    return '<div class="match-card" onclick="openPostDetail(\''+p.id+'\')">'+
+      '<div class="avatar md pink">'+escapeHtml(postAuthor(p).charAt(0))+'</div>'+
+      '<div class="mc-body">'+
+        '<div class="mc-row1"><div class="mc-name">'+escapeHtml(postAuthor(p))+'</div>'+
+        (loc?'<div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>'+escapeHtml(loc)+'</div>':'')+'</div>'+
+        '<div class="mc-desc">'+escapeHtml(p.title||'')+'</div>'+
+        '<div class="mc-meta"><span class="ptype need">困っていること</span><span style="font-size:.7rem;color:var(--tl)">'+timeAgo(p.createdAt)+'</span>'+pinned+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
 }
 
 /* ===== できること札（プロフィールに登録する。中身は type='can' の投稿） ===== */
@@ -2692,7 +3061,7 @@ function renderYuiLists(){
     : empty('平時に「できること札」や「ついで」が出ていると、<br>ここに動ける人が並びます。');
   var b=document.getElementById('yui-moyai-list');
   if(b) b.innerHTML = moyai.length ? moyai.map(row).join('')
-    : empty('「おすそわけ」や「貸し借り・共同作業」が出ていると、<br>ここに出せるものが並びます。');
+    : empty('「貸し借り・共同作業」の投稿が出ていると、<br>ここに出せるものが並びます。');
 }
 
 /* ===== コミュニティ：デジタル回覧板 ===== */
@@ -2712,7 +3081,9 @@ function markKaiRead(el){
 
 /* ===== マッチング掲示板（Firestore posts） ===== */
 function submitPost(){
-  var type=curPostType||'share';
+  var type=curPostType||'tsuide';
+  // ゲート：自分が決めていない支え合いがあるあいだ、自分は新しい依頼に進めない
+  if(type==='need' && gateBlocked()){ openGateSheet(); return; }
   var title=((document.getElementById('post-title')||{}).value||'').trim();
   var detail=((document.getElementById('post-detail')||{}).value||'').trim();
   var cats=[].map.call(document.querySelectorAll('#screen-post .cat-opt.on'),function(e){return e.textContent.trim();});
@@ -2760,18 +3131,23 @@ function subscribePosts(){
 function renderLivePosts(){
   var el=document.getElementById('live-posts'); if(!el) return;
   var lc=document.getElementById('live-count');
-  var items=(window.__rawPosts||[]).filter(function(p){ return !(p.uid&&isBlocked(p.uid)); });
+  var all=(window.__rawPosts||[]).filter(function(p){ return !(p.uid&&isBlocked(p.uid)); });
+  // 掲示板に出すのは「ついで」だけ（時間に紐づくものは時系列で読む）。
+  // 「困っていること」は場所に紐づくのでマップ側に出す（2026-08-11決定）。
+  var items=all.filter(function(p){ var t=normType(p.type); return t==='tsuide'||t==='share'; });
+  window.__needPosts=all.filter(function(p){ return normType(p.type)==='need'; });
   window.__posts={};
+  all.forEach(function(p){ window.__posts[p.id]=p; });
   if(!items.length){
-    el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ投稿がありません。<br>右下の＋から最初の投稿をしてみましょう。</div>';
+    el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ「ついで」が出ていません。<br>下の＋から、手を貸せることを伝えてみませんか。</div>';
     if(lc)lc.textContent='0';
-    if(mapInited) updateMapPins();
-    return;
+  }else{
+    var html='';
+    items.forEach(function(p){ html+=renderPostCard(p); });
+    el.innerHTML=html; if(lc) lc.textContent=String(items.length);
   }
-  var html='';
-  items.forEach(function(p){ window.__posts[p.id]=p; html+=renderPostCard(p); });
-  el.innerHTML=html; if(lc) lc.textContent=String(items.length);
-  if(curRegion!=='all'||curCat!=='all'||curType!=='all') applyProvFilters();
+  if(curRegion!=='all'||curCat!=='all'||curArea) applyProvFilters();
+  renderNeedList();
   if(mapInited) updateMapPins();
   var yui=document.getElementById('screen-yui');
   if(yui && yui.classList.contains('active')) renderYuiLists();
@@ -2786,7 +3162,7 @@ function renderPostCard(p){
   var cats=(p.categories||[]).slice(0,3).map(function(c){return '<span style="font-size:.64rem;padding:2px 7px;border-radius:8px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:4px">'+escapeHtml(c)+'</span>';}).join('');
   var locText=[p.pref,p.area].filter(Boolean).join(' ');
   var loc=locText?'<div style="font-size:.7rem;color:var(--lav2);margin-top:5px;display:flex;align-items:center;gap:3px"><svg class="ic" style="width:11px;height:11px"><use href="#i-location"/></svg>'+escapeHtml(locText)+'</div>':'';
-  return '<div class="prov-card" data-live="1" data-type="'+t+'" data-region="'+escapeHtml(p.pref||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'" onclick="openPostDetail(\''+p.id+'\')">'+
+  return '<div class="prov-card" data-live="1" data-type="'+t+'" data-region="'+escapeHtml(p.pref||'')+'" data-area="'+escapeHtml(p.area||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'" onclick="openPostDetail(\''+p.id+'\')">'+
     '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
     '<div class="prov-body">'+
       '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
@@ -2814,7 +3190,6 @@ function openPostDetail(id){
     '</div>';
   }else if(fbReady && fbAuth.currentUser){
     actions='<button class="btn-primary" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button>'+
-      '<div style="margin-top:10px"><button class="btn-secondary" onclick="closeSheet();openThanks(\''+escapeHtml(p.uid||'')+'\',\''+escapeHtml(postAuthor(p))+'\',\''+id+'\')">終わったら、お礼を伝える</button></div>'+
       '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem" onclick="openReport(\'post\',\''+id+'\',\''+escapeHtml(p.uid||'')+'\',\'この投稿\')">この投稿を通報する</button></div>';
   }else{
     actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
@@ -2876,7 +3251,7 @@ var editType='can';
 function editPost(id){
   var p=(window.__posts||{})[id]; if(!p) return;
   editType=normType(p.type);
-  var cards=['share','tsuide','can','need'].map(function(k){
+  var cards=['tsuide','need','can'].map(function(k){
     return '<div class="pt-card'+(editType===k?' on':'')+'" data-type="'+k+'" onclick="setEditType(this,\''+k+'\')"><b>'+POST_TYPES[k].label+'</b></div>';
   }).join('');
   openSheet('投稿を編集',
@@ -3030,6 +3405,8 @@ function openConversation(otherUid,otherName,color){
   av.innerHTML=escapeHtml(initial)+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
   av.className='avatar sm '+color;
   var sb=document.getElementById('chat-safety'); if(sb) sb.style.display='';
+  var tb=document.getElementById('chat-thanks-bar'); if(tb) tb.style.display='flex';
+
   var pr=document.getElementById('chat-presence'); if(pr) pr.style.display='none';
   subscribeChatMessages(cid,initial,color);
   goScreen('chat');
@@ -3284,9 +3661,18 @@ function openBlockList(){
 }
 
 /* チャット右上メニュー：安全ガイド・通報・ブロック */
+/* 会話の相手にお礼を贈る。助けたのがどちらかは当事者にしか分からないので、
+   投稿ではなく会話から贈る（「困っていること」でお礼の向きが逆になる不具合の是正） */
+function thanksToPartner(){
+  if(!(currentConv&&currentConv.otherUid)){ toast('実際の会話から、お礼を贈れます'); return; }
+  openThanks(currentConv.otherUid, currentConv.otherName||'相手の方', '');
+}
 function openChatMenu(){
   var real=!!(currentConv&&currentConv.id);
   var html='<div class="set-section">'+
+    (real?'<div class="set-item" onclick="closeSheet();closeDeal()"><div class="set-icon" style="color:#5a9a6a"><svg class="ic"><use href="#i-check"/></svg></div><div class="set-label">この支え合いは終わりました<div style="font-size:.7rem;color:var(--tl);margin-top:2px">記録して、お礼を伝えるか決めます</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    (real?'<div class="set-item" onclick="closeSheet();thanksToPartner()"><div class="set-icon" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">お礼を伝える</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    (real?'<div class="set-item" onclick="closeSheet();openConcern()"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-info"/></svg></div><div class="set-label">少し気になった<div style="font-size:.7rem;color:var(--tl);margin-top:2px">運営だけが読みます。相手には分かりません</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     '<div class="set-item" onclick="closeSheet();openLegal(\'safety\')"><div class="set-icon"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">安全ガイド</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
   if(real){
     html+='<div class="set-item" onclick="openReport(\'user\',\'\',window.__reportUid,window.__reportName+\' さん\')"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-alert"/></svg></div><div class="set-label">この相手を通報する</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>'+
@@ -3468,8 +3854,8 @@ function openLegal(kind){
       '<button class="btn-primary" style="margin-top:6px" onclick="contactSupport()">運営に相談する</button>');
   }else{
     openSheet('ヘルプセンター',
-      legalQA('どんなサービスですか？','ご近所どうしが顔の見える関係になるための場所です。災害のときだけのものではありません。ふだんの「おすそわけ」や「ついで」から始めて、いざというときに動ける関係を、日常のうちに育てておきます。')+
-      legalQA('「ついで」って何ですか？','「助けます」と手を挙げるのは、少し気が重いものです。そこで、自分の用事のついでにできることを置いておくだけにしました。頼む側も「ついでなら」と言えるので、お互いに気をつかわずにすみます。')+
+      legalQA('どんなサービスですか？','ご近所どうしが顔の見える関係になるための場所です。災害のときだけのものではありません。ふだんの「ついで」や「困っていること」のやりとりから始めて、いざというときに動ける関係を、日常のうちに育てておきます。')+
+      legalQA('「ついで」って何ですか？','手を貸せることを伝えるための投稿です。「助けます」と宣言するのは少し気が重いので、「ついで」という言い方にしました。用事のついででも、空いた時間でもかまいません。頼む側も「ついでなら」と言えるので、お互いに気をつかわずにすみます。')+
       legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。')+
       legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
       legalQA('安全に使うには？','本人確認・通報・ブロックの仕組みがあります。はじめて会う前に「安全ガイド」をご覧ください。')+
@@ -3539,16 +3925,47 @@ function toast(text){
 function makeUserIcon(color,initial){
   return L.divIcon({html:'<div class="user-marker '+(color||'lav')+'">'+initial+'</div>',className:'',iconSize:[42,42],iconAnchor:[21,21]});
 }
-// 投稿IDから決定的な微小ジッター（同一県の投稿が重ならないように）
-function jitter(id){
+// 投稿IDから決定的な微小ジッター。同じ地点の投稿が重ならないように散らす。
+// span＝散らす幅（度）。都道府県中心のときは広く、市区町村のときは狭くする。
+// 市区町村ピンに都道府県用の幅（±0.09度≒10km）を使うと隣の市まで飛ぶため。
+function jitter(id, span){
+  span = span || 0.18;
   var n=0; id=id||''; for(var i=0;i<id.length;i++) n=(n*31+id.charCodeAt(i))>>>0;
-  return [((n%1000)/1000-0.5)*0.18, (((n>>>10)%1000)/1000-0.5)*0.18];
+  // ハッシュを撹拌する。短いIDだと隣り合う値になり、散らし幅が小さいときに
+  // ピンがぴったり重なってしまうため。
+  n=(n^(n>>>13))>>>0; n=(n*0x5bd1e995)>>>0; n=(n^(n>>>15))>>>0;
+  return [((n%1000)/1000-0.5)*span, (((n>>>10)%1000)/1000-0.5)*span];
 }
 function prefLatLng(pref){ return PREF_LL[pref]||null; }
 
+/* 市区町村の代表点。都道府県の中心だけだと「大阪府」が一つの点になってしまい、
+   ご近所サービスとして意味をなさないため、実証地とその周辺を市区町村まで持つ。
+   （表示はあくまで市区町村の中心あたり＝個人宅は特定できない粒度） */
+var AREA_LL={
+  "高槻市":[34.8465,135.6172], "芦屋市":[34.7280,135.3030], "茨木市":[34.8163,135.5686],
+  "吹田市":[34.7614,135.5158], "枚方市":[34.8143,135.6508], "摂津市":[34.7770,135.5620],
+  "島本町":[34.8790,135.6690], "豊中市":[34.7816,135.4697], "箕面市":[34.8268,135.4720],
+  "大阪市":[34.6937,135.5023], "堺市":[34.5733,135.4830], "西宮市":[34.7376,135.3416],
+  "尼崎市":[34.7333,135.4064], "宝塚市":[34.7995,135.3600], "神戸市":[34.6901,135.1955],
+  "京都市":[35.0116,135.7681], "奈良市":[34.6851,135.8048]
+};
+/* 投稿の位置＝エリア文字列に市区町村名が含まれていればそこ、無ければ都道府県の中心 */
+function postLatLng(p){
+  var a=(p&&p.area)||'';
+  for(var k in AREA_LL){ if(a.indexOf(k)>=0) return AREA_LL[k]; }
+  return prefLatLng(p&&p.pref);
+}
+/* その投稿の位置が市区町村まで分かっているか（＝ピンをどれだけ散らしてよいか） */
+function isCityLevel(p){
+  var a=(p&&p.area)||'';
+  for(var k in AREA_LL){ if(a.indexOf(k)>=0) return true; }
+  return false;
+}
+
 var postMarkers=[];
-/* 縁側マップ：おすそわけ・ついで・できること札・困りごとを、おおまかな位置に表示する
-   （個人宅は出さない＝戦略指針§5-1「縁側マップ」・ルールブック§5） */
+/* 困っていることマップ：助けを求める投稿だけを、おおまかな位置に表示する。
+   ついで（時間に紐づく）は掲示板側、困っていること（場所に紐づく）は地図側という分担。
+   個人宅は出さない＝戦略指針§5-1・ルールブック§5 */
 function updateMapPins(){
   if(!mapInstance) return;
   postMarkers.forEach(function(m){ mapInstance.removeLayer(m); });
@@ -3556,21 +3973,22 @@ function updateMapPins(){
   var posts=window.__posts||{}, bounds=[];
   Object.keys(posts).forEach(function(k){
     var p=posts[k];
-    var t=normType(p.type);
-    if(curMapType!=='all' && t!==curMapType) return;
-    var ll=prefLatLng(p.pref); if(!ll) return;  // 地域未設定の投稿はピンにしない（リストには出る）
-    // 都道府県の中心＋決定的なゆらぎ＝住まいを特定させない「ぼかし」表示
-    var j=jitter(p.id), lat=ll[0]+j[0], lng=ll[1]+j[1];
+    // 地図に出すのは「困っていること」だけ（2026-08-11決定）
+    if(normType(p.type)!=='need') return;
+    var ll=postLatLng(p); if(!ll) return;  // 地域未設定の投稿はピンにしない（リストには出る）
+    // 中心＋決定的なゆらぎ＝住まいを特定させない「ぼかし」表示。
+    // 市区町村まで分かっていれば±約0.3km、都道府県だけなら±約10kmに散らす。
+    var j=jitter(p.id, isCityLevel(p)?0.006:0.18), lat=ll[0]+j[0], lng=ll[1]+j[1];
     var initial=(postAuthor(p)||p.title||'?').charAt(0);
-    var mk=L.marker([lat,lng],{icon:makeUserIcon(typeColor(t),initial)}).addTo(mapInstance)
+    var mk=L.marker([lat,lng],{icon:makeUserIcon('pink',initial)}).addTo(mapInstance)
       .on('click',(function(id){return function(){openPostDetail(id);};})(p.id));
     postMarkers.push(mk); bounds.push([lat,lng]);
   });
   // 実アカウントのみ：投稿があれば全体が収まるようズーム、無ければ空表示
   if(currentProfile && currentProfile.uid){
     var me=document.getElementById('map-empty');
-    if(bounds.length){ if(me) me.style.display='none'; try{mapInstance.fitBounds(bounds,{padding:[50,50],maxZoom:11});}catch(e){} }
-    else if(me){ me.style.display=''; }
+    if(bounds.length){ try{mapInstance.fitBounds(bounds,{padding:[50,50],maxZoom:14});}catch(e){} }
+    if(me) me.style.display=(window.__needPosts||[]).length?'none':'';
   }
 }
 
@@ -3651,6 +4069,8 @@ if(fbReady){
       subscribePosts();
       subscribeConversations();
       subscribeThanks();
+      subscribeDeals();
+      subscribeDisaster();
       if(typeof applyUserToUI==='function') applyUserToUI();
       var active=document.querySelector('.screen.active');
       if(active && active.id==='screen-login'){
