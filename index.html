@@ -769,24 +769,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
-  <div class="entry-row">
-    <div class="entry-btn" onclick="openPostWith('share')">
-      <div class="entry-ic" style="background:rgba(200,184,122,.22);color:#8a7530"><svg class="ic"><use href="#i-gift"/></svg></div>
-      <div class="entry-lbl">おすそわけ</div><div class="entry-sub">余ったものを</div>
-    </div>
-    <div class="entry-btn" onclick="openPostWith('tsuide')">
-      <div class="entry-ic" style="background:rgba(158,202,216,.26);color:#3f7f92"><svg class="ic"><use href="#i-car"/></svg></div>
-      <div class="entry-lbl">ついで</div><div class="entry-sub">用事のついでに</div>
-    </div>
-    <div class="entry-btn" onclick="openPostWith('need')">
-      <div class="entry-ic" style="background:rgba(232,180,184,.26);color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div>
-      <div class="entry-lbl">困りごと</div><div class="entry-sub">助けてほしい</div>
-    </div>
-  </div>
-
   <div class="main-tabs">
-    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-home"/></svg>縁側</button>
-    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>縁側マップ</button>
+    <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-home"/></svg>ご近所</button>
+    <button class="main-tab" onclick="switchMainTab(this,'map')"><svg class="ic"><use href="#i-map"/></svg>ご近所マップ</button>
   </div>
 
   <!-- LIST PANEL -->
@@ -795,14 +780,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="filter-bar">
       <div class="fb-search">
         <svg class="ic"><use href="#i-search"/></svg>
-        <input type="text" placeholder="おすそわけ・ついで・困りごとを探す">
+        <input type="text" placeholder="投稿をさがす">
       </div>
       <button class="fb-more" id="fb-more" onclick="openFilterSheet()"><svg class="ic" style="font-size:.9em"><use href="#i-filter"/></svg><span id="fb-more-label">絞り込み</span></button>
     </div>
     <select id="region-select" onchange="filterRegionSelect(this.value)" style="display:none"><option value="all">すべての地域（全国）</option></select>
 
     <!-- みんなの投稿（Firestoreリアルタイム） -->
-    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>縁側のようす <span class="prov-count" id="live-count">0</span></div>
+    <div class="prov-group-h"><span class="online-dot-h" style="background:var(--lav2)"></span>ご近所のようす <span class="prov-count" id="live-count">0</span></div>
     <div class="prov-list" id="live-posts">
       <div style="padding:16px;text-align:center;color:var(--tl);font-size:.8rem;line-height:1.7">まだ何もありません。<br>「おすそわけ」から始めてみませんか。</div>
     </div>
@@ -988,7 +973,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="filter-chip" onclick="filterMapType(this,'share')">おすそわけ</div>
         <div class="filter-chip" onclick="filterMapType(this,'tsuide')">ついで</div>
         <div class="filter-chip" onclick="filterMapType(this,'can')">できること</div>
-        <div class="filter-chip" onclick="filterMapType(this,'need')">困りごと</div>
+        <div class="filter-chip" onclick="filterMapType(this,'need')">困っていること</div>
       </div>
     </div>
     <div class="map-note">個人のお住まいは表示しません。町丁目までのおおまかな位置と、公民館・お店などの拠点だけを出しています。<br>助けを求める側は名前を伏せられます。応える側だけが顔を見せます。</div>
@@ -1034,14 +1019,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <!-- POST -->
 <div class="screen no-nav" id="screen-post">
   <div class="app-header">
-    <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>縁側に出す</div>
+    <div class="app-h-back" onclick="navTo('main')"><svg class="ic"><use href="#i-back"/></svg>投稿する</div>
   </div>
   <div class="post-screen">
-    <div class="pt-choice" id="pt-choice">
-      <div class="pt-card" data-type="share" onclick="setPostType(this,'share')"><b>おすそわけ</b><small>余ったもの・いただきものを分ける</small></div>
+    <div class="pt-choice" id="pt-choice" style="grid-template-columns:1fr">
+      <div class="pt-card on" data-type="share" onclick="setPostType(this,'share')"><b>おすそわけ</b><small>余ったもの・いただきものを分ける</small></div>
       <div class="pt-card" data-type="tsuide" onclick="setPostType(this,'tsuide')"><b>ついで</b><small>自分の用事のついでにできること</small></div>
-      <div class="pt-card on" data-type="can" onclick="setPostType(this,'can')"><b>できること札</b><small>ふだんからできること。縁側マップに並びます</small></div>
-      <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>困りごと</b><small>助けてほしいことを書く</small></div>
+      <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>困っていること</b><small>助けてほしいことを書く</small></div>
     </div>
     <div id="pt-hint" style="font-size:.74rem;color:var(--lav3);line-height:1.8;background:rgba(184,175,214,.1);border-radius:12px;padding:11px 14px;margin-bottom:20px"></div>
     <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物のついでに寄れます"></div>
@@ -1086,7 +1070,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="photo-upload-text">タップして写真を追加<br><small>支援の質を担保するため、状況がわかる写真の提示を推奨</small></div>
       </div>
     </div>
-    <button class="btn-primary" onclick="submitPost()" style="margin-top:8px" id="post-submit-btn">縁側に出す</button>
+    <button class="btn-primary" onclick="submitPost()" style="margin-top:8px" id="post-submit-btn">投稿する</button>
   </div>
 </div>
 
@@ -1096,7 +1080,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="app-h-logo"><span class="dot" style="background:var(--gold)"></span>結モード</div>
     <div class="app-h-actions"><button class="icon-btn" onclick="exitYuiMode()"><svg class="ic"><use href="#i-close"/></svg></button></div>
   </div>
-  <div class="yui-banner"><svg class="ic"><use href="#i-shield"/></svg>災害時の画面に切り替わっています。ふだんの縁側は下のボタンから戻れます。</div>
+  <div class="yui-banner"><svg class="ic"><use href="#i-shield"/></svg>災害時の画面に切り替わっています。いつもの画面には下のボタンから戻れます。</div>
   <div style="padding:18px 18px 0">
     <div style="font-family:'Noto Serif JP',serif;font-size:1.05rem;font-weight:500">まず、あなたの無事を知らせましょう</div>
     <div style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-top:5px">ご近所の「できること札」を出していた人に届きます。</div>
@@ -1114,13 +1098,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   </div>
 
   <div class="sec-block">
-    <div class="sec-h"><div class="sec-h-title">もやい（出せるもの・使える場所）</div></div>
+    <div class="sec-h"><div class="sec-h-title">出せるもの・使える場所</div></div>
     <div style="font-size:.74rem;color:var(--tl);line-height:1.8;padding:0 18px 10px">ふだん共有していたものが、そのまま供出できる資源になります。</div>
     <div class="prov-list" id="yui-moyai-list"></div>
   </div>
 
   <div style="padding:8px 18px 28px">
-    <button class="btn-secondary" onclick="exitYuiMode()">ふだんの縁側に戻る</button>
+    <button class="btn-secondary" onclick="exitYuiMode()">いつもの画面に戻る</button>
   </div>
 </div>
 
@@ -1279,9 +1263,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <!-- REWARDS -->
 <div class="screen" id="screen-rewards">
   <div class="app-header">
-    <div class="app-h-logo"><span class="dot"></span>＆ポイント</div>
+    <div class="app-h-back" onclick="navTo('profile')"><svg class="ic"><use href="#i-back"/></svg>＆ポイント</div>
     <div class="app-h-actions">
-      <button class="icon-btn" onclick="navTo('notif')"><svg class="ic"><use href="#i-bell"/></svg><span class="badge"></span></button>
       <button class="icon-btn" onclick="openHistory('use')"><svg class="ic"><use href="#i-info"/></svg></button>
     </div>
   </div>
@@ -1292,7 +1275,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="rew-balance-sub" id="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
     </div>
     <div style="background:rgba(184,175,214,.1);border:1px solid rgba(184,175,214,.22);border-radius:14px;padding:14px 16px;margin-bottom:16px">
-      <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">町の講（こう）</div>
+      <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">町のつみたて</div>
       <div style="font-size:.74rem;color:var(--tl);line-height:1.85">手渡しで動いた＆ポイントの一部は、町ごとの積み立てに貯まります。貯まると、結の日や防災訓練、子どもの行事の原資になります。<br>個人と個人の貸し借りが、そのまま町の資産に変わっていきます。</div>
       <div style="margin-top:10px;display:flex;align-items:center;gap:9px">
         <div style="flex:1;height:6px;background:rgba(184,175,214,.2);border-radius:3px;overflow:hidden"><div style="height:100%;width:42%;background:linear-gradient(to right,var(--lav),var(--gold))"></div></div>
@@ -1569,9 +1552,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="qa-illust"><svg class="ic"><use href="#i-trophy"/></svg></div>
       <div class="qa-label">支え合い</div>
     </div>
-    <div class="qa" onclick="navTo('comm')">
-      <div class="qa-illust"><svg class="ic"><use href="#i-globe"/></svg></div>
-      <div class="qa-label">コミュニティ</div>
+    <div class="qa" onclick="navTo('rewards')">
+      <div class="qa-illust"><svg class="ic"><use href="#i-gift"/></svg></div>
+      <div class="qa-label">＆ポイント</div>
     </div>
     <div class="qa" onclick="openHistory('fav')">
       <div class="qa-illust"><svg class="ic"><use href="#i-bookmark"/></svg></div>
@@ -1579,11 +1562,21 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
+  <!-- できること札（ふだんからできること） -->
+  <div class="set-section" style="margin:14px 18px 0;padding:16px 18px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="font-size:.92rem;font-weight:600">できること札</div>
+      <button class="kai-read" style="margin:0;padding:6px 13px;font-size:.74rem" onclick="openAddCard()">＋ 追加</button>
+    </div>
+    <div style="font-size:.72rem;color:var(--tl);line-height:1.85;margin-top:6px">ふだんからできることを書いておくと、ご近所マップに出ます。災害のときは、そのまま「いま動ける人」の一覧になります。</div>
+    <div id="my-cards" style="margin-top:10px"></div>
+  </div>
+
   <!-- 自分の投稿の管理 -->
   <div class="set-section" style="margin:14px 18px 0">
     <div class="set-item" onclick="openMyPosts()">
       <div class="set-icon"><svg class="ic"><use href="#i-edit"/></svg></div>
-      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">おすそわけ・ついで・できること札・困りごとを編集／削除</div></div>
+      <div class="set-label">自分の投稿を管理<div style="font-size:.7rem;color:var(--tl);margin-top:2px">おすそわけ・ついで・困っていることを編集／削除</div></div>
       <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
     </div>
   </div>
@@ -1596,7 +1589,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="feed-item">
       <div class="feed-h">
         <div class="feed-dot"></div>
-        <div class="feed-text"><b>高橋さん</b>があなたを評価しました</div>
+        <div class="feed-text"><b>高橋さん</b>から感謝が届きました</div>
         <div class="feed-time">2時間前</div>
       </div>
       <div class="feed-text" style="margin-left:18px">「丁寧で安心できる方でした。また是非お願いしたいです。」</div>
@@ -1605,7 +1598,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="feed-item">
       <div class="feed-h">
         <div class="feed-dot" style="background:var(--lav)"></div>
-        <div class="feed-text"><b>支援実績バッジ</b>「継続支援8ヶ月」を獲得</div>
+        <div class="feed-text"><b>支え合いの記録</b>「継続8ヶ月」が付きました</div>
         <div class="feed-time">昨日</div>
       </div>
     </div>
@@ -1647,18 +1640,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="cert-body"><div class="cert-title">初回支援完了</div><div class="cert-meta">2025.09.15 ／ You&amp;i Space 発行</div></div>
         <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
-    </div>
-  </div>
-  <!-- ＆ポイント交換への大きな導線 -->
-  <div style="padding:18px;padding-top:8px">
-    <div onclick="navTo('rewards')" style="background:linear-gradient(135deg,#fceea8,#e8c87a,#d9a55c);color:#5c4520;padding:18px 20px;border-radius:18px;cursor:pointer;display:flex;align-items:center;gap:14px;box-shadow:0 6px 20px rgba(200,168,90,.25);position:relative;overflow:hidden">
-      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(255,255,255,.4),transparent 70%);border-radius:50%"></div>
-      <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1"><svg class="ic" style="width:24px;height:24px"><use href="#i-gift"/></svg></div>
-      <div style="flex:1;position:relative;z-index:1">
-        <div style="font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:500">＆ポイントを使う</div>
-        <div style="font-size:.74rem;opacity:.78;margin-top:2px">クーポン・寄付・サービス・証明書発行</div>
-      </div>
-      <svg class="ic" style="position:relative;z-index:1"><use href="#i-chevron-r"/></svg>
     </div>
   </div>
 </div>
@@ -1830,9 +1811,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav" style="display:none">
-  <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>縁側</span></button>
+  <button class="nav-item active" data-screen="main" onclick="navTo('main')"><svg class="ni-icon ic"><use href="#i-home"/></svg><span>ホーム</span></button>
   <button class="nav-item" data-screen="msg" onclick="navTo('msg')"><svg class="ni-icon ic"><use href="#i-chat"/></svg><span>メッセージ</span></button>
-  <button class="nav-item" data-screen="rewards" onclick="navTo('rewards')"><svg class="ni-icon ic"><use href="#i-gift"/></svg><span>＆ポイント</span></button>
+  <button class="nav-fab" onclick="openPostWith('share')" title="投稿する"><svg class="ic"><use href="#i-plus"/></svg></button>
+  <button class="nav-item" data-screen="comm" onclick="navTo('comm')"><svg class="ni-icon ic"><use href="#i-globe"/></svg><span>コミュニティ</span></button>
   <button class="nav-item" data-screen="profile" onclick="navTo('profile')"><svg class="ni-icon ic"><use href="#i-user"/></svg><span>マイページ</span></button>
 </div>
 
@@ -2003,10 +1985,13 @@ function navTo(name){
   const showNav=!target.classList.contains('no-nav');
   document.getElementById('bottom-nav').style.display=showNav?'flex':'none';
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const ni=document.querySelector('.nav-item[data-screen="'+name+'"]');
+  // ＆ポイントはマイページの下位ページ扱い（下タブではマイページを選択状態に）
+  const navKey=(name==='rewards')?'profile':name;
+  const ni=document.querySelector('.nav-item[data-screen="'+navKey+'"]');
   if(ni) ni.classList.add('active');
   if(name==='yui'){ renderYuiLists(); }
-  if(name==='post'){ setPostType(null,curPostType||'can'); }
+  if(name==='profile'){ renderMyCards(); }
+  if(name==='post'){ setPostType(null,curPostType||'share'); }
   if(name==='main'){
     // Re-init map if user is on map tab
     const mapPanel=document.getElementById('main-panel-map');
@@ -2306,7 +2291,7 @@ function filterCat(el,cat){
 
 /* ===== 絞り込みシート（地域・カテゴリをひとまとめにして、画面のボタンを減らす） ===== */
 var CAT_FILTERS=[['all','すべて'],['elder','老老介護'],['parent','ひとり親'],['young','ヤングケアラー'],['daily','日常支援']];
-var TYPE_FILTERS=[['all','すべて'],['share','おすそわけ'],['tsuide','ついで'],['can','できること札'],['need','困りごと']];
+var TYPE_FILTERS=[['all','すべて'],['share','おすそわけ'],['tsuide','ついで'],['can','できること札'],['need','困っていること']];
 var fsCat='all', fsPref='all', fsType='all';
 function openFilterSheet(){
   fsCat=curCat; fsPref=curRegion; fsType=curType;
@@ -2439,11 +2424,11 @@ var POST_TYPES={
           hint:'「助けます」ではなく「ついで」。自分の予定を置いておくだけなので、気負わずに出せます。',
           ph:'例：今日15時ごろスーパーに行きます', btn:'ついでを出す'},
   can   :{label:'できること札', cls:'can',  color:'green',
-          hint:'ふだんからできることを、札にして置いておきます。縁側マップに並び、災害のときはそのまま「いま動ける人」の一覧になります。',
+          hint:'ふだんからできることを書いておきます。ご近所マップに出て、災害のときはそのまま「いま動ける人」の一覧になります。',
           ph:'例：車を出せます／スマホの相談にのれます', btn:'できること札を出す'},
-  need  :{label:'困りごと',    cls:'need',  color:'pink',
+  need  :{label:'困っていること', cls:'need', color:'pink',
           hint:'名前を伏せて出すこともできます。＆ポイントの残高が0でも、遠慮なく頼んで大丈夫です。',
-          ph:'例：ゴミ出しを手伝ってくれる方を探しています', btn:'困りごとを出す'}
+          ph:'例：ゴミ出しを手伝ってくれる方を探しています', btn:'投稿する'}
 };
 /* 旧データ（provide／receive）を新しい4分類に読み替える */
 /* デモ用：0-100の目安値を、水引の段階名に読み替える（生の数字は出さない） */
@@ -2455,12 +2440,12 @@ function typeColor(t){ return typeInfo(t).color; }
 /* 困りごとで「名前を伏せる」が選ばれていたら、ご近所の方として表示（非対称の匿名性） */
 function postAuthor(p){ return (p&&p.anon)?'ご近所の方':((p&&p.authorName)||'利用者'); }
 
-var curPostType='can';
+var curPostType='share';
 function setPostType(el,t){
   curPostType=t;
   var cards=document.querySelectorAll('#pt-choice .pt-card');
   for(var i=0;i<cards.length;i++){ cards[i].classList.toggle('on', cards[i].getAttribute('data-type')===t); }
-  var info=POST_TYPES[t]||POST_TYPES.can;
+  var info=POST_TYPES[t]||POST_TYPES.share;
   var h=document.getElementById('pt-hint'); if(h) h.textContent=info.hint;
   var ti=document.getElementById('post-title'); if(ti) ti.placeholder=info.ph;
   var b=document.getElementById('post-submit-btn'); if(b) b.textContent=info.btn;
@@ -2611,18 +2596,74 @@ function sendThanks(){
   }).catch(function(e){ console.warn('thanks fail',e); toast(authErrMsg(e)); });
 }
 
+/* ===== できること札（プロフィールに登録する。中身は type='can' の投稿） ===== */
+function myCardList(){
+  var me=(fbReady&&fbAuth.currentUser)?fbAuth.currentUser.uid:null;
+  if(!me) return [];
+  var all=window.__posts||{};
+  return Object.keys(all).map(function(k){return all[k];})
+    .filter(function(p){ return normType(p.type)==='can' && p.uid===me; });
+}
+function renderMyCards(){
+  var el=document.getElementById('my-cards'); if(!el) return;
+  var mine=myCardList();
+  if(!mine.length){
+    el.innerHTML='<div style="font-size:.8rem;color:var(--tl);line-height:1.9;padding:6px 0">まだ登録がありません。<br><span style="font-size:.74rem">例：車を出せます／スマホの相談にのれます／庭仕事ができます／子どもを見ていられます</span></div>';
+    return;
+  }
+  el.innerHTML=mine.map(function(p){
+    var loc=[p.pref,p.area].filter(Boolean).join(' ');
+    return '<div style="display:flex;align-items:center;gap:7px;padding:10px 0;border-top:1px solid rgba(184,175,214,.14)">'+
+      '<div style="flex:1;min-width:0"><div style="font-size:.86rem;font-weight:500">'+escapeHtml(p.title||'')+'</div>'+
+      (loc?'<div style="font-size:.7rem;color:var(--tl);margin-top:2px">'+escapeHtml(loc)+'</div>':'')+'</div>'+
+      '<button class="kai-read" style="margin:0;padding:5px 11px;font-size:.7rem" onclick="editPost(\''+p.id+'\')">編集</button>'+
+      '<button class="kai-read" style="margin:0;padding:5px 11px;font-size:.7rem;color:#c07880;border-color:rgba(232,180,184,.45)" onclick="confirmDeletePost(\''+p.id+'\')">削除</button>'+
+    '</div>';
+  }).join('');
+}
+function openAddCard(){
+  if(!fbReady||!fbAuth.currentUser){ toast('登録にはログインが必要です'); return; }
+  openSheet('できること札を追加',
+    '<div style="font-size:.8rem;color:var(--tl);line-height:1.9;margin-bottom:16px">ふだんからできることを、ひとつずつ短く書きます。特別なことでなくて大丈夫です。</div>'+
+    '<div class="input-group"><label class="input-label">できること</label><input id="ac-title" class="input" maxlength="60" placeholder="例：車を出せます"></div>'+
+    '<div class="input-group"><label class="input-label">地域（任意）</label><select id="ac-pref" class="input" style="font-family:inherit">'+prefOptions('')+'</select></div>'+
+    '<div class="input-group"><label class="input-label">市区町村・エリア（任意）</label><input id="ac-area" class="input" maxlength="40" placeholder="例：高槻市 ○○町（番地は不要）"></div>'+
+    '<div class="input-group"><label class="input-label">ひとこと（任意）</label><textarea id="ac-detail" class="input" rows="3" maxlength="800" style="resize:vertical;font-family:inherit" placeholder="動ける曜日や時間帯などがあれば"></textarea></div>'+
+    '<button class="btn-primary" onclick="saveCard()">登録する</button>');
+}
+function saveCard(){
+  var title=((document.getElementById('ac-title')||{}).value||'').trim();
+  var pref=((document.getElementById('ac-pref')||{}).value||'');
+  var area=((document.getElementById('ac-area')||{}).value||'').trim();
+  var detail=((document.getElementById('ac-detail')||{}).value||'').trim();
+  if(!title){ toast('できることを入力してください'); return; }
+  if(tooLong(title,'title','できること'))return;
+  if(tooLong(area,'area','エリア'))return;
+  if(tooLong(detail,'detail','ひとこと'))return;
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(busy('card',3000))return;
+  var u=getStoredUser()||{};
+  fbDb.collection('posts').add({
+    type:'can', title:title, detail:detail, categories:[], pref:pref, area:area, when:'', anon:false,
+    uid:fbAuth.currentUser.uid,
+    authorName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){ closeSheet(); toast('できること札を登録しました'); })
+   .catch(function(e){ console.warn('card fail',e); toast(authErrMsg(e)); });
+}
+
 /* ===== 結モード（災害時）：平時の札が、そのまま資源の台帳になる ===== */
 function enterYuiMode(){
   openSheet('結モードに切り替えますか',
-    '<p style="font-size:.88rem;color:var(--ink);line-height:1.95;margin-bottom:16px">災害が起きたときの画面です。安否をワンタップで知らせ、ふだん出されていた「できること札」と「もやい（共有できるもの）」が、そのまま動ける人・出せるものの一覧に変わります。</p>'+
-    '<p style="font-size:.76rem;color:var(--tl);line-height:1.85;margin-bottom:18px">実際の運用では震度5弱以上などで自動的に切り替わる想定です（実証では手動）。いつでもふだんの縁側に戻れます。</p>'+
+    '<p style="font-size:.88rem;color:var(--ink);line-height:1.95;margin-bottom:16px">災害が起きたときの画面です。安否をワンタップで知らせ、ふだん登録されていた「できること札」と、みんなで共有しているものが、そのまま動ける人・出せるものの一覧に変わります。</p>'+
+    '<p style="font-size:.76rem;color:var(--tl);line-height:1.85;margin-bottom:18px">実際の運用では震度5弱以上などで自動的に切り替わる想定です（実証では手動）。いつでもいつもの画面に戻れます。</p>'+
     '<div style="display:flex;gap:10px">'+
       '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">やめる</button>'+
       '<button class="btn-primary" style="flex:1" onclick="closeSheet();doEnterYui()">切り替える</button>'+
     '</div>');
 }
 function doEnterYui(){ renderYuiLists(); navTo('yui'); toast('結モードに切り替えました'); }
-function exitYuiMode(){ navTo('main'); toast('ふだんの縁側に戻りました'); }
+function exitYuiMode(){ navTo('main'); toast('いつもの画面に戻りました'); }
 function reportSafety(kind){
   var el=document.getElementById('yui-safety-state'); if(!el) return;
   el.innerHTML = (kind==='ok')
@@ -2671,7 +2712,7 @@ function markKaiRead(el){
 
 /* ===== マッチング掲示板（Firestore posts） ===== */
 function submitPost(){
-  var type=curPostType||'can';
+  var type=curPostType||'share';
   var title=((document.getElementById('post-title')||{}).value||'').trim();
   var detail=((document.getElementById('post-detail')||{}).value||'').trim();
   var cats=[].map.call(document.querySelectorAll('#screen-post .cat-opt.on'),function(e){return e.textContent.trim();});
@@ -2698,7 +2739,7 @@ function submitPost(){
     var pp=document.getElementById('post-pref'); if(pp)pp.value='';
     var pw=document.getElementById('post-when'); if(pw)pw.value='';
     var pan=document.getElementById('post-anon'); if(pan)pan.checked=false;
-    toast('縁側に出しました');
+    toast('投稿しました');
     setTimeout(()=>navTo('main'),700);
   }).catch(function(e){toast(authErrMsg(e));});
 }
@@ -2734,6 +2775,7 @@ function renderLivePosts(){
   if(mapInited) updateMapPins();
   var yui=document.getElementById('screen-yui');
   if(yui && yui.classList.contains('active')) renderYuiLists();
+  renderMyCards();
 }
 function renderPostCard(p){
   var t=normType(p.type);
@@ -2802,7 +2844,8 @@ function openMyPosts(){
   if(!fbReady||!fbAuth.currentUser){ toast('投稿の管理にはログインが必要です'); return; }
   var me=fbAuth.currentUser.uid;
   var all=window.__posts||{};
-  var mine=Object.keys(all).map(function(k){return all[k];}).filter(function(p){return p.uid===me;});
+  var mine=Object.keys(all).map(function(k){return all[k];})
+    .filter(function(p){ return p.uid===me && normType(p.type)!=='can'; });
   mine.sort(function(a,b){
     var ta=(a.createdAt&&a.createdAt.toDate)?a.createdAt.toDate().getTime():0;
     var tb=(b.createdAt&&b.createdAt.toDate)?b.createdAt.toDate().getTime():0;
@@ -2810,7 +2853,7 @@ function openMyPosts(){
   });
   var body;
   if(!mine.length){
-    body='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">まだ投稿がありません。<br>縁側の「おすそわけ」「ついで」「困りごと」から出せます。</div>';
+    body='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">まだ投稿がありません。<br>下の＋ボタンから投稿できます。</div>';
   }else{
     body=mine.map(function(p){
       var badge=typeBadge(p.type);
@@ -3568,7 +3611,7 @@ function initMap(){
       {lat:34.8501,lng:135.6238,t:'薬局',d:'見守りの拠点として協力いただいています。'}
     ].forEach(function(h){
       L.marker([h.lat,h.lng],{icon:hubIcon(h.t)}).addTo(mapInstance)
-        .on('click',(function(hh){return function(){ openSheet(hh.t,'<div style="font-size:.88rem;line-height:1.9;color:var(--ink)">'+hh.d+'</div><div style="font-size:.76rem;color:var(--tl);line-height:1.85;margin-top:12px">縁側マップに出るのは、こうした公共の拠点と、町丁目までのおおまかな位置だけです。個人のお住まいは表示しません。</div>'); };})(h));
+        .on('click',(function(hh){return function(){ openSheet(hh.t,'<div style="font-size:.88rem;line-height:1.9;color:var(--ink)">'+hh.d+'</div><div style="font-size:.76rem;color:var(--tl);line-height:1.85;margin-top:12px">地図に出るのは、こうした公共の拠点と、町丁目までのおおまかな位置だけです。個人のお住まいは表示しません。</div>'); };})(h));
     });
   }
   updateMapPins();
