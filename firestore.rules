@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// You&i Space — Firestore セキュリティルール（アプリ v0.5.1 対応。v0.5.0 のアプリとも両立）
+// You&i Space — Firestore セキュリティルール（アプリ v0.5.2 対応。v0.5.0／v0.5.1 のアプリとも両立）
 // ※ このファイルは記録用。実際の反映は Firebase コンソール
 //   （プロジェクト you-i-space → Firestore Database → ルール）に
 //   丸ごと貼り付けて「公開」してください。
@@ -23,7 +23,8 @@ service cloud.firestore {
     function convMembers(cid) { return cid.split('_'); }
 
     // ── ユーザープロフィール ──
-    // 読めるのは本人だけ（メールアドレス・ブロックリストを含むため）。
+    // 読めるのは本人だけ（本名・メールアドレス・ブロックリストを含むため）。
+    // name＝本名（本人と運営だけ）、nickname＝ほかの人に表示する名前。
     // 本人が変えられるのは下の項目だけ。「本人確認済み（verified）」は運営だけが付ける。
     // ＆ポイントは本人の操作では減る（手渡す）ことしかできない。
     match /users/{uid} {
@@ -32,14 +33,16 @@ service cloud.firestore {
 
       allow read: if isMe(uid);
       allow create: if isMe(uid)
-        && incoming().keys().hasOnly(['type', 'name', 'email', 'createdAt', 'orgName', 'bio'])
+        && incoming().keys().hasOnly(['type', 'name', 'nickname', 'email', 'createdAt', 'orgName', 'bio'])
         && incoming().type in ['personal', 'org', 'individual']
         && str(incoming().name, 40) && incoming().name.size() > 0
+        && (!('nickname' in incoming()) || (str(incoming().nickname, 20) && incoming().nickname.size() > 0))
         && optStr('orgName', 60) && optStr('bio', 200) && optStr('email', 254);
       allow update: if isMe(uid)
-        && changed().hasOnly(['name', 'bio', 'verifyRequested', 'verifyRequestedAt',
+        && changed().hasOnly(['name', 'nickname', 'bio', 'verifyRequested', 'verifyRequestedAt',
                               'gateOverrideUntil', 'blocked', 'points'])
         && ifChanged('name', str(incoming().name, 40) && incoming().name.size() > 0)
+        && ifChanged('nickname', str(incoming().nickname, 20) && incoming().nickname.size() > 0)
         && ifChanged('bio', str(incoming().bio, 200))
         && ifChanged('verifyRequested', incoming().verifyRequested == true)
         && ifChanged('verifyRequestedAt', stampedNow('verifyRequestedAt'))
@@ -76,8 +79,12 @@ service cloud.firestore {
         && stampedNow('createdAt');
       allow update: if signedIn()
         && resource.data.uid == request.auth.uid
-        && incoming().diff(resource.data).affectedKeys().hasOnly(['type', 'title', 'detail', 'pref', 'area'])
-        && postFieldsOk(incoming());
+        && ((incoming().diff(resource.data).affectedKeys().hasOnly(['type', 'title', 'detail', 'pref', 'area'])
+             && postFieldsOk(incoming()))
+            // 表示名（ニックネーム）の変更をこれまでの投稿にそろえる。名前を伏せた投稿は空にしかできない
+            || (incoming().diff(resource.data).affectedKeys().hasOnly(['authorName'])
+                && str(incoming().authorName, 60)
+                && (resource.data.get('anon', false) != true || incoming().authorName == '')));
       allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 

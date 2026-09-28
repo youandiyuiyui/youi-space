@@ -98,6 +98,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .input-group{margin-bottom:14px;text-align:left}
 .input-label{display:block;font-size:.7rem;letter-spacing:.05em;color:var(--tl);margin-bottom:7px}
 .input{width:100%;padding:13px 15px;border:1px solid rgba(184,175,214,.3);border-radius:12px;background:rgba(255,255,255,.8);font-family:inherit;font-size:.88rem;color:var(--ink);transition:all .2s}
+.input-note{font-size:.68rem;color:var(--tl);line-height:1.7;margin-top:5px;text-align:left}
 .input:focus{outline:none;border-color:var(--lav);background:#fff;box-shadow:0 0 0 3px rgba(184,175,214,.15)}
 .login-divider{display:flex;align-items:center;gap:12px;margin:18px 0;font-size:.7rem;color:var(--ttl)}
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(184,175,214,.2)}
@@ -738,9 +739,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <input type="text" class="input" id="su-orgname" maxlength="60" placeholder="例：認定NPO法人 ○○の会">
     </div>
 
+    <div class="input-group" id="su-nick-field">
+      <label class="input-label">ニックネーム（表示名）</label>
+      <input type="text" class="input" id="su-nick" maxlength="20" placeholder="例：たろう／高槻のたろう" autocomplete="nickname">
+      <div class="input-note">投稿やメッセージで、ほかの人に表示される名前です。同じ名前の人がいても大丈夫です。</div>
+    </div>
+
     <div class="input-group">
-      <label class="input-label" id="su-name-label">お名前</label>
+      <label class="input-label" id="su-name-label">お名前（本名・非公開）</label>
       <input type="text" class="input" id="su-name" maxlength="40" placeholder="例：田中 太郎" autocomplete="name">
+      <div class="input-note" id="su-name-note">本人確認のために運営だけが使います。ほかの利用者には表示されません。</div>
     </div>
 
     <div class="input-group">
@@ -802,13 +810,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
   <div id="disaster-banner" class="yui-banner" style="display:none"></div>
   <div id="gate-banner" style="display:none;padding:11px 18px;background:rgba(184,175,214,.16);border-bottom:1px solid rgba(184,175,214,.25);font-size:.74rem;color:#5d4d8c;align-items:center;gap:10px"></div>
+  <div id="nick-banner" style="display:none;padding:11px 18px;background:rgba(158,202,216,.16);border-bottom:1px solid rgba(158,202,216,.3);font-size:.74rem;color:#3f7f92;align-items:center;gap:10px"></div>
   <div id="demo-ribbon" class="demo-ribbon"><span>デモ表示中：登場する人物・団体・お店はすべて架空の例です</span><button onclick="openGuide(0)">構想ガイド</button></div>
 
   <div class="main-hero">
     <div class="main-hero-row">
       <div>
         <div class="main-hero-greet">こんにちは</div>
-        <div class="main-hero-name">田中 太郎 さん</div>
+        <div class="main-hero-name">たろう さん</div>
         <div class="main-hero-stats demo-only">
           <div class="mh-stat"><svg class="ic"><use href="#i-users"/></svg>この町の結び目 <b>34</b></div>
           <div class="mh-stat"><svg class="ic"><use href="#i-location"/></svg><b>12</b>世帯とつながっています</div>
@@ -846,11 +855,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div id="demo-providers" class="demo-only">
     <div class="prov-group-h" style="margin-top:18px"><span class="online-dot-h"></span>ご近所の「できること札」（サンプル） <span class="prov-count">3</span></div>
     <div class="prov-list" id="prov-list-active">
-      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('高橋 美佐子','green','高',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
-        <div class="avatar md green">高<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('みさこ','green','み',91,'5.0',18,'高槻市','0.5km','active','elder',['老老介護','通院付き添い','話し相手'])">
+        <div class="avatar md green">み<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">高橋 美佐子 <span class="name-active">アクティブ</span></div>
+            <div class="prov-name">みさこ <span class="name-active">アクティブ</span></div>
             <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
           </div>
           <div class="prov-tags">
@@ -865,11 +874,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
       </div>
 
-      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="daily" onclick="openProvider('前田 健太郎','sky','前',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
-        <div class="avatar md sky">前<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="daily" onclick="openProvider('まえけん','sky','ま',88,'4.9',24,'高槻市','0.8km','active','daily',['買い物代行','移動支援','家事補助'])">
+        <div class="avatar md sky">ま<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">前田 健太郎 <span class="name-active">アクティブ</span></div>
+            <div class="prov-name">まえけん <span class="name-active">アクティブ</span></div>
             <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
           </div>
           <div class="prov-tags">
@@ -884,11 +893,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
       </div>
 
-      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="大阪市" data-cat="parent" onclick="openProvider('加藤 千夏','pink','加',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
-        <div class="avatar md pink">加<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card featured" data-type="can" data-region="大阪府" data-area="大阪市" data-cat="parent" onclick="openProvider('ちなつ','pink','ち',94,'5.0',32,'大阪市内','4.2km','active','parent',['子育て支援','家事','保育'])">
+        <div class="avatar md pink">ち<span class="online-dot"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">加藤 千夏 <span class="name-active">アクティブ</span></div>
+            <div class="prov-name">ちなつ <span class="name-active">アクティブ</span></div>
             <div class="prov-trust"><span class="stage-chip">結い手</span></div>
           </div>
           <div class="prov-tags">
@@ -906,11 +915,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="prov-group-h">本日中</div>
     <div class="prov-list">
-      <div class="prov-card" data-type="can" data-region="大阪府" data-area="茨木市" data-cat="young" onclick="openProvider('中村 健','sky','中',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
-        <div class="avatar md sky">中<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="茨木市" data-cat="young" onclick="openProvider('けん','sky','け',85,'4.8',12,'茨木市','3.4km','30分前','young',['ヤングケアラー支援','学習サポート'])">
+        <div class="avatar md sky">け<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">中村 健</div>
+            <div class="prov-name">けん</div>
             <div class="prov-trust"><span class="stage-chip">あわじ結び</span></div>
           </div>
           <div class="prov-tags">
@@ -925,11 +934,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
       </div>
 
-      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('渡辺 由美','green','渡',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
-        <div class="avatar md green">渡<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('ゆみ','green','ゆ',89,'4.9',21,'高槻市','1.2km','2時間前','elder',['老老介護','家事','調理'])">
+        <div class="avatar md green">ゆ<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">渡辺 由美</div>
+            <div class="prov-name">ゆみ</div>
             <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
           </div>
           <div class="prov-tags">
@@ -945,11 +954,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
       </div>
 
-      <div class="prov-card" data-type="can" data-region="大阪府" data-area="茨木市" data-cat="parent" onclick="openProvider('井上 真理','pink','井',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
-        <div class="avatar md pink">井<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="茨木市" data-cat="parent" onclick="openProvider('まり','pink','ま',93,'5.0',28,'茨木市','3.0km','4時間前','parent',['ひとり親支援','子育て','送り迎え'])">
+        <div class="avatar md pink">ま<span class="online-dot yellow"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">井上 真理</div>
+            <div class="prov-name">まり</div>
             <div class="prov-trust"><span class="stage-chip">結い手</span></div>
           </div>
           <div class="prov-tags">
@@ -968,11 +977,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <div class="prov-group-h">最近</div>
     <div class="prov-list">
-      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="daily" onclick="openProvider('山本 太一','green','山',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
-        <div class="avatar md green">山<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="daily" onclick="openProvider('たいち','green','た',82,'4.7',15,'高槻市','2.1km','昨日','daily',['買い物代行','移動支援'])">
+        <div class="avatar md green">た<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">山本 太一</div>
+            <div class="prov-name">たいち</div>
             <div class="prov-trust"><span class="stage-chip">あわじ結び</span></div>
           </div>
           <div class="prov-tags">
@@ -987,11 +996,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         </div>
       </div>
 
-      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('小林 英樹','sky','小',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
-        <div class="avatar md sky">小<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="prov-card" data-type="can" data-region="大阪府" data-area="高槻市" data-cat="elder" onclick="openProvider('ひでき','sky','ひ',78,'4.6',9,'高槻市','1.8km','3日前','elder',['多目的支援','話し相手'])">
+        <div class="avatar md sky">ひ<span class="online-dot offline"></span><span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="prov-body">
           <div class="prov-row1">
-            <div class="prov-name">小林 英樹</div>
+            <div class="prov-name">ひでき</div>
             <div class="prov-trust"><span class="stage-chip">ひと結び</span></div>
           </div>
           <div class="prov-tags">
@@ -1138,24 +1147,24 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div id="msg-empty" style="display:none;padding:30px 20px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.9">まだメッセージがありません。<br>気になる投稿を開いて<br>「メッセージを送る」から会話を始めましょう。</div>
       <div id="conv-list"></div>
       <div id="msg-demo" class="demo-only">
-      <div class="msg-item" onclick="openChat('鈴木','green','鈴')">
-        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="msg-item" onclick="openChat('ともこ','green','と')">
+        <div class="avatar md green">と<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1"><div class="msg-name">鈴木 さん <span class="msg-unread">2</span></div><div class="msg-time">14:32</div></div>
+          <div class="msg-row1"><div class="msg-name">ともこ さん <span class="msg-unread">2</span></div><div class="msg-time">14:32</div></div>
           <div class="msg-preview">明日の14時に駅前で待ち合わせで大丈夫ですか？</div>
         </div>
       </div>
-      <div class="msg-item" onclick="openChat('佐藤','pink','佐')">
-        <div class="avatar md pink">佐<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="msg-item" onclick="openChat('さとみ','pink','さ')">
+        <div class="avatar md pink">さ<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1"><div class="msg-name">佐藤 さん</div><div class="msg-time">昨日</div></div>
+          <div class="msg-row1"><div class="msg-name">さとみ さん</div><div class="msg-time">昨日</div></div>
           <div class="msg-preview">本当にありがとうございました。助かりました。</div>
         </div>
       </div>
-      <div class="msg-item" onclick="openChat('山田','sky','山')">
-        <div class="avatar md sky">山<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="msg-item" onclick="openChat('ゆうき','sky','ゆ')">
+        <div class="avatar md sky">ゆ<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1"><div class="msg-name">山田 さん</div><div class="msg-time">月曜</div></div>
+          <div class="msg-row1"><div class="msg-name">ゆうき さん</div><div class="msg-time">月曜</div></div>
           <div class="msg-preview">試験お疲れさまでした！結果はいかがでしたか？</div>
         </div>
       </div>
@@ -1166,10 +1175,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           <div class="msg-preview">防災訓練の受付を手伝っていただけませんか？</div>
         </div>
       </div>
-      <div class="msg-item" onclick="openChat('林','pink','林')">
-        <div class="avatar md pink">林<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+      <div class="msg-item" onclick="openChat('めぐみ','pink','め')">
+        <div class="avatar md pink">め<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1"><div class="msg-name">林 さん</div><div class="msg-time">5/13</div></div>
+          <div class="msg-row1"><div class="msg-name">めぐみ さん</div><div class="msg-time">5/13</div></div>
           <div class="msg-preview">来週もよろしくお願いします</div>
         </div>
       </div>
@@ -1231,10 +1240,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div id="notif-empty" style="display:none;padding:34px 20px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.9">新しいお知らせはありません。<br>メッセージが届いたり、マッチングが成立すると<br>ここに表示されます。</div>
     <div class="demo-only">
     <div class="notif-group-h">新着</div>
-    <div class="notif-item unread" onclick="openChat('鈴木','green','鈴')">
+    <div class="notif-item unread" onclick="openChat('ともこ','green','と')">
       <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-chat"/></svg></div>
       <div class="notif-body">
-        <div class="notif-title">鈴木さんから新しいメッセージ</div>
+        <div class="notif-title">ともこさんから新しいメッセージ</div>
         <div class="notif-desc">明日の14時に駅前で待ち合わせで大丈夫ですか？</div>
         <div class="notif-time">2分前</div>
       </div>
@@ -1470,8 +1479,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="comm-post">
       <div class="comm-post-h">
-        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="cp-meta"><div class="cp-name">鈴木 智子 さん</div><div class="cp-time">1時間前 ／ 高槻市</div></div>
+        <div class="avatar md green">と<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">ともこ さん</div><div class="cp-time">1時間前 ／ 高槻市</div></div>
       </div>
       <div class="cp-text">介護を始めて3年。「大丈夫？」と聞かれると、いつも「大丈夫」と答えていました。先週はじめて、ここで「2時間だけ」と頼んでみました。頼るのにも、練習がいるんですね。</div>
       <div class="cp-actions">
@@ -1482,10 +1491,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="comm-post">
       <div class="comm-post-h">
-        <div class="avatar md green">高<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="cp-meta"><div class="cp-name">高橋 美佐子 さん</div><div class="cp-time">2時間前 ／ 高槻市</div></div>
+        <div class="avatar md green">み<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">みさこ さん</div><div class="cp-time">2時間前 ／ 高槻市</div></div>
       </div>
-      <div class="cp-text">田中さんに母の付き添いをお願いして3ヶ月目になります。丁寧で頼りになる方で、母も「あの方が来てくれるのが楽しみ」と言っています。本当に出会えて良かった。</div>
+      <div class="cp-text">たろうさんに母の付き添いをお願いして3ヶ月目になります。丁寧で頼りになる方で、母も「あの方が来てくれるのが楽しみ」と言っています。本当に出会えて良かった。</div>
       <div class="cp-actions">
         <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>ありがとう</span></div>
         <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>コメント</span></div>
@@ -1494,8 +1503,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="comm-post">
       <div class="comm-post-h">
-        <div class="avatar md sky">中<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-        <div class="cp-meta"><div class="cp-name">中村 健 さん</div><div class="cp-time">5時間前 ／ 茨木市</div></div>
+        <div class="avatar md sky">け<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">けん さん</div><div class="cp-time">5時間前 ／ 茨木市</div></div>
       </div>
       <div class="cp-text">ヤングケアラーとして家族を支える子たちに、もっと制度的なバックアップが必要だと感じます。学校との連携、行政の認識——変えていきたいことがたくさん。</div>
       <div class="cp-actions">
@@ -1530,8 +1539,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
   <div class="profile-hero">
-    <div class="avatar xl" style="margin:0 auto">田<span class="v" id="prof-verify-badge"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
-    <div class="prof-name">田中 太郎</div>
+    <div class="avatar xl" style="margin:0 auto">た<span class="v" id="prof-verify-badge"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
+    <div class="prof-name">たろう</div>
     <div class="prof-bio">高槻市在住 / 会社員</div>
     <div class="prof-roles">
       <span class="prof-role">手を貸せます</span>
@@ -1638,7 +1647,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="feed-item">
       <div class="feed-h">
         <div class="feed-dot" style="background:var(--lav)"></div>
-        <div class="feed-text"><b>前田 健太郎</b>さんにありがとうを贈りました</div>
+        <div class="feed-text"><b>まえけん</b>さんにありがとうを贈りました</div>
         <div class="feed-time">5日前</div>
       </div>
       <div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−50 ＆pt</span></div>
@@ -1695,8 +1704,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="app-h-actions"><button class="icon-btn" onclick="toast('通報は運営だけが確認し、相手には通知されません（デモでは送信しません）')"><svg class="ic"><use href="#i-alert"/></svg></button></div>
   </div>
   <div class="uprof-hero">
-    <div class="avatar xl green" id="up-avatar" style="margin:0 auto">鈴<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
-    <div class="prof-name" id="up-name">鈴木 智子 さん</div>
+    <div class="avatar xl green" id="up-avatar" style="margin:0 auto">と<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
+    <div class="prof-name" id="up-name">ともこ さん</div>
     <div class="prof-bio" id="up-bio">高槻市・母（85）の介護をしながら暮らしています</div>
     <div class="prof-roles">
       <span class="prof-role" id="up-stage">あわじ結び</span>
@@ -1722,7 +1731,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div id="up-words"><span class="thanks-tag on" style="cursor:default">ていねいだった <b style="opacity:.8">×4</b></span><span class="thanks-tag on" style="cursor:default">話しやすかった <b style="opacity:.8">×3</b></span></div>
     <div style="font-size:.68rem;color:var(--tl);line-height:1.7">贈られた言葉は点数にせず、誰が書いたかも表示しません。</div>
   </div>
-  <div style="padding:0 18px 80px"><button class="btn-primary" id="up-msg-btn" onclick="openChat('鈴木','green','鈴')">メッセージを送る</button></div>
+  <div style="padding:0 18px 80px"><button class="btn-primary" id="up-msg-btn" onclick="openChat('ともこ','green','と')">メッセージを送る</button></div>
 </div>
 
 <!-- SETTINGS -->
@@ -1839,7 +1848,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.5.1 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.5.2 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -1990,7 +1999,7 @@ let prevScreen='main';  // track previous screen for back button
 let currentProfile=null;  // ログイン中ユーザーのプロフィール（Firebase）
 
 /* ===== 実証運用の共通ヘルパー ===== */
-var MAXLEN={title:60,detail:800,area:40,name:40,org:60,bio:200,msg:500,report:500};
+var MAXLEN={title:60,detail:800,area:40,name:40,nick:20,org:60,bio:200,msg:500,report:500};
 function tooLong(v,key,label){
   if((v||'').length>MAXLEN[key]){ toast(label+'は'+MAXLEN[key]+'文字以内で入力してください'); return true; }
   return false;
@@ -2041,7 +2050,7 @@ function navTo(name){
   if(name==='profile'){ renderMyCards(); }
   if(name==='post'){ setPostType(null,curPostType||'tsuide'); }
   if(name==='main'){
-    renderDemoRibbon(); renderCareCard();
+    renderDemoRibbon(); renderCareCard(); renderNickBanner();
     // Re-init map if user is on map tab
     const mapPanel=document.getElementById('main-panel-map');
     if(mapPanel && mapPanel.style.display!=='none'){
@@ -2055,6 +2064,11 @@ function navTo(name){
 // ============================================
 let accountType='personal';
 
+/* ほかの利用者に見える名前。個人はニックネーム、団体は団体名。
+   本名（name）は本人と運営だけが見るもので、画面にもデータにも他人向けには書かない。
+   ニックネーム導入前の利用者は、設定するまで従来どおり登録名を表示する */
+function displayNameOf(u){ u=u||{}; return ((u.type==='org'?(u.orgName||u.name):(u.nickname||u.name))||'利用者').slice(0,60); }
+function needsNickname(u){ return !!(u&&u.uid&&u.type!=='org'&&!u.nickname); }
 function getStoredUser(){
   if(currentProfile) return currentProfile;
   try{return JSON.parse(localStorage.getItem('youi_user')||'null')}catch(e){return null}
@@ -2064,8 +2078,8 @@ function setStoredUser(u){currentProfile=u;localStorage.setItem('youi_user',JSON
 function applyUserToUI(){
   const u=getStoredUser();
   if(!u) return;
-  const displayName=u.type==='org'?(u.orgName||u.name):u.name;
-  const shortName=u.type==='org'?(u.orgName||u.name):(u.name+' さん');
+  const displayName=displayNameOf(u);
+  const shortName=u.type==='org'?displayName:(displayName+' さん');
   const initial=displayName.charAt(0);
 
   const heroName=document.querySelector('#screen-main .main-hero-name');
@@ -2086,6 +2100,7 @@ function applyUserToUI(){
   }
   if(u.uid){
     window.__profileApplied=true; zeroOutNewAccount(); hideDemoContent();
+    renderNickBanner(); promptNicknameOnce();
     if(u.verified) markVerifiedUI(); else if(u.verifyRequested) markVerifyPendingUI();
     updateVerifyScreen();
   }
@@ -2165,14 +2180,19 @@ function selectAcctype(el,type){
   el.classList.add('selected');
   accountType=type;
   const orgField=document.getElementById('su-orgname-field');
+  const nickField=document.getElementById('su-nick-field');
   const nameLabel=document.getElementById('su-name-label');
+  // 団体は団体名がそのまま表示名になるので、ニックネームは使わない
   if(orgField) orgField.style.display=(type==='org'?'block':'none');
-  if(nameLabel) nameLabel.textContent=(type==='org'?'担当者名':'お名前');
+  if(nickField) nickField.style.display=(type==='org'?'none':'');
+  if(nameLabel) nameLabel.textContent=(type==='org'?'担当者名（非公開）':'お名前（本名・非公開）');
 }
 
 function completeSignup(){
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   const name=document.getElementById('su-name').value.trim();
+  const nickEl=document.getElementById('su-nick');
+  const nick=nickEl?nickEl.value.trim():'';
   const email=document.getElementById('su-email').value.trim();
   const pass=document.getElementById('su-pass').value;
   const pass2=document.getElementById('su-pass2').value;
@@ -2180,7 +2200,9 @@ function completeSignup(){
   const orgEl=document.getElementById('su-orgname');
   const orgName=orgEl?orgEl.value.trim():'';
 
-  if(!name){toast('お名前を入力してください');return}
+  if(accountType!=='org' && !nick){toast('ニックネームを入力してください');return}
+  if(tooLong(nick,'nick','ニックネーム'))return;
+  if(!name){toast(accountType==='org'?'担当者名を入力してください':'お名前（本名）を入力してください');return}
   if(tooLong(name,'name','お名前'))return;
   if(accountType==='org' && !orgName){toast('団体名を入力してください');return}
   if(tooLong(orgName,'org','団体名'))return;
@@ -2191,7 +2213,7 @@ function completeSignup(){
   if(busy('signup',4000))return;
 
   const user={type:accountType,name:name,email:email,createdAt:new Date().toISOString()};
-  if(accountType==='org'){user.orgName=orgName;user.bio='公式アカウント';}else{user.bio='';}
+  if(accountType==='org'){user.orgName=orgName;user.bio='公式アカウント';}else{user.bio='';user.nickname=nick;}
 
   if(!fbReady){ var le0=document.getElementById('login-email'); if(le0) le0.value=email; toast('アカウントを作成しました。ログインしてください'); setTimeout(()=>goScreen('login'),700); return; }
 
@@ -2715,7 +2737,7 @@ function closeDeal(){
   var me=fbAuth.currentUser.uid;
   fbDb.collection('deals').add({
     participants:[me,currentConv.otherUid].sort(),
-    byUid:me, byName:iAmMasked()?ANON_NAME:myRealName(),
+    byUid:me, byName:iAmMasked()?ANON_NAME:myDisplayName(),
     otherName:(currentConv.otherName||'相手の方').slice(0,60),
     title:'', disaster:disasterActive(),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
@@ -3075,7 +3097,7 @@ function saveCard(){
   fbDb.collection('posts').add({
     type:'can', title:title, detail:detail, categories:[], pref:pref, area:area, when:'', anon:false,
     uid:fbAuth.currentUser.uid,
-    authorName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    authorName:displayNameOf(u),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){ closeSheet(); toast('できること札を登録しました'); })
    .catch(function(e){ console.warn('card fail',e); toast(authErrMsg(e)); });
@@ -3189,7 +3211,7 @@ function submitPost(){
     when:(type==='tsuide')?when.slice(0,40):'', anon:isAnon,
     uid:fbAuth.currentUser.uid,
     // 名前を伏せた投稿には、本名をデータとしても残さない（画面で伏せるだけでは読めてしまうため）
-    authorName:isAnon?'':((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    authorName:isAnon?'':displayNameOf(u),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
     clearPostForm();
@@ -3471,7 +3493,7 @@ function chatTime(ts){
 /* 相手を指定して実会話を開く（投稿の「メッセージを送る」等から） */
 /* 名前を伏せている人の表示名。会話・支え合いの記録・感謝にもこの名前だけを書く */
 var ANON_NAME='ご近所の方';
-function myRealName(){ var u=getStoredUser()||{}; return ((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60); }
+function myDisplayName(){ return displayNameOf(getStoredUser()); }
 /* 会話の中で自分が名前を伏せているか */
 function iAmMasked(){ return !!(currentConv && fbAuth && fbAuth.currentUser && (currentConv.masked||[]).indexOf(fbAuth.currentUser.uid)>=0); }
 function openConversation(otherUid,otherName,color,masked){
@@ -3623,7 +3645,7 @@ function sendChat(){
   // 実会話：Firestore に保存（相手にもリアルタイムで届く）
   if(currentConv && currentConv.id && fbReady && fbAuth.currentUser){
     const me=fbAuth.currentUser.uid;
-    const myName=iAmMasked()?ANON_NAME:myRealName();
+    const myName=iAmMasked()?ANON_NAME:myDisplayName();
     f.value='';
     const cid=currentConv.id;
     const names={}; names[me]=myName; names[currentConv.otherUid]=currentConv.otherName;
@@ -3759,7 +3781,7 @@ function openBlockList(){
    伏せる設定を外せるのは本人だけ（ルールでも、相手が外すことはできない） */
 function revealMyName(){
   if(!iAmMasked()) return;
-  var me=fbAuth.currentUser.uid, nm=myRealName();
+  var me=fbAuth.currentUser.uid, nm=myDisplayName();
   currentConv.masked=(currentConv.masked||[]).filter(function(x){ return x!==me; });
   var f=document.getElementById('chat-field'); if(f) f.value='名前をお伝えします。'+nm+'です。';
   sendChat();
@@ -3862,24 +3884,82 @@ function openSheet(title,html){
 }
 function closeSheet(){closeModal(null,'sheet-modal')}
 
-/* プロフィール編集（実際に保存される） */
+/* プロフィール編集（実際に保存される）。ニックネーム＝表示名、本名＝本人と運営だけが見る */
 function openProfileEdit(){
-  const u=getStoredUser()||{name:'田中 太郎',bio:'高槻市在住'};
+  var u=isGuestDemo()?demoMe():(getStoredUser()||{});
+  var org=(u.type==='org');
+  var note='<div class="input-note">本人確認のために運営だけが使います。ほかの利用者には表示されません。</div>';
   openSheet('プロフィール編集',
-    '<div class="input-group"><label class="input-label">お名前</label><input id="pe-name" class="input" maxlength="40" value="'+escapeHtml(u.name||'')+'"></div>'+
+    (org?'':'<div class="input-group"><label class="input-label">ニックネーム（表示名）</label><input id="pe-nick" class="input" maxlength="20" value="'+escapeHtml(u.nickname||'')+'" placeholder="例：たろう／高槻のたろう"><div class="input-note">投稿やメッセージで、ほかの人に表示される名前です。</div></div>')+
+    '<div class="input-group"><label class="input-label">'+(org?'担当者名（非公開）':'お名前（本名・非公開）')+'</label><input id="pe-name" class="input" maxlength="40" value="'+escapeHtml(u.name||'')+'">'+note+'</div>'+
     '<div class="input-group"><label class="input-label">自己紹介 <span style="font-weight:400;color:var(--tl);font-size:.7rem">（200文字まで・住所や電話番号は書かないでください）</span></label><textarea id="pe-bio" class="input" rows="3" maxlength="200" style="resize:vertical;font-family:inherit">'+escapeHtml(u.bio||'')+'</textarea></div>'+
     '<button class="btn-primary" onclick="saveProfileEdit()">保存する</button>');
 }
 function saveProfileEdit(){
-  const name=document.getElementById('pe-name').value.trim();
-  const bio=document.getElementById('pe-bio').value.trim();
+  var nickEl=document.getElementById('pe-nick');
+  var nick=nickEl?nickEl.value.trim():'';
+  var name=document.getElementById('pe-name').value.trim();
+  var bio=document.getElementById('pe-bio').value.trim();
+  if(nickEl && !nick){toast('ニックネームを入力してください');return}
+  if(tooLong(nick,'nick','ニックネーム'))return;
   if(!name){toast('お名前を入力してください');return}
   if(tooLong(name,'name','お名前'))return;
   if(tooLong(bio,'bio','自己紹介'))return;
-  const u=getStoredUser()||{type:'individual'};
-  u.name=name;u.bio=bio;setStoredUser(u);applyUserToUI();
-  closeSheet();toast('プロフィールを保存しました');
-  if(fbReady&&fbAuth.currentUser){fbDb.collection('users').doc(fbAuth.currentUser.uid).update({name:name,bio:bio}).catch(function(){});}
+  var fields={name:name,bio:bio}; if(nickEl) fields.nickname=nick;
+  if(isGuestDemo()){ saveDemoMe(fields); closeSheet(); toast('プロフィールを保存しました（デモ）'); return; }
+  updateMyNames(fields,'プロフィールを保存しました');
+}
+/* ニックネーム導入前に登録した人への案内（ホームの帯＋ログイン後に一度だけシート） */
+function renderNickBanner(){
+  var b=document.getElementById('nick-banner'); if(!b) return;
+  var show=needsNickname(getStoredUser());
+  b.style.display=show?'flex':'none';
+  if(show) b.innerHTML='<div style="flex:1;line-height:1.65">ほかの人に見える名前を、ニックネームにできるようになりました。<br><span style="font-size:.68rem;opacity:.85">いまは登録したお名前が表示されています。</span></div>'+
+    '<button class="kai-read" style="margin:0;padding:6px 13px;font-size:.74rem;flex-shrink:0" onclick="openNicknameSetup()">決める</button>';
+}
+function promptNicknameOnce(){
+  if(!needsNickname(getStoredUser())) return;
+  try{ if(sessionStorage.getItem('youi_nick_prompted')==='1') return; sessionStorage.setItem('youi_nick_prompted','1'); }catch(e){}
+  setTimeout(function(){ if(needsNickname(getStoredUser())) openNicknameSetup(); },1500);
+}
+function openNicknameSetup(){
+  var u=getStoredUser()||{};
+  openSheet('ニックネームを決める',
+    '<div style="font-size:.82rem;color:var(--ink);line-height:1.9;margin-bottom:10px">投稿やメッセージで、ほかの人に表示される名前です。同じ名前の人がいても大丈夫です。本名は、本人確認のために運営だけが使います。</div>'+
+    (u.name?'<div style="font-size:.74rem;color:var(--tl);line-height:1.8;margin-bottom:14px">いまは登録したお名前（'+escapeHtml(u.name)+'）が表示されています。</div>':'')+
+    '<div class="input-group"><label class="input-label">ニックネーム（20文字まで）</label><input id="nk-nick" class="input" maxlength="20" placeholder="例：たろう／高槻のたろう"></div>'+
+    '<div class="input-note" style="margin:-6px 0 16px">これまでの自分の投稿に出ている名前も、ニックネームに変わります。</div>'+
+    '<button class="btn-primary" onclick="saveNickname()">この名前にする</button>');
+}
+function saveNickname(){
+  var v=((document.getElementById('nk-nick')||{}).value||'').trim();
+  if(!v){ toast('ニックネームを入力してください'); return; }
+  if(tooLong(v,'nick','ニックネーム')) return;
+  updateMyNames({nickname:v},'ニックネームを設定しました');
+}
+/* 自分のプロフィールを保存し、表示名が変わったら自分の投稿の表示名もそろえる */
+function updateMyNames(fields,msg){
+  var u=getStoredUser(); if(!u) return;
+  var before=displayNameOf(u);
+  for(var k in fields) u[k]=fields[k];
+  setStoredUser(u); applyUserToUI(); renderNickBanner();
+  closeSheet(); toast(msg);
+  if(!(fbReady&&fbAuth.currentUser)) return;
+  fbDb.collection('users').doc(fbAuth.currentUser.uid).update(fields)
+    .then(function(){ var after=displayNameOf(u); if(after!==before) return syncMyPostNames(after); })
+    .catch(function(e){ console.warn('profile update fail',e); toast('保存できませんでした。通信環境をご確認ください'); });
+}
+/* 自分の投稿の表示名をそろえる。名前を伏せた投稿は名前を空にする（v0.5.1 より前の投稿に残った本名も消える） */
+function syncMyPostNames(nm){
+  var me=fbAuth.currentUser.uid;
+  return fbDb.collection('posts').where('uid','==',me).get().then(function(snap){
+    var jobs=[];
+    snap.forEach(function(d){
+      var p=d.data(), want=p.anon?'':nm;
+      if((p.authorName||'')!==want) jobs.push(d.ref.update({authorName:want}).catch(function(e){ console.warn('post name sync fail',d.id,e); }));
+    });
+    return Promise.all(jobs);
+  }).catch(function(e){ console.warn('post name sync fail',e); });
 }
 
 /* メールアドレス変更 */
@@ -3932,7 +4012,7 @@ function openLegal(kind){
   if(kind==='privacy'){
     openSheet('プライバシーポリシー',
       '<p style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-bottom:14px">You&i（結）（以下「運営」）は、You&i Space（以下「本サービス」）における個人情報を、個人情報保護法その他の法令に従い、次のとおり取り扱います。</p>'+
-      legalSec('1. 取得する情報','①お名前（ニックネーム可）・メールアドレス　②地域情報（都道府県・任意入力のエリア。番地などの詳細な住所は取得しません）　③投稿・メッセージの内容　④本人確認の申請状況（身分証の画像は保存しません）　⑤利用状況の記録（アクセス解析）')+
+      legalSec('1. 取得する情報','①ニックネーム（表示名）・お名前（本名）・メールアドレス（本名とメールアドレスは、ほかの利用者には表示しません）　②地域情報（都道府県・任意入力のエリア。番地などの詳細な住所は取得しません）　③投稿・メッセージの内容　④本人確認の申請状況（身分証の画像は保存しません）　⑤利用状況の記録（アクセス解析）')+
       legalSec('2. 利用目的','①支援したい人と助けを求める人のマッチング　②通報への対応・不正利用の防止など安全な運営　③運営からの連絡　④サービスの改善・統計作成（個人を特定しない形に加工します）')+
       legalSec('3. 保存先','データは Google 社のクラウドサービス（Firebase）に保存されます。データは国外のサーバーで保管されることがあります。通信は暗号化されています。')+
       legalSec('4. 第三者提供','ご本人の同意なく第三者に提供しません。ただし、法令に基づく場合、人の生命・身体・財産の保護のために必要がある場合を除きます。')+
@@ -3969,6 +4049,7 @@ function openLegal(kind){
       legalQA('「ついで」って何ですか？','手を貸せることを伝えるための投稿です。「助けます」と宣言するのは少し気が重いので、「ついで」という言い方にしました。用事のついででも、空いた時間でもかまいません。頼む側も「ついでなら」と言えるので、お互いに気をつかわずにすみます。')+
       legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。')+
       legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
+      legalQA('ほかの人に表示される名前は？','ニックネームです。本名は本人確認のために運営だけが使い、ほかの利用者には表示しません。ニックネームは 設定 →「プロフィール編集」から変えられます。団体・行政のアカウントは、団体名が表示されます。')+
       legalQA('安全に使うには？','本人確認・通報・ブロックの仕組みがあります。はじめて会う前に「安全ガイド」をご覧ください。')+
       legalQA('団体・行政はどう関われますか？','団体・行政のアカウントで参加できます。デジタル回覧板でのお知らせ、災害時の結モードでの支援調整、専門の相談窓口へのご案内などで、個人と同じ基盤の上でつながります。You&i Space は専門職の支援の代わりではなく、その隙間を補うものです。実証への参加・連携のご相談は、運営までお問い合わせください。')+
       legalQA('本人確認はどうやりますか？','設定 → 本人確認 から申請すると、運営からメールでご連絡します。実証期間中は、運営がおひとりずつ確認しています。')+
@@ -3984,7 +4065,7 @@ function legalQA(q,a){return '<div style="margin-bottom:14px"><div style="font-w
 /* コメント */
 function openComments(){
   openSheet('コメント',
-    '<div id="cmt-list">'+cmtItem('佐藤','ありがとうございます、本当に助かりました！')+cmtItem('山田','私も近所なのでお手伝いできます。')+'</div>'+
+    '<div id="cmt-list">'+cmtItem('さとみ','ありがとうございます、本当に助かりました！')+cmtItem('ゆうき','私も近所なのでお手伝いできます。')+'</div>'+
     '<div style="display:flex;gap:8px;margin-top:14px"><input id="cmt-in" class="input" placeholder="コメントを入力" style="flex:1;margin:0"><button class="btn-primary" style="width:auto;padding:0 18px;margin:0" onclick="addComment()">送信</button></div>');
 }
 function cmtItem(name,text){return '<div style="padding:10px 0;border-bottom:1px solid rgba(184,175,214,.15)"><div style="font-size:.78rem;font-weight:600;color:#7c6fa3">'+escapeHtml(name)+'</div><div style="font-size:.85rem;color:var(--ink);margin-top:2px">'+escapeHtml(text)+'</div></div>'}
@@ -4015,7 +4096,7 @@ function openHistory(kind){
   if(kind==='support'){
     openSheet('支援実績', isNew?emptyHist('まだ支援実績がありません。'):histList([['買い物の付き添い','2026/06/10','＋15 ＆P'],['話し相手・見守り','2026/06/03','＋10 ＆P'],['子どもの送迎','2026/05/28','＋20 ＆P']]));
   }else if(kind==='fav'){
-    openSheet('お気に入り', isNew?emptyHist('お気に入りはまだありません。'):histList([['鈴木 みどり さん','支援者',''],['高槻ボランティアの会','団体・行政','']]));
+    openSheet('お気に入り', isNew?emptyHist('お気に入りはまだありません。'):histList([['みどり さん','支援者',''],['高槻ボランティアの会','団体・行政','']]));
   }else{
     openSheet('利用履歴', isNew?emptyHist('まだ利用履歴がありません。'):histList([['＆ポイント利用：カフェドリンク','2026/06/09','−30 ＆P'],['支援を受けた：買い物代行','2026/06/01',''],['アカウント作成','2026/05/30','']]));
   }
@@ -4187,6 +4268,7 @@ var GUIDE=[
   {eb:'04　安全と個人情報', h:'あたたかさは取り戻して、\n監視は取り戻さない。',
    lead:'ご近所のほど良いおせっかいは取り戻しても、見張り合う関係には戻しません。そのための約束を、仕組みとして組み込んでいます。',
    body:gPt('i-location','お住まいは<b>地図に出しません</b>。市区町村のおおまかな位置と、公民館などの公共の拠点だけです')+
+        gPt('i-user','ほかの人に見えるのは<b>ニックネームだけ</b>。本名は本人確認のために運営だけが使います')+
         gPt('i-edit','投稿の主語は、いつも自分だけ。<b>他の人を主語にして書く機能はつくりません</b>')+
         gPt('i-alert','<b>低い評価は公開しません</b>。気になったことは、運営が非公開でお預かりします')+
         gPt('i-id-card','本人確認は運営がおひとりずつ行い、<b>身分証の画像は保存しません</b>。金銭の授受は禁止、＆ポイントに換金性はありません')},
@@ -4248,7 +4330,7 @@ function guideGo(t){
     window.__careDismissed=false; navTo('main');
     setTimeout(function(){ var c=document.getElementById('care-card'); if(c&&c.style.display!=='none') c.scrollIntoView({behavior:'smooth',block:'center'}); },120);
   }
-  else if(t==='thanks'){ openChat('鈴木 智子','green','鈴'); setTimeout(demoCloseDeal,650); }
+  else if(t==='thanks'){ openChat('ともこ','green','鈴'); setTimeout(demoCloseDeal,650); }
   else if(t==='yui'){ doEnterYui(); }
 }
 
@@ -4308,45 +4390,58 @@ function openCareDesk(){
 }
 
 /* ===== ゲストデモ：架空のデータ（この端末の中だけで動く） ===== */
-var DEMO_ME='demo-me', DEMO_ME_NAME='田中 太郎';
+var DEMO_ME='demo-me', DEMO_ME_NAME='たろう';
+/* デモの本人：表示はニックネーム、本名は記録（証明書）と本名欄だけに使う */
+function demoMe(){ if(!window.__demoMe) window.__demoMe={type:'personal',nickname:DEMO_ME_NAME,name:'田中 太郎',bio:'高槻市在住 / 会社員'}; return window.__demoMe; }
+function saveDemoMe(f){
+  var m=demoMe(); for(var k in f) m[k]=f[k];
+  DEMO_ME_NAME=m.nickname||DEMO_ME_NAME;
+  (window.__rawPosts||[]).forEach(function(p){ if(p.uid===DEMO_ME&&!p.anon) p.authorName=DEMO_ME_NAME; });
+  var h=document.querySelector('#screen-main .main-hero-name'); if(h) h.textContent=DEMO_ME_NAME+' さん';
+  var n=document.querySelector('#screen-profile .prof-name'); if(n) n.textContent=DEMO_ME_NAME;
+  var b=document.querySelector('#screen-profile .prof-bio'); if(b) b.textContent=m.bio||'';
+  var a=document.querySelector('#screen-profile .avatar.xl');
+  if(a&&a.childNodes[0]&&a.childNodes[0].nodeType===3) a.childNodes[0].nodeValue=DEMO_ME_NAME.charAt(0);
+  renderLivePosts();
+}
 function demoTs(min){ var ms=Date.now()-min*60000; return {toDate:function(){ return new Date(ms); }}; }
 var DEMO_POSTS=[
   // ついで（掲示板）
-  {type:'tsuide',uid:'demo-maeda',authorName:'前田 健太郎',title:'夕方スーパーに行くので、ついでに買ってこられます',when:'今日 17時ごろ',area:'高槻市 ○○町',categories:['買い物'],detail:'お米や飲みものなど、重いものもだいじょうぶです。受け渡しは玄関先か、公民館で。',min:25},
-  {type:'tsuide',uid:'demo-takahashi',authorName:'高橋 美佐子',title:'木曜の午前なら、通院の付き添いに行けます',when:'木曜の午前',area:'高槻市',categories:['通院付き添い','話し相手'],detail:'以前、病院で働いていました。付き添いと、待ち時間の話し相手くらいなら。',min:95},
-  {type:'tsuide',uid:'demo-inoue',authorName:'井上 真理',title:'日曜の午後、公園で子どもたちを見ていられます',when:'日曜 14〜16時',area:'茨木市',categories:['家事・育児'],detail:'うちの子も一緒です。そのあいだ、1〜2時間ひと息ついてください。',min:200},
-  {type:'tsuide',uid:'demo-yamamoto',authorName:'山本 太一',title:'土曜の午前、車を出せます',when:'土曜の午前',area:'高槻市',categories:['移動・送迎'],detail:'通院・買い物・役所の手続きなどに。4人まで乗れます。',min:1500},
-  {type:'tsuide',uid:'demo-nakamura',authorName:'中村 健',title:'中学生の宿題、オンラインで30分見られます',when:'平日の20時以降',area:'茨木市',categories:['学習サポート'],detail:'家のことで勉強の時間がとりにくい子の、力になれたらと思っています。',min:2900},
+  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'夕方スーパーに行くので、ついでに買ってこられます',when:'今日 17時ごろ',area:'高槻市 ○○町',categories:['買い物'],detail:'お米や飲みものなど、重いものもだいじょうぶです。受け渡しは玄関先か、公民館で。',min:25},
+  {type:'tsuide',uid:'demo-takahashi',authorName:'みさこ',title:'木曜の午前なら、通院の付き添いに行けます',when:'木曜の午前',area:'高槻市',categories:['通院付き添い','話し相手'],detail:'以前、病院で働いていました。付き添いと、待ち時間の話し相手くらいなら。',min:95},
+  {type:'tsuide',uid:'demo-inoue',authorName:'まり',title:'日曜の午後、公園で子どもたちを見ていられます',when:'日曜 14〜16時',area:'茨木市',categories:['家事・育児'],detail:'うちの子も一緒です。そのあいだ、1〜2時間ひと息ついてください。',min:200},
+  {type:'tsuide',uid:'demo-yamamoto',authorName:'たいち',title:'土曜の午前、車を出せます',when:'土曜の午前',area:'高槻市',categories:['移動・送迎'],detail:'通院・買い物・役所の手続きなどに。4人まで乗れます。',min:1500},
+  {type:'tsuide',uid:'demo-nakamura',authorName:'けん',title:'中学生の宿題、オンラインで30分見られます',when:'平日の20時以降',area:'茨木市',categories:['学習サポート'],detail:'家のことで勉強の時間がとりにくい子の、力になれたらと思っています。',min:2900},
   // 困っていること（地図）：頼んでいるのは、ふだん誰かを支えている人たち
-  {type:'need',uid:'demo-suzuki',authorName:'鈴木 智子',title:'介護の合間に、自分の通院の2時間だけ母の話し相手を',area:'高槻市 ○○町',categories:['話し相手'],detail:'母（85）の介護を3年続けています。自分の歯医者に行くあいだの2時間ほど、母の話し相手をしていただける方を探しています。',min:40},
-  {type:'need',uid:'demo-anon1',anon:true,authorName:'佐藤',title:'水曜だけ、15時の保育園のお迎えを',area:'高槻市',categories:['ひとり親','家事・育児'],detail:'ひとりで子育てをしています。水曜だけ仕事が延びるので、お迎えから1時間ほど一緒にいていただける方がいると助かります。',min:130},
-  {type:'need',uid:'demo-anon2',anon:true,authorName:'山田',title:'試験前の2週間だけ、夕食づくりを手伝ってほしい',area:'高槻市',categories:['ヤングケアラー','家事・育児'],detail:'高校生です。家族のケアをしながら受験勉強をしています。試験前だけ、夕食の準備を手伝ってもらえたら助かります。',min:300},
-  {type:'need',uid:'demo-kimura',authorName:'木村 和子',title:'夫の通院に、月2回同行してほしい',area:'高槻市',categories:['老老介護','通院付き添い'],detail:'わたしも78歳になり、夫の車いすを押して病院まで行くのが難しくなってきました。',min:1400},
-  {type:'need',uid:'demo-hayashi',authorName:'林 恵',title:'子ども食堂の片付けに、月2回だけ手を貸してほしい',area:'高槻市',categories:['家事・育児'],detail:'地域で子ども食堂を開いています。運営の仲間が減って、片付けまで手が回らなくなってきました。30分でも助かります。',min:2600},
+  {type:'need',uid:'demo-suzuki',authorName:'ともこ',title:'介護の合間に、自分の通院の2時間だけ母の話し相手を',area:'高槻市 ○○町',categories:['話し相手'],detail:'母（85）の介護を3年続けています。自分の歯医者に行くあいだの2時間ほど、母の話し相手をしていただける方を探しています。',min:40},
+  {type:'need',uid:'demo-anon1',anon:true,authorName:'',title:'水曜だけ、15時の保育園のお迎えを',area:'高槻市',categories:['ひとり親','家事・育児'],detail:'ひとりで子育てをしています。水曜だけ仕事が延びるので、お迎えから1時間ほど一緒にいていただける方がいると助かります。',min:130},
+  {type:'need',uid:'demo-anon2',anon:true,authorName:'',title:'試験前の2週間だけ、夕食づくりを手伝ってほしい',area:'高槻市',categories:['ヤングケアラー','家事・育児'],detail:'高校生です。家族のケアをしながら受験勉強をしています。試験前だけ、夕食の準備を手伝ってもらえたら助かります。',min:300},
+  {type:'need',uid:'demo-kimura',authorName:'かずこ',title:'夫の通院に、月2回同行してほしい',area:'高槻市',categories:['老老介護','通院付き添い'],detail:'わたしも78歳になり、夫の車いすを押して病院まで行くのが難しくなってきました。',min:1400},
+  {type:'need',uid:'demo-hayashi',authorName:'めぐみ',title:'子ども食堂の片付けに、月2回だけ手を貸してほしい',area:'高槻市',categories:['家事・育児'],detail:'地域で子ども食堂を開いています。運営の仲間が減って、片付けまで手が回らなくなってきました。30分でも助かります。',min:2600},
   // できること札（結モードで「いま動ける人」になる）
-  {type:'can',uid:'demo-takahashi',authorName:'高橋 美佐子',title:'通院の付き添い・話し相手ができます',area:'高槻市',categories:['通院付き添い'],detail:'平日の午前中なら。',min:9000},
-  {type:'can',uid:'demo-maeda',authorName:'前田 健太郎',title:'車を出せます（4人乗り）',area:'高槻市',categories:['移動・送迎'],detail:'',min:12000},
-  {type:'can',uid:'demo-kato',authorName:'加藤 千夏',title:'子どもを見ていられます（保育士です）',area:'大阪市',categories:['家事・育児'],detail:'',min:15000},
+  {type:'can',uid:'demo-takahashi',authorName:'みさこ',title:'通院の付き添い・話し相手ができます',area:'高槻市',categories:['通院付き添い'],detail:'平日の午前中なら。',min:9000},
+  {type:'can',uid:'demo-maeda',authorName:'まえけん',title:'車を出せます（4人乗り）',area:'高槻市',categories:['移動・送迎'],detail:'',min:12000},
+  {type:'can',uid:'demo-kato',authorName:'ちなつ',title:'子どもを見ていられます（保育士です）',area:'大阪市',categories:['家事・育児'],detail:'',min:15000},
   {type:'can',uid:DEMO_ME,authorName:DEMO_ME_NAME,title:'重いものを運べます',area:'高槻市 ○○町',categories:[],detail:'週末ならだいたい動けます。',min:20000},
   {type:'can',uid:DEMO_ME,authorName:DEMO_ME_NAME,title:'スマホの使い方の相談にのれます',area:'高槻市 ○○町',categories:[],detail:'',min:21000},
   // 貸し借り（結モードで「出せるもの・使える場所」になる）
-  {type:'can',uid:'demo-maeda',authorName:'前田 健太郎',title:'発電機と延長コードを貸せます',area:'高槻市',categories:['貸し借り'],detail:'停電のときにどうぞ。',min:30000},
-  {type:'can',uid:'demo-kobayashi',authorName:'小林 英樹',title:'庭の井戸（手押しポンプ）の水が使えます',area:'高槻市',categories:['貸し借り'],detail:'飲み水には使えませんが、トイレや洗いものに。',min:40000},
-  {type:'can',uid:'demo-inoue',authorName:'井上 真理',title:'ベビーカーと抱っこひもを貸せます',area:'茨木市',categories:['貸し借り'],detail:'',min:35000}
+  {type:'can',uid:'demo-maeda',authorName:'まえけん',title:'発電機と延長コードを貸せます',area:'高槻市',categories:['貸し借り'],detail:'停電のときにどうぞ。',min:30000},
+  {type:'can',uid:'demo-kobayashi',authorName:'ひでき',title:'庭の井戸（手押しポンプ）の水が使えます',area:'高槻市',categories:['貸し借り'],detail:'飲み水には使えませんが、トイレや洗いものに。',min:40000},
+  {type:'can',uid:'demo-inoue',authorName:'まり',title:'ベビーカーと抱っこひもを貸せます',area:'茨木市',categories:['貸し借り'],detail:'',min:35000}
 ];
 /* 相手プロフィール（数値・星・送り主の名前は出さない） */
 var DEMO_PEOPLE={
-  '鈴木 智子':{c:'green',bio:'高槻市・母（85）の介護をしながら暮らしています',st:'あわじ結び',intro:'3年前から母の介護をしています。「大丈夫？」と聞かれると、つい「大丈夫」と答えてしまう性分です。ここでは少しずつ、頼ることを練習しています。',can:['編み物を教えられます','子どもの宿題を見られます（夜）'],words:[['ていねいだった',4],['話しやすかった',3],['声をかけてくれてうれしかった',2]]},
-  '高橋 美佐子':{c:'green',bio:'高槻市・以前は病院で働いていました',st:'梅結び',intro:'夫を見送ってから、時間ができました。付き添いや話し相手なら、いつでも声をかけてください。',words:[['安心できた',8],['ていねいだった',6],['また会いたい',5]]},
-  '前田 健太郎':{c:'sky',bio:'高槻市・会社員（週末は動けます）',st:'梅結び',intro:'車があるので、送迎や重いものの買い物なら。ついでで良ければ、遠慮なく。',words:[['すぐ来てくれた',7],['話しやすかった',4]]},
-  '井上 真理':{c:'pink',bio:'茨木市・ふたりの子どもを育てています',st:'結い手',intro:'ひとりで子育てをしていた時期に、ご近所の方に何度も助けてもらいました。今度はわたしの番です。',words:[['安心できた',9],['また会いたい',6],['声をかけてくれてうれしかった',3]]},
-  '中村 健':{c:'sky',bio:'茨木市・大学生',st:'あわじ結び',intro:'自分も家族のケアをしながら学校に通っていました。同じような子の力になりたいです。',words:[['話しやすかった',5],['ていねいだった',3]]},
-  '山本 太一':{c:'green',bio:'高槻市・自営業',st:'あわじ結び',intro:'平日は店がありますが、土曜の午前なら動けます。',words:[['すぐ来てくれた',4]]},
-  '木村 和子':{c:'green',bio:'高槻市・夫とふたり暮らし',st:'ひと結び',intro:'夫の通院が月に2回あります。わたしにできることは、漬物づくりくらいですが。',can:['漬物・保存食のつくり方を教えられます'],words:[['声をかけてくれてうれしかった',2]]},
-  '林 恵':{c:'pink',bio:'高槻市・子ども食堂を運営しています',st:'梅結び',intro:'毎月2回、公民館で子ども食堂を開いています。支える側の人手が足りないのが、いちばんの悩みです。',words:[['ていねいだった',5],['また力になりたい',4]]},
-  '加藤 千夏':{c:'pink',bio:'大阪市・保育士',st:'結い手',intro:'子どもを見ることなら、任せてください。',words:[['安心できた',7]]},
-  '渡辺 由美':{c:'green',bio:'高槻市',st:'梅結び',intro:'家事や料理なら、ついでにお手伝いできます。',words:[['ていねいだった',3]]},
-  '小林 英樹':{c:'sky',bio:'高槻市・退職後、地域の見回りをしています',st:'ひと結び',intro:'',words:[['ていねいだった',2]]}
+  'ともこ':{c:'green',bio:'高槻市・母（85）の介護をしながら暮らしています',st:'あわじ結び',intro:'3年前から母の介護をしています。「大丈夫？」と聞かれると、つい「大丈夫」と答えてしまう性分です。ここでは少しずつ、頼ることを練習しています。',can:['編み物を教えられます','子どもの宿題を見られます（夜）'],words:[['ていねいだった',4],['話しやすかった',3],['声をかけてくれてうれしかった',2]]},
+  'みさこ':{c:'green',bio:'高槻市・以前は病院で働いていました',st:'梅結び',intro:'夫を見送ってから、時間ができました。付き添いや話し相手なら、いつでも声をかけてください。',words:[['安心できた',8],['ていねいだった',6],['また会いたい',5]]},
+  'まえけん':{c:'sky',bio:'高槻市・会社員（週末は動けます）',st:'梅結び',intro:'車があるので、送迎や重いものの買い物なら。ついでで良ければ、遠慮なく。',words:[['すぐ来てくれた',7],['話しやすかった',4]]},
+  'まり':{c:'pink',bio:'茨木市・ふたりの子どもを育てています',st:'結い手',intro:'ひとりで子育てをしていた時期に、ご近所の方に何度も助けてもらいました。今度はわたしの番です。',words:[['安心できた',9],['また会いたい',6],['声をかけてくれてうれしかった',3]]},
+  'けん':{c:'sky',bio:'茨木市・大学生',st:'あわじ結び',intro:'自分も家族のケアをしながら学校に通っていました。同じような子の力になりたいです。',words:[['話しやすかった',5],['ていねいだった',3]]},
+  'たいち':{c:'green',bio:'高槻市・自営業',st:'あわじ結び',intro:'平日は店がありますが、土曜の午前なら動けます。',words:[['すぐ来てくれた',4]]},
+  'かずこ':{c:'green',bio:'高槻市・夫とふたり暮らし',st:'ひと結び',intro:'夫の通院が月に2回あります。わたしにできることは、漬物づくりくらいですが。',can:['漬物・保存食のつくり方を教えられます'],words:[['声をかけてくれてうれしかった',2]]},
+  'めぐみ':{c:'pink',bio:'高槻市・子ども食堂を運営しています',st:'梅結び',intro:'毎月2回、公民館で子ども食堂を開いています。支える側の人手が足りないのが、いちばんの悩みです。',words:[['ていねいだった',5],['また力になりたい',4]]},
+  'ちなつ':{c:'pink',bio:'大阪市・保育士',st:'結い手',intro:'子どもを見ることなら、任せてください。',words:[['安心できた',7]]},
+  'ゆみ':{c:'green',bio:'高槻市',st:'梅結び',intro:'家事や料理なら、ついでにお手伝いできます。',words:[['ていねいだった',3]]},
+  'ひでき':{c:'sky',bio:'高槻市・退職後、地域の見回りをしています',st:'ひと結び',intro:'',words:[['ていねいだった',2]]}
 };
 function loadDemoData(){
   window.__demoLoaded=true;
@@ -4420,7 +4515,7 @@ function demoMessageFromPost(id){
 }
 /* 支え合いが終わった → お礼を決める（デモ版。実運用の「ゲート」の説明つき） */
 function demoCloseDeal(){
-  var c=window.__demoChat||{name:'鈴木 智子'};
+  var c=window.__demoChat||{name:'ともこ'};
   toast('支え合いを記録しました（デモ）');
   setTimeout(function(){
     openSheet('お礼を決める',
