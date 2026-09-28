@@ -1,51 +1,180 @@
 rules_version = '2';
 
-// You&i Space — Firestore セキュリティルール
+// You&i Space — Firestore セキュリティルール（アプリ v0.5.0 対応）
 // ※ このファイルは記録用。実際の反映は Firebase コンソール
 //   （プロジェクト you-i-space → Firestore Database → ルール）に
 //   丸ごと貼り付けて「公開」してください。
+// ※ 運営の操作（本人確認済みの付与・災害モードの切り替え・通報や
+//   「少し気になった」の確認）は Firebase コンソールから行います。
+//   コンソールからの操作は、このルールの制限を受けません。
+// ※ ここに書いていないコレクションは、すべて読み書きできません。
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function signedIn() { return request.auth != null; }
+    function isMe(uid) { return signedIn() && request.auth.uid == uid; }
+    function incoming() { return request.resource.data; }
+    function str(v, max) { return v is string && v.size() <= max; }
+    function optStr(key, max) { return !(key in incoming()) || str(incoming()[key], max); }
+    // 書き込み時刻はサーバー時刻（serverTimestamp）だけを受け付ける
+    function stampedNow(key) { return incoming()[key] == request.time; }
+    // 会話IDは2人の uid をソートして「_」でつないだもの（index.html の convIdFor）
+    function convMembers(cid) { return cid.split('_'); }
+
     // ── ユーザープロフィール ──
-    // ログイン者は閲覧可。作成・編集は本人のみ。
+    // 読めるのは本人だけ（メールアドレス・ブロックリストを含むため）。
+    // 本人が変えられるのは下の項目だけ。「本人確認済み（verified）」は運営だけが付ける。
+    // ＆ポイントは本人の操作では減る（手渡す）ことしかできない。
     match /users/{uid} {
-      allow read: if request.auth != null;
-      allow create, update: if request.auth != null && request.auth.uid == uid;
+      function changed() { return incoming().diff(resource.data).affectedKeys(); }
+      function ifChanged(key, ok) { return !(key in changed()) || ok; }
+
+      allow read: if isMe(uid);
+      allow create: if isMe(uid)
+        && incoming().keys().hasOnly(['type', 'name', 'email', 'createdAt', 'orgName', 'bio'])
+        && incoming().type in ['personal', 'org', 'individual']
+        && str(incoming().name, 40) && incoming().name.size() > 0
+        && optStr('orgName', 60) && optStr('bio', 200) && optStr('email', 254);
+      allow update: if isMe(uid)
+        && changed().hasOnly(['name', 'bio', 'verifyRequested', 'verifyRequestedAt',
+                              'gateOverrideUntil', 'blocked', 'points'])
+        && ifChanged('name', str(incoming().name, 40) && incoming().name.size() > 0)
+        && ifChanged('bio', str(incoming().bio, 200))
+        && ifChanged('verifyRequested', incoming().verifyRequested == true)
+        && ifChanged('verifyRequestedAt', stampedNow('verifyRequestedAt'))
+        // 本人による「お礼の確認のおやすみ」は最長24時間（＋端末の時計のずれ1時間）
+        && ifChanged('gateOverrideUntil', incoming().gateOverrideUntil is number
+             && incoming().gateOverrideUntil <= request.time.toMillis() + 25 * 3600 * 1000)
+        && ifChanged('blocked', incoming().blocked is map)
+        // 登録時は 300pt（アプリの初期値）。本人の操作では増やせない
+        && ifChanged('points', incoming().points is int && incoming().points >= 0
+             && incoming().points <= resource.data.get('points', 300));
+      allow delete: if isMe(uid);   // 退会
     }
 
-    // ── 支援・受援の投稿 ──
-    // ログイン者は全員閲覧可（他アカウントの投稿も見える）。
-    // 作成・編集（修正）・削除は投稿者本人のみ。
+    // ── 支援・受援の投稿（ついで／困っていること／できること札）──
+    // ログイン者は全員閲覧可。作成・編集・削除は投稿者本人のみ。
     match /posts/{postId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null
-                    && request.auth.uid == request.resource.data.uid;
-      allow update, delete: if request.auth != null
-                    && request.auth.uid == resource.data.uid;
+      function postFieldsOk(d) {
+        return d.type in ['tsuide', 'need', 'can']
+          && str(d.title, 60) && d.title.size() > 0
+          && str(d.detail, 800)
+          && str(d.pref, 10)
+          && str(d.area, 40);
+      }
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && incoming().uid == request.auth.uid
+        && incoming().keys().hasOnly(['type', 'title', 'detail', 'categories', 'pref', 'area',
+                                      'when', 'anon', 'uid', 'authorName', 'createdAt'])
+        && postFieldsOk(incoming())
+        && incoming().categories is list && incoming().categories.size() <= 20
+        && str(incoming().when, 40)
+        && incoming().anon is bool
+        && str(incoming().authorName, 60)
+        && stampedNow('createdAt');
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && incoming().diff(resource.data).affectedKeys().hasOnly(['type', 'title', 'detail', 'pref', 'area'])
+        && postFieldsOk(incoming());
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
     // ── 会話（メッセージスレッド）──
-    // 参加者（participants に含まれる2人）だけが閲覧・作成・更新できる。
+    // 参加者（会話IDに含まれる2人）だけが閲覧・作成・更新できる。
     match /conversations/{cid} {
-      allow read:   if request.auth != null
-                    && request.auth.uid in resource.data.participants;
-      allow create: if request.auth != null
-                    && request.auth.uid in request.resource.data.participants;
-      allow update: if request.auth != null
-                    && request.auth.uid in resource.data.participants
-                    && request.auth.uid in request.resource.data.participants;
+      function convOk() {
+        return incoming().keys().hasOnly(['participants', 'names', 'lastMessage', 'lastSender', 'updatedAt'])
+          && incoming().participants is list
+          && incoming().participants.size() == 2
+          && incoming().participants.hasOnly(convMembers(cid))
+          && convMembers(cid).hasOnly(incoming().participants)
+          && request.auth.uid in incoming().participants
+          && incoming().lastSender == request.auth.uid
+          && str(incoming().lastMessage, 500)
+          && stampedNow('updatedAt');
+      }
+      allow read: if signedIn() && request.auth.uid in resource.data.participants;
+      allow create: if signedIn() && convOk();
+      allow update: if signedIn() && request.auth.uid in resource.data.participants && convOk();
 
       // ── 個々のメッセージ ──
-      // 会話の参加者のみ閲覧。送信は本人（senderId==自分）かつ参加者のみ。
+      // 参加者だけが閲覧できる。会話がまだ無い（はじめての相手）ときも、
+      // 空の一覧を読めるように、会話ドキュメントではなく会話IDで判定する。
+      // 送信は本人（senderId==自分）かつ参加者のみ。編集・削除はできない。
       match /messages/{mid} {
-        allow read: if request.auth != null
-          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(cid)).data.participants;
-        allow create: if request.auth != null
-          && request.auth.uid == request.resource.data.senderId
-          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(cid)).data.participants;
+        allow read: if signedIn() && request.auth.uid in convMembers(cid);
+        allow create: if signedIn()
+          && request.auth.uid in convMembers(cid)
+          && incoming().keys().hasOnly(['senderId', 'text', 'createdAt'])
+          && incoming().senderId == request.auth.uid
+          && str(incoming().text, 500) && incoming().text.size() > 0
+          && stampedNow('createdAt');
       }
+    }
+
+    // ── 感謝（ありがとう・＆ポイントの手渡し）──
+    // 贈った本人と受け取った本人だけが読める。自分から自分へは贈れない。一度贈ったら変更・削除できない。
+    match /thanks/{id} {
+      allow read: if signedIn()
+        && (resource.data.toUid == request.auth.uid || resource.data.fromUid == request.auth.uid);
+      allow create: if signedIn()
+        && incoming().keys().hasOnly(['fromUid', 'fromName', 'toUid', 'toName', 'postId', 'dealId',
+                                      'pairKey', 'disaster', 'tags', 'note', 'points', 'createdAt'])
+        && incoming().fromUid == request.auth.uid
+        && incoming().toUid is string && incoming().toUid != request.auth.uid
+        && incoming().tags is list && incoming().tags.size() >= 1 && incoming().tags.size() <= 5
+        && str(incoming().note, 200)
+        && incoming().points in [0, 30, 50, 100]
+        && stampedNow('createdAt');
+    }
+
+    // ── 支え合いの記録（「終わりました」）──
+    // 当事者の2人だけが読める。記録した本人が参加者に含まれていること。
+    match /deals/{id} {
+      allow read: if signedIn() && request.auth.uid in resource.data.participants;
+      allow create: if signedIn()
+        && incoming().keys().hasOnly(['participants', 'byUid', 'byName', 'otherName', 'title', 'disaster', 'createdAt'])
+        && incoming().byUid == request.auth.uid
+        && incoming().participants is list && incoming().participants.size() == 2
+        && request.auth.uid in incoming().participants
+        && incoming().participants[0] != incoming().participants[1]
+        && stampedNow('createdAt');
+    }
+
+    // ── 「今回は伝えない」の記録 ──
+    // 決めた本人だけが読める（相手には分からない）。
+    match /decisions/{id} {
+      allow read: if signedIn() && resource.data.fromUid == request.auth.uid;
+      allow create: if signedIn()
+        && incoming().keys().hasOnly(['dealId', 'fromUid', 'toUid', 'createdAt'])
+        && incoming().fromUid == request.auth.uid
+        && stampedNow('createdAt');
+    }
+
+    // ── 「少し気になった」（運営だけが読む。相手にも本人にも読めない）──
+    match /concerns/{id} {
+      allow create: if signedIn()
+        && incoming().keys().hasOnly(['fromUid', 'aboutUid', 'dealId', 'note', 'createdAt'])
+        && incoming().fromUid == request.auth.uid
+        && str(incoming().note, 500)
+        && stampedNow('createdAt');
+    }
+
+    // ── 通報（運営だけが読む）──
+    match /reports/{id} {
+      allow create: if signedIn()
+        && incoming().keys().hasOnly(['targetType', 'targetId', 'targetUid', 'reason', 'detail', 'reporterUid', 'createdAt'])
+        && incoming().reporterUid == request.auth.uid
+        && str(incoming().reason, 40)
+        && str(incoming().detail, 500)
+        && stampedNow('createdAt');
+    }
+
+    // ── 運営の設定（災害モードなど）：ログイン者は読むだけ ──
+    match /config/{doc} {
+      allow read: if signedIn();
     }
   }
 }
