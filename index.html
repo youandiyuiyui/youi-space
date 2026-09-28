@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>You&i Space - 支援者×受援者マッチングプラットフォーム</title>
-<meta name="description" content="支援の無駄と空白を無くし、支援を善意で終わらせない。You&i Spaceは支援者と受援者をつなぐ相互支援プラットフォームです。">
+<title>You&i Space｜支援を善意で終わらせない、支援者支援のプラットフォーム</title>
+<meta name="description" content="支える人もまた、支えを必要としている。You&i Spaceは、ご近所の「ついで」と「お互いさま」で役割が循環する、支援者支援のプラットフォームです。平時のつながりが、そのまま災害時の支え合いの基盤になります。">
 
 <!-- OGP -->
-<meta property="og:title" content="You&i Space - 支援者×受援者マッチングプラットフォーム">
-<meta property="og:description" content="支援の無駄と空白を無くし、支援を善意で終わらせない。信頼スコアと＆ポイントで、新しい互助の仕組みをつくる。">
+<meta property="og:title" content="You&i Space｜支援を善意で終わらせない、支援者支援のプラットフォーム">
+<meta property="og:description" content="支える人もまた、支えを必要としている。今日助けられた人が、明日は誰かを助ける——平時から災害時まで、役割が循環する支援者支援のプラットフォーム。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://youandiyuiyui.github.io/youi-space/">
 <meta property="og:image" content="https://youandiyuiyui.github.io/youi-website/ogp-space.png">
@@ -17,8 +17,8 @@
 <meta property="og:site_name" content="You&i Space">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="You&i Space - 支援者×受援者マッチングプラットフォーム">
-<meta name="twitter:description" content="支援の無駄と空白を無くし、支援を善意で終わらせない。">
+<meta name="twitter:title" content="You&i Space｜支援を善意で終わらせない、支援者支援のプラットフォーム">
+<meta name="twitter:description" content="支える人もまた、支えを必要としている。役割が循環する、支援者支援のプラットフォーム。">
 <meta name="twitter:image" content="https://youandiyuiyui.github.io/youi-website/ogp-space.png">
 
 <!-- GA4 -->
@@ -554,6 +554,49 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .cert-info div{display:flex;gap:14px;padding:6px 0}
 .cert-info b{color:var(--tl);font-weight:500;min-width:60px;font-size:.75rem;display:inline-flex;align-items:center}
 
+/* ===== v0.5.0：構想ガイド・支える人への声かけ・デモ表示 ===== */
+.guide{position:absolute;inset:0;z-index:1200;display:none;flex-direction:column;background:linear-gradient(160deg,#ede6f7 0%,#e2f1ea 55%,#fbe9eb 100%)}
+.guide.show{display:flex;animation:fadeIn .3s ease}
+.guide-top{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 6px}
+.guide-dots{display:flex;gap:6px}
+.guide-dot{width:7px;height:7px;border-radius:50%;background:rgba(124,111,163,.25);transition:all .25s}
+.guide-dot.on{width:20px;border-radius:4px;background:var(--lav3)}
+.guide-skip{background:none;border:none;font-family:inherit;font-size:.76rem;color:var(--tl);cursor:pointer;padding:6px 2px}
+.guide-body{flex:1;overflow-y:auto;padding:14px 24px 10px}
+.guide-eyebrow{font-size:.66rem;letter-spacing:.24em;color:var(--lav3);font-weight:600;margin-bottom:10px}
+.guide-h{font-family:'Noto Serif JP',serif;font-size:1.42rem;font-weight:500;line-height:1.65;color:var(--ink);margin-bottom:14px;white-space:pre-line}
+.guide-lead{font-size:.84rem;color:#4d4d5c;line-height:2;margin-bottom:18px}
+.guide-pt{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.8);border-radius:14px;padding:12px 14px;margin-bottom:9px;font-size:.8rem;line-height:1.8;color:var(--ink)}
+.guide-pt .gp-ic{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,rgba(184,175,214,.25),rgba(158,202,216,.25));display:flex;align-items:center;justify-content:center;color:var(--lav3);flex-shrink:0;font-size:.95rem}
+.guide-pt b{font-weight:600}
+.guide-pt.tap{cursor:pointer}
+.guide-pt.tap:active{transform:scale(.99)}
+.guide-pillars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.guide-pillar{background:rgba(255,255,255,.72);border-radius:14px;padding:12px;font-size:.74rem;color:var(--tl);line-height:1.6}
+.guide-pillar b{display:block;font-family:'Noto Serif JP',serif;font-size:.86rem;color:var(--ink);font-weight:500;margin-bottom:2px}
+.guide-note{font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px}
+.guide-foot{display:flex;gap:10px;padding:12px 24px calc(20px + env(safe-area-inset-bottom))}
+.guide-foot .btn-secondary{flex:0 0 34%;background:rgba(255,255,255,.6)}
+.guide-foot .btn-primary{flex:1}
+.demo-ribbon{display:none;align-items:center;gap:8px;padding:8px 18px;background:rgba(200,184,122,.16);border-bottom:1px solid rgba(200,184,122,.28);font-size:.68rem;color:#7a6a35;line-height:1.6}
+.demo-ribbon button{margin-left:auto;flex-shrink:0;background:#fff;border:1px solid rgba(200,184,122,.45);border-radius:14px;padding:4px 10px;font-family:inherit;font-size:.68rem;color:#7a6a35;cursor:pointer}
+.care-card{margin:14px 18px 0;padding:16px 16px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(232,180,184,.2),rgba(184,175,214,.2));border:1px solid rgba(232,180,184,.35);position:relative}
+.care-eyebrow{display:flex;align-items:center;gap:6px;font-size:.66rem;letter-spacing:.12em;color:var(--blush2);font-weight:600;margin-bottom:6px}
+.care-h{font-family:'Noto Serif JP',serif;font-size:.98rem;font-weight:500;color:var(--ink);line-height:1.6;margin-bottom:6px}
+.care-body{font-size:.78rem;color:#4d4d5c;line-height:1.9}
+.care-chips{display:flex;flex-wrap:wrap;gap:6px;margin:11px 0 12px}
+.care-chip{padding:6px 11px;border-radius:16px;background:#fff;border:1px solid rgba(232,180,184,.45);font-size:.72rem;color:var(--blush2);cursor:pointer;font-family:inherit;text-align:left;line-height:1.5}
+.care-actions{display:flex;gap:8px}
+.care-actions .btn-primary,.care-actions .btn-secondary{padding:11px 8px;font-size:.8rem}
+.care-actions .btn-secondary{background:rgba(255,255,255,.65)}
+.care-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:.66rem;color:var(--tl);line-height:1.6}
+.care-foot button{background:none;border:none;font-family:inherit;font-size:.66rem;color:var(--tl);text-decoration:underline;cursor:pointer;flex-shrink:0;padding:0}
+.modal .guide-pt{background:rgba(184,175,214,.08);border-color:rgba(184,175,214,.18)}
+.lbl-example{display:inline-block;font-size:.58rem;font-weight:600;padding:1px 6px;border-radius:6px;background:rgba(200,184,122,.22);color:#8a7530;margin-left:4px;vertical-align:1px;letter-spacing:0}
+.info-box{background:rgba(184,175,214,.1);border:1px solid rgba(184,175,214,.22);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.info-box-h{font-size:.82rem;font-weight:600;margin-bottom:4px}
+.info-box-b{font-size:.74rem;color:var(--tl);line-height:1.85}
+
 /* Toast */
 .toast{position:absolute;bottom:90px;left:20px;right:20px;background:rgba(40,42,53,.94);backdrop-filter:blur(20px);color:#fff;padding:11px 18px;border-radius:12px;font-size:.82rem;text-align:center;z-index:300;opacity:0;pointer-events:none;transition:all .3s}
 .toast.show{opacity:1;transform:translateY(-6px)}
@@ -630,7 +673,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="login-tag">SUPPORT EACH OTHER</div>
       <div class="login-card">
         <div class="login-h">おかえりなさい</div>
-        <div class="login-sub">支援の輪を、つづけましょう。</div>
+        <div class="login-sub">支える人にも、頼れる場所を。</div>
         <div class="input-group">
           <label class="input-label">メールアドレス</label>
           <input type="email" class="input" id="login-email" placeholder="example@email.com" autocomplete="username" onkeydown="if(event.key==='Enter')login()">
@@ -646,7 +689,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
       <div class="login-divider">または</div>
       <button class="btn-secondary" onclick="guestDemo()" style="background:rgba(255,255,255,.55);border-color:rgba(184,175,214,.3)">ゲストとしてデモを試す</button>
-      <div style="text-align:center;margin-top:16px;font-size:.68rem;color:var(--tl);line-height:1.8">
+      <div style="text-align:center;margin-top:12px"><button class="btn-link" onclick="openGuide(0)">You&amp;i Space とは？（構想ガイド）</button></div>
+      <div style="text-align:center;margin-top:12px;font-size:.68rem;color:var(--tl);line-height:1.8">
         本サービスは、同意を得た限定参加者による実証運用中です。<br>
         <a style="color:var(--lav2);text-decoration:underline;cursor:pointer" onclick="openLegal('terms')">利用規約</a>　<a style="color:var(--lav2);text-decoration:underline;cursor:pointer" onclick="openLegal('privacy')">プライバシーポリシー</a>　<a style="color:var(--lav2);text-decoration:underline;cursor:pointer" onclick="openLegal('safety')">安全ガイド</a>
       </div>
@@ -758,6 +802,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
   <div id="disaster-banner" class="yui-banner" style="display:none"></div>
   <div id="gate-banner" style="display:none;padding:11px 18px;background:rgba(184,175,214,.16);border-bottom:1px solid rgba(184,175,214,.25);font-size:.74rem;color:#5d4d8c;align-items:center;gap:10px"></div>
+  <div id="demo-ribbon" class="demo-ribbon"><span>デモ表示中：登場する人物・団体・お店はすべて架空の例です</span><button onclick="openGuide(0)">構想ガイド</button></div>
 
   <div class="main-hero">
     <div class="main-hero-row">
@@ -771,6 +816,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
   </div>
+
+  <!-- 支える人への声かけ（支援者支援：頼る回路を、こちらから作りに行く） -->
+  <div id="care-card" class="care-card" style="display:none"></div>
 
   <div class="main-tabs">
     <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-users"/></svg>ついで</button>
@@ -975,36 +1023,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="map-note">この地図には「困っていること」だけを出しています。行く場所が要る話なので、地図のほうが伝わるからです。<br>個人のお住まいは表示しません。ピンは市区町村の中心あたりに置いた「おおまかな位置」で、住所は特定できません。名前も伏せられます。</div>
     <div class="map-list">
       <div class="map-list-h" style="display:flex;justify-content:space-between;align-items:center">
-        <div class="demo-only">高槻市内 / このあたりの <b>5件</b></div>
         <div id="need-count" style="display:none">困っていること <b>0</b>件</div>
         <button class="icon-btn" onclick="centerMap()" style="width:32px;height:32px"><svg class="ic" style="font-size:.95rem"><use href="#i-target"/></svg></button>
       </div>
-      <div class="match-list demo-only">
-        <div class="match-card" onclick="openMatch('鈴木','elder','高齢の母の通院付き添いを週1でお願いしたいです。','1.2km','5.0','スコア92',92)">
-          <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-          <div class="mc-body">
-            <div class="mc-row1"><div class="mc-name">鈴木 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.2km</div></div>
-            <div class="mc-desc">高齢の母の通院付き添い（週1）</div>
-            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span></div>
-          </div>
-        </div>
-        <div class="match-card" onclick="openMatch('木村','elder','夫の通院に同行できる方を探しています。月2回程度。','3.4km','4.9','スコア88',88)">
-          <div class="avatar md green">木<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-          <div class="mc-body">
-            <div class="mc-row1"><div class="mc-name">木村 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>3.4km</div></div>
-            <div class="mc-desc">夫の通院同行（月2回）</div>
-            <div class="mc-meta"><span class="mc-cat cat-elder">老老介護</span></div>
-          </div>
-        </div>
-        <div class="match-card" onclick="openMatch('林','parent','子の食事準備を週2でお願いします。','1.8km','5.0','ひとり親',91)">
-          <div class="avatar md pink">林<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
-          <div class="mc-body">
-            <div class="mc-row1"><div class="mc-name">林 さん</div><div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>1.8km</div></div>
-            <div class="mc-desc">子の食事準備（週2）</div>
-            <div class="mc-meta"><span class="mc-cat cat-parent">ひとり親</span></div>
-          </div>
-        </div>
-      </div>
+      <div class="demo-only" style="font-size:.72rem;color:var(--blush2);line-height:1.8;background:rgba(232,180,184,.12);border-radius:12px;padding:10px 13px;margin-bottom:12px">ここに並ぶ頼みごとの多くは、介護や子育て、家族のケアなど、<b>ふだん誰かを支えている人</b>からのものです。</div>
       <div id="need-list"></div>
       <div id="map-empty" style="display:none;padding:24px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">いま出ている「困っていること」はありません。<br>誰かが助けを求めると、ここと地図に出ます。</div>
     </div>
@@ -1137,11 +1159,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
           <div class="msg-preview">試験お疲れさまでした！結果はいかがでしたか？</div>
         </div>
       </div>
-      <div class="msg-item" onclick="openChat('高槻市役所 福祉課','gray','高')">
-        <div class="avatar md gray">高<span class="v" style="background:var(--sky2)"><svg class="ic" style="font-size:.6rem"><use href="#i-shield"/></svg></span></div>
+      <div class="msg-item" onclick="openChat('○○地区 自主防災会','gray','防')">
+        <div class="avatar md gray">防<span class="v" style="background:var(--sky2)"><svg class="ic" style="font-size:.6rem"><use href="#i-shield"/></svg></span></div>
         <div class="mc-body">
-          <div class="msg-row1"><div class="msg-name">高槻市役所 福祉課</div><div class="msg-time">5/15</div></div>
-          <div class="msg-preview">地域支援者表彰の対象となりました。詳細は…</div>
+          <div class="msg-row1"><div class="msg-name">○○地区 自主防災会<span class="lbl-example">例</span></div><div class="msg-time">5/15</div></div>
+          <div class="msg-preview">防災訓練の受付を手伝っていただけませんか？</div>
         </div>
       </div>
       <div class="msg-item" onclick="openChat('林','pink','林')">
@@ -1218,39 +1240,47 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div class="notif-item unread" onclick="navTo('profile')">
-      <div class="notif-illust gold"><svg class="ic ic-fill" style="width:18px;height:18px"><use href="#i-star"/></svg></div>
+      <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-heart"/></svg></div>
       <div class="notif-body">
-        <div class="notif-title">高橋さんから評価が届きました</div>
-        <div class="notif-desc">★5.0 「丁寧で安心できる方でした」</div>
-        <div class="notif-time">2時間前</div>
+        <div class="notif-title">今週、4人からありがとうが届きました</div>
+        <div class="notif-desc">「ていねいだった」「安心できた」など。誰から届いたかは表示しません。</div>
+        <div class="notif-time">今朝 08:00</div>
       </div>
     </div>
-    <div class="notif-item unread" onclick="navTo('profile')">
-      <div class="notif-illust sage"><svg class="ic" style="width:18px;height:18px"><use href="#i-medal"/></svg></div>
+    <div class="notif-item unread" onclick="window.__careDismissed=false;navTo('main')">
+      <div class="notif-illust sage"><svg class="ic" style="width:18px;height:18px"><use href="#i-heart"/></svg></div>
       <div class="notif-body">
-        <div class="notif-title">バッジを獲得しました</div>
-        <div class="notif-desc">「継続支援 8ヶ月」のバッジが追加されました</div>
-        <div class="notif-time">昨日 09:14</div>
+        <div class="notif-title">あなたへのお便り</div>
+        <div class="notif-desc">いつも支えてくださってありがとうございます。今度は、あなたが頼ってみませんか。</div>
+        <div class="notif-time">昨日 19:00</div>
       </div>
     </div>
     <div class="notif-group-h">これまで</div>
+    <div class="notif-item" onclick="navTo('main');switchMainTab(document.querySelectorAll('.main-tab')[1],'map')">
+      <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-location"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">あなたの「できること札」に近い頼みごとがあります</div>
+        <div class="notif-desc">高槻市 ○○町・介護の合間の話し相手</div>
+        <div class="notif-time">2日前</div>
+      </div>
+    </div>
+    <div class="notif-item" onclick="navTo('comm')">
+      <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-bell"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">回覧板：防災訓練のお知らせ</div>
+        <div class="notif-desc">○○地区 自主防災会（例）から届きました</div>
+        <div class="notif-time">3日前</div>
+      </div>
+    </div>
     <div class="notif-item" onclick="navTo('rewards')">
       <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-gift"/></svg></div>
       <div class="notif-body">
         <div class="notif-title">＆ポイントの引き換え完了</div>
-        <div class="notif-desc">高槻市内カフェクーポン（−500＆pt）</div>
-        <div class="notif-time">3日前</div>
+        <div class="notif-desc">（例）まちかどカフェ クーポン（−500＆pt）</div>
+        <div class="notif-time">1週間前</div>
       </div>
     </div>
-    <div class="notif-item" onclick="openChat('高槻市役所 福祉課','gray','高')">
-      <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-shield"/></svg></div>
-      <div class="notif-body">
-        <div class="notif-title">高槻市役所からのお知らせ</div>
-        <div class="notif-desc">地域支援者表彰の対象となりました。詳細をご確認ください。</div>
-        <div class="notif-time">5/15</div>
-      </div>
-    </div>
-    <div class="notif-item">
+    <div class="notif-item" onclick="openLegal('privacy')">
       <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-info"/></svg></div>
       <div class="notif-body">
         <div class="notif-title">プライバシーポリシーが更新されました</div>
@@ -1274,132 +1304,113 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="rew-balance">
       <div class="rew-balance-lbl">いま持っている ＆ポイント</div>
       <div class="rew-balance-num"><span id="rew-balance-num">1,240</span><span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
-      <div class="rew-balance-sub" id="rew-balance-sub">獲得：1,740pt ／ 使用：500pt</div>
+      <div class="rew-balance-sub" id="rew-balance-sub">受け取った：1,740pt ／ 手渡した・使った：500pt</div>
     </div>
-    <div style="background:rgba(184,175,214,.1);border:1px solid rgba(184,175,214,.22);border-radius:14px;padding:14px 16px;margin-bottom:16px">
-      <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">町のつみたて</div>
-      <div style="font-size:.74rem;color:var(--tl);line-height:1.85">手渡しで動いた＆ポイントの一部は、町ごとの積み立てに貯まります。貯まると、結の日や防災訓練、子どもの行事の原資になります。<br>個人と個人の貸し借りが、そのまま町の資産に変わっていきます。</div>
+    <div class="info-box">
+      <div class="info-box-h">＆ポイントは「手渡し」のお礼です</div>
+      <div class="info-box-b">運営が配るものではありません。支えてもらった人が、お礼として手渡します。受け取った＆ポイントは、地域のお店や You&amp;i Gallery で使えます。金銭的な価値・換金性はなく、信頼の段階を＆ポイントで買うこともできません。</div>
+    </div>
+    <div class="info-box" style="margin-bottom:16px">
+      <div class="info-box-h">町のつみたて</div>
+      <div class="info-box-b">手渡しで動いた＆ポイントの一部は、町ごとの積み立てに貯まります。貯まると、結の日や防災訓練、子どもの行事の原資になります。個人と個人の貸し借りが、そのまま町の資産に変わっていきます。</div>
       <div style="margin-top:10px;display:flex;align-items:center;gap:9px">
         <div style="flex:1;height:6px;background:rgba(184,175,214,.2);border-radius:3px;overflow:hidden"><div style="height:100%;width:42%;background:linear-gradient(to right,var(--lav),var(--gold))"></div></div>
         <div style="font-size:.72rem;color:var(--lav3);font-weight:600;white-space:nowrap">4,200 / 10,000 pt</div>
       </div>
     </div>
     <div class="rew-tabs">
-      <div class="rew-tab on" onclick="rewTab(this,'coupon')">クーポン</div>
-      <div class="rew-tab" onclick="rewTab(this,'donate')">寄付</div>
-      <div class="rew-tab" onclick="rewTab(this,'service')">サービス</div>
-      <div class="rew-tab" onclick="rewTab(this,'cert')">証明書発行</div>
+      <div class="rew-tab on" onclick="rewTab(this,'coupon')">地域のお店</div>
+      <div class="rew-tab" onclick="rewTab(this,'gallery')">You&amp;i Gallery</div>
+      <div class="rew-tab" onclick="rewTab(this,'donate')">寄付・つみたて</div>
     </div>
 
-    <!-- COUPONS -->
+    <!-- 地域のお店（協賛店の例） -->
     <div class="rew-grid" id="rew-coupon">
-      <div class="rew-card" onclick="redeem('カフェ ハコモリ クーポン','500')">
+      <div class="rew-card" onclick="redeem('（例）まちかどカフェ クーポン','500')">
         <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-gift"/></svg></div>
-        <div class="rew-cat">高槻市内・飲食</div>
-        <div class="rew-name">カフェ ハコモリ<br>500円クーポン</div>
+        <div class="rew-cat">協賛店の例・飲食</div>
+        <div class="rew-name">まちかどカフェ<br>500円クーポン</div>
         <div class="rew-price">500<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('商店街共通券','1000')">
+      <div class="rew-card" onclick="redeem('（例）○○商店街 共通券','1,000')">
         <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-globe"/></svg></div>
-        <div class="rew-cat">高槻商店街連合</div>
-        <div class="rew-name">商店街<br>1,000円共通券</div>
+        <div class="rew-cat">協賛店の例・商店街</div>
+        <div class="rew-name">○○商店街<br>1,000円共通券</div>
         <div class="rew-price">1,000<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('セレクト書店クーポン','600')">
+      <div class="rew-card" onclick="redeem('（例）町の本屋さん クーポン','600')">
         <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
-        <div class="rew-cat">市内書店</div>
-        <div class="rew-name">セレクト書店<br>600円クーポン</div>
+        <div class="rew-cat">協賛店の例・書店</div>
+        <div class="rew-name">町の本屋さん<br>600円クーポン</div>
         <div class="rew-price">600<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('お弁当 結','450')">
+      <div class="rew-card" onclick="redeem('（例）お弁当屋さん クーポン','450')">
         <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-heart"/></svg></div>
-        <div class="rew-cat">高槻市内・お弁当</div>
-        <div class="rew-name">お弁当 結<br>450円クーポン</div>
+        <div class="rew-cat">協賛店の例・お弁当</div>
+        <div class="rew-name">お弁当屋さん<br>450円クーポン</div>
         <div class="rew-price">450<small>＆pt</small></div>
       </div>
     </div>
 
-    <!-- DONATIONS -->
+    <!-- You&i Gallery：＆ポイントのリアルな出口（オフラインの出会い・ねぎらい） -->
+    <div id="rew-gallery" style="display:none">
+      <div class="info-box" style="background:linear-gradient(135deg,rgba(232,180,184,.14),rgba(200,184,122,.14));border-color:rgba(200,184,122,.3)">
+        <div class="info-box-h">Space で支えた人が、Gallery でねぎらわれる<span class="lbl-example">構想</span></div>
+        <div class="info-box-b">You&amp;i Gallery は、結の「オフラインの顔」。人と人が直接出会い、等身大でいられる場所です。オンラインの善意が、オフラインの出会いに変わります。いまは大阪の cue books で、小さく始めています。</div>
+      </div>
+      <div class="rew-grid">
+        <div class="rew-card" onclick="redeem('Gallery：ねぎらいの会','300')">
+        <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-users"/></svg></div>
+        <div class="rew-cat">支える人どうしの交流</div>
+        <div class="rew-name">ねぎらいの会に<br>参加する</div>
+        <div class="rew-price">300<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('Gallery：作品・ZINEと交換','500')">
+        <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-book"/></svg></div>
+        <div class="rew-cat">等身大の作品と</div>
+        <div class="rew-name">作品・ZINEと<br>交換する</div>
+        <div class="rew-price">500<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('Gallery：展示の場','800')">
+        <div class="rew-img pink"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-star"/></svg></div>
+        <div class="rew-cat">好きなもの・作ったもの</div>
+        <div class="rew-name">展示の場を<br>借りる</div>
+        <div class="rew-price">800<small>＆pt</small></div>
+      </div>
+      <div class="rew-card" onclick="redeem('Gallery：参加枠を贈る','300')">
+        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-share"/></svg></div>
+        <div class="rew-cat">役割の循環</div>
+        <div class="rew-name">交流会の参加枠を<br>誰かに贈る</div>
+        <div class="rew-price">300<small>＆pt</small></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- 寄付・つみたて -->
     <div class="rew-grid" id="rew-donate" style="display:none">
-      <div class="rew-card" onclick="redeem('地域包括支援センターへ寄付','500')">
-        <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-heart"/></svg></div>
-        <div class="rew-cat">高槻市・福祉</div>
-        <div class="rew-name">地域包括支援<br>センターへ寄付</div>
-        <div class="rew-price">500<small>＆pt</small></div>
+      <div class="rew-card" onclick="redeem('町のつみたて','100')">
+        <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-house"/></svg></div>
+        <div class="rew-cat">結の日・防災訓練の原資</div>
+        <div class="rew-name">町のつみたてに<br>入れる</div>
+        <div class="rew-price">100<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('こども食堂支援','300')">
+      <div class="rew-card" onclick="redeem('（例）こども食堂の応援','300')">
         <div class="rew-img pink"><svg class="ic" style="width:36px;height:36px"><use href="#il-parent"/></svg></div>
-        <div class="rew-cat">NPO・子育て</div>
-        <div class="rew-name">こども食堂<br>運営支援</div>
+        <div class="rew-cat">団体の例・子育て</div>
+        <div class="rew-name">こども食堂の<br>運営を応援</div>
         <div class="rew-price">300<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('ヤングケアラー支援','500')">
+      <div class="rew-card" onclick="redeem('（例）ヤングケアラー支援の応援','500')">
         <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#il-young"/></svg></div>
-        <div class="rew-cat">NPO・若者支援</div>
-        <div class="rew-name">ヤングケアラー<br>支援基金</div>
+        <div class="rew-cat">団体の例・若者支援</div>
+        <div class="rew-name">ヤングケアラー<br>支援を応援</div>
         <div class="rew-price">500<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('災害支援基金','1000')">
+      <div class="rew-card" onclick="redeem('災害時の支え合い基金','1,000')">
         <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-shield"/></svg></div>
-        <div class="rew-cat">災害復興</div>
-        <div class="rew-name">災害支援<br>基金</div>
+        <div class="rew-cat">平時から有事に備える</div>
+        <div class="rew-name">災害時の<br>支え合い基金</div>
         <div class="rew-price">1,000<small>＆pt</small></div>
-      </div>
-    </div>
-
-    <!-- SERVICES -->
-    <div class="rew-grid" id="rew-service" style="display:none">
-      <div class="rew-card" onclick="redeem('PRO機能1ヶ月体験','1200')">
-        <div class="rew-img gold"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-star"/></svg></div>
-        <div class="rew-cat">プレミアム</div>
-        <div class="rew-name">PRO機能<br>1ヶ月体験</div>
-        <div class="rew-price">1,200<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('プロフィール強調表示','400')">
-        <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-trophy"/></svg></div>
-        <div class="rew-cat">マッチング強化</div>
-        <div class="rew-name">プロフィール<br>強調表示 7日間</div>
-        <div class="rew-price">400<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('優先マッチング','700')">
-        <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-target"/></svg></div>
-        <div class="rew-cat">マッチング強化</div>
-        <div class="rew-name">優先マッチング<br>1ヶ月</div>
-        <div class="rew-price">700<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('アバターカスタマイズ','250')">
-        <div class="rew-img pink"><svg class="ic" style="width:36px;height:36px"><use href="#i-user"/></svg></div>
-        <div class="rew-cat">プロフィール装飾</div>
-        <div class="rew-name">限定アバター<br>カスタマイズ</div>
-        <div class="rew-price">250<small>＆pt</small></div>
-      </div>
-    </div>
-
-    <!-- CERTIFICATES -->
-    <div class="rew-grid" id="rew-cert" style="display:none">
-      <div class="rew-card" onclick="redeem('支援活動証明書（PDF）','300')">
-        <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-medal"/></svg></div>
-        <div class="rew-cat">公式書類</div>
-        <div class="rew-name">支援活動証明書<br>（PDF）</div>
-        <div class="rew-price">300<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('地域貢献証明書','600')">
-        <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-shield"/></svg></div>
-        <div class="rew-cat">行政連携</div>
-        <div class="rew-name">地域貢献<br>証明書</div>
-        <div class="rew-price">600<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('累計実績レポート','450')">
-        <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
-        <div class="rew-cat">統計レポート</div>
-        <div class="rew-name">累計実績<br>レポート</div>
-        <div class="rew-price">450<small>＆pt</small></div>
-      </div>
-      <div class="rew-card" onclick="redeem('カスタム証明書発行','1500')">
-        <div class="rew-img gold"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-trophy"/></svg></div>
-        <div class="rew-cat">プレミアム書類</div>
-        <div class="rew-name">カスタム<br>証明書発行</div>
-        <div class="rew-price">1,500<small>＆pt</small></div>
       </div>
     </div>
 
@@ -1455,7 +1466,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div id="comm-voice" style="display:none">
     <div class="comm-banner">
       <div class="comm-banner-h">ご近所のみんなが想いを綴る場所</div>
-      <div class="comm-banner-sub">日々のこと、ありがとうの言葉、気になっていること——顔の見える関係を育てる場所です。</div>
+      <div class="comm-banner-sub">日々のこと、ありがとうの言葉、気になっていること——顔の見える関係を育てる場所です。「いいね」の数は表示しません。</div>
+    </div>
+    <div class="comm-post">
+      <div class="comm-post-h">
+        <div class="avatar md green">鈴<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">鈴木 智子 さん</div><div class="cp-time">1時間前 ／ 高槻市</div></div>
+      </div>
+      <div class="cp-text">介護を始めて3年。「大丈夫？」と聞かれると、いつも「大丈夫」と答えていました。先週はじめて、ここで「2時間だけ」と頼んでみました。頼るのにも、練習がいるんですね。</div>
+      <div class="cp-actions">
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>ありがとう</span></div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>コメント</span></div>
+        <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
+      </div>
     </div>
     <div class="comm-post">
       <div class="comm-post-h">
@@ -1464,8 +1487,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
       <div class="cp-text">田中さんに母の付き添いをお願いして3ヶ月目になります。丁寧で頼りになる方で、母も「あの方が来てくれるのが楽しみ」と言っています。本当に出会えて良かった。</div>
       <div class="cp-actions">
-        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>24</span></div>
-        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>5</span></div>
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>ありがとう</span></div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>コメント</span></div>
         <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
@@ -1476,20 +1499,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
       <div class="cp-text">ヤングケアラーとして家族を支える子たちに、もっと制度的なバックアップが必要だと感じます。学校との連携、行政の認識——変えていきたいことがたくさん。</div>
       <div class="cp-actions">
-        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>47</span></div>
-        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>12</span></div>
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>ありがとう</span></div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>コメント</span></div>
         <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
     <div class="comm-post">
       <div class="comm-post-h">
-        <div class="avatar md gray">高<span class="v" style="background:var(--sky2)"><svg class="ic" style="font-size:.6rem"><use href="#i-shield"/></svg></span></div>
-        <div class="cp-meta"><div class="cp-name">高槻市役所 福祉課</div><div class="cp-time">昨日 ／ 公式</div></div>
+        <div class="avatar md gray">包<span class="v" style="background:var(--sky2)"><svg class="ic" style="font-size:.6rem"><use href="#i-shield"/></svg></span></div>
+        <div class="cp-meta"><div class="cp-name">○○市 地域包括支援センター<span class="lbl-example">公式の例</span></div><div class="cp-time">昨日 ／ 公式アカウント</div></div>
       </div>
-      <div class="cp-text">6月から地域包括支援センターとYou&amp;i Spaceの連携実証を開始します。詳細は追って発表します。</div>
+      <div class="cp-text">介護をしているご家族の相談会を、毎月第2水曜に公民館で開いています。「相談するほどでもない」と思うことこそ、お気軽にどうぞ。</div>
       <div class="cp-actions">
-        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>132</span></div>
-        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>38</span></div>
+        <div class="cp-action" onclick="cpLike(this)"><svg class="ic"><use href="#i-heart"/></svg><span>ありがとう</span></div>
+        <div class="cp-action" onclick="openComments()"><svg class="ic"><use href="#i-comment"/></svg><span>コメント</span></div>
         <div class="cp-action" onclick="openShare()"><svg class="ic"><use href="#i-share"/></svg>シェア</div>
       </div>
     </div>
@@ -1524,7 +1547,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="score-label" style="margin-bottom:8px">信頼の段階</div>
         <div id="prof-trust" style="font-family:'Noto Serif JP',serif;font-size:1.15rem;font-weight:500;line-height:1.5;color:#fff;white-space:nowrap">梅結び</div>
         <div id="prof-trust-chip" style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(200,232,212,.22);color:#c8e8d4;font-size:.7rem;font-weight:500">
-          感謝 38 回
+          活動中
         </div>
       </div>
       <div style="width:1px;height:74px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.35),transparent);justify-self:center"></div>
@@ -1538,9 +1561,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="score-bar" style="margin-top:22px"><div class="score-fill"></div></div>
     <div class="score-tags" id="prof-badges" style="margin-top:14px;justify-content:center">
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-trophy"/></svg>支え合い 42回</span>
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-heart"/></svg>感謝 38回</span>
-      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>継続 8ヶ月</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-medal"/></svg>梅結び</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-users"/></svg>活動中</span>
+      <span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#i-check"/></svg>本人確認済</span>
     </div>
   </div>
 
@@ -1568,8 +1591,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="set-section" style="margin:14px 18px 0;padding:16px 18px">
     <div style="font-size:.92rem;font-weight:600">よく言われること</div>
     <div style="font-size:.72rem;color:var(--tl);line-height:1.85;margin-top:5px">贈られた言葉は、点数にしません。誰が書いたかも表示しません。</div>
-    <div id="prof-words" style="margin-top:11px"></div>
-    <div id="prof-notes" style="margin-top:12px"></div>
+    <div id="prof-words" style="margin-top:11px"><span class="thanks-tag on" style="cursor:default">ていねいだった <b style="opacity:.8">×9</b></span><span class="thanks-tag on" style="cursor:default">安心できた <b style="opacity:.8">×7</b></span><span class="thanks-tag on" style="cursor:default">すぐ来てくれた <b style="opacity:.8">×5</b></span><span class="thanks-tag on" style="cursor:default">また会いたい <b style="opacity:.8">×4</b></span><span class="thanks-tag on" style="cursor:default">話しやすかった <b style="opacity:.8">×3</b></span></div>
+    <div id="prof-notes" style="margin-top:12px"><div style="border-left:2px solid rgba(184,175,214,.5);padding:2px 0 2px 11px;margin-bottom:9px;font-size:.84rem;color:var(--ink);line-height:1.85">「母の通院に付き添っていただき、心強かったです。」</div><div style="border-left:2px solid rgba(184,175,214,.5);padding:2px 0 2px 11px;margin-bottom:9px;font-size:.84rem;color:var(--ink);line-height:1.85">「重い荷物を運んでくださって、本当に助かりました。」</div><div style="font-size:.68rem;color:var(--tl);margin-top:2px">送り主の名前は表示しません。</div></div>
   </div>
 
   <!-- できること札（ふだんからできること） -->
@@ -1599,55 +1622,65 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="feed-item">
       <div class="feed-h">
         <div class="feed-dot"></div>
-        <div class="feed-text"><b>高橋さん</b>から感謝が届きました</div>
-        <div class="feed-time">2時間前</div>
+        <div class="feed-text">4人から、ありがとうが届きました</div>
+        <div class="feed-time">今週</div>
       </div>
-      <div class="feed-text" style="margin-left:18px">「丁寧で安心できる方でした。また是非お願いしたいです。」</div>
-      <div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋12 ＆pt</span></div>
+      <div style="margin-left:18px;margin-top:5px"><span class="ptype can" style="margin-right:4px">ていねいだった</span><span class="ptype can" style="margin-right:4px">安心できた</span><span class="ptype can">すぐ来てくれた</span></div>
+      <div style="margin-left:18px;margin-top:6px"><span class="feed-point">＋150 ＆pt</span></div>
+    </div>
+    <div class="feed-item">
+      <div class="feed-h">
+        <div class="feed-dot" style="background:var(--sage)"></div>
+        <div class="feed-text">支え合いがひとつ、終わりました</div>
+        <div class="feed-time">2日前</div>
+      </div>
     </div>
     <div class="feed-item">
       <div class="feed-h">
         <div class="feed-dot" style="background:var(--lav)"></div>
-        <div class="feed-text"><b>支え合いの記録</b>「継続8ヶ月」が付きました</div>
-        <div class="feed-time">昨日</div>
+        <div class="feed-text"><b>前田 健太郎</b>さんにありがとうを贈りました</div>
+        <div class="feed-time">5日前</div>
       </div>
+      <div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−50 ＆pt</span></div>
     </div>
     <div class="feed-item">
       <div class="feed-h">
         <div class="feed-dot" style="background:var(--gold)"></div>
-        <div class="feed-text">＆ポイントで<b>高槻市内カフェクーポン</b>と交換</div>
-        <div class="feed-time">3日前</div>
+        <div class="feed-text">＆ポイントを<b>（例）まちかどカフェ</b>のクーポンと交換</div>
+        <div class="feed-time">1週間前</div>
       </div>
       <div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−500 ＆pt</span></div>
     </div>
+    <div style="padding:2px 18px 6px;font-size:.68rem;color:var(--tl);line-height:1.8">届いたありがとうは、まとめてお知らせしています。誰が送ったか・送らなかったかは表示しません。</div>
   </div>
 
   <div class="score-detail" style="margin-top:18px">
     <div class="sd-h"><div class="sd-title">信頼の段階の内訳</div><div class="sd-value" id="prof-trust2" style="font-family:'Noto Serif JP',serif;font-size:.95rem">梅結び</div></div>
     <div class="sd-bars" id="prof-scorebars">
       <div class="sd-bar-row"><div class="sd-bar-lbl">本人確認</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:100%"></div></div><div class="sd-bar-val">済</div></div>
-      <div class="sd-bar-row"><div class="sd-bar-lbl">支え合い</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:88%"></div></div><div class="sd-bar-val">42</div></div>
-      <div class="sd-bar-row"><div class="sd-bar-lbl">継続</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:72%"></div></div><div class="sd-bar-val">8ヶ月</div></div>
-      <div class="sd-bar-row"><div class="sd-bar-lbl">感謝</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:81%"></div></div><div class="sd-bar-val">38</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">支えた</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:100%"></div></div><div class="sd-bar-val">28</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">支えられた</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:21%"></div></div><div class="sd-bar-val">6</div></div>
+      <div class="sd-bar-row"><div class="sd-bar-lbl">次の段階まで</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:64%"></div></div><div class="sd-bar-val">64%</div></div>
     </div>
     <div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">助けを求めることにも、段階の条件はありません。支えた回数と支えられた回数を、同じだけ「支え合い」に数えます。どちらか一方に偏っていても、段階は同じように上がります。信頼は、＆ポイントでもお金でも買えません。</div>
   </div>
   <div class="sec-block" id="prof-certs">
-    <div class="sec-h"><div class="sec-h-title">デジタル証明書</div><div class="sec-h-more">すべて見る <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>
-    <div class="cert-list">
-      <div class="cert" onclick="openCert('継続支援バッジ（8ヶ月）','2026.05.13','高槻市内 老老介護支援','YIS-CER-2026-05-1042','gold','i-medal')">
-        <div class="cert-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-medal"/></svg></div>
-        <div class="cert-body"><div class="cert-title">継続支援バッジ（8ヶ月）</div><div class="cert-meta">2026.05.13 ／ 高槻市内 老老介護支援</div></div>
+    <div class="sec-h"><div class="sec-h-title">活動の記録（証明書）</div></div>
+    <div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-4px 0 10px">学校や勤め先、地域の活動に提出できる記録です。＆ポイントと交換せず、いつでも出せます。</div>
+    <div class="cert-list" style="padding:0">
+      <div class="cert" onclick="openCert('支え合いの記録（2026年度 上半期）','2026.09.30','You&amp;i Space 運営','YIS-REC-2026-H1-0042','lav','i-users')">
+        <div class="cert-illust lav"><svg class="ic" style="width:22px;height:22px"><use href="#i-users"/></svg></div>
+        <div class="cert-body"><div class="cert-title">支え合いの記録（2026年度 上半期）</div><div class="cert-meta">2026.09.30 ／ You&amp;i Space 運営</div></div>
         <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="cert" onclick="openCert('ヤングケアラー支援認証','2026.03.20','高槻市役所 福祉課発行','YIS-OFC-2026-03-0218','sky','i-shield')">
+      <div class="cert" onclick="openCert('防災訓練への参加','2026.09.01','○○地区 自主防災会（例）','YIS-REC-2026-09-0118','sky','i-shield')">
         <div class="cert-illust sky"><svg class="ic" style="width:22px;height:22px"><use href="#i-shield"/></svg></div>
-        <div class="cert-body"><div class="cert-title">ヤングケアラー支援認証</div><div class="cert-meta">2026.03.20 ／ 高槻市役所 福祉課</div></div>
+        <div class="cert-body"><div class="cert-title">防災訓練への参加</div><div class="cert-meta">2026.09.01 ／ ○○地区 自主防災会（例）</div></div>
         <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
-      <div class="cert" onclick="openCert('初回支援完了','2025.09.15','You&amp;i Space システム発行','YIS-SYS-2025-09-0001','lav','i-star')">
-        <div class="cert-illust lav"><svg class="ic ic-fill" style="width:22px;height:22px"><use href="#i-star"/></svg></div>
-        <div class="cert-body"><div class="cert-title">初回支援完了</div><div class="cert-meta">2025.09.15 ／ You&amp;i Space 発行</div></div>
+      <div class="cert" onclick="openCert('はじめての支え合い','2025.09.15','You&amp;i Space 運営','YIS-REC-2025-09-0001','','i-heart')">
+        <div class="cert-illust"><svg class="ic" style="width:22px;height:22px"><use href="#i-heart"/></svg></div>
+        <div class="cert-body"><div class="cert-title">はじめての支え合い</div><div class="cert-meta">2025.09.15 ／ You&amp;i Space 運営</div></div>
         <div class="cert-action">表示 <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div>
       </div>
     </div>
@@ -1659,53 +1692,37 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <div class="screen no-nav" id="screen-uprof">
   <div class="app-header">
     <div class="app-h-back" onclick="goBackFromUprof()"><svg class="ic"><use href="#i-back"/></svg>プロフィール</div>
-    <div class="app-h-actions"><button class="icon-btn" onclick="toast('通報フォームを開きました')"><svg class="ic"><use href="#i-alert"/></svg></button></div>
+    <div class="app-h-actions"><button class="icon-btn" onclick="toast('通報は運営だけが確認し、相手には通知されません（デモでは送信しません）')"><svg class="ic"><use href="#i-alert"/></svg></button></div>
   </div>
   <div class="uprof-hero">
-    <div class="avatar xl green" style="margin:0 auto">鈴<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
-    <div class="prof-name">鈴木 智子 さん</div>
-    <div class="prof-bio">高槻市・3年前から母（85）を介護中</div>
+    <div class="avatar xl green" id="up-avatar" style="margin:0 auto">鈴<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span></div>
+    <div class="prof-name" id="up-name">鈴木 智子 さん</div>
+    <div class="prof-bio" id="up-bio">高槻市・母（85）の介護をしながら暮らしています</div>
     <div class="prof-roles">
-      <span class="prof-role">＆ Receiver</span>
+      <span class="prof-role" id="up-stage">あわじ結び</span>
+      <span class="prof-role">活動中</span>
       <span class="prof-role">本人確認済</span>
     </div>
   </div>
-  <div style="display:flex;gap:8px;padding:14px 18px 12px">
-    <div class="stat-card"><div class="stat-num">92</div><div class="stat-label">TRUST SCORE</div></div>
-    <div class="stat-card"><div class="stat-num">5.0</div><div class="stat-label">評価平均</div></div>
-    <div class="stat-card"><div class="stat-num">14</div><div class="stat-label">受援回数</div></div>
-  </div>
-  <div class="uprof-section">
+  <div style="margin:12px 18px 10px;font-size:.7rem;color:var(--tl);line-height:1.8;text-align:center">支え合った回数や、評価の点数は表示しません。</div>
+  <div class="uprof-section" id="up-intro-sec">
     <h4>自己紹介</h4>
-    <p>夫を亡くしてから、母と二人で暮らしています。母の通院や買い物のサポートを必要としており、温かい繋がりを求めています。</p>
+    <p id="up-intro">3年前から母の介護をしています。「大丈夫？」と聞かれると、つい「大丈夫」と答えてしまう性分です。ここでは少しずつ、頼ることを練習しています。</p>
+  </div>
+  <div class="uprof-section" id="up-can-sec">
+    <h4>できること</h4>
+    <div class="uprof-skills" id="up-can"><span class="uprof-skill">編み物を教えられます</span><span class="uprof-skill">子どもの宿題を見られます（夜）</span></div>
+  </div>
+  <div class="uprof-section" id="up-need-sec">
+    <h4>いま頼みたいこと</h4>
+    <div class="uprof-skills" id="up-need"><span class="uprof-skill">介護の合間に、自分の通院の2時間だけ母の話し相手を</span></div>
   </div>
   <div class="uprof-section">
-    <h4>必要としている支援</h4>
-    <div class="uprof-skills">
-      <span class="uprof-skill">通院付き添い</span>
-      <span class="uprof-skill">買い物代行</span>
-      <span class="uprof-skill">話し相手</span>
-      <span class="uprof-skill">家事補助</span>
-    </div>
+    <h4>よく言われること</h4>
+    <div id="up-words"><span class="thanks-tag on" style="cursor:default">ていねいだった <b style="opacity:.8">×4</b></span><span class="thanks-tag on" style="cursor:default">話しやすかった <b style="opacity:.8">×3</b></span></div>
+    <div style="font-size:.68rem;color:var(--tl);line-height:1.7">贈られた言葉は点数にせず、誰が書いたかも表示しません。</div>
   </div>
-  <div class="uprof-section">
-    <h4>これまでの評価（14件）</h4>
-    <div class="uprof-review">
-      <div class="uprof-review-h">
-        <div class="uprof-rev-name">前田 さん（支援者）</div>
-        <div class="uprof-rev-stars" style="color:#c07880"><span class="ptype can" style="margin-right:4px">ていねいだった</span><span class="ptype can">また会いたい</span></div>
-      </div>
-      <div class="uprof-rev-text">いつも温かくお迎えくださり、こちらが励まされます。母娘の関係性も穏やかで素敵な方です。</div>
-    </div>
-    <div class="uprof-review">
-      <div class="uprof-review-h">
-        <div class="uprof-rev-name">井上 さん（支援者）</div>
-        <div class="uprof-rev-stars" style="color:#c07880"><span class="ptype can" style="margin-right:4px">ていねいだった</span><span class="ptype can">また会いたい</span></div>
-      </div>
-      <div class="uprof-rev-text">明るく前向きな方で、初対面でも安心して関われました。お母様とのやり取りからも、深い愛情が伝わってきます。</div>
-    </div>
-  </div>
-  <div style="padding:0 18px 80px"><button class="btn-primary" onclick="openChat('鈴木','green','鈴')">メッセージを送る</button></div>
+  <div style="padding:0 18px 80px"><button class="btn-primary" id="up-msg-btn" onclick="openChat('鈴木','green','鈴')">メッセージを送る</button></div>
 </div>
 
 <!-- SETTINGS -->
@@ -1758,6 +1775,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="set-icon"><svg class="ic"><use href="#i-location"/></svg></div>
         <div class="set-label">位置情報の利用</div>
         <div class="set-toggle on" id="set-toggle-loc" onclick="toggleSetting(this,'loc')"></div>
+      </div>
+    </div>
+    <div class="set-section-h">このアプリについて</div>
+    <div class="set-section">
+      <div class="set-item" onclick="openGuide(0)">
+        <div class="set-icon"><svg class="ic"><use href="#i-info"/></svg></div>
+        <div class="set-label">You&amp;i Space とは（構想ガイド）<div style="font-size:.7rem;color:var(--tl);margin-top:2px">支援者支援・役割の循環・平時から災害時へ・安全の設計</div></div>
+        <div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div>
       </div>
     </div>
     <div class="set-section-h">災害時</div>
@@ -1814,7 +1839,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.2.0 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.5.0 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -1850,7 +1875,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal(null,'match-modal');navTo('uprof')">プロフィール</button>
+      <button class="btn-secondary" onclick="closeModal(null,'match-modal');openDemoProfile(window.__mmName)">プロフィール</button>
       <button class="btn-primary" id="mm-contact-btn">連絡する</button>
     </div>
   </div>
@@ -1861,7 +1886,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <div class="modal-title">デジタル証明書</div>
+      <div class="modal-title">活動の記録</div>
       <button class="modal-close" onclick="closeModal(null,'cert-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
     </div>
     <div class="cert-detail" id="cert-detail">
@@ -1873,11 +1898,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div><b>発行日</b><span id="cd-date">—</span></div>
       <div><b>発行元</b><span id="cd-issuer">—</span></div>
       <div><b>所有者</b><span>田中 太郎</span></div>
-      <div><b>検証</b><span>ブロックチェーン署名済</span></div>
+      <div><b>確認方法</b><span>運営の記録と照合できます（構想）</span></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="toast('証明書を共有します')">共有</button>
-      <button class="btn-primary" onclick="toast('ダウンロードを開始しました')">ダウンロード</button>
+      <button class="btn-secondary" onclick="toast('共有します（デモ）')">共有</button>
+      <button class="btn-primary" onclick="toast('PDFで保存します（デモ）')">PDFで保存</button>
     </div>
   </div>
 </div>
@@ -1914,6 +1939,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <button class="modal-close" onclick="closeModal(null,'sheet-modal')"><svg class="ic"><use href="#i-close"/></svg></button>
     </div>
     <div class="modal-content" id="sheet-content">—</div>
+  </div>
+</div>
+
+<!-- 構想ガイド（ゲスト開始時・設定・ログインから開く） -->
+<div class="guide" id="guide" role="dialog" aria-modal="true" aria-label="You&amp;i Space とは">
+  <div class="guide-top">
+    <div class="guide-dots" id="guide-dots"></div>
+    <button class="guide-skip" id="guide-skip" onclick="closeGuide()">スキップ</button>
+  </div>
+  <div class="guide-body" id="guide-body"></div>
+  <div class="guide-foot">
+    <button class="btn-secondary" id="guide-prev" onclick="guideStep(-1)">戻る</button>
+    <button class="btn-primary" id="guide-next" onclick="guideStep(1)">次へ</button>
   </div>
 </div>
 
@@ -2003,6 +2041,7 @@ function navTo(name){
   if(name==='profile'){ renderMyCards(); }
   if(name==='post'){ setPostType(null,curPostType||'tsuide'); }
   if(name==='main'){
+    renderDemoRibbon(); renderCareCard();
     // Re-init map if user is on map tab
     const mapPanel=document.getElementById('main-panel-map');
     if(mapPanel && mapPanel.style.display!=='none'){
@@ -2072,7 +2111,7 @@ function zeroOutNewAccount(){
   var bars=document.getElementById('prof-scorebars');
   if(bars){ bars.querySelectorAll('.sd-bar-fill').forEach(function(b){b.style.width='0%';}); bars.querySelectorAll('.sd-bar-val').forEach(function(v){v.textContent='0';}); }
   var act=document.getElementById('prof-activity'); if(act) act.innerHTML='<div class="sec-h"><div class="sec-h-title">最近の活動</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.8">まだ活動がありません。<br>支援したり助けを求めると、ここに記録されます。</div>';
-  var certs=document.getElementById('prof-certs'); if(certs) certs.innerHTML='<div class="sec-h"><div class="sec-h-title">デジタル証明書</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem">まだ証明書がありません。</div>';
+  var certs=document.getElementById('prof-certs'); if(certs) certs.innerHTML='<div class="sec-h"><div class="sec-h-title">活動の記録（証明書）</div></div><div style="padding:20px;text-align:center;color:var(--tl);font-size:.82rem">まだ記録がありません。</div>';
   var vchip=document.getElementById('prof-verify-chip'); if(vchip){vchip.textContent='本人確認 未完了'; vchip.style.opacity='.55';}
   var vbadge=document.getElementById('prof-verify-badge'); if(vbadge) vbadge.style.display='none';
 }
@@ -2178,7 +2217,7 @@ function login(){
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   const em=((document.getElementById('login-email')||{}).value||'').trim();
   const pass=(document.getElementById('login-pass')||{}).value||'';
-  if(!fbReady){ navTo('main'); setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300); return; }
+  if(!fbReady){ loadDemoData(); navTo('main'); setTimeout(()=>toast('ようこそ、You&i Spaceへ'),300); return; }
   if(!em||!pass){ toast('メールアドレスとパスワードを入力してください'); return; }
   fbAuth.signInWithEmailAndPassword(em,pass).catch(function(e){ toast(authErrMsg(e)); });
   // 成功時は onAuthStateChanged が main へ自動遷移
@@ -2189,8 +2228,9 @@ function guestDemo(){
   // ある場合は、サインアウトしてクリーンな状態で再読込 → まっさらなゲストにする
   var hadSession=(fbReady&&fbAuth&&fbAuth.currentUser)||!!localStorage.getItem('youi_user')||window.__profileApplied;
   if(!hadSession){
-    window.__guest=true; currentProfile=null;
-    navTo('main'); setTimeout(function(){toast('ゲストとしてデモを開始しました');},300);
+    var withGuide=!guideSeen();
+    startDemo(withGuide);
+    if(!withGuide) setTimeout(function(){toast('ゲストとしてデモを開始しました');},300);
     return;
   }
   try{ sessionStorage.setItem('youi_guest','1'); }catch(e){}
@@ -2401,8 +2441,12 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   s.style.color='var(--tl)';
   s.innerHTML='';
   s.style.fontSize='.78rem';tags.appendChild(s);
-  document.getElementById('mm-score').textContent=stage_label_for(trust);
-  document.getElementById('mm-score-bar').style.width=trust+'%';
+  // 生の数値は出さず、水引の段階の位置だけを示す
+  var stName=stage_label_for(trust), si=0;
+  TRUST_STAGES.forEach(function(st,k){ if(st.name===stName) si=k; });
+  document.getElementById('mm-score').textContent=stName;
+  document.getElementById('mm-score-bar').style.width=Math.round((si+1)/TRUST_STAGES.length*100)+'%';
+  window.__mmName=name;
   document.getElementById('mm-contact-btn').onclick=function(){
     closeModal(null,'match-modal');
     openChat(name,color,initial);
@@ -2440,7 +2484,7 @@ var POST_TYPES={
           hint:'ふだんからできることを書いておきます。ご近所マップに出て、災害のときはそのまま「いま動ける人」の一覧になります。',
           ph:'例：車を出せます／スマホの相談にのれます', btn:'できること札を出す'},
   need  :{label:'困っていること', cls:'need', color:'pink',
-          hint:'名前を伏せて出すこともできます。＆ポイントの残高が0でも、遠慮なく頼んで大丈夫です。',
+          hint:'名前を伏せて出すこともできます。＆ポイントの残高が0でも、遠慮なく頼んで大丈夫です。いつも誰かを支えている人こそ、どうぞ。',
           ph:'例：ゴミ出しを手伝ってくれる方を探しています', btn:'投稿する'}
 };
 /* 旧データ（provide／receive）を新しい4分類に読み替える */
@@ -2662,6 +2706,7 @@ function skipThanks(dealId, toUid){
 }
 /* 支え合いが終わったことを記録する（ゲートの起点・1件+0.5） */
 function closeDeal(){
+  if(isGuestDemo()){ demoCloseDeal(); return; }
   if(!(currentConv&&currentConv.otherUid)){ toast('実際の会話から記録できます'); return; }
   if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
   if(busy('deal',3000)) return;
@@ -2682,7 +2727,7 @@ function closeDeal(){
 
 /* ===== 気になったこと（運営だけが見る。相手には通知されない） ===== */
 function openConcern(){
-  if(!(currentConv&&currentConv.otherUid)){ toast('実際の会話から送れます'); return; }
+  if(!(currentConv&&currentConv.otherUid)&&!isGuestDemo()){ toast('実際の会話から送れます'); return; }
   openSheet('少し気になった',
     '<div style="font-size:.82rem;color:var(--ink);line-height:1.9;margin-bottom:14px">運営だけが読みます。<b>相手には通知されず、送ったこと自体も知られません。</b>公開の低評価にはなりません。</div>'+
     '<div style="font-size:.78rem;color:var(--tl);line-height:1.8;margin-bottom:14px">「通報するほどではないけれど、少し気になった」を受け取るための窓口です。運営が様子を見るために使います。</div>'+
@@ -2690,6 +2735,7 @@ function openConcern(){
     '<button class="btn-primary" onclick="sendConcern()">運営に伝える</button>');
 }
 function sendConcern(){
+  if(isGuestDemo()){ closeSheet(); toast('運営に伝えました（デモ）。相手には分かりません'); return; }
   if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
   if(!(currentConv&&currentConv.otherUid)){ toast('相手が特定できません'); return; }
   if(busy('concern',3000)) return;
@@ -2706,6 +2752,7 @@ var PT_CHOICES=[30,50,100];
 
 /* 自分の＆ポイント残高（登録時300pt・戦略指針§5-6の初期値） */
 function myPoints(){
+  if(isGuestDemo()) return (typeof window.__demoPoints==='number')?window.__demoPoints:1240;
   var u=getStoredUser()||{};
   return (typeof u.points==='number')?u.points:300;
 }
@@ -2793,6 +2840,7 @@ function renderTrustUI(){
   renderActivity();
   renderPointsUI();
   renderGateUI();
+  renderCareCard();
 }
 
 /* 人柄資本＝言葉のまま。数値にしないし、誰が書いたかも出さない */
@@ -2872,8 +2920,10 @@ function renderActivity(){
 /* ===== 感謝を贈る（星評価なし・＆ポイントは手渡し・「お互いさま」で借りを閉じる） ===== */
 var thanksSel={tags:[],pts:50,to:null,toName:'',postId:'',dealId:''};
 function openThanks(toUid,toName,postId,dealId){
-  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
-  if(toUid===fbAuth.currentUser.uid){ toast('自分には贈れません'); return; }
+  if(!isGuestDemo()){
+    if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+    if(toUid===fbAuth.currentUser.uid){ toast('自分には贈れません'); return; }
+  }
   thanksSel={tags:[],pts:50,to:toUid,toName:toName||'相手の方',postId:postId||'',dealId:dealId||''};
   var bal=myPoints();
   // 語彙は方向で分ける。どちらだったかは本人にしか分からないので、両方見せて選んでもらう
@@ -2887,7 +2937,7 @@ function openThanks(toUid,toName,postId,dealId){
     return '<span class="thanks-tag'+(v===50?' on':'')+'" data-pt="'+v+'" onclick="setThanksPt(this,'+v+')">'+v+' pt</span>';
   }).join('')+'<span class="thanks-tag" data-pt="0" onclick="setThanksPt(this,0)">今回は渡さない</span>';
   openSheet('お礼を伝える',
-    '<div style="font-size:.85rem;color:var(--ink);line-height:1.9;margin-bottom:16px">'+escapeHtml(thanksSel.toName)+'さんに、ありがとうを贈ります。<br><span style="font-size:.76rem;color:var(--tl)">点数はつけません。感じたことを選ぶだけで大丈夫です。</span></div>'+
+    '<div style="font-size:.85rem;color:var(--ink);line-height:1.9;margin-bottom:16px">'+escapeHtml(thanksSel.toName)+honorific(thanksSel.toName).trim()+'に、ありがとうを贈ります。<br><span style="font-size:.76rem;color:var(--tl)">点数はつけません。感じたことを選ぶだけで大丈夫です。</span></div>'+
     '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">感謝タグ（いくつでも）</div>'+
     '<div style="margin-bottom:18px">'+tagHtml+'</div>'+
     '<div style="font-size:.78rem;font-weight:600;margin-bottom:7px">ひとこと（任意）</div>'+
@@ -2910,7 +2960,8 @@ function setThanksPt(el,v){
   el.classList.add('on'); thanksSel.pts=v;
 }
 function sendThanks(){
-  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  var demo=isGuestDemo();
+  if(!demo&&(!fbReady||!fbAuth.currentUser)){ toast('ログインが必要です'); return; }
   if(!thanksSel.to){ toast('相手が特定できません'); return; }
   if(!thanksSel.tags.length){ toast('感謝タグを1つ以上えらんでください'); return; }
   var note=((document.getElementById('th-note')||{}).value||'').trim();
@@ -2918,6 +2969,7 @@ function sendThanks(){
   var pts=thanksSel.pts||0;
   if(pts>myPoints()){ toast('＆ポイントが足りません。0ptでも贈れます'); return; }
   if(busy('thanks',3000)) return;
+  if(demo){ demoSendThanks(pts); return; }
   var u=getStoredUser()||{};
   fbDb.collection('thanks').add({
     fromUid:fbAuth.currentUser.uid,
@@ -2942,7 +2994,7 @@ function renderNeedList(){
   var items=window.__needPosts||[];
   var cnt=document.getElementById('need-count');
   var real=!!(currentProfile&&currentProfile.uid);
-  if(cnt){ cnt.style.display=real?'':'none'; cnt.innerHTML='困っていること <b>'+items.length+'</b>件'; }
+  if(cnt){ cnt.style.display=(real||isGuestDemo())?'':'none'; cnt.innerHTML='困っていること <b>'+items.length+'</b>件'; }
   var me=document.getElementById('map-empty');
   if(!items.length){
     el.innerHTML='';
@@ -2967,7 +3019,7 @@ function renderNeedList(){
 
 /* ===== できること札（プロフィールに登録する。中身は type='can' の投稿） ===== */
 function myCardList(){
-  var me=(fbReady&&fbAuth.currentUser)?fbAuth.currentUser.uid:null;
+  var me=isGuestDemo()?DEMO_ME:((fbReady&&fbAuth.currentUser)?fbAuth.currentUser.uid:null);
   if(!me) return [];
   var all=window.__posts||{};
   return Object.keys(all).map(function(k){return all[k];})
@@ -2991,7 +3043,7 @@ function renderMyCards(){
   }).join('');
 }
 function openAddCard(){
-  if(!fbReady||!fbAuth.currentUser){ toast('登録にはログインが必要です'); return; }
+  if(!isGuestDemo() && (!fbReady||!fbAuth.currentUser)){ toast('登録にはログインが必要です'); return; }
   openSheet('できること札を追加',
     '<div style="font-size:.8rem;color:var(--tl);line-height:1.9;margin-bottom:16px">ふだんからできることを、ひとつずつ短く書きます。特別なことでなくて大丈夫です。</div>'+
     '<div class="input-group"><label class="input-label">できること</label><input id="ac-title" class="input" maxlength="60" placeholder="例：車を出せます"></div>'+
@@ -3009,6 +3061,10 @@ function saveCard(){
   if(tooLong(title,'title','できること'))return;
   if(tooLong(area,'area','エリア'))return;
   if(tooLong(detail,'detail','ひとこと'))return;
+  if(isGuestDemo()){
+    demoAddPost({type:'can',title:title,detail:detail,categories:[],pref:pref,area:area,when:'',anon:false});
+    closeSheet(); toast('できること札を登録しました（デモ）'); return;
+  }
   if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
   if(busy('card',3000))return;
   var u=getStoredUser()||{};
@@ -3035,17 +3091,26 @@ function doEnterYui(){ renderYuiLists(); navTo('yui'); toast('結モードに切
 function exitYuiMode(){ navTo('main'); toast('いつもの画面に戻りました'); }
 function reportSafety(kind){
   var el=document.getElementById('yui-safety-state'); if(!el) return;
+  // 実アカウントの「試す」では何も送っていないので、届いたとは表示しない
+  if(!isGuestDemo()){
+    el.innerHTML='試用中のため、実際には送信していません。災害時の運用では、ここから「'+(kind==='ok'?'無事です':'手助けが要ります')+'」がご近所に届きます。';
+    toast('試用のため送信していません'); return;
+  }
   el.innerHTML = (kind==='ok')
-    ? '「無事です」を知らせました。ご近所の12世帯に届いています。'
-    : '「手助けが要ります」を知らせました。近くで動ける方に届いています。まもなく連絡が入ります。';
+    ? '「無事です」を知らせました。ご近所の12世帯に届いています（デモ）。'
+    : '「手助けが要ります」を知らせました。近くで動ける方に届いています。まもなく連絡が入ります（デモ）。';
   toast(kind==='ok'?'無事を知らせました':'手助けの要請を知らせました');
 }
 function renderYuiLists(){
   var posts=window.__posts||{}, can=[], moyai=[];
   Object.keys(posts).forEach(function(k){
     var p=posts[k], t=normType(p.type);
-    if(t==='can'||t==='tsuide') can.push(p);
-    if(t==='share'||(p.categories||[]).indexOf('貸し借り・共同作業')>=0) moyai.push(p);
+    // 投稿フォームのカテゴリ名は「貸し借り」。旧名「貸し借り・共同作業」も読む
+    var cats=p.categories||[];
+    var lend=cats.filter(function(c){ return c==='貸し借り'||c==='貸し借り・共同作業'; }).length;
+    if(t==='share'||lend) moyai.push(p);
+    // 貸し借りだけの札は「出せるもの」に回し、「動ける人」には重ねて出さない
+    if((t==='can'||t==='tsuide') && !(lend && lend===cats.length)) can.push(p);
   });
   var row=function(p){
     return '<div class="prov-card" onclick="openPostDetail(\''+p.id+'\')">'+
@@ -3061,7 +3126,7 @@ function renderYuiLists(){
     : empty('平時に「できること札」や「ついで」が出ていると、<br>ここに動ける人が並びます。');
   var b=document.getElementById('yui-moyai-list');
   if(b) b.innerHTML = moyai.length ? moyai.map(row).join('')
-    : empty('「貸し借り・共同作業」の投稿が出ていると、<br>ここに出せるものが並びます。');
+    : empty('「貸し借り」のできること札や投稿が出ていると、<br>ここに出せるものが並びます。');
 }
 
 /* ===== コミュニティ：デジタル回覧板 ===== */
@@ -3095,6 +3160,23 @@ function submitPost(){
   if(tooLong(title,'title','タイトル'))return;
   if(tooLong(detail,'detail','詳細'))return;
   if(tooLong(area,'area','エリア'))return;
+  if(isGuestDemo()){
+    // デモ：端末の中の一覧に足すだけ（送信しない）
+    demoAddPost({type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,
+      when:(type==='tsuide')?when.slice(0,40):'', anon:(type==='need')?anon:false});
+    clearPostForm();
+    if(type==='need') markCareAnswered();
+    toast('投稿しました（デモ：この端末の中だけに表示されます）');
+    setTimeout(function(){
+      navTo('main');
+      if(type==='need'){
+        var tb=document.querySelectorAll('.main-tab')[1]; if(tb) switchMainTab(tb,'map');
+        var sc=document.getElementById('screen-main'), tabs=document.querySelector('#screen-main .main-tabs'), hd=document.querySelector('#screen-main .app-header');
+        if(sc&&tabs) sc.scrollTop=tabs.offsetTop-(hd?hd.offsetHeight:0)-8;
+      }
+    },700);
+    return;
+  }
   if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
   if(busy('post',3000))return;
   var u=getStoredUser()||{};
@@ -3104,15 +3186,20 @@ function submitPost(){
     authorName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
-    var t=document.getElementById('post-title'); if(t)t.value='';
-    var d=document.getElementById('post-detail'); if(d)d.value='';
-    var pa=document.getElementById('post-area'); if(pa)pa.value='';
-    var pp=document.getElementById('post-pref'); if(pp)pp.value='';
-    var pw=document.getElementById('post-when'); if(pw)pw.value='';
-    var pan=document.getElementById('post-anon'); if(pan)pan.checked=false;
+    clearPostForm();
+    if(type==='need') markCareAnswered();
     toast('投稿しました');
     setTimeout(()=>navTo('main'),700);
   }).catch(function(e){toast(authErrMsg(e));});
+}
+
+function clearPostForm(){
+  var t=document.getElementById('post-title'); if(t)t.value='';
+  var d=document.getElementById('post-detail'); if(d)d.value='';
+  var pa=document.getElementById('post-area'); if(pa)pa.value='';
+  var pp=document.getElementById('post-pref'); if(pp)pp.value='';
+  var pw=document.getElementById('post-when'); if(pw)pw.value='';
+  var pan=document.getElementById('post-anon'); if(pan)pan.checked=false;
 }
 
 var postsUnsub=null;
@@ -3175,7 +3262,10 @@ function renderPostCard(p){
   '</div>';
 }
 /* この投稿がログイン中の自分のものか */
-function isMyPost(p){ return !!(fbReady && fbAuth.currentUser && p && p.uid===fbAuth.currentUser.uid); }
+function isMyPost(p){
+  if(isGuestDemo()) return !!(p && p.uid===DEMO_ME);
+  return !!(fbReady && fbAuth.currentUser && p && p.uid===fbAuth.currentUser.uid);
+}
 
 function openPostDetail(id){
   var p=(window.__posts||{})[id]; if(!p) return;
@@ -3191,6 +3281,12 @@ function openPostDetail(id){
   }else if(fbReady && fbAuth.currentUser){
     actions='<button class="btn-primary" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button>'+
       '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem" onclick="openReport(\'post\',\''+id+'\',\''+escapeHtml(p.uid||'')+'\',\'この投稿\')">この投稿を通報する</button></div>';
+  }else if(isGuestDemo()){
+    // デモ：名前を伏せた頼みごとは、プロフィールを開けない（頼む側だけが匿名になれる）
+    actions='<div style="display:flex;gap:10px">'+
+      (p.anon?'':'<button class="btn-secondary" style="flex:1" onclick="closeSheet();demoProfilePost(\''+id+'\')">プロフィール</button>')+
+      '<button class="btn-primary" style="flex:1" onclick="demoMessageFromPost(\''+id+'\')">メッセージを送る</button></div>'+
+      (p.anon?'<div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:10px;text-align:center">頼む側は名前を伏せています。応える側の名前は、相手に表示されます。</div>':'');
   }else{
     actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
   }
@@ -3216,8 +3312,8 @@ function messageFromPost(id){
 
 /* 自分の投稿一覧（管理シート） */
 function openMyPosts(){
-  if(!fbReady||!fbAuth.currentUser){ toast('投稿の管理にはログインが必要です'); return; }
-  var me=fbAuth.currentUser.uid;
+  var me=isGuestDemo()?DEMO_ME:((fbReady&&fbAuth.currentUser)?fbAuth.currentUser.uid:null);
+  if(!me){ toast('投稿の管理にはログインが必要です'); return; }
   var all=window.__posts||{};
   var mine=Object.keys(all).map(function(k){return all[k];})
     .filter(function(p){ return p.uid===me && normType(p.type)!=='can'; });
@@ -3272,6 +3368,11 @@ function saveEditPost(id){
   if(tooLong(title,'title','タイトル'))return;
   if(tooLong(detail,'detail','詳細'))return;
   if(tooLong(area,'area','エリア'))return;
+  if(isGuestDemo()){
+    var q=(window.__posts||{})[id];
+    if(q){ q.type=editType; q.title=title; q.detail=detail; q.pref=pref; q.area=area; renderLivePosts(); }
+    closeSheet(); toast('投稿を更新しました（デモ）'); return;
+  }
   if(!fbReady||!fbAuth.currentUser){toast('ログインが必要です');return;}
   if(busy('editpost',3000))return;
   fbDb.collection('posts').doc(id).update({type:editType,title:title,detail:detail,pref:pref,area:area})
@@ -3289,6 +3390,10 @@ function confirmDeletePost(id){
     '</div>');
 }
 function doDeletePost(id){
+  if(isGuestDemo()){
+    window.__rawPosts=(window.__rawPosts||[]).filter(function(p){ return p.id!==id; });
+    closeSheet(); renderLivePosts(); toast('投稿を削除しました（デモ）'); return;
+  }
   if(!fbReady||!fbAuth.currentUser){toast('ログインが必要です');return;}
   fbDb.collection('posts').doc(id).delete()
     .then(function(){ if(window.__posts)delete window.__posts[id]; closeSheet(); toast('投稿を削除しました'); })
@@ -3306,60 +3411,26 @@ function toggleFilter(el){el.parentNode.querySelectorAll('.filter-chip').forEach
 function rewTab(el,key){
   el.parentNode.querySelectorAll('.rew-tab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
-  ['coupon','donate','service','cert'].forEach(k=>{
+  ['coupon','gallery','donate'].forEach(k=>{
     const g=document.getElementById('rew-'+k);
-    if(g) g.style.display=(k===key?'grid':'none');
+    if(g) g.style.display=(k===key?(k==='gallery'?'block':'grid'):'none');
   });
 }
 function redeem(name,pt){
   // 実アカウント：実証期間中の交換は未提供（誤解を招く偽の成功表示はしない）
   if(currentProfile&&currentProfile.uid){ toast('＆ポイントの交換は実証期間中は準備中です'); return; }
+  var n=parseInt(String(pt).replace(/,/g,''),10)||0;
+  if(n>myPoints()){ toast('＆ポイントが足りません（デモ）'); return; }
+  window.__demoPoints=myPoints()-n; renderDemoPoints();
   toast(name+' を '+pt+'＆pt で引き換えました（デモ）');
 }
-function cpLike(el){
-  const span=el.querySelector('span');
-  if(!el.classList.contains('liked')){
-    el.classList.add('liked');
-    span.textContent=(parseInt(span.textContent)||0)+1;
-  } else {
-    el.classList.remove('liked');
-    span.textContent=Math.max(0,(parseInt(span.textContent)||0)-1);
-  }
-}
+/* 「ありがとう」は数を出さない（人気の軸をつくらないため） */
+function cpLike(el){ el.classList.toggle('liked'); }
 function markAllRead(){
   document.querySelectorAll('.notif-item.unread').forEach(n=>n.classList.remove('unread'));
   toast('すべて既読にしました');
 }
 
-function openMatch(initial,cat,content,dist,stars,meta,score){
-  const m=document.getElementById('match-modal');
-  const av=document.getElementById('mm-avatar');
-  av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.6rem"><use href="#i-check"/></svg></span>';
-  av.className='avatar md';
-  if(cat==='elder') av.classList.add('green');
-  if(cat==='parent') av.classList.add('pink');
-  if(cat==='young') av.classList.add('sky');
-  document.getElementById('mm-title').textContent=initial+' さん';
-  document.getElementById('mm-meta').textContent=dist+' ／ '+meta;
-  document.getElementById('mm-content').textContent=content;
-  const tagMap={elder:['老老介護','cat-elder'],parent:['ひとり親','cat-parent'],young:['ヤングケアラー','cat-young']};
-  const tags=document.getElementById('mm-tags');
-  tags.innerHTML='';
-  if(tagMap[cat]){
-    const t=document.createElement('span');t.className='mc-cat '+tagMap[cat][1];t.textContent=tagMap[cat][0];tags.appendChild(t);
-  }
-  const s=document.createElement('span');s.className='mc-stars';
-  s.innerHTML=stars==='—'?'新しく来た方':'';
-  s.style.fontSize='.78rem';tags.appendChild(s);
-  document.getElementById('mm-score').textContent=stage_label_for(score);
-  document.getElementById('mm-score-bar').style.width=score+'%';
-  const color=cat==='elder'?'green':(cat==='parent'?'pink':'sky');
-  document.getElementById('mm-contact-btn').onclick=function(){
-    closeModal(null,'match-modal');
-    openChat(initial,color,initial.charAt(0));
-  };
-  m.classList.add('show');
-}
 function closeModal(e,id){
   if(e&&e.target!==e.currentTarget)return;
   document.getElementById(id).classList.remove('show');
@@ -3417,7 +3488,7 @@ function openConvById(uid){ var c=(window.__convs||{})[uid]||{}; openConversatio
 /* チャットヘッダーの相手名タップ：実会話では相手名を確認（デモ時のみプロフィールへ） */
 function openChatPartner(){
   if(currentConv && currentConv.id){ toast((currentConv.otherName||'相手')+' さんとの会話'); return; }
-  navTo('uprof');
+  openDemoProfile((window.__demoChat||{}).name);
 }
 
 /* 現在のチャットのメッセージを購読して描画 */
@@ -3513,7 +3584,9 @@ function openChat(name,color,initial){
   if(chatMsgsUnsub){ chatMsgsUnsub(); chatMsgsUnsub=null; }
   var sb=document.getElementById('chat-safety'); if(sb) sb.style.display='none';
   var pr=document.getElementById('chat-presence'); if(pr) pr.style.display='';
-  document.getElementById('chat-name').textContent=name+(name.includes('役所')?'':' さん');
+  if(DEMO_THREAD_HTML) document.getElementById('chat-thread').innerHTML=DEMO_THREAD_HTML;
+  window.__demoChat={name:name,color:color,initial:initial};
+  document.getElementById('chat-name').textContent=name+honorific(name);
   const av=document.getElementById('chat-avatar');
   av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
   av.className='avatar sm '+color;
@@ -3664,15 +3737,19 @@ function openBlockList(){
 /* 会話の相手にお礼を贈る。助けたのがどちらかは当事者にしか分からないので、
    投稿ではなく会話から贈る（「困っていること」でお礼の向きが逆になる不具合の是正） */
 function thanksToPartner(){
-  if(!(currentConv&&currentConv.otherUid)){ toast('実際の会話から、お礼を贈れます'); return; }
+  if(!(currentConv&&currentConv.otherUid)){
+    if(isGuestDemo()){ var dc=window.__demoChat||{}; openThanks('demo',dc.name||'相手の方','','demo'); return; }
+    toast('実際の会話から、お礼を贈れます'); return;
+  }
   openThanks(currentConv.otherUid, currentConv.otherName||'相手の方', '');
 }
 function openChatMenu(){
   var real=!!(currentConv&&currentConv.id);
+  var demo=!real&&isGuestDemo();
   var html='<div class="set-section">'+
-    (real?'<div class="set-item" onclick="closeSheet();closeDeal()"><div class="set-icon" style="color:#5a9a6a"><svg class="ic"><use href="#i-check"/></svg></div><div class="set-label">この支え合いは終わりました<div style="font-size:.7rem;color:var(--tl);margin-top:2px">記録して、お礼を伝えるか決めます</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
-    (real?'<div class="set-item" onclick="closeSheet();thanksToPartner()"><div class="set-icon" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">お礼を伝える</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
-    (real?'<div class="set-item" onclick="closeSheet();openConcern()"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-info"/></svg></div><div class="set-label">少し気になった<div style="font-size:.7rem;color:var(--tl);margin-top:2px">運営だけが読みます。相手には分かりません</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    ((real||demo)?'<div class="set-item" onclick="closeSheet();closeDeal()"><div class="set-icon" style="color:#5a9a6a"><svg class="ic"><use href="#i-check"/></svg></div><div class="set-label">この支え合いは終わりました<div style="font-size:.7rem;color:var(--tl);margin-top:2px">記録して、お礼を伝えるか決めます</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    ((real||demo)?'<div class="set-item" onclick="closeSheet();thanksToPartner()"><div class="set-icon" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">お礼を伝える</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    ((real||demo)?'<div class="set-item" onclick="closeSheet();openConcern()"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-info"/></svg></div><div class="set-label">少し気になった<div style="font-size:.7rem;color:var(--tl);margin-top:2px">運営だけが読みます。相手には分かりません</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     '<div class="set-item" onclick="closeSheet();openLegal(\'safety\')"><div class="set-icon"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">安全ガイド</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
   if(real){
     html+='<div class="set-item" onclick="openReport(\'user\',\'\',window.__reportUid,window.__reportName+\' さん\')"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-alert"/></svg></div><div class="set-label">この相手を通報する</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>'+
@@ -3680,7 +3757,7 @@ function openChatMenu(){
     window.__reportUid=currentConv.otherUid; window.__reportName=currentConv.otherName||'相手';
   }
   html+='</div>';
-  if(!real) html+='<p style="font-size:.74rem;color:var(--tl);margin-top:10px;line-height:1.7">デモ会話では通報・ブロックは使えません。実際の会話でご利用いただけます。</p>';
+  if(!real) html+='<p style="font-size:.74rem;color:var(--tl);margin-top:10px;line-height:1.7">デモ会話では通報・ブロックは使えません（実際の会話では、ここから運営に通報・相手をブロックできます。相手には通知されません）。</p>';
   openSheet('チャット設定',html);
 }
 
@@ -3854,11 +3931,13 @@ function openLegal(kind){
       '<button class="btn-primary" style="margin-top:6px" onclick="contactSupport()">運営に相談する</button>');
   }else{
     openSheet('ヘルプセンター',
-      legalQA('どんなサービスですか？','ご近所どうしが顔の見える関係になるための場所です。災害のときだけのものではありません。ふだんの「ついで」や「困っていること」のやりとりから始めて、いざというときに動ける関係を、日常のうちに育てておきます。')+
+      legalQA('どんなサービスですか？','「支える人もまた、支えを必要としている」という考えから生まれた、支援者支援のプラットフォームです。ご近所どうしが顔の見える関係になり、ふだんの「ついで」や「困っていること」のやりとりから、いざというときに動ける関係を日常のうちに育てておきます。')+
+      legalQA('支援者支援とは？','特定の誰かを選んで助けることではなく、「支える」という行為が生まれやすく・続きやすく・報われやすい環境を整えることです。家族を介護する人、ひとりで子育てをする人、家族を支える若い人——支える側ほど「大丈夫な人」と見なされ、助けを求める回路が塞がれがちです。You&i Space は、その回路をこちらから作りに行きます。')+
       legalQA('「ついで」って何ですか？','手を貸せることを伝えるための投稿です。「助けます」と宣言するのは少し気が重いので、「ついで」という言い方にしました。用事のついででも、空いた時間でもかまいません。頼む側も「ついでなら」と言えるので、お互いに気をつかわずにすみます。')+
       legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。')+
       legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
       legalQA('安全に使うには？','本人確認・通報・ブロックの仕組みがあります。はじめて会う前に「安全ガイド」をご覧ください。')+
+      legalQA('団体・行政はどう関われますか？','団体・行政のアカウントで参加できます。デジタル回覧板でのお知らせ、災害時の結モードでの支援調整、専門の相談窓口へのご案内などで、個人と同じ基盤の上でつながります。You&i Space は専門職の支援の代わりではなく、その隙間を補うものです。実証への参加・連携のご相談は、運営までお問い合わせください。')+
       legalQA('本人確認はどうやりますか？','設定 → 本人確認 から申請すると、運営からメールでご連絡します。実証期間中は、運営がおひとりずつ確認しています。')+
       legalQA('退会したいときは？','設定 → 退会（アカウント削除）からいつでも退会できます。プロフィールと投稿は削除されます。')+
       '<div style="display:flex;gap:10px;margin-top:6px">'+
@@ -4007,25 +4086,14 @@ function initMap(){
 
   const meIcon=L.divIcon({html:'<div class="me-marker"></div>',className:'',iconSize:[22,22],iconAnchor:[11,11]});
 
-  const markers=[
-    {lat:34.8495,lng:135.6135,c:'green',i:'鈴',n:'鈴木',cat:'elder',t:'高齢の母の通院付き添いを週1でお願いしたいです。',d:'1.2km',s:'5.0',m:'スコア92',sc:92},
-    {lat:34.8460,lng:135.6210,c:'pink', i:'佐',n:'佐藤',cat:'parent',t:'上の子の保育園お迎えを15時に1時間だけお願いしたいです。',d:'0.8km',s:'4.8',m:'ひとり親',sc:86},
-    {lat:34.8530,lng:135.6250,c:'sky',  i:'山',n:'山田',cat:'young', t:'試験前だけ夕食準備を手伝ってもらえる方を探しています。',d:'2.1km',s:'—',m:'ヤングケアラー',sc:74},
-    {lat:34.8420,lng:135.6300,c:'green',i:'木',n:'木村',cat:'elder', t:'夫の通院に同行できる方を探しています。',d:'3.4km',s:'4.9',m:'スコア88',sc:88},
-    {lat:34.8520,lng:135.6080,c:'pink', i:'林',n:'林',  cat:'parent',t:'子の食事準備を週2でお願いします。',d:'1.8km',s:'5.0',m:'ひとり親',sc:91},
-  ];
-  // デモのピン・現在地はゲスト時のみ表示（実アカウントでは実投稿ピンのみ）
+  // 現在地・拠点はゲスト（デモ）時のみ表示。困っていることのピンは updateMapPins が投稿から描く
   if(isGuest){
-    markers.forEach(m=>{
-      L.marker([m.lat,m.lng],{icon:makeUserIcon(m.c,m.i)}).addTo(mapInstance)
-        .on('click',()=>openMatch(m.n,m.cat,m.t,m.d,m.s,m.m,m.sc));
-    });
     L.marker([34.8485,135.6178],{icon:meIcon}).addTo(mapInstance);
     // 拠点ピン：個人宅の代わりに、受け渡しに使える公共の場所を出す（戦略指針§5-1）
     var hubIcon=function(t){ return L.divIcon({html:'<div class="user-marker" style="background:#fff;border:2px solid var(--gold);color:#8a7530;font-size:.6rem;line-height:1.15;text-align:center;display:flex;align-items:center;justify-content:center">'+t+'</div>',className:'',iconSize:[42,42],iconAnchor:[21,21]}); };
     [
       {lat:34.8508,lng:135.6152,t:'公民館',d:'受け渡しによく使われる場所です。'},
-      {lat:34.8462,lng:135.6165,t:'商店街',d:'協賛店があります。＆ポイントが使えます。'},
+      {lat:34.8438,lng:135.6128,t:'商店街',d:'協賛店があります。＆ポイントが使えます。'},
       {lat:34.8501,lng:135.6238,t:'薬局',d:'見守りの拠点として協力いただいています。'}
     ].forEach(function(h){
       L.marker([h.lat,h.lng],{icon:hubIcon(h.t)}).addTo(mapInstance)
@@ -4035,6 +4103,327 @@ function initMap(){
   updateMapPins();
 }
 function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);toast('現在地に戻りました')}}
+
+/* ===================================================================
+   v0.5.0：支援者支援の打ち出し・ゲストデモを現行方針へ
+   正本＝公式サイト「You&i Space」（2026-09）の説明 ＋ 本アプリの設計方針
+   ・支援者支援：支える人ほど頼る回路が塞がれる。その回路をこちらから作りに行く
+   ・役割の循環：今日助けられた人が、明日は誰かを助ける（＆ポイントの出口に Gallery）
+   ・平時から災害時へ：日常で使えなければ、有事には使えない
+   ・ゲストデモのデータはすべて架空で、この端末の中だけで動く（Firebase に書き込まない）
+   =================================================================== */
+
+/* ログインしていない＝ゲスト（デモ）。実アカウントの判定は従来どおり */
+function isGuestDemo(){ return !(currentProfile&&currentProfile.uid) && !(fbReady&&fbAuth&&fbAuth.currentUser); }
+function onLoginScreen(){ var a=document.querySelector('.screen.active'); return !!(a&&a.id==='screen-login'); }
+/* 団体名や「ご近所の方」には「さん」を付けない */
+function honorific(name){ return /(役所|会|課|センター|の方)$/.test(name||'')?'':' さん'; }
+
+/* ===== 構想ガイド ===== */
+function gPt(icon,html,tap){
+  return '<div class="guide-pt'+(tap?' tap':'')+'"'+(tap?' onclick="'+tap+'"':'')+'>'+
+    '<div class="gp-ic"><svg class="ic"><use href="#'+icon+'"/></svg></div><div style="flex:1">'+html+'</div>'+
+    (tap?'<svg class="ic" style="color:var(--ttl);margin-top:7px"><use href="#i-chevron-r"/></svg>':'')+'</div>';
+}
+var GUIDE=[
+  {eb:'YOU&amp;I SPACE', h:'支える人もまた、\n支えを必要としている。',
+   lead:'You&amp;i Space は、支援を善意で終わらせないための<b>支援者支援</b>のプラットフォームです。ご近所の小さな頼みごとから始めて、災害のときにも動ける関係を、日常のうちに育てます。',
+   body:'<div class="guide-pillars">'+
+     '<div class="guide-pillar"><b>01 支援者支援</b>頼る回路を、こちらから作る</div>'+
+     '<div class="guide-pillar"><b>02 役割の循環</b>助けられた人が、次は誰かを</div>'+
+     '<div class="guide-pillar"><b>03 平時から災害時へ</b>日常のつながりを有事の基盤に</div>'+
+     '<div class="guide-pillar"><b>04 安全の設計</b>あたたかさは戻し、監視は戻さない</div>'+
+   '</div>'},
+  {eb:'01　支援者支援', h:'助けを求める回路を、\nこちらから作りに行く。',
+   lead:'家族を介護する人、ひとりで子育てをする人、家族を支える若い人、被災地で働く支援者——。社会は「助けている人＝大丈夫な人」と見なしがちで、支える側ほど頼る回路が塞がれています。',
+   body:gPt('i-heart','支える側が続いている人に、アプリのほうから<b>「頼っていい」と声をかけます</b>')+
+        gPt('i-lock','頼む側は<b>名前を伏せて</b>出せます。＆ポイントの残高が0でも頼めます')+
+        gPt('i-shield','<b>専門の相談窓口</b>（地域包括支援センター・社会福祉協議会など）もあわせて案内し、専門職の支援の隙間を補います')},
+  {eb:'02　役割の循環', h:'今日助けられた人が、\n明日は誰かを助ける。',
+   lead:'慈善ではなく、相互扶助。善意を一度きりで終わらせず、一部の人の善意に頼りきりにもしない仕組みです。',
+   body:gPt('i-users','<b>ついで</b>——用事のついでに手を貸せることを、「助けます」と宣言せずに出せます')+
+        gPt('i-chat','<b>困っていること</b>——頼みたいことを出せます。地図にはおおまかな位置だけが出ます')+
+        gPt('i-gift','お礼は<b>＆ポイントの手渡し</b>。「お互いさま」で貸し借りを閉じます。使い道は地域のお店と You&amp;i Gallery')+
+        gPt('i-medal','信頼は<b>水引の結び名（5段階）</b>で表し、星や点数はつけません。支えられた回数も、支えた回数と同じだけ数えます')},
+  {eb:'03　平時から災害時へ', h:'日常で使えなければ、\n有事には使えない。',
+   lead:'ふだんのつながりが、そのまま災害時の支援調整の基盤になります（フェーズフリー）。新しく人を集める必要はありません。',
+   body:gPt('i-shield','災害時は<b>結モード</b>に切り替わり、安否をワンタップで知らせられます')+
+        gPt('i-users','ふだんの<b>「できること札」</b>が、そのまま「いま動ける人」の一覧に。貸し借りの登録は「出せるもの」の一覧になります')+
+        gPt('i-bell','自治会・自主防災会のお知らせを、<b>デジタル回覧板</b>で各戸へ届けます')+
+        gPt('il-org','個人も、<b>団体・行政</b>も、同じ基盤の上でつながります')},
+  {eb:'04　安全と個人情報', h:'あたたかさは取り戻して、\n監視は取り戻さない。',
+   lead:'ご近所のほど良いおせっかいは取り戻しても、見張り合う関係には戻しません。そのための約束を、仕組みとして組み込んでいます。',
+   body:gPt('i-location','お住まいは<b>地図に出しません</b>。市区町村のおおまかな位置と、公民館などの公共の拠点だけです')+
+        gPt('i-edit','投稿の主語は、いつも自分だけ。<b>他の人を主語にして書く機能はつくりません</b>')+
+        gPt('i-alert','<b>低い評価は公開しません</b>。気になったことは、運営が非公開でお預かりします')+
+        gPt('i-id-card','本人確認は運営がおひとりずつ行い、<b>身分証の画像は保存しません</b>。金銭の授受は禁止、＆ポイントに換金性はありません')},
+  {eb:'デモの歩き方', h:'さわって、\n確かめてみてください。',
+   lead:'気になるところから、どうぞ。設定 →「You&amp;i Space とは」から、いつでもこのガイドに戻れます。',
+   body:gPt('i-users','<b>ホーム</b>で、ご近所の「ついで」と「困っていること」を見る','guideGo(\'main\')')+
+        gPt('i-heart','<b>支える人への声かけ</b>を見る（ホーム上部のお便り）','guideGo(\'care\')')+
+        gPt('i-chat','支え合いが終わった後の<b>お礼と「お互いさま」</b>を体験する','guideGo(\'thanks\')')+
+        gPt('i-shield','<b>結モード</b>（災害時の画面）に切り替えてみる','guideGo(\'yui\')')+
+        '<div class="guide-note">このデモに登場する人物・団体・お店は、すべて架空の例です。操作した内容はこの端末の中だけで動き、どこにも送信されません。</div>'}
+];
+var guideIdx=0;
+/* 実アカウントには「デモの歩き方」を出さない */
+function guideSlides(){ return isGuestDemo()?GUIDE:GUIDE.slice(0,GUIDE.length-1); }
+function openGuide(i){
+  guideIdx=Math.max(0,Math.min(guideSlides().length-1,i||0));
+  renderGuide();
+  document.getElementById('guide').classList.add('show');
+}
+function renderGuide(){
+  var list=guideSlides(), g=list[guideIdx], last=(guideIdx===list.length-1);
+  var body=document.getElementById('guide-body');
+  body.innerHTML='<div class="guide-eyebrow">'+g.eb+'</div><div class="guide-h">'+g.h+'</div>'+
+    '<div class="guide-lead">'+g.lead+'</div>'+g.body;
+  body.scrollTop=0;
+  document.getElementById('guide-dots').innerHTML=list.map(function(_,k){ return '<span class="guide-dot'+(k===guideIdx?' on':'')+'"></span>'; }).join('');
+  document.getElementById('guide-prev').style.display=guideIdx?'':'none';
+  document.getElementById('guide-next').textContent=!last?'次へ':(onLoginScreen()?'デモをはじめる':(isGuestDemo()?'ホームへ':'とじる'));
+  document.getElementById('guide-skip').style.visibility=last?'hidden':'visible';
+}
+function guideStep(d){
+  var n=guideSlides().length;
+  if(d>0 && guideIdx>=n-1){ finishGuide(); return; }
+  guideIdx=Math.max(0,Math.min(n-1,guideIdx+d)); renderGuide();
+}
+function closeGuide(){
+  document.getElementById('guide').classList.remove('show');
+  window.__guideSeen=true;
+  try{ sessionStorage.setItem('youi_guide_seen','1'); }catch(e){}
+}
+function guideSeen(){
+  if(window.__guideSeen) return true;
+  try{ return sessionStorage.getItem('youi_guide_seen')==='1'; }catch(e){ return false; }
+}
+function finishGuide(){
+  var fromLogin=onLoginScreen();
+  closeGuide();
+  if(fromLogin) guestDemo();
+  else if(isGuestDemo()) navTo('main');
+}
+/* 「デモの歩き方」から各画面へ */
+function guideGo(t){
+  var fromLogin=onLoginScreen();
+  closeGuide();
+  if(fromLogin) guestDemo();   // 以前のログイン痕跡があると再読込になる。その場合はホームから
+  if(!window.__demoLoaded||!isGuestDemo()) return;
+  if(t==='main'){ navTo('main'); }
+  else if(t==='care'){
+    window.__careDismissed=false; navTo('main');
+    setTimeout(function(){ var c=document.getElementById('care-card'); if(c&&c.style.display!=='none') c.scrollIntoView({behavior:'smooth',block:'center'}); },120);
+  }
+  else if(t==='thanks'){ openChat('鈴木 智子','green','鈴'); setTimeout(demoCloseDeal,650); }
+  else if(t==='yui'){ doEnterYui(); }
+}
+
+/* ===== 支える人への声かけ（支援者支援） =====
+   支える側が続いている人に、アプリのほうから「頼っていい」と伝える。
+   実アカウントでは既存の感謝データから判定して表示するだけで、何も書き込まない。 */
+var CARE_DRAFTS=['自分の通院のあいだ、家族を見ていてほしい','買い物を、ついでにお願いしたい','30分だけ、話を聞いてほしい'];
+var CARE_SNOOZE_DAYS=14;
+function careSnoozed(){
+  if(isGuestDemo()) return !!window.__careDismissed;
+  try{ return (parseInt(localStorage.getItem('youi_care_snooze'),10)||0)>Date.now(); }catch(e){ return false; }
+}
+function careShouldShow(){
+  if(careSnoozed()) return false;
+  if(isGuestDemo()) return !!window.__demoLoaded;
+  var u=getStoredUser(); if(!u||!u.uid) return false;
+  var t=computeTrust();
+  // received＝支えた（受け取った感謝）、given＝支えられた（贈った感謝）
+  return t.received>=3 && t.given*3<=t.received;
+}
+function renderCareCard(){
+  var el=document.getElementById('care-card'); if(!el) return;
+  if(!careShouldShow()){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='';
+  el.innerHTML='<div class="care-eyebrow"><svg class="ic"><use href="#i-heart"/></svg>あなたへのお便り</div>'+
+    '<div class="care-h">いつも、支えてくださってありがとうございます。</div>'+
+    '<div class="care-body">このところ、あなたは支える側が続いています。支える人ほど、ひとりで抱えこみがちです。今度は、あなたが「ついで」に頼ってみませんか。</div>'+
+    '<div class="care-chips">'+CARE_DRAFTS.map(function(t,i){ return '<button class="care-chip" onclick="openCareRequest('+i+')">'+t+'</button>'; }).join('')+'</div>'+
+    '<div class="care-actions"><button class="btn-primary" onclick="openCareRequest(-1)">頼みごとを出してみる</button><button class="btn-secondary" onclick="openCareDesk()">専門の相談窓口</button></div>'+
+    '<div class="care-foot"><span>名前を伏せて頼めます。＆ポイントの残高が0でも大丈夫です。</span><button onclick="snoozeCare()">いまは大丈夫</button></div>';
+}
+/* 下書きを入れた「困っていること」へ。頼みやすいよう、名前を伏せる設定をはじめから入れておく */
+function openCareRequest(i){
+  openPostWith('need');
+  var t=document.getElementById('post-title'); if(t) t.value=(i>=0?CARE_DRAFTS[i]:'');
+  var a=document.getElementById('post-anon'); if(a) a.checked=true;
+}
+function markCareAnswered(){
+  if(isGuestDemo()) window.__careDismissed=true;
+  else { try{ localStorage.setItem('youi_care_snooze',String(Date.now()+CARE_SNOOZE_DAYS*24*3600*1000)); }catch(e){} }
+}
+function snoozeCare(){
+  markCareAnswered();
+  renderCareCard();
+  toast('わかりました。しばらくお便りはお休みします');
+}
+/* 専門の相談窓口（ご近所の「ついで」では足りないときに） */
+function openCareDesk(){
+  openSheet('専門の相談窓口',
+    '<div style="font-size:.8rem;color:var(--tl);line-height:1.9;margin-bottom:14px">ご近所の「ついで」では足りないこともあります。専門の窓口と、ご近所の支え合いの両方を使ってください。「相談するほどでもない」と思うことこそ、話してみてください。</div>'+
+    legalSec('介護のこと','お住まいの地域の<b>地域包括支援センター</b>。介護をしている家族の相談も受け付けています。')+
+    legalSec('子育てや、家族のケアをしている子どものこと','市区町村の<b>こども家庭センター</b>や子育て相談の窓口。ヤングケアラーについての相談もできます。')+
+    legalSec('暮らし全般・地域の活動のこと','市区町村の<b>社会福祉協議会</b>。ボランティアや地域の支え合いにもつないでくれます。')+
+    legalSec('こころのつらさ','市区町村の保健センターや、都道府県の<b>精神保健福祉センター</b>。')+
+    legalSec('いますぐ危ないとき','体調の急変は <b>119</b>、身の危険を感じたら <b>110</b> へ。')+
+    '<div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:4px">※ 窓口の名称は自治体によって異なります。実際の運用では、実証地域の窓口の連絡先をここに載せます。</div>');
+}
+
+/* ===== ゲストデモ：架空のデータ（この端末の中だけで動く） ===== */
+var DEMO_ME='demo-me', DEMO_ME_NAME='田中 太郎';
+function demoTs(min){ var ms=Date.now()-min*60000; return {toDate:function(){ return new Date(ms); }}; }
+var DEMO_POSTS=[
+  // ついで（掲示板）
+  {type:'tsuide',uid:'demo-maeda',authorName:'前田 健太郎',title:'夕方スーパーに行くので、ついでに買ってこられます',when:'今日 17時ごろ',area:'高槻市 ○○町',categories:['買い物'],detail:'お米や飲みものなど、重いものもだいじょうぶです。受け渡しは玄関先か、公民館で。',min:25},
+  {type:'tsuide',uid:'demo-takahashi',authorName:'高橋 美佐子',title:'木曜の午前なら、通院の付き添いに行けます',when:'木曜の午前',area:'高槻市',categories:['通院付き添い','話し相手'],detail:'以前、病院で働いていました。付き添いと、待ち時間の話し相手くらいなら。',min:95},
+  {type:'tsuide',uid:'demo-inoue',authorName:'井上 真理',title:'日曜の午後、公園で子どもたちを見ていられます',when:'日曜 14〜16時',area:'茨木市',categories:['家事・育児'],detail:'うちの子も一緒です。そのあいだ、1〜2時間ひと息ついてください。',min:200},
+  {type:'tsuide',uid:'demo-yamamoto',authorName:'山本 太一',title:'土曜の午前、車を出せます',when:'土曜の午前',area:'高槻市',categories:['移動・送迎'],detail:'通院・買い物・役所の手続きなどに。4人まで乗れます。',min:1500},
+  {type:'tsuide',uid:'demo-nakamura',authorName:'中村 健',title:'中学生の宿題、オンラインで30分見られます',when:'平日の20時以降',area:'茨木市',categories:['学習サポート'],detail:'家のことで勉強の時間がとりにくい子の、力になれたらと思っています。',min:2900},
+  // 困っていること（地図）：頼んでいるのは、ふだん誰かを支えている人たち
+  {type:'need',uid:'demo-suzuki',authorName:'鈴木 智子',title:'介護の合間に、自分の通院の2時間だけ母の話し相手を',area:'高槻市 ○○町',categories:['話し相手'],detail:'母（85）の介護を3年続けています。自分の歯医者に行くあいだの2時間ほど、母の話し相手をしていただける方を探しています。',min:40},
+  {type:'need',uid:'demo-anon1',anon:true,authorName:'佐藤',title:'水曜だけ、15時の保育園のお迎えを',area:'高槻市',categories:['ひとり親','家事・育児'],detail:'ひとりで子育てをしています。水曜だけ仕事が延びるので、お迎えから1時間ほど一緒にいていただける方がいると助かります。',min:130},
+  {type:'need',uid:'demo-anon2',anon:true,authorName:'山田',title:'試験前の2週間だけ、夕食づくりを手伝ってほしい',area:'高槻市',categories:['ヤングケアラー','家事・育児'],detail:'高校生です。家族のケアをしながら受験勉強をしています。試験前だけ、夕食の準備を手伝ってもらえたら助かります。',min:300},
+  {type:'need',uid:'demo-kimura',authorName:'木村 和子',title:'夫の通院に、月2回同行してほしい',area:'高槻市',categories:['老老介護','通院付き添い'],detail:'わたしも78歳になり、夫の車いすを押して病院まで行くのが難しくなってきました。',min:1400},
+  {type:'need',uid:'demo-hayashi',authorName:'林 恵',title:'子ども食堂の片付けに、月2回だけ手を貸してほしい',area:'高槻市',categories:['家事・育児'],detail:'地域で子ども食堂を開いています。運営の仲間が減って、片付けまで手が回らなくなってきました。30分でも助かります。',min:2600},
+  // できること札（結モードで「いま動ける人」になる）
+  {type:'can',uid:'demo-takahashi',authorName:'高橋 美佐子',title:'通院の付き添い・話し相手ができます',area:'高槻市',categories:['通院付き添い'],detail:'平日の午前中なら。',min:9000},
+  {type:'can',uid:'demo-maeda',authorName:'前田 健太郎',title:'車を出せます（4人乗り）',area:'高槻市',categories:['移動・送迎'],detail:'',min:12000},
+  {type:'can',uid:'demo-kato',authorName:'加藤 千夏',title:'子どもを見ていられます（保育士です）',area:'大阪市',categories:['家事・育児'],detail:'',min:15000},
+  {type:'can',uid:DEMO_ME,authorName:DEMO_ME_NAME,title:'重いものを運べます',area:'高槻市 ○○町',categories:[],detail:'週末ならだいたい動けます。',min:20000},
+  {type:'can',uid:DEMO_ME,authorName:DEMO_ME_NAME,title:'スマホの使い方の相談にのれます',area:'高槻市 ○○町',categories:[],detail:'',min:21000},
+  // 貸し借り（結モードで「出せるもの・使える場所」になる）
+  {type:'can',uid:'demo-maeda',authorName:'前田 健太郎',title:'発電機と延長コードを貸せます',area:'高槻市',categories:['貸し借り'],detail:'停電のときにどうぞ。',min:30000},
+  {type:'can',uid:'demo-kobayashi',authorName:'小林 英樹',title:'庭の井戸（手押しポンプ）の水が使えます',area:'高槻市',categories:['貸し借り'],detail:'飲み水には使えませんが、トイレや洗いものに。',min:40000},
+  {type:'can',uid:'demo-inoue',authorName:'井上 真理',title:'ベビーカーと抱っこひもを貸せます',area:'茨木市',categories:['貸し借り'],detail:'',min:35000}
+];
+/* 相手プロフィール（数値・星・送り主の名前は出さない） */
+var DEMO_PEOPLE={
+  '鈴木 智子':{c:'green',bio:'高槻市・母（85）の介護をしながら暮らしています',st:'あわじ結び',intro:'3年前から母の介護をしています。「大丈夫？」と聞かれると、つい「大丈夫」と答えてしまう性分です。ここでは少しずつ、頼ることを練習しています。',can:['編み物を教えられます','子どもの宿題を見られます（夜）'],words:[['ていねいだった',4],['話しやすかった',3],['声をかけてくれてうれしかった',2]]},
+  '高橋 美佐子':{c:'green',bio:'高槻市・以前は病院で働いていました',st:'梅結び',intro:'夫を見送ってから、時間ができました。付き添いや話し相手なら、いつでも声をかけてください。',words:[['安心できた',8],['ていねいだった',6],['また会いたい',5]]},
+  '前田 健太郎':{c:'sky',bio:'高槻市・会社員（週末は動けます）',st:'梅結び',intro:'車があるので、送迎や重いものの買い物なら。ついでで良ければ、遠慮なく。',words:[['すぐ来てくれた',7],['話しやすかった',4]]},
+  '井上 真理':{c:'pink',bio:'茨木市・ふたりの子どもを育てています',st:'結い手',intro:'ひとりで子育てをしていた時期に、ご近所の方に何度も助けてもらいました。今度はわたしの番です。',words:[['安心できた',9],['また会いたい',6],['声をかけてくれてうれしかった',3]]},
+  '中村 健':{c:'sky',bio:'茨木市・大学生',st:'あわじ結び',intro:'自分も家族のケアをしながら学校に通っていました。同じような子の力になりたいです。',words:[['話しやすかった',5],['ていねいだった',3]]},
+  '山本 太一':{c:'green',bio:'高槻市・自営業',st:'あわじ結び',intro:'平日は店がありますが、土曜の午前なら動けます。',words:[['すぐ来てくれた',4]]},
+  '木村 和子':{c:'green',bio:'高槻市・夫とふたり暮らし',st:'ひと結び',intro:'夫の通院が月に2回あります。わたしにできることは、漬物づくりくらいですが。',can:['漬物・保存食のつくり方を教えられます'],words:[['声をかけてくれてうれしかった',2]]},
+  '林 恵':{c:'pink',bio:'高槻市・子ども食堂を運営しています',st:'梅結び',intro:'毎月2回、公民館で子ども食堂を開いています。支える側の人手が足りないのが、いちばんの悩みです。',words:[['ていねいだった',5],['また力になりたい',4]]},
+  '加藤 千夏':{c:'pink',bio:'大阪市・保育士',st:'結い手',intro:'子どもを見ることなら、任せてください。',words:[['安心できた',7]]},
+  '渡辺 由美':{c:'green',bio:'高槻市',st:'梅結び',intro:'家事や料理なら、ついでにお手伝いできます。',words:[['ていねいだった',3]]},
+  '小林 英樹':{c:'sky',bio:'高槻市・退職後、地域の見回りをしています',st:'ひと結び',intro:'',words:[['ていねいだった',2]]}
+};
+function loadDemoData(){
+  window.__demoLoaded=true;
+  if(typeof window.__demoPoints!=='number') window.__demoPoints=1240;
+  window.__rawPosts=DEMO_POSTS.map(function(p,i){
+    var q={}; for(var k in p) q[k]=p[k];
+    q.id='demo-p'+i; q.pref=q.pref||'大阪府'; q.when=q.when||''; q.anon=!!q.anon; q.createdAt=demoTs(p.min||60);
+    return q;
+  });
+  renderLivePosts();
+}
+function startDemo(withGuide){
+  window.__guest=true; currentProfile=null;
+  loadDemoData();
+  navTo('main');
+  if(withGuide) openGuide(0);
+}
+function renderDemoRibbon(){
+  var el=document.getElementById('demo-ribbon'); if(el) el.style.display=isGuestDemo()?'flex':'none';
+}
+/* ゲストの投稿・札は、端末の中の一覧に足すだけ */
+function demoAddPost(p){
+  p.id='demo-u'+Date.now(); p.uid=DEMO_ME; p.authorName=DEMO_ME_NAME; p.createdAt=demoTs(0);
+  window.__rawPosts=[p].concat(window.__rawPosts||[]);
+  renderLivePosts();
+}
+function renderDemoPoints(){
+  var v=myPoints().toLocaleString();
+  var a=document.getElementById('prof-points'); if(a) a.textContent=v;
+  var b=document.getElementById('rew-balance-num'); if(b) b.textContent=v;
+}
+function demoProfilePost(id){ var p=(window.__posts||{})[id]; if(p&&!p.anon) openDemoProfile(p.authorName); }
+function openDemoProfile(name){
+  if(!name||name==='ご近所の方'){ toast('名前を伏せている方です'); return; }
+  var d=DEMO_PEOPLE[name]||{c:colorForUid(name),bio:'',st:'ひと結び',intro:'',words:[]};
+  var posts=(window.__rawPosts||[]).filter(function(p){ return p.authorName===name && !p.anon; });
+  var can=(d.can||[]).concat(posts.filter(function(p){ var t=normType(p.type); return t==='can'||t==='tsuide'; }).map(function(p){ return p.title; }));
+  var need=posts.filter(function(p){ return normType(p.type)==='need'; }).map(function(p){ return p.title; });
+  var chips=function(arr){ return arr.map(function(x){ return '<span class="uprof-skill">'+escapeHtml(x)+'</span>'; }).join(''); };
+  var av=document.getElementById('up-avatar');
+  av.className='avatar xl '+d.c;
+  av.innerHTML=escapeHtml(name.charAt(0))+'<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span>';
+  document.getElementById('up-name').textContent=name+honorific(name);
+  document.getElementById('up-bio').textContent=d.bio||'';
+  document.getElementById('up-stage').textContent=d.st;
+  document.getElementById('up-intro').textContent=d.intro||'';
+  document.getElementById('up-intro-sec').style.display=d.intro?'':'none';
+  document.getElementById('up-can').innerHTML=chips(can);
+  document.getElementById('up-can-sec').style.display=can.length?'':'none';
+  document.getElementById('up-need').innerHTML=chips(need);
+  document.getElementById('up-need-sec').style.display=need.length?'':'none';
+  document.getElementById('up-words').innerHTML=(d.words||[]).map(function(w){ return '<span class="thanks-tag on" style="cursor:default">'+escapeHtml(w[0])+' <b style="opacity:.8">×'+w[1]+'</b></span>'; }).join('')||'<div style="font-size:.8rem;color:var(--tl)">まだ言葉は届いていません。</div>';
+  document.getElementById('up-msg-btn').onclick=function(){ openChat(name,d.c,name.charAt(0)); };
+  navTo('uprof');
+}
+/* 投稿からデモの会話へ。はじめの2通だけ、投稿の中身に合わせて入れておく */
+function demoMessageFromPost(id){
+  var p=(window.__posts||{})[id]; if(!p) return;
+  closeSheet();
+  var name=postAuthor(p), color=colorForUid(p.uid), initial=name.charAt(0);
+  openChat(name,color,initial);
+  var need=(normType(p.type)==='need');
+  var av='<div class="avatar sm bub1 '+color+'">'+escapeHtml(initial)+'</div>';
+  var mine=need?'はじめまして。「'+escapeHtml(p.title||'')+'」を見てご連絡しました。お手伝いできそうです。'
+               :'はじめまして。「'+escapeHtml(p.title||'')+'」を見てご連絡しました。お願いしてもよいでしょうか。';
+  var theirs=need?'ご連絡ありがとうございます。本当に助かります。はじめてなので、日中に公民館の前で顔合わせをしてもいいですか？'
+                 :'もちろんです。はじめてなので、日中に公民館の前で受け渡しにしましょうか。';
+  document.getElementById('chat-thread').innerHTML='<div class="chat-meta">今日</div>'+
+    '<div class="bubble-wrap me"><div><div class="bubble">'+mine+'</div><div class="bubble-time">今</div></div></div>'+
+    '<div class="bubble-wrap">'+av+'<div><div class="bubble">'+theirs+'</div><div class="bubble-time">今</div></div></div>';
+}
+/* 支え合いが終わった → お礼を決める（デモ版。実運用の「ゲート」の説明つき） */
+function demoCloseDeal(){
+  var c=window.__demoChat||{name:'鈴木 智子'};
+  toast('支え合いを記録しました（デモ）');
+  setTimeout(function(){
+    openSheet('お礼を決める',
+      '<div style="font-size:.8rem;color:var(--tl);line-height:1.9;margin-bottom:6px">どちらを選んでも構いません。伝えないことを選んでも、相手には分かりません。</div>'+
+      '<div style="padding:14px 0;border-bottom:1px solid rgba(184,175,214,.15)">'+
+        '<div style="font-size:.9rem;font-weight:600">'+escapeHtml(c.name+honorific(c.name))+'との支え合い</div>'+
+        '<div style="display:flex;gap:9px;margin-top:11px">'+
+          '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem" onclick="closeSheet();toast(\'わかりました。相手には伝わりません（デモ）\')">今回は伝えない</button>'+
+          '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem;color:var(--lav3);border-color:rgba(184,175,214,.55)" onclick="closeSheet();thanksToPartner()">ありがとうを伝える</button>'+
+        '</div>'+
+      '</div>'+
+      '<div style="margin-top:16px;font-size:.72rem;color:var(--tl);line-height:1.8">実際の運用では、決めるまで新しい「困っていること」は出せません（記録の質を保つため）。72時間で自動的に閉じ、急ぎのときや災害時は外れます。</div>');
+  },450);
+}
+function demoSendThanks(pts){
+  window.__demoPoints=Math.max(0,myPoints()-pts); renderDemoPoints();
+  var act=document.getElementById('prof-activity'), h=act&&act.querySelector('.sec-h');
+  if(h) h.insertAdjacentHTML('afterend',
+    '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--lav)"></div>'+
+    '<div class="feed-text"><b>'+escapeHtml(thanksSel.toName)+'</b>'+honorific(thanksSel.toName).trim()+'にありがとうを贈りました</div><div class="feed-time">たった今</div></div>'+
+    (pts?'<div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−'+pts+' ＆pt</span></div>':'')+'</div>');
+  closeSheet();
+  toast('お互いさま。貸し借りは、これでおしまいです');
+  setTimeout(demoExplainThanks,1100);
+}
+function demoExplainThanks(){
+  openSheet('いま起きたこと',
+    '<div style="font-size:.8rem;color:var(--tl);line-height:1.85;margin-bottom:12px">お礼ひとつにも、支える人が負い目なく続けられるための工夫を入れています。</div>'+
+    gPt('i-heart','選んだ感謝タグは、相手のプロフィールの<b>「よく言われること」に言葉のまま</b>残ります。誰が書いたかは表示しません')+
+    gPt('i-gift','＆ポイントは運営が配るのではなく、<b>受けた人から手渡し</b>ます。その場で借りを返したことになるので、負い目が残りません')+
+    gPt('i-users','同じ相手との2回目以降は、信頼の伸びがゆるやかになります。<b>いろいろな人と支え合うほど</b>、段階が上がります')+
+    gPt('i-lock','「今回は伝えない」を選んでも、相手には分かりません。<b>低い評価を公開する仕組みはありません</b>')+
+    '<button class="btn-primary" style="margin-top:8px" onclick="closeSheet()">わかりました</button>');
+}
+/* デモ会話の最初の中身（投稿から開いた会話で上書きされても、ここから戻す） */
+var DEMO_THREAD_HTML=(document.getElementById('chat-thread')||{}).innerHTML||'';
 
 /* 都道府県セレクト（地域フィルター・投稿フォーム）を全国対応で生成 */
 initPrefSelects();
@@ -4084,9 +4473,9 @@ if(fbReady){
 
 /* ゲストモードで再読込された場合：クリーンな状態でデモのメイン画面へ */
 if(isGuestMode()){
-  window.__guest=true; currentProfile=null;
-  navTo('main');
-  setTimeout(function(){toast('ゲストとしてデモを開始しました');},400);
+  var __withGuide=!guideSeen();
+  startDemo(__withGuide);
+  if(!__withGuide) setTimeout(function(){toast('ゲストとしてデモを開始しました');},400);
 }
 </script>
 </body>
