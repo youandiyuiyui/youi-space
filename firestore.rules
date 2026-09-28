@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// You&i Space — Firestore セキュリティルール（アプリ v0.5.0 対応）
+// You&i Space — Firestore セキュリティルール（アプリ v0.5.1 対応。v0.5.0 のアプリとも両立）
 // ※ このファイルは記録用。実際の反映は Firebase コンソール
 //   （プロジェクト you-i-space → Firestore Database → ルール）に
 //   丸ごと貼り付けて「公開」してください。
@@ -83,9 +83,13 @@ service cloud.firestore {
 
     // ── 会話（メッセージスレッド）──
     // 参加者（会話IDに含まれる2人）だけが閲覧・作成・更新できる。
+    // masked＝名前を伏せている人（名前を伏せた頼みごとから始まった会話で、頼んだ人）。
     match /conversations/{cid} {
       function convOk() {
-        return incoming().keys().hasOnly(['participants', 'names', 'lastMessage', 'lastSender', 'updatedAt'])
+        return incoming().keys().hasOnly(['participants', 'names', 'lastMessage', 'lastSender', 'updatedAt', 'masked'])
+          && (!('masked' in incoming())
+              || (incoming().masked is list && incoming().masked.size() <= 2
+                  && incoming().participants.hasAll(incoming().masked)))
           && incoming().participants is list
           && incoming().participants.size() == 2
           && incoming().participants.hasOnly(convMembers(cid))
@@ -97,7 +101,11 @@ service cloud.firestore {
       }
       allow read: if signedIn() && request.auth.uid in resource.data.participants;
       allow create: if signedIn() && convOk();
-      allow update: if signedIn() && request.auth.uid in resource.data.participants && convOk();
+      // 伏せる設定を外せるのは本人だけ（相手が勝手に外して本名を書かせることはできない）
+      function keepsOthersMask() {
+        return incoming().get('masked', []).hasAll(resource.data.get('masked', []).removeAll([request.auth.uid]));
+      }
+      allow update: if signedIn() && request.auth.uid in resource.data.participants && convOk() && keepsOthersMask();
 
       // ── 個々のメッセージ ──
       // 参加者だけが閲覧できる。会話がまだ無い（はじめての相手）ときも、
