@@ -1839,7 +1839,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.5.0 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.5.1 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -2453,15 +2453,16 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   };
   m.classList.add('show');
 }
+/* リアルタイム購読をすべて止める。サインアウトで権限エラーになった購読は止まったまま残り、
+   次のログインで張り直されない（新規登録→そのままログインで掲示板が空になる不具合の原因）ため */
+function stopRealtime(){
+  [convListUnsub,chatMsgsUnsub,postsUnsub,thanksUnsub,thanksOutUnsub,dealsUnsub,decisionsUnsub,disasterUnsub]
+    .forEach(function(f){ if(f){ try{ f(); }catch(e){} } });
+  convListUnsub=chatMsgsUnsub=postsUnsub=thanksUnsub=thanksOutUnsub=dealsUnsub=decisionsUnsub=disasterUnsub=null;
+}
 function logout(){
   if(fbReady&&fbAuth.currentUser){fbAuth.signOut();}
-  if(convListUnsub){convListUnsub();convListUnsub=null;}
-  if(chatMsgsUnsub){chatMsgsUnsub();chatMsgsUnsub=null;}
-  if(postsUnsub){postsUnsub();postsUnsub=null;}
-  if(thanksUnsub){thanksUnsub();thanksUnsub=null;}
-  if(thanksOutUnsub){thanksOutUnsub();thanksOutUnsub=null;}
-  if(dealsUnsub){dealsUnsub();dealsUnsub=null;}
-  if(decisionsUnsub){decisionsUnsub();decisionsUnsub=null;}
+  stopRealtime();
   window.__thanksOut=[]; window.__deals=[]; window.__skipped={};
   currentConv=null; window.__convs={}; window.__blocked={}; window.__rawPosts=[]; window.__rawConvs=[]; window.__thanksIn=[];
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
@@ -2714,7 +2715,7 @@ function closeDeal(){
   var me=fbAuth.currentUser.uid;
   fbDb.collection('deals').add({
     participants:[me,currentConv.otherUid].sort(),
-    byUid:me, byName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    byUid:me, byName:iAmMasked()?ANON_NAME:myRealName(),
     otherName:(currentConv.otherName||'相手の方').slice(0,60),
     title:'', disaster:disasterActive(),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
@@ -2750,23 +2751,27 @@ function sendConcern(){
 
 var PT_CHOICES=[30,50,100];
 
-/* 自分の＆ポイント残高（登録時300pt・戦略指針§5-6の初期値） */
+/* 自分の＆ポイント残高＝登録時の300pt（戦略指針§5-6の初期値）＋受け取った合計−手渡した合計。
+   感謝の記録（thanks）から数える。相手の残高を書き換えることも、自分で増やすこともルールで禁じているため、
+   受け取った分は記録から数えるのが唯一の方法（以前の users.points は、手渡した分しか減らせず、受け取っても増えなかった） */
+var START_PT=300;
+function pointsLedger(){
+  var sum=function(arr){ return (arr||[]).reduce(function(s,t){ return s+(parseInt(t.points,10)||0); },0); };
+  return {received:sum(window.__thanksIn), given:sum(window.__thanksOut)};
+}
 function myPoints(){
   if(isGuestDemo()) return (typeof window.__demoPoints==='number')?window.__demoPoints:1240;
-  var u=getStoredUser()||{};
-  return (typeof u.points==='number')?u.points:300;
-}
-function setMyPoints(v){
-  var u=getStoredUser(); if(!u) return;
-  u.points=Math.max(0,v); setStoredUser(u);
-  if(fbReady&&fbAuth.currentUser){ fbDb.collection('users').doc(fbAuth.currentUser.uid).update({points:u.points}).catch(function(){}); }
-  renderPointsUI();
+  var l=pointsLedger();
+  return Math.max(0, START_PT+l.received-l.given);
 }
 function renderPointsUI(){
   var u=getStoredUser(); if(!u||!u.uid) return;
-  var p=myPoints();
+  var p=myPoints(), l=pointsLedger();
   var a=document.getElementById('prof-points'); if(a) a.textContent=p.toLocaleString();
   var b=document.getElementById('rew-balance-num'); if(b) b.textContent=p.toLocaleString();
+  var c=document.getElementById('rew-balance-sub');
+  if(c) c.textContent=(l.received||l.given)?('受け取った：'+l.received.toLocaleString()+'pt ／ 手渡した：'+l.given.toLocaleString()+'pt')
+                                          :('登録のお祝いに '+START_PT+'pt をお渡ししています');
 }
 
 /* 受け取った感謝を購読して、段階・回数・最近の活動に反映する */
@@ -2970,10 +2975,9 @@ function sendThanks(){
   if(pts>myPoints()){ toast('＆ポイントが足りません。0ptでも贈れます'); return; }
   if(busy('thanks',3000)) return;
   if(demo){ demoSendThanks(pts); return; }
-  var u=getStoredUser()||{};
+  // 送り主の名前は保存しない（受け取った側に「誰から」を見せない設計のため。人数の集計には uid だけ使う）
   fbDb.collection('thanks').add({
     fromUid:fbAuth.currentUser.uid,
-    fromName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
     toUid:thanksSel.to, toName:(thanksSel.toName||'').slice(0,60),
     postId:thanksSel.postId||'', dealId:thanksSel.dealId||'',
     pairKey:pairKeyOf(fbAuth.currentUser.uid, thanksSel.to),
@@ -2981,7 +2985,7 @@ function sendThanks(){
     tags:thanksSel.tags.slice(0,5), note:note,
     points:pts, createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){
-    if(pts>0) setMyPoints(myPoints()-pts);
+    // 残高は感謝の記録から数える（購読の更新で自動的に減る）
     closeSheet();
     toast('お互いさま。貸し借りは、これでおしまいです');
   }).catch(function(e){ console.warn('thanks fail',e); toast(authErrMsg(e)); });
@@ -3180,10 +3184,12 @@ function submitPost(){
   if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
   if(busy('post',3000))return;
   var u=getStoredUser()||{};
+  var isAnon=(type==='need')?anon:false;
   var post={type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,
-    when:(type==='tsuide')?when.slice(0,40):'', anon:(type==='need')?anon:false,
+    when:(type==='tsuide')?when.slice(0,40):'', anon:isAnon,
     uid:fbAuth.currentUser.uid,
-    authorName:((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
+    // 名前を伏せた投稿には、本名をデータとしても残さない（画面で伏せるだけでは読めてしまうため）
+    authorName:isAnon?'':((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
     clearPostForm();
@@ -3307,7 +3313,9 @@ function openPostDetail(id){
 function messageFromPost(id){
   var p=(window.__posts||{})[id]; if(!p) return;
   closeSheet();
-  openConversation(p.uid,p.authorName||'利用者',colorForUid(p.uid));
+  // 名前を伏せた頼みごとから始める会話では、頼んだ人の名前を伏せたままにする（masked に入れる）
+  if(p.anon) openConversation(p.uid,ANON_NAME,colorForUid(p.uid),[p.uid]);
+  else openConversation(p.uid,p.authorName||'利用者',colorForUid(p.uid));
 }
 
 /* 自分の投稿一覧（管理シート） */
@@ -3461,7 +3469,12 @@ function chatTime(ts){
 }
 
 /* 相手を指定して実会話を開く（投稿の「メッセージを送る」等から） */
-function openConversation(otherUid,otherName,color){
+/* 名前を伏せている人の表示名。会話・支え合いの記録・感謝にもこの名前だけを書く */
+var ANON_NAME='ご近所の方';
+function myRealName(){ var u=getStoredUser()||{}; return ((u.type==='org'?(u.orgName||u.name):u.name)||'利用者').slice(0,60); }
+/* 会話の中で自分が名前を伏せているか */
+function iAmMasked(){ return !!(currentConv && fbAuth && fbAuth.currentUser && (currentConv.masked||[]).indexOf(fbAuth.currentUser.uid)>=0); }
+function openConversation(otherUid,otherName,color,masked){
   if(!fbReady||!fbAuth.currentUser){ toast('メッセージのご利用にはログインが必要です'); return; }
   var me=fbAuth.currentUser.uid;
   if(!otherUid){ toast('相手が見つかりませんでした'); return; }
@@ -3469,9 +3482,13 @@ function openConversation(otherUid,otherName,color){
   if(isBlocked(otherUid)){ toast('ブロック中の相手です。設定の「ブロックしたユーザー」から解除できます'); return; }
   color=color||colorForUid(otherUid);
   var cid=convIdFor(me,otherUid);
-  currentConv={id:cid, otherUid:otherUid, otherName:otherName||'利用者', color:color};
+  // すでに会話があれば、そこで伏せている人も引き継ぐ
+  var known=((window.__convs||{})[otherUid]||{}).masked||[];
+  var mk=known.slice(); (masked||[]).forEach(function(x){ if(mk.indexOf(x)<0) mk.push(x); });
+  if(mk.indexOf(otherUid)>=0) otherName=ANON_NAME;
+  currentConv={id:cid, otherUid:otherUid, otherName:otherName||'利用者', color:color, masked:mk, hadMasked:known.length>0};
   var initial=(otherName||'?').charAt(0);
-  document.getElementById('chat-name').textContent=(otherName||'利用者')+' さん';
+  document.getElementById('chat-name').textContent=(otherName||'利用者')+honorific(otherName||'利用者');
   var av=document.getElementById('chat-avatar');
   av.innerHTML=escapeHtml(initial)+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
   av.className='avatar sm '+color;
@@ -3483,11 +3500,11 @@ function openConversation(otherUid,otherName,color){
   goScreen('chat');
 }
 /* 会話一覧の項目から開く（uidをキーに __convs から名前・色を復元） */
-function openConvById(uid){ var c=(window.__convs||{})[uid]||{}; openConversation(uid,c.name,c.color); }
+function openConvById(uid){ var c=(window.__convs||{})[uid]||{}; openConversation(uid,c.name,c.color,c.masked); }
 
 /* チャットヘッダーの相手名タップ：実会話では相手名を確認（デモ時のみプロフィールへ） */
 function openChatPartner(){
-  if(currentConv && currentConv.id){ toast((currentConv.otherName||'相手')+' さんとの会話'); return; }
+  if(currentConv && currentConv.id){ var on=currentConv.otherName||'相手'; toast(on+honorific(on)+'との会話'+(iAmMasked()?'（あなたは名前を伏せています）':'')); return; }
   openDemoProfile((window.__demoChat||{}).name);
 }
 
@@ -3550,16 +3567,17 @@ function renderConvList(){
   items.forEach(function(c){
     var other=(c.participants||[]).filter(function(u){return u!==me;})[0]||'';
     if(other&&isBlocked(other)) return;
-    var name=(c.names&&c.names[other])||'利用者';
+    var masked=(c.masked||[]);
+    var name=(masked.indexOf(other)>=0)?ANON_NAME:((c.names&&c.names[other])||'利用者');
     var color=colorForUid(other);
     var initial=name.charAt(0);
-    window.__convs[other]={name:name,color:color};
+    window.__convs[other]={name:name,color:color,masked:masked};
     var preview=(c.lastSender===me?'あなた: ':'')+(c.lastMessage||'');
     count++;
     html+='<div class="msg-item" onclick="openConvById(\''+other+'\')">'+
       '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
       '<div class="mc-body">'+
-        '<div class="msg-row1"><div class="msg-name">'+escapeHtml(name)+' さん</div><div class="msg-time">'+chatTime(c.updatedAt)+'</div></div>'+
+        '<div class="msg-row1"><div class="msg-name">'+escapeHtml(name+honorific(name))+'</div><div class="msg-time">'+chatTime(c.updatedAt)+'</div></div>'+
         '<div class="msg-preview">'+escapeHtml(preview)+'</div>'+
       '</div>'+
     '</div>';
@@ -3605,19 +3623,23 @@ function sendChat(){
   // 実会話：Firestore に保存（相手にもリアルタイムで届く）
   if(currentConv && currentConv.id && fbReady && fbAuth.currentUser){
     const me=fbAuth.currentUser.uid;
-    const u=getStoredUser()||{};
-    const myName=(u.type==='org'?(u.orgName||u.name):u.name)||'利用者';
+    const myName=iAmMasked()?ANON_NAME:myRealName();
     f.value='';
     const cid=currentConv.id;
     const names={}; names[me]=myName; names[currentConv.otherUid]=currentConv.otherName;
     const convRef=fbDb.collection('conversations').doc(cid);
-    convRef.set({
+    const conv={
       participants:[me,currentConv.otherUid],
       names:names,
       lastMessage:text,
       lastSender:me,
       updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-    },{merge:true}).then(function(){
+    };
+    // 名前を伏せている人がいる会話だけ masked を書く（伏せていない会話のデータは従来どおり）
+    const mk=currentConv.masked||[];
+    if(mk.length||currentConv.hadMasked) conv.masked=mk;
+    convRef.set(conv,{merge:true}).then(function(){
+      if(currentConv&&currentConv.id===cid) currentConv.hadMasked=mk.length>0;
       return convRef.collection('messages').add({
         senderId:me, text:text,
         createdAt:firebase.firestore.FieldValue.serverTimestamp()
@@ -3685,7 +3707,7 @@ function confirmBlock(uid,name){
   blockCtx={uid:uid,name:name||'利用者'};
   closeSheet();
   openSheet('ブロックする',
-    '<p style="font-size:.88rem;color:var(--ink);line-height:1.9;margin-bottom:18px">'+escapeHtml(blockCtx.name)+' さんをブロックしますか？<br><span style="font-size:.8rem;color:var(--tl)">相手の投稿が表示されなくなり、メッセージのやりとりもできなくなります。相手に通知はされません。設定からいつでも解除できます。</span></p>'+
+    '<p style="font-size:.88rem;color:var(--ink);line-height:1.9;margin-bottom:18px">'+escapeHtml(blockCtx.name+honorific(blockCtx.name))+'をブロックしますか？<br><span style="font-size:.8rem;color:var(--tl)">相手の投稿が表示されなくなり、メッセージのやりとりもできなくなります。相手に通知はされません。設定からいつでも解除できます。</span></p>'+
     '<div style="display:flex;gap:10px">'+
       '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">キャンセル</button>'+
       '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="doBlock()">ブロックする</button>'+
@@ -3704,7 +3726,7 @@ function doBlock(){
       currentConv=null; navTo('msg');
     }
     renderLivePosts(); renderConvList();
-    toast(name+' さんをブロックしました');
+    toast(name+honorific(name)+'をブロックしました');
   }).catch(function(e){ console.warn('block fail',e); toast('ブロックできませんでした'); });
 }
 function unblockUser(uid){
@@ -3715,7 +3737,7 @@ function unblockUser(uid){
     if(window.__blocked) delete window.__blocked[uid];
     renderLivePosts(); renderConvList();
     openBlockList();
-    toast(name+' さんのブロックを解除しました');
+    toast(name+honorific(name)+'のブロックを解除しました');
   }).catch(function(){ toast('解除できませんでした'); });
 }
 function openBlockList(){
@@ -3733,6 +3755,16 @@ function openBlockList(){
   openSheet('ブロックしたユーザー',body);
 }
 
+/* 名前を伏せて頼んだ本人が、自分の意思で相手に名前を伝える。
+   伏せる設定を外せるのは本人だけ（ルールでも、相手が外すことはできない） */
+function revealMyName(){
+  if(!iAmMasked()) return;
+  var me=fbAuth.currentUser.uid, nm=myRealName();
+  currentConv.masked=(currentConv.masked||[]).filter(function(x){ return x!==me; });
+  var f=document.getElementById('chat-field'); if(f) f.value='名前をお伝えします。'+nm+'です。';
+  sendChat();
+  toast('相手に名前を伝えました');
+}
 /* チャット右上メニュー：安全ガイド・通報・ブロック */
 /* 会話の相手にお礼を贈る。助けたのがどちらかは当事者にしか分からないので、
    投稿ではなく会話から贈る（「困っていること」でお礼の向きが逆になる不具合の是正） */
@@ -3749,10 +3781,11 @@ function openChatMenu(){
   var html='<div class="set-section">'+
     ((real||demo)?'<div class="set-item" onclick="closeSheet();closeDeal()"><div class="set-icon" style="color:#5a9a6a"><svg class="ic"><use href="#i-check"/></svg></div><div class="set-label">この支え合いは終わりました<div style="font-size:.7rem;color:var(--tl);margin-top:2px">記録して、お礼を伝えるか決めます</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     ((real||demo)?'<div class="set-item" onclick="closeSheet();thanksToPartner()"><div class="set-icon" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">お礼を伝える</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    ((real&&iAmMasked())?'<div class="set-item" onclick="closeSheet();revealMyName()"><div class="set-icon"><svg class="ic"><use href="#i-user"/></svg></div><div class="set-label">相手に名前を伝える<div style="font-size:.7rem;color:var(--tl);margin-top:2px">いまは「'+ANON_NAME+'」と表示されています</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     ((real||demo)?'<div class="set-item" onclick="closeSheet();openConcern()"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-info"/></svg></div><div class="set-label">少し気になった<div style="font-size:.7rem;color:var(--tl);margin-top:2px">運営だけが読みます。相手には分かりません</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     '<div class="set-item" onclick="closeSheet();openLegal(\'safety\')"><div class="set-icon"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">安全ガイド</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
   if(real){
-    html+='<div class="set-item" onclick="openReport(\'user\',\'\',window.__reportUid,window.__reportName+\' さん\')"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-alert"/></svg></div><div class="set-label">この相手を通報する</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>'+
+    html+='<div class="set-item" onclick="openReport(\'user\',\'\',window.__reportUid,window.__reportName+honorific(window.__reportName))"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-alert"/></svg></div><div class="set-label">この相手を通報する</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>'+
       '<div class="set-item" onclick="confirmBlock(window.__reportUid,window.__reportName)"><div class="set-icon" style="color:#c07880;background:linear-gradient(135deg,rgba(232,180,184,.2),rgba(232,180,184,.1))"><svg class="ic"><use href="#i-lock"/></svg></div><div class="set-label" style="color:#c07880">この相手をブロックする</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
     window.__reportUid=currentConv.otherUid; window.__reportName=currentConv.otherName||'相手';
   }
@@ -4446,7 +4479,7 @@ function toggleSetting(el,key){
 function isGuestMode(){ try{ return sessionStorage.getItem('youi_guest')==='1'; }catch(e){ return false; } }
 if(fbReady){
   fbAuth.onAuthStateChanged(function(user){
-    if(!user) return;
+    if(!user){ stopRealtime(); return; }
     // ゲストモード中に古いログインセッションが残っていたら、必ずサインアウトしてゲストを優先
     if(isGuestMode()){ fbAuth.signOut(); return; }
     window.__guest=false;
