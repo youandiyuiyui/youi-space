@@ -1709,8 +1709,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="prof-name" id="up-name">ともこ さん</div>
     <div class="prof-bio" id="up-bio">高槻市・母（85）の介護をしながら暮らしています</div>
     <div class="prof-roles">
-      <span class="prof-role" id="up-stage">あわじ結び</span>
-      <span class="prof-role" id="up-active">活動中</span>
       <span class="prof-role" id="up-verified">本人確認済</span>
     </div>
   </div>
@@ -1726,11 +1724,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="uprof-section" id="up-need-sec">
     <h4>いま頼みたいこと</h4>
     <div class="uprof-skills" id="up-need"><span class="uprof-skill">介護の合間に、自分の通院の2時間だけ母の話し相手を</span></div>
-  </div>
-  <div class="uprof-section" id="up-words-sec">
-    <h4>よく言われること</h4>
-    <div id="up-words"><span class="thanks-tag on" style="cursor:default">ていねいだった <b style="opacity:.8">×4</b></span><span class="thanks-tag on" style="cursor:default">話しやすかった <b style="opacity:.8">×3</b></span></div>
-    <div style="font-size:.68rem;color:var(--tl);line-height:1.7">贈られた言葉は点数にせず、誰が書いたかも表示しません。</div>
   </div>
   <div style="padding:0 18px 80px"><button class="btn-primary" id="up-msg-btn" onclick="openChat('ともこ','green','と')">メッセージを送る</button></div>
 </div>
@@ -3542,7 +3535,7 @@ function openChatPartner(){
     openUserProfile(currentConv.otherUid,currentConv.otherName,{from:'chat',masked:masked});
     return;
   }
-  openDemoProfile((window.__demoChat||{}).name);
+  openDemoProfile((window.__demoChat||{}).name,'chat');
 }
 
 /* 現在のチャットのメッセージを購読して描画 */
@@ -3639,12 +3632,12 @@ function openChat(name,color,initial){
   if(chatMsgsUnsub){ chatMsgsUnsub(); chatMsgsUnsub=null; }
   var sb=document.getElementById('chat-safety'); if(sb) sb.style.display='none';
   var pr=document.getElementById('chat-presence');
-  if(pr){ pr.style.display='flex'; pr.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:var(--sage2)"></span>オンライン'; }
+  if(pr){ pr.style.display='flex'; pr.textContent='プロフィールを見る ›'; }
   if(DEMO_THREAD_HTML) document.getElementById('chat-thread').innerHTML=DEMO_THREAD_HTML;
   window.__demoChat={name:name,color:color,initial:initial};
   document.getElementById('chat-name').textContent=name+honorific(name);
   const av=document.getElementById('chat-avatar');
-  av.innerHTML=initial+'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>';
+  av.innerHTML=escapeHtml(initial)+(demoVerified(name)?'<span class="v"><svg class="ic" style="font-size:.5rem"><use href="#i-check"/></svg></span>':'');
   av.className='avatar sm '+color;
   document.querySelectorAll('#chat-thread .bub1').forEach(a=>{
     a.innerHTML=initial;
@@ -4057,7 +4050,7 @@ function renderUserProfile(ctx,prof,posts){
   av.innerHTML=escapeHtml(name.charAt(0))+(verified?'<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span>':'');
   document.getElementById('up-name').textContent=name+(org?'':honorific(name));
   var bio=document.getElementById('up-bio'); bio.textContent=org?'団体・行政の公式アカウント':''; show('up-bio',org);
-  show('up-stage',false); show('up-active',false); show('up-verified',verified);
+  show('up-verified',verified);
   var note;
   if(prof===null) note='読み込み中…';
   else if(ctx.self) note=prof?'投稿やメッセージの相手には、このように表示されます。':'まだ公開プロフィールがありません。ニックネームを決めると、投稿やメッセージの相手に表示されます。';
@@ -4074,7 +4067,6 @@ function renderUserProfile(ctx,prof,posts){
   var can=titles(function(t){ return t==='can'||t==='tsuide'; }), need=titles(function(t){ return t==='need'; });
   document.getElementById('up-can').innerHTML=chips(can); show('up-can-sec',can.length>0);
   document.getElementById('up-need').innerHTML=chips(need); show('up-need-sec',need.length>0);
-  show('up-words-sec',false);
   var rb=document.getElementById('up-report-btn');
   if(rb){ rb.style.display=ctx.self?'none':''; rb.onclick=function(){ openReport('user','',ctx.uid,name+(org?'':honorific(name))); }; }
   var btn=document.getElementById('up-msg-btn');
@@ -4569,17 +4561,17 @@ var DEMO_POSTS=[
 ];
 /* 相手プロフィール（数値・星・送り主の名前は出さない） */
 var DEMO_PEOPLE={
-  'ともこ':{c:'green',bio:'高槻市・母（85）の介護をしながら暮らしています',st:'あわじ結び',intro:'3年前から母の介護をしています。「大丈夫？」と聞かれると、つい「大丈夫」と答えてしまう性分です。ここでは少しずつ、頼ることを練習しています。',can:['編み物を教えられます','子どもの宿題を見られます（夜）'],words:[['ていねいだった',4],['話しやすかった',3],['声をかけてくれてうれしかった',2]]},
-  'みさこ':{c:'green',bio:'高槻市・以前は病院で働いていました',st:'梅結び',intro:'夫を見送ってから、時間ができました。付き添いや話し相手なら、いつでも声をかけてください。',words:[['安心できた',8],['ていねいだった',6],['また会いたい',5]]},
-  'まえけん':{c:'sky',bio:'高槻市・会社員（週末は動けます）',st:'梅結び',intro:'車があるので、送迎や重いものの買い物なら。ついでで良ければ、遠慮なく。',words:[['すぐ来てくれた',7],['話しやすかった',4]]},
-  'まり':{c:'pink',bio:'茨木市・ふたりの子どもを育てています',st:'結い手',intro:'ひとりで子育てをしていた時期に、ご近所の方に何度も助けてもらいました。今度はわたしの番です。',words:[['安心できた',9],['また会いたい',6],['声をかけてくれてうれしかった',3]]},
-  'けん':{c:'sky',bio:'茨木市・大学生',st:'あわじ結び',intro:'自分も家族のケアをしながら学校に通っていました。同じような子の力になりたいです。',words:[['話しやすかった',5],['ていねいだった',3]]},
-  'たいち':{c:'green',bio:'高槻市・自営業',st:'あわじ結び',intro:'平日は店がありますが、土曜の午前なら動けます。',words:[['すぐ来てくれた',4]]},
-  'かずこ':{c:'green',bio:'高槻市・夫とふたり暮らし',st:'ひと結び',intro:'夫の通院が月に2回あります。わたしにできることは、漬物づくりくらいですが。',can:['漬物・保存食のつくり方を教えられます'],words:[['声をかけてくれてうれしかった',2]]},
-  'めぐみ':{c:'pink',bio:'高槻市・子ども食堂を運営しています',st:'梅結び',intro:'毎月2回、公民館で子ども食堂を開いています。支える側の人手が足りないのが、いちばんの悩みです。',words:[['ていねいだった',5],['また力になりたい',4]]},
-  'ちなつ':{c:'pink',bio:'大阪市・保育士',st:'結い手',intro:'子どもを見ることなら、任せてください。',words:[['安心できた',7]]},
-  'ゆみ':{c:'green',bio:'高槻市',st:'梅結び',intro:'家事や料理なら、ついでにお手伝いできます。',words:[['ていねいだった',3]]},
-  'ひでき':{c:'sky',bio:'高槻市・退職後、地域の見回りをしています',st:'ひと結び',intro:'',words:[['ていねいだった',2]]}
+  'ともこ':{c:'green',bio:'高槻市・母（85）の介護をしながら暮らしています',intro:'3年前から母の介護をしています。「大丈夫？」と聞かれると、つい「大丈夫」と答えてしまう性分です。ここでは少しずつ、頼ることを練習しています。',can:['編み物を教えられます','子どもの宿題を見られます（夜）']},
+  'みさこ':{c:'green',bio:'高槻市・以前は病院で働いていました',intro:'夫を見送ってから、時間ができました。付き添いや話し相手なら、いつでも声をかけてください。'},
+  'まえけん':{c:'sky',bio:'高槻市・会社員（週末は動けます）',intro:'車があるので、送迎や重いものの買い物なら。ついでで良ければ、遠慮なく。'},
+  'まり':{c:'pink',bio:'茨木市・ふたりの子どもを育てています',intro:'ひとりで子育てをしていた時期に、ご近所の方に何度も助けてもらいました。今度はわたしの番です。'},
+  'けん':{c:'sky',bio:'茨木市・大学生',intro:'自分も家族のケアをしながら学校に通っていました。同じような子の力になりたいです。'},
+  'たいち':{c:'green',bio:'高槻市・自営業',intro:'平日は店がありますが、土曜の午前なら動けます。'},
+  'かずこ':{c:'green',v:false,bio:'高槻市・夫とふたり暮らし',intro:'夫の通院が月に2回あります。わたしにできることは、漬物づくりくらいですが。',can:['漬物・保存食のつくり方を教えられます']},
+  'めぐみ':{c:'pink',bio:'高槻市・子ども食堂を運営しています',intro:'毎月2回、公民館で子ども食堂を開いています。支える側の人手が足りないのが、いちばんの悩みです。'},
+  'ちなつ':{c:'pink',bio:'大阪市・保育士',intro:'子どもを見ることなら、任せてください。'},
+  'ゆみ':{c:'green',bio:'高槻市',intro:'家事や料理なら、ついでにお手伝いできます。'},
+  'ひでき':{c:'sky',v:false,bio:'高槻市・退職後、地域の見回りをしています',intro:''}
 };
 function loadDemoData(){
   window.__demoLoaded=true;
@@ -4612,32 +4604,19 @@ function renderDemoPoints(){
   var b=document.getElementById('rew-balance-num'); if(b) b.textContent=v;
 }
 function demoProfilePost(id){ var p=(window.__posts||{})[id]; if(p&&!p.anon) openDemoProfile(p.authorName); }
-function openDemoProfile(name){
-  if(!name||name==='ご近所の方'){ toast('名前を伏せている方です'); return; }
-  var d=DEMO_PEOPLE[name]||{c:colorForUid(name),bio:'',st:'ひと結び',intro:'',words:[]};
+/* デモの相手のプロフィール。実アプリと同じ描き方（ニックネーム・自己紹介・本人確認済みの印と、名前を出した投稿）。
+   from==='chat' なら会話から開いたもの */
+function demoVerified(name){ var d=DEMO_PEOPLE[name]; return !!d && d.v!==false; }
+function openDemoProfile(name,from){
+  if(!name||name===ANON_NAME){ toast('名前を伏せている方です'); return; }
+  var d=DEMO_PEOPLE[name]||{c:colorForUid(name),bio:'',intro:'',v:false};
   var posts=(window.__rawPosts||[]).filter(function(p){ return p.authorName===name && !p.anon; });
-  var can=(d.can||[]).concat(posts.filter(function(p){ var t=normType(p.type); return t==='can'||t==='tsuide'; }).map(function(p){ return p.title; }));
-  var need=posts.filter(function(p){ return normType(p.type)==='need'; }).map(function(p){ return p.title; });
-  var chips=function(arr){ return arr.map(function(x){ return '<span class="uprof-skill">'+escapeHtml(x)+'</span>'; }).join(''); };
-  var av=document.getElementById('up-avatar');
-  av.className='avatar xl '+d.c;
-  av.innerHTML=escapeHtml(name.charAt(0))+'<span class="v"><svg class="ic" style="font-size:.8rem"><use href="#i-check"/></svg></span>';
-  document.getElementById('up-name').textContent=name+honorific(name);
-  document.getElementById('up-bio').textContent=d.bio||'';
-  document.getElementById('up-stage').textContent=d.st;
-  document.getElementById('up-intro').textContent=d.intro||'';
-  document.getElementById('up-intro-sec').style.display=d.intro?'':'none';
-  document.getElementById('up-can').innerHTML=chips(can);
-  document.getElementById('up-can-sec').style.display=can.length?'':'none';
-  document.getElementById('up-need').innerHTML=chips(need);
-  document.getElementById('up-need-sec').style.display=need.length?'':'none';
-  document.getElementById('up-words').innerHTML=(d.words||[]).map(function(w){ return '<span class="thanks-tag on" style="cursor:default">'+escapeHtml(w[0])+' <b style="opacity:.8">×'+w[1]+'</b></span>'; }).join('')||'<div style="font-size:.8rem;color:var(--tl)">まだ言葉は届いていません。</div>';
-  var btn=document.getElementById('up-msg-btn'); btn.textContent='メッセージを送る';
-  btn.onclick=function(){ openChat(name,d.c,name.charAt(0)); };
-  ['up-bio','up-stage','up-active','up-verified','up-words-sec','up-report-btn'].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.display=''; });
-  var rb=document.getElementById('up-report-btn'); if(rb) rb.onclick=function(){ toast('通報は運営だけが確認し、相手には通知されません（デモでは送信しません）'); };
-  document.getElementById('up-note').textContent='支え合った回数や、評価の点数は表示しません。';
-  var intro=document.getElementById('up-intro'); if(intro) intro.style.color='';
+  (d.can||[]).forEach(function(t){ posts.push({type:'can',title:t}); });
+  var ctx={uid:'', name:name, color:d.c, self:false, from:from||''};
+  renderUserProfile(ctx,{name:name, type:'personal', bio:[d.bio,d.intro].filter(Boolean).join('。'), verified:demoVerified(name)},posts);
+  if(ctx.from!=='chat') document.getElementById('up-msg-btn').onclick=function(){ openChat(name,d.c,name.charAt(0)); };
+  var rb=document.getElementById('up-report-btn');
+  if(rb) rb.onclick=function(){ toast('通報は運営だけが確認し、相手には通知されません（デモでは送信しません）'); };
   navTo('uprof');
 }
 /* 投稿からデモの会話へ。はじめの2通だけ、投稿の中身に合わせて入れておく */
@@ -4687,7 +4666,7 @@ function demoSendThanks(pts){
 function demoExplainThanks(){
   openSheet('いま起きたこと',
     '<div style="font-size:.8rem;color:var(--tl);line-height:1.85;margin-bottom:12px">お礼ひとつにも、支える人が負い目なく続けられるための工夫を入れています。</div>'+
-    gPt('i-heart','選んだ感謝タグは、相手のプロフィールの<b>「よく言われること」に言葉のまま</b>残ります。誰が書いたかは表示しません')+
+    gPt('i-heart','選んだ感謝タグは、相手のマイページの<b>「よく言われること」に言葉のまま</b>届きます。ほかの人には見せず、誰が書いたかも表示しません')+
     gPt('i-gift','＆ポイントは運営が配るのではなく、<b>受けた人から手渡し</b>ます。その場で借りを返したことになるので、負い目が残りません')+
     gPt('i-users','同じ相手との2回目以降は、信頼の伸びがゆるやかになります。<b>いろいろな人と支え合うほど</b>、段階が上がります')+
     gPt('i-lock','「今回は伝えない」を選んでも、相手には分かりません。<b>低い評価を公開する仕組みはありません</b>')+
