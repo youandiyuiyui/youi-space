@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// You&i Space — Firestore セキュリティルール（アプリ v0.5.2 対応。v0.5.0／v0.5.1 のアプリとも両立）
+// You&i Space — Firestore セキュリティルール（アプリ v0.5.3 対応。v0.5.0〜v0.5.2 のアプリとも両立）
 // ※ このファイルは記録用。実際の反映は Firebase コンソール
 //   （プロジェクト you-i-space → Firestore Database → ルール）に
 //   丸ごと貼り付けて「公開」してください。
@@ -53,6 +53,41 @@ service cloud.firestore {
         // 登録時は 300pt（アプリの初期値）。本人の操作では増やせない
         && ifChanged('points', incoming().points is int && incoming().points >= 0
              && incoming().points <= resource.data.get('points', 300));
+      allow delete: if isMe(uid);   // 退会
+    }
+
+    // ── 公開プロフィール（ほかの利用者に見せる名前・自己紹介・本人確認済みの印）──
+    // 本名・メールアドレスを含む users とは分けて置く。書けるのは本人だけ。
+    // 名前は users のニックネーム（団体は団体名）と同じものだけ（本名は書けない）。
+    // 本人確認済みの印は、運営が users に付けたときだけ付けられる。
+    // 読めるのは次の人だけ。1人ずつ開くだけで、一覧（検索）はできない。
+    //   ・本人
+    //   ・名前を出して投稿した人（listed）のプロフィールを、ログインしている人が
+    //   ・会話の相手（ただし相手が名前を伏せている会話からは読めない）
+    //   ※ 本人がブロックしている人は読めない
+    match /profiles/{uid} {
+      function ownerAfter() { return getAfter(/databases/$(database)/documents/users/$(uid)).data; }
+      function pairId(a, b) { return a < b ? a + '_' + b : b + '_' + a; }
+      function convPath() { return /databases/$(database)/documents/conversations/$(pairId(request.auth.uid, uid)); }
+      function seesViaConv() { return exists(convPath()) && !(uid in get(convPath()).data.get('masked', [])); }
+      function notBlocked() {
+        return !(request.auth.uid in get(/databases/$(database)/documents/users/$(uid)).data.get('blocked', {}));
+      }
+      function profileOk() {
+        let u = ownerAfter();
+        return incoming().keys().hasOnly(['name', 'type', 'bio', 'verified', 'listed', 'updatedAt'])
+          && incoming().type == u.type
+          && incoming().name == (u.type == 'org' ? u.get('orgName', '') : u.get('nickname', ''))
+          && str(incoming().name, 60) && incoming().name.size() > 0
+          && str(incoming().bio, 200)
+          && incoming().listed is bool
+          && incoming().verified is bool
+          && (incoming().verified == false || u.get('verified', false) == true)
+          && stampedNow('updatedAt');
+      }
+      allow get: if isMe(uid)
+        || (signedIn() && notBlocked() && (resource.data.get('listed', false) == true || seesViaConv()));
+      allow create, update: if isMe(uid) && profileOk();
       allow delete: if isMe(uid);   // 退会
     }
 
