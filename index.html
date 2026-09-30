@@ -1306,14 +1306,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   <div class="app-header">
     <div class="app-h-back" onclick="navTo('profile')"><svg class="ic"><use href="#i-back"/></svg>＆ポイント</div>
     <div class="app-h-actions">
-      <button class="icon-btn" onclick="openHistory('use')"><svg class="ic"><use href="#i-info"/></svg></button>
+      <button class="icon-btn" onclick="openPointsHistory()"><svg class="ic"><use href="#i-info"/></svg></button>
     </div>
   </div>
   <div class="rewards-screen">
     <div class="rew-balance">
       <div class="rew-balance-lbl">いま持っている ＆ポイント</div>
-      <div class="rew-balance-num"><span id="rew-balance-num">1,240</span><span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
-      <div class="rew-balance-sub" id="rew-balance-sub">受け取った：1,740pt ／ 手渡した・使った：500pt</div>
+      <div class="rew-balance-num"><span id="rew-balance-num">1,050</span><span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
+      <div class="rew-balance-sub" id="rew-balance-sub">受け取った：930pt ／ 手渡した：80pt ／ 使った：100pt</div>
     </div>
     <div class="info-box">
       <div class="info-box-h">＆ポイントは「手渡し」のお礼です</div>
@@ -1335,25 +1335,25 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <!-- 地域のお店（協賛店の例） -->
     <div class="rew-grid" id="rew-coupon">
-      <div class="rew-card" onclick="redeem('（例）まちかどカフェ クーポン','500')">
+      <div class="rew-card" onclick="redeem('（例）まちかどカフェ クーポン','500','shop')">
         <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-gift"/></svg></div>
         <div class="rew-cat">協賛店の例・飲食</div>
         <div class="rew-name">まちかどカフェ<br>500円クーポン</div>
         <div class="rew-price">500<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('（例）○○商店街 共通券','1,000')">
+      <div class="rew-card" onclick="redeem('（例）○○商店街 共通券','1,000','shop')">
         <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-globe"/></svg></div>
         <div class="rew-cat">協賛店の例・商店街</div>
         <div class="rew-name">○○商店街<br>1,000円共通券</div>
         <div class="rew-price">1,000<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('（例）町の本屋さん クーポン','600')">
+      <div class="rew-card" onclick="redeem('（例）町の本屋さん クーポン','600','shop')">
         <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-bookmark"/></svg></div>
         <div class="rew-cat">協賛店の例・書店</div>
         <div class="rew-name">町の本屋さん<br>600円クーポン</div>
         <div class="rew-price">600<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('（例）お弁当屋さん クーポン','450')">
+      <div class="rew-card" onclick="redeem('（例）お弁当屋さん クーポン','450','shop')">
         <div class="rew-img green"><svg class="ic" style="width:36px;height:36px"><use href="#i-heart"/></svg></div>
         <div class="rew-cat">協賛店の例・お弁当</div>
         <div class="rew-name">お弁当屋さん<br>450円クーポン</div>
@@ -1368,25 +1368,25 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="info-box-b">You&amp;i Gallery は、結の「オフラインの顔」。人と人が直接出会い、等身大でいられる場所です。オンラインの善意が、オフラインの出会いに変わります。いまは大阪の cue books で、小さく始めています。</div>
       </div>
       <div class="rew-grid">
-        <div class="rew-card" onclick="redeem('Gallery：ねぎらいの会','300')">
+        <div class="rew-card" onclick="redeem('Gallery：ねぎらいの会','300','gallery')">
         <div class="rew-img"><svg class="ic" style="width:36px;height:36px"><use href="#i-users"/></svg></div>
         <div class="rew-cat">支える人どうしの交流</div>
         <div class="rew-name">ねぎらいの会に<br>参加する</div>
         <div class="rew-price">300<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('Gallery：作品・ZINEと交換','500')">
+      <div class="rew-card" onclick="redeem('Gallery：作品・ZINEと交換','500','gallery')">
         <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-book"/></svg></div>
         <div class="rew-cat">等身大の作品と</div>
         <div class="rew-name">作品・ZINEと<br>交換する</div>
         <div class="rew-price">500<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('Gallery：展示の場','800')">
+      <div class="rew-card" onclick="redeem('Gallery：展示の場','800','gallery')">
         <div class="rew-img pink"><svg class="ic ic-fill" style="width:36px;height:36px"><use href="#i-star"/></svg></div>
         <div class="rew-cat">好きなもの・作ったもの</div>
         <div class="rew-name">展示の場を<br>借りる</div>
         <div class="rew-price">800<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('Gallery：参加枠を贈る','300')">
+      <div class="rew-card" onclick="redeem('Gallery：参加枠を贈る','300','gallery')">
         <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#i-share"/></svg></div>
         <div class="rew-cat">役割の循環</div>
         <div class="rew-name">交流会の参加枠を<br>誰かに贈る</div>
@@ -1397,25 +1397,25 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
     <!-- 寄付・つみたて -->
     <div class="rew-grid" id="rew-donate" style="display:none">
-      <div class="rew-card" onclick="redeem('町のつみたて','100')">
+      <div class="rew-card" onclick="redeem('町のつみたて','100','donate')">
         <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-house"/></svg></div>
         <div class="rew-cat">結の日・防災訓練の原資</div>
         <div class="rew-name">町のつみたてに<br>入れる</div>
         <div class="rew-price">100<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('（例）こども食堂の応援','300')">
+      <div class="rew-card" onclick="redeem('（例）こども食堂の応援','300','donate')">
         <div class="rew-img pink"><svg class="ic" style="width:36px;height:36px"><use href="#il-parent"/></svg></div>
         <div class="rew-cat">団体の例・子育て</div>
         <div class="rew-name">こども食堂の<br>運営を応援</div>
         <div class="rew-price">300<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('（例）ヤングケアラー支援の応援','500')">
+      <div class="rew-card" onclick="redeem('（例）ヤングケアラー支援の応援','500','donate')">
         <div class="rew-img sky"><svg class="ic" style="width:36px;height:36px"><use href="#il-young"/></svg></div>
         <div class="rew-cat">団体の例・若者支援</div>
         <div class="rew-name">ヤングケアラー<br>支援を応援</div>
         <div class="rew-price">500<small>＆pt</small></div>
       </div>
-      <div class="rew-card" onclick="redeem('災害時の支え合い基金','1,000')">
+      <div class="rew-card" onclick="redeem('災害時の支え合い基金','1,000','donate')">
         <div class="rew-img gold"><svg class="ic" style="width:36px;height:36px"><use href="#i-shield"/></svg></div>
         <div class="rew-cat">平時から有事に備える</div>
         <div class="rew-name">災害時の<br>支え合い基金</div>
@@ -1423,11 +1423,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
 
-    <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px;display:flex;gap:10px;align-items:center;cursor:pointer" onclick="openHistory('use')">
+    <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px;display:flex;gap:10px;align-items:center;cursor:pointer" onclick="openPointsHistory()">
       <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2)"><svg class="ic"><use href="#i-info"/></svg></div>
       <div style="flex:1">
-        <div style="font-size:.86rem;font-weight:500">利用履歴を見る</div>
-        <div style="font-size:.74rem;color:var(--tl)">これまでの獲得・使用ポイント</div>
+        <div style="font-size:.86rem;font-weight:500">＆ポイントの記録を見る</div>
+        <div style="font-size:.74rem;color:var(--tl)">受け取った・手渡した・使った＆ポイント</div>
       </div>
       <svg class="ic" style="color:var(--ttl)"><use href="#i-chevron-r"/></svg>
     </div>
@@ -1563,7 +1563,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div style="width:1px;height:74px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.35),transparent);justify-self:center"></div>
       <div style="text-align:center">
         <div class="score-label" style="margin-bottom:8px">＆ポイント</div>
-        <div id="prof-points" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">1,240</div>
+        <div id="prof-points" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">1,050</div>
         <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(252,238,168,.18);color:#fceea8;font-size:.7rem;font-weight:500">
           <svg class="ic" style="font-size:.85em"><use href="#i-gift"/></svg>使える
         </div>
@@ -1842,7 +1842,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.5.3 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.5.4 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -2042,6 +2042,7 @@ function navTo(name){
   if(ni) ni.classList.add('active');
   if(name==='yui'){ renderYuiLists(); }
   if(name==='profile'){ renderMyCards(); }
+  if((name==='profile'||name==='rewards')&&isGuestDemo()) renderDemoPoints();
   if(name==='post'){ setPostType(null,curPostType||'tsuide'); }
   if(name==='main'){
     renderDemoRibbon(); renderCareCard(); renderNickBanner();
@@ -2778,7 +2779,7 @@ function pointsLedger(){
   return {received:sum(window.__thanksIn), given:sum(window.__thanksOut)};
 }
 function myPoints(){
-  if(isGuestDemo()) return (typeof window.__demoPoints==='number')?window.__demoPoints:1240;
+  if(isGuestDemo()) return Math.max(0, pointsTotals(demoTx()).balance);
   var l=pointsLedger();
   return Math.max(0, START_PT+l.received-l.given);
 }
@@ -2787,9 +2788,7 @@ function renderPointsUI(){
   var p=myPoints(), l=pointsLedger();
   var a=document.getElementById('prof-points'); if(a) a.textContent=p.toLocaleString();
   var b=document.getElementById('rew-balance-num'); if(b) b.textContent=p.toLocaleString();
-  var c=document.getElementById('rew-balance-sub');
-  if(c) c.textContent=(l.received||l.given)?('受け取った：'+l.received.toLocaleString()+'pt ／ 手渡した：'+l.given.toLocaleString()+'pt')
-                                          :('登録のお祝いに '+START_PT+'pt をお渡ししています');
+  var c=document.getElementById('rew-balance-sub'); if(c) c.textContent=balanceSubText({received:l.received, given:l.given, used:0});
 }
 
 /* 受け取った感謝を購読して、段階・回数・最近の活動に反映する */
@@ -3447,13 +3446,73 @@ function rewTab(el,key){
     if(g) g.style.display=(k===key?(k==='gallery'?'block':'grid'):'none');
   });
 }
-function redeem(name,pt){
-  // 実アカウント：実証期間中の交換は未提供（誤解を招く偽の成功表示はしない）
+/* ＆ポイントの引き換え。実アカウントは実証期間中は準備中（誤解を招く偽の成功表示はしない）。
+   ゲストのデモでは、確認 → 引換券 → 記録（＆ポイントの記録）まで体験できる。端末の中だけで、何も送信しない */
+var REDEEM_KINDS={
+  shop:   {title:'引き換えの確認', verb:'引き換える', done:'引換券', where:'お店のレジで、この画面を見せてください。'},
+  gallery:{title:'引き換えの確認', verb:'引き換える', done:'引換券', where:'You&i Gallery の受付で、この画面を見せてください。'},
+  donate: {title:'応援の確認',     verb:'入れる',     done:'受け付けました', where:''}
+};
+function redeem(name,pt,kind){
   if(currentProfile&&currentProfile.uid){ toast('＆ポイントの交換は実証期間中は準備中です'); return; }
-  var n=parseInt(String(pt).replace(/,/g,''),10)||0;
-  if(n>myPoints()){ toast('＆ポイントが足りません（デモ）'); return; }
-  window.__demoPoints=myPoints()-n; renderDemoPoints();
-  toast(name+' を '+pt+'＆pt で引き換えました（デモ）');
+  kind=REDEEM_KINDS[kind]?kind:'shop';
+  var k=REDEEM_KINDS[kind], n=parseInt(String(pt).replace(/,/g,''),10)||0, bal=myPoints(), after=bal-n;
+  window.__redeemCtx={name:name, n:n, kind:kind};
+  var line=function(l,v,strong){ return '<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.84rem'+(strong?';font-weight:600':'')+'"><span>'+l+'</span><span>'+v+'</span></div>'; };
+  openSheet(k.title,
+    '<div style="font-weight:600;font-size:1rem;margin-bottom:4px">'+escapeHtml(name)+'</div>'+
+    '<div style="font-size:.76rem;color:var(--tl);margin-bottom:14px">'+(kind==='donate'?'寄付・つみたて':(kind==='gallery'?'You&amp;i Gallery':'地域のお店'))+'</div>'+
+    '<div style="background:rgba(184,175,214,.08);border:1px solid var(--border);border-radius:12px;padding:8px 14px;margin-bottom:14px">'+
+      line('いま持っている',bal.toLocaleString()+' pt')+
+      line(kind==='donate'?'入れる':'引き換える','−'+n.toLocaleString()+' pt')+
+      '<div style="border-top:1px solid var(--border);margin:4px 0"></div>'+
+      line(kind==='donate'?'入れたあと':'引き換えたあと',(after>=0?after.toLocaleString()+' pt':'—'),true)+
+    '</div>'+
+    (after<0
+      ? '<div style="font-size:.84rem;color:#c07880;line-height:1.8;margin-bottom:14px">あと '+(-after).toLocaleString()+' pt 足りません。お礼として受け取ると、たまっていきます。</div>'+
+        '<button class="btn-secondary" onclick="closeSheet()">とじる</button>'
+      : '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin-bottom:14px">デモのため、実際には引き換えられません。この端末の中の記録だけが変わります。</div>'+
+        '<div style="display:flex;gap:10px"><button class="btn-secondary" style="flex:1" onclick="closeSheet()">やめる</button>'+
+        '<button class="btn-primary" style="flex:1" onclick="confirmRedeem()">'+k.verb+'</button></div>'));
+}
+function newVoucherCode(){
+  var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r='';
+  for(var i=0;i<4;i++) r+=a.charAt(Math.floor(Math.random()*a.length));
+  return 'YS-'+String(Math.floor(1000+Math.random()*9000))+'-'+r;
+}
+function confirmRedeem(){
+  var c=window.__redeemCtx; if(!c||!isGuestDemo()) return;
+  if(c.n>myPoints()){ toast('＆ポイントが足りません（デモ）'); return; }
+  if(busy('redeem',1500)) return;
+  var now=Date.now();
+  var tx={id:'tx'+now, kind:'use', label:c.name, pts:-c.n, at:now, rk:c.kind, code:newVoucherCode(), until:now+30*DAY_MS};
+  demoTx().unshift(tx);
+  window.__redeemCtx=null;
+  renderDemoPoints();
+  var act=document.getElementById('prof-activity'), h=act&&act.querySelector('.sec-h');
+  if(h) h.insertAdjacentHTML('afterend',
+    '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--gold)"></div>'+
+    '<div class="feed-text">＆ポイントを<b>'+escapeHtml(c.name)+'</b>'+(c.kind==='donate'?'に入れました':'と引き換えました')+'</div><div class="feed-time">たった今</div></div>'+
+    '<div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−'+c.n.toLocaleString()+' ＆pt</span></div></div>');
+  openVoucher(tx.id);
+}
+/* 引換券（寄付は受付の記録）。＆ポイントの記録からも、あとで開ける */
+function openVoucher(id){
+  var tx=demoTx().filter(function(t){ return t.id===id; })[0]; if(!tx) return;
+  var k=REDEEM_KINDS[tx.rk]||REDEEM_KINDS.shop, donate=(tx.rk==='donate');
+  openSheet(k.done,
+    (donate
+      ? '<div style="font-size:.88rem;line-height:1.9;margin-bottom:14px">ありがとうございます。<b>'+escapeHtml(tx.label)+'</b>に '+(-tx.pts).toLocaleString()+' pt を入れました。</div>'
+      : '<div style="font-size:.84rem;color:var(--tl);line-height:1.8;margin-bottom:12px">'+escapeHtml(k.where)+'</div>')+
+    '<div style="border:1.5px dashed rgba(184,175,214,.8);border-radius:16px;padding:18px 16px;text-align:center;background:linear-gradient(135deg,rgba(184,175,214,.08),rgba(200,184,122,.08));margin-bottom:14px">'+
+      '<div style="font-weight:600;font-size:.95rem;margin-bottom:10px">'+escapeHtml(tx.label)+'</div>'+
+      '<div style="font-size:.7rem;color:var(--tl);letter-spacing:.08em">'+(donate?'受付番号':'引換番号')+'</div>'+
+      '<div id="voucher-code" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.5rem;font-weight:700;letter-spacing:.12em;margin:4px 0 10px">'+escapeHtml(tx.code)+'</div>'+
+      '<div style="font-size:.78rem;color:var(--ink)">'+(-tx.pts).toLocaleString()+' pt ・ '+fmtYMD(tx.at)+(donate?'':' 〜 '+fmtYMD(tx.until)+' まで有効')+'</div>'+
+    '</div>'+
+    '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin-bottom:14px">デモのため、実際のお店・Gallery では使えません。'+(donate?'':'引換券は「＆ポイントの記録」から、いつでも見返せます。')+'</div>'+
+    '<div style="display:flex;gap:10px"><button class="btn-secondary" style="flex:1" onclick="closeSheet()">とじる</button>'+
+    '<button class="btn-primary" style="flex:1" onclick="openPointsHistory()">＆ポイントの記録</button></div>');
 }
 /* 「ありがとう」は数を出さない（人気の軸をつくらないため） */
 function cpLike(el){ el.classList.toggle('liked'); }
@@ -4220,6 +4279,90 @@ function copyShareLink(){
   else{closeSheet();toast('リンクをコピーしました')}
 }
 
+/* ===== ＆ポイントの記録（取引の履歴） =====
+   実アプリ：感謝の記録（thanks）から作る。受け取ったお礼は、誰からかを表示しない（送り主の名前はデータにも持たない）。
+   ゲストのデモ：端末の中の記録（window.__demoTx）。お礼の手渡しと引き換えが、ここに足されていく */
+var DAY_MS=86400000;
+function msOf(v){ if(!v) return 0; if(v.toDate) return v.toDate().getTime(); if(typeof v==='number') return v; var t=Date.parse(v); return isNaN(t)?0:t; }
+function fmtYMD(ms){ if(!ms) return ''; var d=new Date(ms); return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate(); }
+/* デモの最初の記録（受け取った 930pt・手渡した 80pt・使った 100pt ＋ 登録のお祝い 300pt ＝ 残高 1,050pt） */
+function demoTxSeed(){
+  var now=Date.now(), n=0, at=function(d){ return now-d*DAY_MS; };
+  var recv=function(d,pts,tags){ return {id:'seed'+(n++), kind:'recv', label:'ありがとうを受け取りました', pts:pts, tags:tags, at:at(d)}; };
+  return [
+    recv(9,100,['また会いたい']),
+    recv(16,100,['話しやすかった']),
+    recv(24,100,['安心できた','ていねいだった']),
+    {id:'seed-give2', kind:'give', label:'ひでき さんへ', pts:-30, tags:['安心できた'], at:at(20)},
+    recv(31,100,['すぐ来てくれた']),
+    {id:'seed-use1', kind:'use', label:'町のつみたて', pts:-100, rk:'donate', code:'YS-2718-KTMR', at:at(35)},
+    recv(40,100,['また会いたい']),
+    recv(47,50,['ていねいだった']),
+    recv(55,100,['安心できた']),
+    {id:'seed-give1', kind:'give', label:'ゆみ さんへ', pts:-50, tags:['ていねいだった'], at:at(58)},
+    recv(63,30,['声をかけてくれてうれしかった']),
+    recv(71,100,['話しやすかった']),
+    recv(80,100,['すぐ来てくれた','安心できた']),
+    recv(88,50,['ていねいだった']),
+    {id:'seed-start', kind:'start', label:'登録のお祝い', pts:START_PT, at:at(92)}
+  ].sort(function(a,b){ return b.at-a.at; });
+}
+function demoTx(){ if(!window.__demoTx) window.__demoTx=demoTxSeed(); return window.__demoTx; }
+/* 実アプリ・デモ共通の記録（新しい順）。0pt のお礼はポイントの動きがないので載せない */
+function pointsTx(){
+  if(isGuestDemo()) return demoTx().slice();
+  var u=getStoredUser()||{}, out=[{id:'start', kind:'start', label:'登録のお祝い', pts:START_PT, at:msOf(u.createdAt)}];
+  (window.__thanksIn||[]).forEach(function(t){ var p=parseInt(t.points,10)||0;
+    if(p>0) out.push({id:t.id, kind:'recv', label:'ありがとうを受け取りました', pts:p, tags:t.tags||[], at:msOf(t.createdAt)||Date.now()}); });
+  (window.__thanksOut||[]).forEach(function(t){ var p=parseInt(t.points,10)||0, nm=t.toName||'相手の方';
+    if(p>0) out.push({id:t.id, kind:'give', label:nm+honorific(nm)+'へ', pts:-p, tags:t.tags||[], at:msOf(t.createdAt)||Date.now()}); });
+  // 送ったばかりのお礼はサーバー時刻が未確定なので「いま」として並べる。登録のお祝いはいちばん古い
+  return out.sort(function(a,b){ return b.at-a.at; });
+}
+function pointsTotals(list){
+  var t={received:0, given:0, used:0, start:0, balance:0};
+  (list||[]).forEach(function(x){
+    if(x.kind==='recv') t.received+=x.pts; else if(x.kind==='give') t.given-=x.pts;
+    else if(x.kind==='use') t.used-=x.pts; else if(x.kind==='start') t.start+=x.pts;
+    t.balance+=x.pts;
+  });
+  return t;
+}
+function balanceSubText(t){
+  if(!t.received&&!t.given&&!t.used) return '登録のお祝いに '+START_PT+'pt をお渡ししています';
+  return '受け取った：'+t.received.toLocaleString()+'pt ／ 手渡した：'+t.given.toLocaleString()+'pt'+(t.used?' ／ 使った：'+t.used.toLocaleString()+'pt':'');
+}
+var TX_FILTERS=[['all','すべて'],['recv','受け取った'],['give','手渡した'],['use','使った']];
+function openPointsHistory(filter){
+  filter=filter||'all';
+  var list=pointsTx(), t=pointsTotals(list), bal=myPoints();
+  var shown=list.filter(function(x){ return filter==='all' || x.kind===filter; });
+  var sum=function(l,v,c){ return '<div style="flex:1;text-align:center"><div style="font-size:.66rem;color:var(--tl)">'+l+'</div><div style="font-size:.9rem;font-weight:600;color:'+c+'">'+v+'</div></div>'; };
+  var chips=TX_FILTERS.map(function(f){ return '<span class="thanks-tag'+(f[0]===filter?' on':'')+'" data-f="'+f[0]+'" onclick="openPointsHistory(\''+f[0]+'\')">'+f[1]+'</span>'; }).join('');
+  var rows=shown.map(function(x){
+    var plus=x.pts>0, sub='';
+    if(x.kind==='recv'||x.kind==='give') sub=(x.tags||[]).map(function(g){ return '「'+escapeHtml(g)+'」'; }).join('');
+    if(x.kind==='use') sub=(x.code?(x.rk==='donate'?'受付番号 ':'引換番号 ')+escapeHtml(x.code):'')+(x.code&&x.id&&isGuestDemo()?' ・ <span style="color:var(--lav3);text-decoration:underline">'+(x.rk==='donate'?'受付を見る':'引換券を見る')+'</span>':'');
+    var kindLbl={recv:'受け取った',give:'手渡した',use:(x.rk==='donate'?'入れた':'使った'),start:'はじめに'}[x.kind]||'';
+    var click=(x.kind==='use'&&x.code&&isGuestDemo())?' style="cursor:pointer" onclick="openVoucher(\''+escapeHtml(x.id)+'\')"':'';
+    return '<div class="set-item tx-row" data-kind="'+x.kind+'"'+click+'>'+
+      '<div style="flex:1;min-width:0"><div class="set-label">'+escapeHtml(x.label)+'</div>'+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:2px;line-height:1.6">'+fmtYMD(x.at)+' ・ '+kindLbl+(sub?' ・ '+sub:'')+'</div></div>'+
+      '<div class="tx-pts" style="font-size:.86rem;font-weight:600;white-space:nowrap;color:'+(plus?'#5a9a6a':'#c07880')+'">'+(plus?'＋':'−')+Math.abs(x.pts).toLocaleString()+' pt</div></div>';
+  }).join('');
+  openSheet('＆ポイントの記録',
+    '<div style="text-align:center;margin-bottom:12px"><div style="font-size:.72rem;color:var(--tl)">いま持っている</div>'+
+      '<div id="tx-balance" style="font-size:1.6rem;font-weight:600">'+bal.toLocaleString()+' <span style="font-size:.9rem">pt</span></div></div>'+
+    '<div style="display:flex;gap:6px;background:rgba(184,175,214,.08);border:1px solid var(--border);border-radius:12px;padding:10px 6px;margin-bottom:14px">'+
+      sum('受け取った','＋'+t.received.toLocaleString(),'#5a9a6a')+sum('手渡した','−'+t.given.toLocaleString(),'#c07880')+
+      sum('使った','−'+t.used.toLocaleString(),'#c07880')+sum('登録のお祝い','＋'+t.start.toLocaleString(),'#5a9a6a')+
+    '</div>'+
+    '<div style="margin-bottom:10px">'+chips+'</div>'+
+    (rows?'<div class="set-section" id="tx-list">'+rows+'</div>':emptyHist('この種類の記録は、まだありません。'))+
+    '<div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">受け取ったお礼は、誰からかを表示しません。'+
+      (isGuestDemo()?'デモの記録は、この端末の中だけのものです。':'引き換えは、実証期間中は準備中です。')+'</div>');
+}
+
 /* 履歴・実績・お気に入り */
 function openHistory(kind){
   var isNew = currentProfile && currentProfile.uid;
@@ -4228,7 +4371,7 @@ function openHistory(kind){
   }else if(kind==='fav'){
     openSheet('お気に入り', isNew?emptyHist('お気に入りはまだありません。'):histList([['みどり さん','支援者',''],['高槻ボランティアの会','団体・行政','']]));
   }else{
-    openSheet('利用履歴', isNew?emptyHist('まだ利用履歴がありません。'):histList([['＆ポイント利用：カフェドリンク','2026/06/09','−30 ＆P'],['支援を受けた：買い物代行','2026/06/01',''],['アカウント作成','2026/05/30','']]));
+    openPointsHistory();
   }
 }
 function emptyHist(msg){return '<div style="padding:24px;text-align:center;color:var(--tl);font-size:.85rem;line-height:1.8">'+escapeHtml(msg)+'</div>';}
@@ -4575,7 +4718,7 @@ var DEMO_PEOPLE={
 };
 function loadDemoData(){
   window.__demoLoaded=true;
-  if(typeof window.__demoPoints!=='number') window.__demoPoints=1240;
+  demoTx();
   window.__rawPosts=DEMO_POSTS.map(function(p,i){
     var q={}; for(var k in p) q[k]=p[k];
     q.id='demo-p'+i; q.pref=q.pref||'大阪府'; q.when=q.when||''; q.anon=!!q.anon; q.createdAt=demoTs(p.min||60);
@@ -4602,6 +4745,7 @@ function renderDemoPoints(){
   var v=myPoints().toLocaleString();
   var a=document.getElementById('prof-points'); if(a) a.textContent=v;
   var b=document.getElementById('rew-balance-num'); if(b) b.textContent=v;
+  var c=document.getElementById('rew-balance-sub'); if(c) c.textContent=balanceSubText(pointsTotals(demoTx()));
 }
 function demoProfilePost(id){ var p=(window.__posts||{})[id]; if(p&&!p.anon) openDemoProfile(p.authorName); }
 /* デモの相手のプロフィール。実アプリと同じ描き方（ニックネーム・自己紹介・本人確認済みの印と、名前を出した投稿）。
@@ -4653,7 +4797,8 @@ function demoCloseDeal(){
   },450);
 }
 function demoSendThanks(pts){
-  window.__demoPoints=Math.max(0,myPoints()-pts); renderDemoPoints();
+  if(pts>0){ var nm=thanksSel.toName||'相手の方'; demoTx().unshift({id:'tx'+Date.now(), kind:'give', label:nm+honorific(nm)+'へ', pts:-pts, tags:(thanksSel.tags||[]).slice(0,5), at:Date.now()}); }
+  renderDemoPoints();
   var act=document.getElementById('prof-activity'), h=act&&act.querySelector('.sec-h');
   if(h) h.insertAdjacentHTML('afterend',
     '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--lav)"></div>'+
