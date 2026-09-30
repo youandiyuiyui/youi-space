@@ -63,6 +63,17 @@ export async function run(browser) {
   step('Bob', '受け取った50ptが残高に入る', bPts.pts === 350, '残高 ' + bPts.pts);
   step('Bob', '感謝のデータに送り主の名前が残らない', bPts.fromName === '', JSON.stringify(bPts.fromName));
 
+  // ＆ポイントの記録：受け取ったお礼は誰からかを出さない／手渡した相手は出る／実アプリの引き換えは準備中
+  const history = (page) => page.evaluate(() => { openPointsHistory(); const rows = [...document.querySelectorAll('#tx-list .tx-row')]; return { kinds: rows.map(r => r.dataset.kind), text: document.getElementById('tx-list').innerText }; });
+  const bHist = await history(B);
+  step('Bob', '＆ポイントの記録に、受け取った50ptと登録のお祝い', JSON.stringify(bHist.kinds) === '["recv","start"]' && /＋50 pt/.test(bHist.text) && /＋300 pt/.test(bHist.text), JSON.stringify(bHist.kinds));
+  step('Bob', '受け取ったお礼に、送り主の名前が出ない', !/はなこ|青木/.test(bHist.text));
+  const aHist = await history(A);
+  step('Alice', '＆ポイントの記録に、手渡した50pt（相手の名前つき）', aHist.kinds[0] === 'give' && /いちろう さんへ/.test(aHist.text) && /−50 pt/.test(aHist.text), JSON.stringify(aHist.kinds));
+  await A.evaluate(() => { closeSheet(); window.__toasts = []; redeem('（例）まちかどカフェ クーポン', '500', 'shop'); });
+  step('Alice', '実アプリの引き換えは準備中（引き換えの画面は出さない）', await A.evaluate(() => window.__toasts.some(t => /準備中/.test(t)) && !document.getElementById('sheet-modal').classList.contains('show')));
+  await B.evaluate(() => closeSheet());
+
   // Bob：「終わりました」→「今回は伝えない」／少し気になった／通報／ブロック・解除
   await clearToasts(B);
   await B.evaluate(() => closeDeal());

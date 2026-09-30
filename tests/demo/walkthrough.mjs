@@ -1,6 +1,6 @@
 // ゲストのデモを、最初から最後まで操作する（npm run test:demo）。Firebase にはつながない。
 // JS エラーが出たら失敗。SHOTS=保存先フォルダ を付けると、各画面を撮影する。
-// 手順は steps.json：{ eval: 実行するJS, wait: 待つミリ秒, shot: 画面名, full: 縦長で撮る画面, shotFull: その名前 }
+// 手順は steps.json：{ eval: 実行するJS, wait: 待つミリ秒, expect: 成り立つべき式, shot: 画面名, full: 縦長で撮る画面, shotFull: その名前 }
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -35,6 +35,11 @@ for (const s of steps) {
   try { if (s.eval) await page.evaluate(s.eval); }
   catch (e) { errors.push('step error: ' + s.eval + ' :: ' + e.message); }
   await page.waitForTimeout(s.wait || 350);
+  if (s.expect) {
+    let ok = false;
+    try { ok = await page.evaluate(s.expect); } catch (e) { ok = false; }
+    if (!ok) errors.push('期待どおりでない: ' + (s.shot || s.eval) + ' :: ' + s.expect);
+  }
   if (SHOTS && s.shot) await page.screenshot({ path: path.join(SHOTS, s.shot + '.png') });
   if (SHOTS && s.full) {
     const h = await page.evaluate(sel => { const e = document.querySelector(sel); return e ? e.scrollHeight : 0; }, s.full);
@@ -47,5 +52,5 @@ for (const s of steps) {
   }
 }
 await browser.close();
-console.log(errors.length ? 'NG   デモの途中でエラー:\n' + errors.join('\n') : 'OK   デモの ' + steps.length + ' 画面を通して、JSエラーなし');
+console.log(errors.length ? 'NG   デモの途中でエラー:\n' + errors.join('\n') : 'OK   デモの ' + steps.length + ' 画面を通して、JSエラーなし・確認 ' + steps.filter(s => s.expect).length + ' 件すべて期待どおり');
 process.exit(errors.length ? 1 : 0);

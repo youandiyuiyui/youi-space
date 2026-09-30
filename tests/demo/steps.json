@@ -25,5 +25,13 @@
  {"eval":"reportSafety('ok')","shot":"25-yui-ok"},
  {"eval":"navTo('settings')","shot":"26-settings"},
  {"eval":"navTo('msg')","shot":"27-msg"},
- {"eval":"navTo('profile');openAddCard();document.getElementById('ac-title').value='自転車を貸せます';saveCard()","wait":600,"shot":"28-addcard","text":"document.getElementById('my-cards').innerText"}
+ {"eval":"navTo('profile');openAddCard();document.getElementById('ac-title').value='自転車を貸せます';saveCard()","wait":600,"shot":"28-addcard","text":"document.getElementById('my-cards').innerText"},
+ {"eval":"navTo('rewards')","shot":"29-rewards","expect":"document.getElementById('rew-balance-num').textContent===myPoints().toLocaleString()"},
+ {"eval":"window.__b0=myPoints();redeem('（例）まちかどカフェ クーポン','500','shop')","shot":"30-redeem-confirm","expect":"/引き換えの確認/.test(document.getElementById('sheet-title').textContent)"},
+ {"eval":"confirmRedeem()","wait":500,"shot":"31-voucher","expect":"myPoints()===window.__b0-500 && /^YS-\\d{4}-[A-Z0-9]{4}$/.test(document.getElementById('voucher-code').textContent) && /使った：600pt/.test(document.getElementById('rew-balance-sub').textContent)"},
+ {"eval":"openPointsHistory()","shot":"32-points-history","expect":"(r=>r.length>=17 && r[0].dataset.kind==='use' && r[1].dataset.kind==='give')([...document.querySelectorAll('#tx-list .tx-row')])"},
+ {"eval":"openPointsHistory('recv')","shot":"33-history-received","expect":"(r=>r.length===11 && r.every(x=>x.dataset.kind==='recv') && !/さんから/.test(document.getElementById('tx-list').innerText))([...document.querySelectorAll('#tx-list .tx-row')])"},
+ {"eval":"openPointsHistory('use');document.querySelector('#tx-list .tx-row').click()","wait":400,"shot":"34-voucher-again","expect":"/引換券/.test(document.getElementById('sheet-title').textContent)"},
+ {"eval":"closeSheet();redeem('災害時の支え合い基金','1,000','donate')","shot":"35-redeem-short","expect":"myPoints()===500 && /あと 500 pt 足りません/.test(document.getElementById('sheet-content').innerText)"},
+ {"eval":"closeSheet();redeem('町のつみたて','100','donate');confirmRedeem()","wait":500,"shot":"36-donate-done","expect":"/受け付けました/.test(document.getElementById('sheet-title').textContent) && myPoints()===400"}
 ]
