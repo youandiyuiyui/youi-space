@@ -5,4 +5,4 @@
 @AGENTS.md
 
 ## Claude Code だけのメモ
-- クラウド環境には対応する Chromium が入っている（`PLAYWRIGHT_BROWSERS_PATH` が設定済み）ので、`tests/setup.sh` は Chromium をダウンロードしない。
+- クラウド環境では `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` が設定されているので、`tests/setup.sh` は Chromium をダウンロードしない。テストは `PLAYWRIGHT_BROWSERS_PATH`（`/opt/pw-browsers`）に入っている Chromium を使う。これは、いまの Playwright（`tests/package.json` の 1.56.1）に合うもの。Playwright の版を変えると合わなくなるので、そのときは `npx playwright install chromium` で合う Chromium を取ってくる（インターネットが要る）。
