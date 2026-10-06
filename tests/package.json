@@ -3,9 +3,10 @@
   "private": true,
   "description": "You&i Space のルールの単体テスト・通し確認（エミュレーター）・デモの通し操作",
   "scripts": {
-    "test": "npm run test:rules && npm run test:e2e && npm run test:demo",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-youi \"node rules.test.mjs\"",
-    "test:e2e": "firebase emulators:exec --only auth,firestore --project demo-youi \"node e2e/run.mjs\"",
+    "test": "npm run test:unit && npm run test:rules && npm run test:e2e && npm run test:demo",
+    "test:unit": "node auth-session.test.cjs && node post-safety.test.cjs && node privacy-plan.test.mjs",
+    "test:rules": "firebase emulators:exec --config ../firebase.json --only auth,firestore --project demo-youi \"node rules.test.mjs && node privacy-p1.test.mjs && node posts-schema-p1.test.mjs && node points-ledger.test.mjs && node ../tools/migrate-points.test.mjs && node ../tools/migrate-privacy.test.mjs\"",
+    "test:e2e": "firebase emulators:exec --config ../firebase.json --only auth,firestore --project demo-youi \"node e2e/run.mjs\"",
     "test:demo": "node demo/walkthrough.mjs"
   },
   "devDependencies": {

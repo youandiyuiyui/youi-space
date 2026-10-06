@@ -1,7 +1,8 @@
 // 公開プロフィール：申し込みやメッセージのときに、お互いのプロフィールを見る（v0.5.3）
 // SHOTS=保存先フォルダ を付けると、要所の画面を撮影する
-import { step, sleep, newUser, waitFor, signupAndLogin, post, hookToasts, onMain, currentApp, oldApp,
-  adminGet, adminSetBool, field, checkErrors, OLD_APP_COMMIT } from './common.mjs';
+import { step, sleep, newUser, waitFor, signupAndLogin, post, hookToasts, onMain, currentApp,
+  adminGet, adminSetBool, field, checkErrors } from './common.mjs';
+import { legacyUser, anonRejected } from './legacy-fixtures.mjs';
 
 const shot = async (page, name) => { if (process.env.SHOTS) { await sleep(500); await page.screenshot({ path: process.env.SHOTS + '/' + name + '.png' }); } };
 async function setBio(page, bio) {
@@ -27,7 +28,9 @@ const canRead = (page, uid) => page.evaluate(uid => fbDb.collection('profiles').
 const screenIs = (page, id) => waitFor(page, id => document.querySelector('.screen.active').id === id, id);
 
 export async function run(browser) {
-  const NEW = currentApp(), OLD = oldApp();
+  await adminSetBool('config/pointsLedger', 'ready', true);
+  await adminSetBool('config/privacyMigration', 'ready', true);
+  const NEW = currentApp();
 
   // 1) 3人が登録。公開プロフィールには本名・メールを書かない
   const A = await newUser(browser, 'Alice', NEW);
@@ -83,37 +86,13 @@ export async function run(browser) {
   await A.evaluate(() => document.getElementById('up-msg-btn').click());
   step('Alice', '戻るとチャットに戻る', await screenIs(A, 'screen-chat'));
 
-  // 4) 名前を伏せた頼みごと：頼む側のプロフィールは、名前を伝えるまで見られない
-  await post(C, 'need', '買い物を手伝ってほしい', true);
-  await waitFor(B, uid => (window.__rawPosts || []).some(p => p.uid === uid), cUid);
-  const cPost = await B.evaluate(uid => (window.__rawPosts || []).find(p => p.uid === uid).id, cUid);
-  const anonDetail = await B.evaluate(id => { openPostDetail(id); return { btn: [...document.querySelectorAll('#sheet-content button')].some(b => b.textContent === 'プロフィール'), t: document.getElementById('sheet-content').innerText }; }, cPost);
-  step('Bob', '伏せた頼みごとに「プロフィール」ボタンは無い', !anonDetail.btn);
-  step('Bob', '応える側のプロフィールは相手に見える、と案内', /名前とプロフィールは、相手に表示/.test(anonDetail.t));
-  await B.evaluate(id => messageFromPost(id), cPost);
+  // 4) 実アカウントの匿名投稿は一時停止。名前つき投稿へ自動変換しない。
+  step('Carol', '実アカウントの匿名投稿を一時停止と案内', await anonRejected(C, '買い物を手伝ってほしい'));
   await sleep(600);
-  await B.evaluate(() => { document.getElementById('chat-field').value = '買い物、手伝えます'; sendChat(); });
-  await sleep(800);
-  const bSub = await B.evaluate(() => document.getElementById('chat-presence').textContent);
-  step('Bob', '見出しは「名前を伏せている方です」', bSub === '名前を伏せている方です', bSub);
-  await shot(B, '5_masked_chat');
-  await B.evaluate(() => { window.__toasts = []; openChatPartner(); });
-  await sleep(400);
-  const stay = await B.evaluate(() => ({ s: document.querySelector('.screen.active').id, t: window.__toasts.join('|') }));
-  step('Bob', '伏せている相手のプロフィールは開かない', stay.s === 'screen-chat' && /名前を伏せている方/.test(stay.t), stay.t);
-  step('Bob', 'データの上でも読めない（ルールで拒否）', (await canRead(B, cUid)) === '拒否');
+  const unpublished = await B.evaluate(uid => !(window.__rawPosts || []).some(p => p.uid === uid), cUid);
+  step('Bob', '拒否した匿名投稿が名前つきで公開されない', unpublished);
+  step('Bob', '会話のないCarolの未掲載プロフィールは読めない', (await canRead(B, cUid)) === '拒否');
   B.__errors = [];
-  await waitFor(C, uid => (window.__rawConvs || []).some(c => (c.participants || []).includes(uid)), bUid);
-  await C.evaluate(uid => openConvById(uid), bUid);
-  await sleep(600);
-  await C.evaluate(() => openChatPartner());
-  await loaded(C);
-  v = await uprof(C);
-  step('Carol', '伏せている本人は、応えてくれた Bob のプロフィールを見られる', v.active && v.name === 'ぼぶ さん', v.name);
-  step('Carol', '「相手からあなたのプロフィールは見えません」と案内', /あなたは名前を伏せている/.test(v.note), v.note.replace(/\n/g, ' '));
-  await C.evaluate(() => { goBackFromUprof(); revealMyName(); });
-  await waitFor(B, uid => { const c = (window.__rawConvs || []).find(c => (c.participants || []).includes(uid)); return c && !(c.masked || []).includes(uid); }, cUid);
-  step('Bob', '名前を伝えてもらったら、読めるようになる', (await canRead(B, cUid)) === '読めた');
 
   // 5) 本人確認済みの印：運営が users に付ける → 本人のログインで公開プロフィールにも付く
   await adminSetBool('users/' + bUid, 'verified', true);
@@ -146,24 +125,19 @@ export async function run(browser) {
   C.__errors = [];
 
   // 8) ニックネーム導入前の利用者：ニックネームを決めるまで公開プロフィールを作らない → 9) 退会で消える
-  if (!OLD) step('準備', '旧アプリ（' + OLD_APP_COMMIT + '）を git から取り出す', false, 'git の履歴が足りません（git fetch --unshallow）');
   const pages = [A, B, C];
-  if (OLD) {
-    const D = await newUser(browser, 'Dave(旧→新)', OLD);
-    pages.push(D);
-    const dUid = await signupAndLogin(D, '大山 大介', 'dave@example.com', 'password-d1');
-    D.__html = NEW; await D.reload(); await sleep(800); await hookToasts(D);
-    await onMain(D);
-    await sleep(1200);
-    step('Dave(旧→新)', 'ニックネーム未設定のあいだは公開プロフィールなし', (await adminGet('profiles/' + dUid)) === null);
-    await D.evaluate(() => { openNicknameSetup(); document.getElementById('nk-nick').value = 'だいちゃん'; saveNickname(); });
-    await sleep(1500);
-    const dDoc = await adminGet('profiles/' + dUid);
-    step('Dave(旧→新)', 'ニックネームを決めたら公開プロフィールができる', field(dDoc, 'name') === 'だいちゃん' && !JSON.stringify(dDoc).includes('大山'), JSON.stringify(dDoc && dDoc.fields));
-    await D.evaluate(() => { openDeleteAccount(); document.getElementById('da-pass').value = 'password-d1'; deleteAccount(); });
-    await screenIs(D, 'screen-login');
-    step('Dave(旧→新)', '退会で公開プロフィールも削除', (await adminGet('profiles/' + dUid)) === null && (await adminGet('users/' + dUid)) === null);
-  }
+  const D = await newUser(browser, 'Dave(旧データ→新)', NEW);
+  pages.push(D);
+  const dUid = await legacyUser(D, '大山 大介', 'dave@example.com', 'password-d1');
+  await sleep(1200);
+  step('Dave(旧→新)', 'ニックネーム未設定のあいだは公開プロフィールなし', (await adminGet('profiles/' + dUid)) === null);
+  await D.evaluate(() => { openNicknameSetup(); document.getElementById('nk-nick').value = 'だいちゃん'; saveNickname(); });
+  await sleep(1500);
+  const dDoc = await adminGet('profiles/' + dUid);
+  step('Dave(旧→新)', 'ニックネームを決めたら公開プロフィールができる', field(dDoc, 'name') === 'だいちゃん' && !JSON.stringify(dDoc).includes('大山'), JSON.stringify(dDoc && dDoc.fields));
+  await D.evaluate(() => { openDeleteAccount(); document.getElementById('da-pass').value = 'password-d1'; deleteAccount(); });
+  await screenIs(D, 'screen-login');
+  step('Dave(旧→新)', '退会で公開プロフィールも削除', (await adminGet('profiles/' + dUid)) === null && (await adminGet('users/' + dUid)) === null);
 
   // 10) ゲストのデモも、実アプリと同じ項目
   const G = await newUser(browser, 'Guest', NEW);
@@ -189,6 +163,19 @@ export async function run(browser) {
   step('Guest', 'デモ：会話から開くと「メッセージに戻る」', v.active && v.name === 'かずこ さん' && v.btn === 'メッセージに戻る', v.btn);
   await G.evaluate(() => document.getElementById('up-msg-btn').click());
   step('Guest', 'デモ：戻ると会話に戻る', await screenIs(G, 'screen-chat'));
+
+  // ゲストは端末内の架空データだけなので、匿名の体験を維持する。
+  await G.evaluate(() => {
+    openPostWith('need');document.getElementById('post-title').value='ゲストの匿名投稿';
+    document.getElementById('post-anon').checked=true;submitPost();
+  });
+  await sleep(1000);
+  const guestAnon = await G.evaluate(() => { const p=(window.__rawPosts || []).find(p => p.title === 'ゲストの匿名投稿'); return p?{id:p.id,anon:p.anon,shown:postAuthor(p)}:null; });
+  step('Guest', 'ゲストの匿名投稿は「ご近所の方」として体験できる', !!guestAnon && guestAnon.anon === true && guestAnon.shown === 'ご近所の方');
+  if(guestAnon){
+    const guestDetail=await G.evaluate(id=>{openPostDetail(id);return document.getElementById('sheet-content').innerText;},guestAnon.id);
+    step('Guest', 'ゲスト匿名投稿にも相手のプロフィールボタンを出さない', !/プロフィール\n/.test(guestDetail));
+  }
 
   checkErrors(pages);
 }
