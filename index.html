@@ -1085,6 +1085,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div class="post-field"><label class="post-label">詳細 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（800文字まで）</span></label><textarea class="post-textarea" id="post-detail" maxlength="800" placeholder="いつ・どこで・どんなことか、ふだんの言葉で大丈夫です。※電話番号・番地などは書かず、やりとりが始まってからメッセージで伝えましょう。"></textarea></div>
     <div class="post-field" id="post-anon-field" style="display:none">
+      <div id="post-anon-notice" class="input-note" style="display:none;margin-bottom:8px">名前を伏せる機能は一時停止しています。投稿には表示名が出ます。</div>
       <label style="display:flex;align-items:flex-start;gap:9px;font-size:.8rem;color:var(--ink);line-height:1.7;cursor:pointer">
         <input type="checkbox" id="post-anon" style="margin-top:3px;accent-color:var(--lav)">
         <span>名前を伏せて出す<br><small style="color:var(--tl);font-size:.7rem;font-weight:400">「ご近所の方」として表示されます。応える人の名前は表示されるので、安心して頼めます。</small></span>
@@ -1842,7 +1843,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.5.4 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.5.5 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -1987,10 +1988,30 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
   }catch(e){ console.warn('Firebase init failed', e); }
 </script>
 
+<script src="post-safety.js"></script>
+<script src="auth-session.js"></script>
+<script src="points-ledger.js"></script>
 <script>
+YouiPostSafety.bind(document,{
+  'conversation':function(id){openConvById(id);},
+  open:function(id){ openPostDetail(id); },
+  edit:function(id){ editPost(id); },
+  'confirm-delete':function(id){ confirmDeletePost(id); },
+  profile:function(id){ openPostAuthorProfile(id); },
+  message:function(id){ messageFromPost(id); },
+  report:function(id){ reportPost(id); },
+  'demo-profile':function(id){ closeSheet(); demoProfilePost(id); },
+  'demo-message':function(id){ demoMessageFromPost(id); },
+  'skip-deal-thanks':function(id){ skipThanksForDeal(id); },
+  'thank-for-deal':function(id){ thankForDeal(id); },
+  'save-edit':function(id){ saveEditPost(id); },
+  delete:function(id){ doDeletePost(id); }
+});
 let mapInited=false, mapInstance=null;
 let prevScreen='main';  // track previous screen for back button
 let currentProfile=null;  // ログイン中ユーザーのプロフィール（Firebase）
+var authSession=YouiAuthSession.create(function(){return fbAuth&&fbAuth.currentUser?fbAuth.currentUser.uid:null;},
+  function(){return window.__guest===true||isGuestMode();});
 
 /* ===== 実証運用の共通ヘルパー ===== */
 var MAXLEN={title:60,detail:800,area:40,name:40,nick:20,org:60,bio:200,msg:500,report:500};
@@ -2065,10 +2086,17 @@ let accountType='personal';
 function displayNameOf(u){ u=u||{}; return ((u.type==='org'?(u.orgName||u.name):(u.nickname||u.name))||'利用者').slice(0,60); }
 function needsNickname(u){ return !!(u&&u.uid&&u.type!=='org'&&!u.nickname); }
 function getStoredUser(){
-  if(currentProfile) return currentProfile;
-  try{return JSON.parse(localStorage.getItem('youi_user')||'null')}catch(e){return null}
+  var u=currentProfile;
+  if(!u){try{u=JSON.parse(localStorage.getItem('youi_user')||'null');}catch(e){return null;}}
+  if(u&&u.uid&&(!fbAuth||!fbAuth.currentUser||u.uid!==fbAuth.currentUser.uid||window.__guest||isGuestMode())) return null;
+  return u;
 }
-function setStoredUser(u){currentProfile=u;localStorage.setItem('youi_user',JSON.stringify(u))}
+function setStoredUser(u){
+  if(u&&u.uid&&(!fbAuth||!fbAuth.currentUser||u.uid!==fbAuth.currentUser.uid||window.__guest||isGuestMode())) return false;
+  currentProfile=u;
+  try{localStorage.setItem('youi_user',JSON.stringify(u));}catch(e){}
+  return true;
+}
 
 function applyUserToUI(){
   const u=getStoredUser();
@@ -2082,7 +2110,7 @@ function applyUserToUI(){
   const profName=document.querySelector('#screen-profile .prof-name');
   if(profName) profName.textContent=displayName;
   const profBio=document.querySelector('#screen-profile .prof-bio');
-  if(profBio && u.bio) profBio.textContent=u.bio;
+  if(profBio) profBio.textContent=u.bio||'';
   const profAvatar=document.querySelector('#screen-profile .avatar.xl');
   if(profAvatar){
     const firstNode=profAvatar.childNodes[0];
@@ -2115,8 +2143,7 @@ function hideDemoContent(){
 function zeroOutNewAccount(){
   var s=function(id,v){var el=document.getElementById(id); if(el) el.textContent=v;};
   s('prof-trust','はじめの結び'); s('prof-trust2','はじめの結び');
-  s('prof-points',String(myPoints())); s('rew-balance-num',String(myPoints()));
-  var sub=document.getElementById('rew-balance-sub'); if(sub) sub.textContent='登録のお祝いに 300pt をお渡ししています';
+  renderPointsUI();
   var chip=document.getElementById('prof-trust-chip'); if(chip){ chip.style.display=''; chip.textContent='感謝 0 回'; }
   var badges=document.getElementById('prof-badges'); if(badges) badges.innerHTML='<span class="score-tag">まずは「ついで」から</span>';
   var bars=document.getElementById('prof-scorebars');
@@ -2142,9 +2169,11 @@ function requestVerify(){
   if(u.verified){ toast('すでに本人確認済みです'); return; }
   if(u.verifyRequested){ toast('申請済みです。運営からの連絡をお待ちください'); return; }
   if(busy('verify')) return;
+  var token=authSession.capture();
   fbDb.collection('users').doc(fbAuth.currentUser.uid)
     .update({verifyRequested:true,verifyRequestedAt:firebase.firestore.FieldValue.serverTimestamp()})
     .then(function(){
+      if(!authSession.isCurrent(token)) return;
       if(currentProfile){currentProfile.verifyRequested=true; setStoredUser(currentProfile);}
       markVerifyPendingUI(); updateVerifyScreen();
       toast('申請を受け付けました。運営からメールでご連絡します');
@@ -2184,6 +2213,7 @@ function selectAcctype(el,type){
   if(nameLabel) nameLabel.textContent=(type==='org'?'担当者名（非公開）':'お名前（本名・非公開）');
 }
 
+var signupInProgress=false;
 function completeSignup(){
   try{ sessionStorage.removeItem('youi_guest'); }catch(e){} window.__guest=false;
   const name=document.getElementById('su-name').value.trim();
@@ -2213,20 +2243,35 @@ function completeSignup(){
 
   if(!fbReady){ var le0=document.getElementById('login-email'); if(le0) le0.value=email; toast('アカウントを作成しました。ログインしてください'); setTimeout(()=>goScreen('login'),700); return; }
 
+  signupInProgress=true;
   fbAuth.createUserWithEmailAndPassword(email,pass)
     .then(function(cred){
-      try{ cred.user.sendEmailVerification(); }catch(e){}
-      return fbDb.collection('users').doc(cred.user.uid).set(user);
+      return YouiPoints.registerProfile(fbDb,firebase,cred.user.uid,user)
+        .then(function(){try{cred.user.sendEmailVerification().catch(function(){});}catch(e){}})
+        .catch(function(e){
+          // 登録の一括保存に失敗したときは、今回作った認証だけを残さない。
+          return cred.user.delete().catch(function(){e.signupCleanupFailed=true;}).then(function(){
+            if(fbAuth.currentUser&&fbAuth.currentUser.uid===cred.user.uid){
+              authSession.invalidate();clearRealAccountState(false);
+              return fbAuth.signOut();
+            }
+          }).then(function(){throw e;});
+        });
     })
     .then(function(){ return fbAuth.signOut(); })
     .then(function(){
+      signupInProgress=false;
       currentProfile=null;
       var le=document.getElementById('login-email'); if(le) le.value=email;
       var lp=document.getElementById('login-pass'); if(lp) lp.value='';
       toast('確認メールをお送りしました。ログインしてご利用ください');
       setTimeout(()=>goScreen('login'),900);
     })
-    .catch(function(e){ toast(authErrMsg(e)); });
+    .catch(function(e){
+      signupInProgress=false;
+      toast(e.signupCleanupFailed?'登録情報を保存できませんでした。ログインを解除しました。登録をやり直せない場合は運営へご連絡ください':authErrMsg(e));
+      goScreen('login');
+    });
 }
 
 function backFromVerify(){goScreen('settings')}
@@ -2328,7 +2373,7 @@ function initPrefSelects(){
 function catTokens(cats){
   var map={'老老介護':'elder','ひとり親':'parent','ヤングケアラー':'young'};
   var set={};
-  (cats||[]).forEach(function(c){ set[map[c]||'daily']=1; });
+  YouiPostSafety.categories(cats).forEach(function(c){ set[map[c]||'daily']=1; });
   return Object.keys(set);
 }
 function firstCatToken(cats){ var t=catTokens(cats); return t.length?t[0]:'daily'; }
@@ -2474,12 +2519,26 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
 /* リアルタイム購読をすべて止める。サインアウトで権限エラーになった購読は止まったまま残り、
    次のログインで張り直されない（新規登録→そのままログインで掲示板が空になる不具合の原因）ため */
 function stopRealtime(){
-  [convListUnsub,chatMsgsUnsub,postsUnsub,thanksUnsub,thanksOutUnsub,dealsUnsub,decisionsUnsub,disasterUnsub]
+  [convListUnsub,chatMsgsUnsub,postsUnsub,thanksUnsub,thanksOutUnsub,dealsUnsub,decisionsUnsub,disasterUnsub,walletUnsub]
     .forEach(function(f){ if(f){ try{ f(); }catch(e){} } });
-  convListUnsub=chatMsgsUnsub=postsUnsub=thanksUnsub=thanksOutUnsub=dealsUnsub=decisionsUnsub=disasterUnsub=null;
+  convListUnsub=chatMsgsUnsub=postsUnsub=thanksUnsub=thanksOutUnsub=dealsUnsub=decisionsUnsub=disasterUnsub=walletUnsub=null;
+  walletBalance=null;
   myProfileCache=null;
 }
+function clearRealAccountState(keepDemo){
+  stopRealtime();
+  currentProfile=null; myProfileCache=null;
+  try{localStorage.removeItem('youi_user');}catch(e){}
+  window.__uprofToken=(window.__uprofToken||0)+1;
+  window.__uprofCtx=null;
+  window.__chatOpenToken=(window.__chatOpenToken||0)+1;
+  if(keepDemo) return;
+  currentConv=null; window.__convs={}; window.__blocked={}; window.__posts={};
+  window.__rawPosts=[]; window.__rawConvs=[]; window.__thanksIn=[]; window.__thanksOut=[];
+  window.__deals=[]; window.__skipped={}; window.__profileApplied=false;
+}
 function logout(){
+  authSession.invalidate();
   if(fbReady&&fbAuth.currentUser){fbAuth.signOut();}
   stopRealtime();
   window.__thanksOut=[]; window.__deals=[]; window.__skipped={};
@@ -2523,11 +2582,15 @@ function setPostType(el,t){
   var cards=document.querySelectorAll('#pt-choice .pt-card');
   for(var i=0;i<cards.length;i++){ cards[i].classList.toggle('on', cards[i].getAttribute('data-type')===t); }
   var info=POST_TYPES[t]||POST_TYPES.tsuide;
-  var h=document.getElementById('pt-hint'); if(h) h.textContent=info.hint;
+  var h=document.getElementById('pt-hint'); if(h) h.textContent=(t==='need'&&!isGuestDemo())?'匿名投稿は一時停止しています。表示名を出して頼めます。＆ポイントの残高が0でも大丈夫です。':info.hint;
   var ti=document.getElementById('post-title'); if(ti) ti.placeholder=info.ph;
   var b=document.getElementById('post-submit-btn'); if(b) b.textContent=info.btn;
   var wf=document.getElementById('post-when-field'); if(wf) wf.style.display=(t==='tsuide')?'':'none';
   var af=document.getElementById('post-anon-field'); if(af) af.style.display=(t==='need')?'':'none';
+  var anonBox=document.getElementById('post-anon');
+  if(anonBox){anonBox.disabled=!isGuestDemo(); if(!isGuestDemo())anonBox.checked=false;}
+  var notice=document.getElementById('post-anon-notice');
+  if(notice)notice.style.display=isGuestDemo()?'none':'';
 }
 /* 縁側の3つの入口ボタンから、種類を選んだ状態で投稿画面へ */
 function openPostWith(t){ navTo('post'); setPostType(null,t); }
@@ -2616,7 +2679,9 @@ function gateOverrideActive(){
 }
 function subscribeDisaster(){
   if(!fbReady||disasterUnsub) return;
+  var token=authSession.capture();
   disasterUnsub=fbDb.collection('config').doc('disasterMode').onSnapshot(function(doc){
+    if(!authSession.isCurrent(token))return;
     window.__disaster=doc.exists?doc.data():null;
     renderDisasterUI();
   },function(e){ console.warn('disaster listen',e); });
@@ -2648,11 +2713,14 @@ var dealsUnsub=null, decisionsUnsub=null;
 function subscribeDeals(){
   if(!fbReady||!fbAuth.currentUser||dealsUnsub) return;
   var uid=fbAuth.currentUser.uid;
-  dealsUnsub=fbDb.collection('deals').where('participants','array-contains',uid).onSnapshot(function(snap){
+  var token=authSession.capture();
+  dealsUnsub=fbDb.collection('deals').where('participants','array-contains',uid).where('privacySafe','==',true).onSnapshot(function(snap){
+    if(!authSession.isCurrent(token))return;
     var arr=[]; snap.forEach(function(d){ var x=d.data(); x.id=d.id; arr.push(x); });
     window.__deals=sortByNewest(arr); renderTrustUI(); renderGateUI();
   },function(e){ console.warn('deals listen',e); });
   decisionsUnsub=fbDb.collection('decisions').where('fromUid','==',uid).onSnapshot(function(snap){
+    if(!authSession.isCurrent(token))return;
     var m={}; snap.forEach(function(d){ m[d.data().dealId]=1; });
     window.__skipped=m; renderGateUI();
   },function(e){ console.warn('decisions listen',e); });
@@ -2703,8 +2771,8 @@ function openGateSheet(){
       '<div style="font-size:.9rem;font-weight:600">'+escapeHtml(o.name)+' さんとの支え合い</div>'+
       (d.title?'<div style="font-size:.76rem;color:var(--tl);margin-top:3px">'+escapeHtml(d.title)+'</div>':'')+
       '<div style="display:flex;gap:9px;margin-top:11px">'+
-        '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem" onclick="skipThanks(\''+d.id+'\',\''+escapeHtml(o.uid)+'\')">今回は伝えない</button>'+
-        '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem;color:var(--lav3);border-color:rgba(184,175,214,.55)" onclick="closeSheet();openThanks(\''+escapeHtml(o.uid)+'\',\''+escapeHtml(o.name)+'\',\'\',\''+d.id+'\')">ありがとうを伝える</button>'+
+        '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem"'+YouiPostSafety.actionAttrs('skip-deal-thanks',d.id)+'>今回は伝えない</button>'+
+        '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem;color:var(--lav3);border-color:rgba(184,175,214,.55)"'+YouiPostSafety.actionAttrs('thank-for-deal',d.id)+'>ありがとうを伝える</button>'+
       '</div>'+
     '</div>';
   }).join('');
@@ -2713,6 +2781,14 @@ function openGateSheet(){
     body+
     '<div style="margin-top:18px;font-size:.72rem;color:var(--tl);line-height:1.8">72時間で自動的に閉じます。いま決められない事情があるときは、下から外せます。</div>'+
     '<div style="margin-top:10px"><button class="btn-secondary" onclick="selfOverrideGate()">いま急ぎです（24時間おやすみ）</button></div>');
+}
+function skipThanksForDeal(id){
+  var d=(window.__deals||[]).find(function(item){ return item.id===id; }); if(!d) return;
+  skipThanks(id,otherOf(d).uid);
+}
+function thankForDeal(id){
+  var d=(window.__deals||[]).find(function(item){ return item.id===id; }); if(!d) return;
+  var o=otherOf(d); closeSheet(); openThanks(o.uid,o.name,'',id);
 }
 function skipThanks(dealId, toUid){
   if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
@@ -2733,6 +2809,7 @@ function closeDeal(){
   var u=getStoredUser()||{};
   var me=fbAuth.currentUser.uid;
   fbDb.collection('deals').add({
+    privacySafe:true,
     participants:[me,currentConv.otherUid].sort(),
     byUid:me, byName:iAmMasked()?ANON_NAME:myDisplayName(),
     otherName:(currentConv.otherName||'相手の方').slice(0,60),
@@ -2770,25 +2847,36 @@ function sendConcern(){
 
 var PT_CHOICES=[30,50,100];
 
-/* 自分の＆ポイント残高＝登録時の300pt（戦略指針§5-6の初期値）＋受け取った合計−手渡した合計。
-   感謝の記録（thanks）から数える。相手の残高を書き換えることも、自分で増やすこともルールで禁じているため、
-   受け取った分は記録から数えるのが唯一の方法（以前の users.points は、手渡した分しか減らせず、受け取っても増えなかった） */
-var START_PT=300;
+/* 実利用の残高は非公開walletを購読する。送金と感謝は一度の保存で確定し、
+   ルール側でも残高を検証する。旧履歴からの移行は運営が行い、ブラウザで初期値を再配布しない。 */
+var START_PT=300; // ゲストデモの架空の初期残高。実残高はwalletsから取得する。
+var walletUnsub=null, walletBalance=null;
+function subscribeWallet(){
+  if(!fbReady||!fbAuth.currentUser||walletUnsub) return;
+  var uid=fbAuth.currentUser.uid, token=authSession.capture();
+  walletUnsub=fbDb.collection('wallets').doc(uid).onSnapshot(function(doc){
+    if(!authSession.isCurrent(token)) return;
+    walletBalance=YouiPoints.balanceOf(doc); renderPointsUI();
+  },function(e){
+    if(!authSession.isCurrent(token)) return;
+    walletBalance=null; renderPointsUI(); console.warn('wallet listen',e);
+  });
+}
 function pointsLedger(){
   var sum=function(arr){ return (arr||[]).reduce(function(s,t){ return s+(parseInt(t.points,10)||0); },0); };
   return {received:sum(window.__thanksIn), given:sum(window.__thanksOut)};
 }
 function myPoints(){
   if(isGuestDemo()) return Math.max(0, pointsTotals(demoTx()).balance);
-  var l=pointsLedger();
-  return Math.max(0, START_PT+l.received-l.given);
+  return walletBalance===null?0:walletBalance;
 }
 function renderPointsUI(){
   var u=getStoredUser(); if(!u||!u.uid) return;
   var p=myPoints(), l=pointsLedger();
-  var a=document.getElementById('prof-points'); if(a) a.textContent=p.toLocaleString();
-  var b=document.getElementById('rew-balance-num'); if(b) b.textContent=p.toLocaleString();
-  var c=document.getElementById('rew-balance-sub'); if(c) c.textContent=balanceSubText({received:l.received, given:l.given, used:0});
+  var display=walletBalance===null?'確認中':p.toLocaleString();
+  var a=document.getElementById('prof-points'); if(a) a.textContent=display;
+  var b=document.getElementById('rew-balance-num'); if(b) b.textContent=display;
+  var c=document.getElementById('rew-balance-sub'); if(c) c.textContent=(walletBalance===null||p<0)?'残高を確認しています。ポイントを渡さずにお礼を贈れます。':balanceSubText({received:l.received, given:l.given, used:0});
 }
 
 /* 受け取った感謝を購読して、段階・回数・最近の活動に反映する */
@@ -2804,14 +2892,17 @@ function sortByNewest(arr){
 function subscribeThanks(){
   if(!fbReady||!fbAuth.currentUser||thanksUnsub) return;
   var uid=fbAuth.currentUser.uid;
+  var token=authSession.capture();
   // 受け取った感謝
-  thanksUnsub=fbDb.collection('thanks').where('toUid','==',uid).onSnapshot(function(snap){
+  thanksUnsub=fbDb.collection('thanks').where('toUid','==',uid).where('privacySafe','==',true).onSnapshot(function(snap){
+    if(!authSession.isCurrent(token))return;
     var arr=[]; snap.forEach(function(d){ var t=d.data(); t.id=d.id; arr.push(t); });
     window.__thanksIn=sortByNewest(arr); renderTrustUI();
   },function(e){ console.warn('thanks in listen',e); });
   // 自分が贈った感謝＝助けを求めて、支えてもらった回数。
   // 「受援も実績に数える」（戦略指針§5-6のガードレール）はこちらで実装する。
-  thanksOutUnsub=fbDb.collection('thanks').where('fromUid','==',uid).onSnapshot(function(snap){
+  thanksOutUnsub=fbDb.collection('thanks').where('fromUid','==',uid).where('privacySafe','==',true).onSnapshot(function(snap){
+    if(!authSession.isCurrent(token))return;
     var arr=[]; snap.forEach(function(d){ var t=d.data(); t.id=d.id; arr.push(t); });
     window.__thanksOut=sortByNewest(arr); renderTrustUI();
   },function(e){ console.warn('thanks out listen',e); });
@@ -2948,6 +3039,7 @@ function openThanks(toUid,toName,postId,dealId){
   }
   thanksSel={tags:[],pts:50,to:toUid,toName:toName||'相手の方',postId:postId||'',dealId:dealId||''};
   var bal=myPoints();
+  thanksSel.pts=bal>=50?50:0;
   // 語彙は方向で分ける。どちらだったかは本人にしか分からないので、両方見せて選んでもらう
   var grp=function(label,arr,off){
     return '<div style="font-size:.7rem;color:var(--tl);margin:0 0 7px">'+label+'</div><div style="margin-bottom:14px">'+
@@ -2956,8 +3048,8 @@ function openThanks(toUid,toName,postId,dealId){
   var tagHtml=grp('手を貸してもらったとき',THANKS_TAGS_TO_HELPER,0)+
               grp('手を貸したとき',THANKS_TAGS_TO_ASKER,THANKS_TAGS_TO_HELPER.length);
   var ptHtml=PT_CHOICES.map(function(v){
-    return '<span class="thanks-tag'+(v===50?' on':'')+'" data-pt="'+v+'" onclick="setThanksPt(this,'+v+')">'+v+' pt</span>';
-  }).join('')+'<span class="thanks-tag" data-pt="0" onclick="setThanksPt(this,0)">今回は渡さない</span>';
+    return '<span class="thanks-tag'+(v===thanksSel.pts?' on':'')+'" data-pt="'+v+'" onclick="setThanksPt(this,'+v+')">'+v+' pt</span>';
+  }).join('')+'<span class="thanks-tag'+(thanksSel.pts===0?' on':'')+'" data-pt="0" onclick="setThanksPt(this,0)">今回は渡さない</span>';
   openSheet('お礼を伝える',
     '<div style="font-size:.85rem;color:var(--ink);line-height:1.9;margin-bottom:16px">'+escapeHtml(thanksSel.toName)+honorific(thanksSel.toName).trim()+'に、ありがとうを贈ります。<br><span style="font-size:.76rem;color:var(--tl)">点数はつけません。感じたことを選ぶだけで大丈夫です。</span></div>'+
     '<div style="font-size:.78rem;font-weight:600;margin-bottom:9px">感謝タグ（いくつでも）</div>'+
@@ -2989,23 +3081,27 @@ function sendThanks(){
   var note=((document.getElementById('th-note')||{}).value||'').trim();
   if(note.length>200){ toast('ひとことは200文字までです'); return; }
   var pts=thanksSel.pts||0;
-  if(pts>myPoints()){ toast('＆ポイントが足りません。0ptでも贈れます'); return; }
+  if(pts>0&&pts>myPoints()){ toast('＆ポイントが足りません。0ptでも贈れます'); return; }
   if(busy('thanks',3000)) return;
   if(demo){ demoSendThanks(pts); return; }
   // 送り主の名前は保存しない（受け取った側に「誰から」を見せない設計のため。人数の集計には uid だけ使う）
-  fbDb.collection('thanks').add({
-    fromUid:fbAuth.currentUser.uid,
+  var token=authSession.capture();
+  YouiPoints.send(fbDb,firebase,fbAuth.currentUser.uid,{
     toUid:thanksSel.to, toName:(thanksSel.toName||'').slice(0,60),
     postId:thanksSel.postId||'', dealId:thanksSel.dealId||'',
     pairKey:pairKeyOf(fbAuth.currentUser.uid, thanksSel.to),
     disaster:disasterActive(),
     tags:thanksSel.tags.slice(0,5), note:note,
-    points:pts, createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    points:pts
   }).then(function(){
-    // 残高は感謝の記録から数える（購読の更新で自動的に減る）
+    if(!authSession.isCurrent(token)) return;
     closeSheet();
     toast('お互いさま。貸し借りは、これでおしまいです');
-  }).catch(function(e){ console.warn('thanks fail',e); toast(authErrMsg(e)); });
+  }).catch(function(e){
+    if(!authSession.isCurrent(token)) return;
+    console.warn('thanks fail',e);
+    toast(e.code&&e.code.indexOf('points/')===0?e.message:authErrMsg(e));
+  });
 }
 
 /* マップの下に「困っていること」の一覧を出す。
@@ -3026,7 +3122,7 @@ function renderNeedList(){
   el.innerHTML=items.map(function(p){
     var loc=[p.pref,p.area].filter(Boolean).join(' ');
     var pinned=postLatLng(p)?'':'<span style="font-size:.64rem;color:var(--tl);margin-left:6px">地図に出ていません（地域が未入力）</span>';
-    return '<div class="match-card" onclick="openPostDetail(\''+p.id+'\')">'+
+    return '<div class="match-card"'+YouiPostSafety.actionAttrs('open',p.id)+'>'+
       '<div class="avatar md pink">'+escapeHtml(postAuthor(p).charAt(0))+'</div>'+
       '<div class="mc-body">'+
         '<div class="mc-row1"><div class="mc-name">'+escapeHtml(postAuthor(p))+'</div>'+
@@ -3058,8 +3154,8 @@ function renderMyCards(){
     return '<div style="display:flex;align-items:center;gap:7px;padding:10px 0;border-top:1px solid rgba(184,175,214,.14)">'+
       '<div style="flex:1;min-width:0"><div style="font-size:.86rem;font-weight:500">'+escapeHtml(p.title||'')+'</div>'+
       (loc?'<div style="font-size:.7rem;color:var(--tl);margin-top:2px">'+escapeHtml(loc)+'</div>':'')+'</div>'+
-      '<button class="kai-read" style="margin:0;padding:5px 11px;font-size:.7rem" onclick="editPost(\''+p.id+'\')">編集</button>'+
-      '<button class="kai-read" style="margin:0;padding:5px 11px;font-size:.7rem;color:#c07880;border-color:rgba(232,180,184,.45)" onclick="confirmDeletePost(\''+p.id+'\')">削除</button>'+
+      '<button class="kai-read" style="margin:0;padding:5px 11px;font-size:.7rem"'+YouiPostSafety.actionAttrs('edit',p.id)+'>編集</button>'+
+      '<button class="kai-read" style="margin:0;padding:5px 11px;font-size:.7rem;color:#c07880;border-color:rgba(232,180,184,.45)"'+YouiPostSafety.actionAttrs('confirm-delete',p.id)+'>削除</button>'+
     '</div>';
   }).join('');
 }
@@ -3087,12 +3183,13 @@ function saveCard(){
     closeSheet(); toast('できること札を登録しました（デモ）'); return;
   }
   if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
-  if(busy('card',3000))return;
   var u=getStoredUser()||{};
+  if(needsNickname(u)){openNicknameSetup();return;}
+  if(busy('card',3000))return;
   fbDb.collection('posts').add({
     type:'can', title:title, detail:detail, categories:[], pref:pref, area:area, when:'', anon:false,
     uid:fbAuth.currentUser.uid,
-    authorName:displayNameOf(u),
+    authorName:myDisplayName(),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){ closeSheet(); syncMyProfile({listed:true}); toast('できること札を登録しました'); })
    .catch(function(e){ console.warn('card fail',e); toast(authErrMsg(e)); });
@@ -3127,14 +3224,14 @@ function renderYuiLists(){
   Object.keys(posts).forEach(function(k){
     var p=posts[k], t=normType(p.type);
     // 投稿フォームのカテゴリ名は「貸し借り」。旧名「貸し借り・共同作業」も読む
-    var cats=p.categories||[];
+    var cats=YouiPostSafety.categories(p.categories);
     var lend=cats.filter(function(c){ return c==='貸し借り'||c==='貸し借り・共同作業'; }).length;
     if(t==='share'||lend) moyai.push(p);
     // 貸し借りだけの札は「出せるもの」に回し、「動ける人」には重ねて出さない
     if((t==='can'||t==='tsuide') && !(lend && lend===cats.length)) can.push(p);
   });
   var row=function(p){
-    return '<div class="prov-card" onclick="openPostDetail(\''+p.id+'\')">'+
+    return '<div class="prov-card"'+YouiPostSafety.actionAttrs('open',p.id)+'>'+
       '<div class="avatar md '+typeColor(p.type)+'">'+escapeHtml(postAuthor(p).charAt(0))+'</div>'+
       '<div class="prov-body"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+typeBadge(p.type)+
       '<span style="font-weight:600;font-size:.88rem">'+escapeHtml(p.title||'')+'</span></div>'+
@@ -3199,14 +3296,16 @@ function submitPost(){
     return;
   }
   if(!fbReady||!fbAuth.currentUser){toast('投稿にはログインが必要です');return}
+  if(type==='need'&&anon){toast('匿名投稿は一時停止しています。名前を出す場合だけ投稿できます');return;}
   if(busy('post',3000))return;
   var u=getStoredUser()||{};
   var isAnon=(type==='need')?anon:false;
+  if(needsNickname(u)){openNicknameSetup();return;}
   var post={type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,
     when:(type==='tsuide')?when.slice(0,40):'', anon:isAnon,
     uid:fbAuth.currentUser.uid,
     // 名前を伏せた投稿には、本名をデータとしても残さない（画面で伏せるだけでは読めてしまうため）
-    authorName:isAnon?'':displayNameOf(u),
+    authorName:isAnon?'':myDisplayName(),
     createdAt:firebase.firestore.FieldValue.serverTimestamp()};
   fbDb.collection('posts').add(post).then(function(){
     clearPostForm();
@@ -3229,12 +3328,15 @@ function clearPostForm(){
 var postsUnsub=null;
 function subscribePosts(){
   if(!fbReady||postsUnsub) return;
-  postsUnsub=fbDb.collection('posts').orderBy('createdAt','desc').limit(50).onSnapshot(function(snap){
+  var token=authSession.capture();
+  postsUnsub=fbDb.collection('posts').where('anon','==',false).orderBy('createdAt','desc').limit(50).onSnapshot(function(snap){
+    if(!authSession.isCurrent(token))return;
     var raw=[];
     snap.forEach(function(doc){ var p=doc.data(); p.id=doc.id; raw.push(p); });
     window.__rawPosts=raw;
     renderLivePosts();
   },function(err){ console.warn('posts listen error',err);
+    if(!authSession.isCurrent(token))return;
     var el=document.getElementById('live-posts'); if(el&&(err.code==='permission-denied')) el.innerHTML='<div style="padding:16px;text-align:center;color:var(--tl);font-size:.78rem">投稿の表示にはログインが必要です。</div>';
   });
 }
@@ -3270,10 +3372,10 @@ function renderPostCard(p){
   var initial=postAuthor(p).charAt(0);
   var badge=typeBadge(t);
   var whenHtml=(t==='tsuide'&&p.when)?'<div style="font-size:.72rem;color:#3f7f92;margin-top:4px;font-weight:600">🕒 '+escapeHtml(p.when)+'</div>':'';
-  var cats=(p.categories||[]).slice(0,3).map(function(c){return '<span style="font-size:.64rem;padding:2px 7px;border-radius:8px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:4px">'+escapeHtml(c)+'</span>';}).join('');
+  var cats=YouiPostSafety.categories(p.categories).slice(0,3).map(function(c){return '<span style="font-size:.64rem;padding:2px 7px;border-radius:8px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:4px">'+escapeHtml(c)+'</span>';}).join('');
   var locText=[p.pref,p.area].filter(Boolean).join(' ');
   var loc=locText?'<div style="font-size:.7rem;color:var(--lav2);margin-top:5px;display:flex;align-items:center;gap:3px"><svg class="ic" style="width:11px;height:11px"><use href="#i-location"/></svg>'+escapeHtml(locText)+'</div>':'';
-  return '<div class="prov-card" data-live="1" data-type="'+t+'" data-region="'+escapeHtml(p.pref||'')+'" data-area="'+escapeHtml(p.area||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'" onclick="openPostDetail(\''+p.id+'\')">'+
+  return '<div class="prov-card" data-live="1" data-type="'+t+'" data-region="'+escapeHtml(p.pref||'')+'" data-area="'+escapeHtml(p.area||'')+'" data-cat="'+escapeHtml(catTokens(p.categories).join(' '))+'"'+YouiPostSafety.actionAttrs('open',p.id)+'>'+
     '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
     '<div class="prov-body">'+
       '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
@@ -3295,25 +3397,26 @@ function openPostDetail(id){
   var p=(window.__posts||{})[id]; if(!p) return;
   var t=normType(p.type);
   var mine=isMyPost(p);
-  var cats=(p.categories||[]).map(function(c){return '<span style="font-size:.7rem;padding:3px 9px;border-radius:9px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:5px">'+escapeHtml(c)+'</span>';}).join('');
+  var cats=YouiPostSafety.categories(p.categories).map(function(c){return '<span style="font-size:.7rem;padding:3px 9px;border-radius:9px;background:rgba(184,175,214,.15);color:#7c6fa3;margin-right:5px">'+escapeHtml(c)+'</span>';}).join('');
   var actions;
   if(mine){
     actions='<div style="display:flex;gap:10px">'+
-      '<button class="btn-secondary" style="flex:1" onclick="editPost(\''+id+'\')">編集する</button>'+
-      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="confirmDeletePost(\''+id+'\')">削除する</button>'+
+      '<button class="btn-secondary" style="flex:1"'+YouiPostSafety.actionAttrs('edit',id)+'>編集する</button>'+
+      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)"'+YouiPostSafety.actionAttrs('confirm-delete',id)+'>削除する</button>'+
     '</div>';
+    if(p.anon&&!isGuestDemo())actions='<div class="input-note">匿名機能の一時停止中は、この投稿を公開せず保管しています。</div><button class="btn-primary"'+YouiPostSafety.actionAttrs('confirm-delete',id)+'>投稿を取り下げる</button>';
   }else if(fbReady && fbAuth.currentUser){
     // 名前を伏せた頼みごとは、プロフィールを開けない（頼む側だけが匿名になれる）
     actions='<div style="display:flex;gap:10px">'+
-      (p.anon?'':'<button class="btn-secondary" style="flex:1" onclick="openPostAuthorProfile(\''+id+'\')">プロフィール</button>')+
-      '<button class="btn-primary" style="flex:1" onclick="messageFromPost(\''+id+'\')">メッセージを送る</button></div>'+
+      (p.anon?'':'<button class="btn-secondary" style="flex:1"'+YouiPostSafety.actionAttrs('profile',id)+'>プロフィール</button>')+
+      '<button class="btn-primary" style="flex:1"'+YouiPostSafety.actionAttrs('message',id)+'>メッセージを送る</button></div>'+
       (p.anon?'<div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:10px;text-align:center">頼む側は名前を伏せています。応える側の名前とプロフィールは、相手に表示されます。</div>':'')+
-      '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem" onclick="openReport(\'post\',\''+id+'\',\''+escapeHtml(p.uid||'')+'\',\'この投稿\')">この投稿を通報する</button></div>';
+      '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem"'+YouiPostSafety.actionAttrs('report',id)+'>この投稿を通報する</button></div>';
   }else if(isGuestDemo()){
     // デモ：名前を伏せた頼みごとは、プロフィールを開けない（頼む側だけが匿名になれる）
     actions='<div style="display:flex;gap:10px">'+
-      (p.anon?'':'<button class="btn-secondary" style="flex:1" onclick="closeSheet();demoProfilePost(\''+id+'\')">プロフィール</button>')+
-      '<button class="btn-primary" style="flex:1" onclick="demoMessageFromPost(\''+id+'\')">メッセージを送る</button></div>'+
+      (p.anon?'':'<button class="btn-secondary" style="flex:1"'+YouiPostSafety.actionAttrs('demo-profile',id)+'>プロフィール</button>')+
+      '<button class="btn-primary" style="flex:1"'+YouiPostSafety.actionAttrs('demo-message',id)+'>メッセージを送る</button></div>'+
       (p.anon?'<div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:10px;text-align:center">頼む側は名前を伏せています。応える側の名前とプロフィールは、相手に表示されます。</div>':'');
   }else{
     actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
@@ -3330,10 +3433,15 @@ function openPostDetail(id){
     '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(postAuthor(p))+' ・ '+timeAgo(p.createdAt)+(mine?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
     actions);
 }
+function reportPost(id){
+  var p=(window.__posts||{})[id]; if(!p) return;
+  openReport('post',id,p.uid||'','この投稿');
+}
 
 /* 投稿から相手に実メッセージを送る */
 function messageFromPost(id){
   var p=(window.__posts||{})[id]; if(!p) return;
+  if(p.anon&&!isGuestDemo()){toast('匿名の投稿・会話は一時停止しています');return;}
   closeSheet();
   // 名前を伏せた頼みごとから始める会話では、頼んだ人の名前を伏せたままにする（masked に入れる）
   if(p.anon) openConversation(p.uid,ANON_NAME,colorForUid(p.uid),[p.uid]);
@@ -3342,10 +3450,22 @@ function messageFromPost(id){
 
 /* 自分の投稿一覧（管理シート） */
 function openMyPosts(){
+  if(isGuestDemo()){renderMyPosts();return;}
+  if(!fbReady||!fbAuth.currentUser){toast('投稿の管理にはログインが必要です');return;}
+  var me=fbAuth.currentUser.uid, token=authSession.capture();
+  openSheet('自分の投稿','<div class="input-note">読み込み中…</div>');
+  fbDb.collection('posts').where('uid','==',me).get().then(function(snap){
+    if(!authSession.isCurrent(token))return;
+    var owned=[];window.__posts=window.__posts||{};
+    snap.forEach(function(d){var p=d.data();p.id=d.id;owned.push(p);window.__posts[d.id]=p;});
+    renderMyPosts(owned);
+  }).catch(function(e){if(authSession.isCurrent(token))toast('投稿を読み込めませんでした');});
+}
+function renderMyPosts(owned){
   var me=isGuestDemo()?DEMO_ME:((fbReady&&fbAuth.currentUser)?fbAuth.currentUser.uid:null);
   if(!me){ toast('投稿の管理にはログインが必要です'); return; }
   var all=window.__posts||{};
-  var mine=Object.keys(all).map(function(k){return all[k];})
+  var mine=(owned||Object.keys(all).map(function(k){return all[k];}))
     .filter(function(p){ return p.uid===me && normType(p.type)!=='can'; });
   mine.sort(function(a,b){
     var ta=(a.createdAt&&a.createdAt.toDate)?a.createdAt.toDate().getTime():0;
@@ -3363,8 +3483,8 @@ function openMyPosts(){
         (p.detail?'<div style="font-size:.76rem;color:var(--tl);line-height:1.6;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
         '<div style="font-size:.68rem;color:var(--tl);margin-bottom:8px">'+timeAgo(p.createdAt)+'</div>'+
         '<div style="display:flex;gap:8px">'+
-          '<button class="btn-secondary" style="flex:1;padding:8px;font-size:.8rem" onclick="editPost(\''+p.id+'\')">編集</button>'+
-          '<button class="btn-primary" style="flex:1;padding:8px;font-size:.8rem;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:none" onclick="confirmDeletePost(\''+p.id+'\')">削除</button>'+
+          '<button class="btn-secondary" style="flex:1;padding:8px;font-size:.8rem"'+YouiPostSafety.actionAttrs(p.anon&&!isGuestDemo()?'open':'edit',p.id)+'>'+(p.anon&&!isGuestDemo()?'非公開の投稿を見る':'編集')+'</button>'+
+          '<button class="btn-primary" style="flex:1;padding:8px;font-size:.8rem;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:none"'+YouiPostSafety.actionAttrs('confirm-delete',p.id)+'>削除</button>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -3376,6 +3496,7 @@ function openMyPosts(){
 var editType='can';
 function editPost(id){
   var p=(window.__posts||{})[id]; if(!p) return;
+  if(p.anon&&!isGuestDemo()){toast('匿名投稿は一時停止しています。取り下げは自分の投稿から行えます');return;}
   editType=normType(p.type);
   var cards=['tsuide','need','can'].map(function(k){
     return '<div class="pt-card'+(editType===k?' on':'')+'" data-type="'+k+'" onclick="setEditType(this,\''+k+'\')"><b>'+POST_TYPES[k].label+'</b></div>';
@@ -3386,7 +3507,7 @@ function editPost(id){
     '<div class="input-group"><label class="input-label">地域（都道府県）</label><select id="ep-pref" class="input">'+prefOptions(p.pref||'')+'</select></div>'+
     '<div class="input-group"><label class="input-label">市区町村・エリア（任意）</label><input id="ep-area" class="input" value="'+escapeHtml(p.area||'')+'" placeholder="例：高槻市 ○○駅周辺"></div>'+
     '<div class="input-group"><label class="input-label">詳細</label><textarea id="ep-detail" class="input" rows="4" style="resize:vertical;font-family:inherit">'+escapeHtml(p.detail||'')+'</textarea></div>'+
-    '<button class="btn-primary" onclick="saveEditPost(\''+id+'\')">保存する</button>');
+    '<button class="btn-primary"'+YouiPostSafety.actionAttrs('save-edit',id)+'>保存する</button>');
 }
 function setEditType(el,t){ el.parentNode.querySelectorAll('.pt-card').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); editType=t; }
 function saveEditPost(id){
@@ -3416,7 +3537,7 @@ function confirmDeletePost(id){
     '<p style="font-size:.9rem;color:var(--ink);line-height:1.85;margin-bottom:18px">この投稿を削除しますか？<br>一度削除すると元に戻せません。</p>'+
     '<div style="display:flex;gap:10px">'+
       '<button class="btn-secondary" style="flex:1" onclick="closeSheet()">キャンセル</button>'+
-      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)" onclick="doDeletePost(\''+id+'\')">削除する</button>'+
+      '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e8b4b8,#d99aa0);box-shadow:0 6px 20px rgba(232,180,184,.4)"'+YouiPostSafety.actionAttrs('delete',id)+'>削除する</button>'+
     '</div>');
 }
 function doDeletePost(id){
@@ -3536,7 +3657,7 @@ var currentConv=null;     // 実会話 {id, otherUid, otherName, color}
 var chatMsgsUnsub=null;   // 現在のチャットの購読解除
 var convListUnsub=null;   // 会話一覧の購読解除
 
-function convIdFor(a,b){ return [a,b].sort().join('_'); }
+function convIdFor(a,b){ return 'v2_'+[a,b].sort().join('_'); }
 function colorForUid(uid){
   var cs=['lav','green','pink','sky','gold'], n=0, s=uid||'';
   for(var i=0;i<s.length;i++) n+=s.charCodeAt(i);
@@ -3553,22 +3674,47 @@ function chatTime(ts){
 /* 相手を指定して実会話を開く（投稿の「メッセージを送る」等から） */
 /* 名前を伏せている人の表示名。会話・支え合いの記録・感謝にもこの名前だけを書く */
 var ANON_NAME='ご近所の方';
-function myDisplayName(){ return displayNameOf(getStoredUser()); }
+function myDisplayName(){
+  var u=getStoredUser()||{}, org=u.type==='org';
+  var name=org?u.orgName:u.nickname;
+  return (typeof name==='string'&&name?name:(org?'団体':'利用者')).slice(0,60);
+}
 /* 会話の中で自分が名前を伏せているか */
 function iAmMasked(){ return !!(currentConv && fbAuth && fbAuth.currentUser && (currentConv.masked||[]).indexOf(fbAuth.currentUser.uid)>=0); }
-function openConversation(otherUid,otherName,color,masked){
+function openConversation(otherUid,otherName,color,masked,existingId){
   if(!fbReady||!fbAuth.currentUser){ toast('メッセージのご利用にはログインが必要です'); return; }
+  if(needsNickname(getStoredUser())){openNicknameSetup();return;}
   var me=fbAuth.currentUser.uid;
   if(!otherUid){ toast('相手が見つかりませんでした'); return; }
   if(otherUid===me){ toast('自分の投稿にはメッセージを送れません'); return; }
   if(isBlocked(otherUid)){ toast('ブロック中の相手です。設定の「ブロックしたユーザー」から解除できます'); return; }
+  if(masked&&masked.length){toast('匿名の投稿・会話は一時停止しています');return;}
+  var token=authSession.capture(), openToken=window.__chatOpenToken=(window.__chatOpenToken||0)+1;
+  var known=(window.__convs||{})[otherUid]||{};
+  var cid=existingId||known.id||convIdFor(me,otherUid);
+  var ref=fbDb.collection('conversations').doc(cid);
+  return fbDb.runTransaction(function(transaction){return transaction.get(ref).then(function(doc){
+    if(!authSession.isCurrent(token)||window.__chatOpenToken!==openToken)return false;
+    if(doc.exists){
+      var c=doc.data();
+      if(c.privacySafe!==true||(c.masked&&c.masked.length)){var error=new Error('匿名の投稿・会話は一時停止しています');error.code='privacy/paused';throw error;}
+      return true;
+    }
+    var names={};names[me]=myDisplayName();names[otherUid]=otherName||'利用者';
+    transaction.set(ref,{participants:[me,otherUid],names:names,masked:[],privacySafe:true,
+      lastMessage:'',lastSender:me,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+    return true;
+  });}).then(function(ready){
+    if(!ready||!authSession.isCurrent(token)||window.__chatOpenToken!==openToken)return;
+    showNamedConversation(cid,otherUid,otherName,color);
+  }).catch(function(e){
+    if(!authSession.isCurrent(token)||window.__chatOpenToken!==openToken)return;
+    console.warn('conversation open failed',e);toast(e.code==='privacy/paused'?e.message:'会話を開けませんでした。安全のためのデータ整理中は、新しい会話をお休みしています');
+  });
+}
+function showNamedConversation(cid,otherUid,otherName,color){
   color=color||colorForUid(otherUid);
-  var cid=convIdFor(me,otherUid);
-  // すでに会話があれば、そこで伏せている人も引き継ぐ
-  var known=((window.__convs||{})[otherUid]||{}).masked||[];
-  var mk=known.slice(); (masked||[]).forEach(function(x){ if(mk.indexOf(x)<0) mk.push(x); });
-  if(mk.indexOf(otherUid)>=0) otherName=ANON_NAME;
-  currentConv={id:cid, otherUid:otherUid, otherName:otherName||'利用者', color:color, masked:mk, hadMasked:known.length>0};
+  currentConv={id:cid, otherUid:otherUid, otherName:otherName||'利用者', color:color, masked:[],privacySafe:true};
   var initial=(otherName||'?').charAt(0);
   document.getElementById('chat-name').textContent=(otherName||'利用者')+honorific(otherName||'利用者');
   var av=document.getElementById('chat-avatar');
@@ -3577,15 +3723,18 @@ function openConversation(otherUid,otherName,color,masked){
   var sb=document.getElementById('chat-safety'); if(sb) sb.style.display='';
   var tb=document.getElementById('chat-thanks-bar'); if(tb) tb.style.display='flex';
 
-  var otherMasked=(mk.indexOf(otherUid)>=0);
   var pr=document.getElementById('chat-presence');
-  if(pr){ pr.style.display='flex'; pr.textContent=otherMasked?'名前を伏せている方です':'プロフィールを見る ›'; }
-  if(!otherMasked) markChatPartnerVerified(otherUid);
+  if(pr){ pr.style.display='flex'; pr.textContent='プロフィールを見る ›'; }
+  markChatPartnerVerified(otherUid);
   subscribeChatMessages(cid,initial,color);
   goScreen('chat');
 }
 /* 会話一覧の項目から開く（uidをキーに __convs から名前・色を復元） */
-function openConvById(uid){ var c=(window.__convs||{})[uid]||{}; openConversation(uid,c.name,c.color,c.masked); }
+function openConvById(key){
+  var c=(window.__conversationRows||{})[key];
+  if(c)openConversation(c.otherUid,c.name,c.color,[],key);
+  else {c=(window.__convs||{})[key]||{};openConversation(key,c.name,c.color,c.masked,c.id);}
+}
 
 /* チャットヘッダーの相手名タップ：相手のプロフィールへ（名前を伏せている相手は開けない） */
 function openChatPartner(){
@@ -3603,8 +3752,10 @@ function subscribeChatMessages(cid,initial,color){
   var thread=document.getElementById('chat-thread');
   thread.innerHTML='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.8rem">読み込み中…</div>';
   var me=fbAuth.currentUser.uid;
+  var token=authSession.capture();
   chatMsgsUnsub=fbDb.collection('conversations').doc(cid).collection('messages')
     .orderBy('createdAt','asc').limit(300).onSnapshot(function(snap){
+      if(!authSession.isCurrent(token)||!currentConv||currentConv.id!==cid)return;
       if(snap.empty){
         thread.innerHTML='<div style="padding:34px 20px;text-align:center;color:var(--tl);font-size:.82rem;line-height:1.9">まだメッセージはありません。<br>最初のメッセージを送ってみましょう。</div>';
         return;
@@ -3622,6 +3773,7 @@ function subscribeChatMessages(cid,initial,color){
       thread.innerHTML=html;
       thread.scrollTop=thread.scrollHeight;
     },function(err){ console.warn('messages listen error',err);
+      if(!authSession.isCurrent(token)||!currentConv||currentConv.id!==cid)return;
       thread.innerHTML='<div style="padding:24px;text-align:center;color:var(--tl);font-size:.8rem">メッセージを読み込めませんでした。</div>';
     });
 }
@@ -3630,8 +3782,10 @@ function subscribeChatMessages(cid,initial,color){
 function subscribeConversations(){
   if(!fbReady||!fbAuth.currentUser||convListUnsub) return;
   var me=fbAuth.currentUser.uid;
-  convListUnsub=fbDb.collection('conversations').where('participants','array-contains',me)
+  var token=authSession.capture();
+  convListUnsub=fbDb.collection('conversations').where('participants','array-contains',me).where('privacySafe','==',true)
     .onSnapshot(function(snap){
+      if(!authSession.isCurrent(token))return;
       var items=[];
       snap.forEach(function(doc){ var c=doc.data(); c.id=doc.id; items.push(c); });
       window.__rawConvs=items;
@@ -3651,19 +3805,22 @@ function renderConvList(){
     var tb=(b.updatedAt&&b.updatedAt.toDate)?b.updatedAt.toDate().getTime():0;
     return tb-ta;
   });
-  window.__convs=window.__convs||{};
+  window.__convs={};window.__conversationRows={};
   var html='', count=0;
   items.forEach(function(c){
     var other=(c.participants||[]).filter(function(u){return u!==me;})[0]||'';
     if(other&&isBlocked(other)) return;
     var masked=(c.masked||[]);
-    var name=(masked.indexOf(other)>=0)?ANON_NAME:((c.names&&c.names[other])||'利用者');
+    var storedName=(c.names&&typeof c.names==='object'&&!Array.isArray(c.names))?c.names[other]:null;
+    var name=(masked.indexOf(other)>=0)?ANON_NAME:((typeof storedName==='string'&&storedName)?storedName:'利用者');
     var color=colorForUid(other);
     var initial=name.charAt(0);
-    window.__convs[other]={name:name,color:color,masked:masked};
+    var row={id:c.id,otherUid:other,name:name,color:color,masked:masked};
+    if(!window.__convs[other])window.__convs[other]=row;
+    window.__conversationRows[c.id]=row;
     var preview=(c.lastSender===me?'あなた: ':'')+(c.lastMessage||'');
     count++;
-    html+='<div class="msg-item" onclick="openConvById(\''+other+'\')">'+
+    html+='<div class="msg-item"'+YouiPostSafety.actionAttrs('conversation',c.id)+'>'+
       '<div class="avatar md '+color+'">'+escapeHtml(initial)+'</div>'+
       '<div class="mc-body">'+
         '<div class="msg-row1"><div class="msg-name">'+escapeHtml(name+honorific(name))+'</div><div class="msg-time">'+chatTime(c.updatedAt)+'</div></div>'+
@@ -3712,6 +3869,8 @@ function sendChat(){
   if(tooLong(text,'msg','メッセージ'))return;
   // 実会話：Firestore に保存（相手にもリアルタイムで届く）
   if(currentConv && currentConv.id && fbReady && fbAuth.currentUser){
+    if(currentConv.privacySafe!==true||(currentConv.masked&&currentConv.masked.length)){toast('匿名の投稿・会話は一時停止しています');return;}
+    const token=authSession.capture();
     const me=fbAuth.currentUser.uid;
     const myName=iAmMasked()?ANON_NAME:myDisplayName();
     f.value='';
@@ -3719,22 +3878,17 @@ function sendChat(){
     const names={}; names[me]=myName; names[currentConv.otherUid]=currentConv.otherName;
     const convRef=fbDb.collection('conversations').doc(cid);
     const conv={
+      privacySafe:true,masked:[],
       participants:[me,currentConv.otherUid],
       names:names,
       lastMessage:text,
       lastSender:me,
       updatedAt:firebase.firestore.FieldValue.serverTimestamp()
     };
-    // 名前を伏せている人がいる会話だけ masked を書く（伏せていない会話のデータは従来どおり）
-    const mk=currentConv.masked||[];
-    if(mk.length||currentConv.hadMasked) conv.masked=mk;
-    convRef.set(conv,{merge:true}).then(function(){
-      if(currentConv&&currentConv.id===cid) currentConv.hadMasked=mk.length>0;
-      return convRef.collection('messages').add({
-        senderId:me, text:text,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }).catch(function(e){ console.warn('send message fail',e); toast('送信できませんでした'); });
+    const batch=fbDb.batch();
+    batch.update(convRef,conv);
+    batch.set(convRef.collection('messages').doc(),{senderId:me,text:text,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    batch.commit().catch(function(e){if(!authSession.isCurrent(token))return;console.warn('send message fail',e);toast('送信できませんでした');});
     return;
   }
   // デモ（ゲスト）：ローカルに追加するだけ
@@ -3746,7 +3900,7 @@ function sendChat(){
   f.value='';
   thread.scrollTop=thread.scrollHeight;
 }
-function escapeHtml(t){return t.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
+function escapeHtml(t){return String(t==null?'':t).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
 
 /* ============================================
    安全機能：通報・ブロック（実証運用の要）
@@ -4012,14 +4166,16 @@ function saveNickname(){
 /* 自分のプロフィールを保存し、表示名が変わったら自分の投稿の表示名もそろえる */
 function updateMyNames(fields,msg){
   var u=getStoredUser(); if(!u) return;
+  var token=authSession.capture();
   var before=displayNameOf(u);
   for(var k in fields) u[k]=fields[k];
   setStoredUser(u); applyUserToUI(); renderNickBanner();
   closeSheet(); toast(msg);
   if(!(fbReady&&fbAuth.currentUser)) return;
   fbDb.collection('users').doc(fbAuth.currentUser.uid).update(fields)
-    .then(function(){ var after=displayNameOf(u); return Promise.all([after!==before?syncMyPostNames(after):null, syncMyProfile()]); })
+    .then(function(){ if(!authSession.isCurrent(token))return; var after=displayNameOf(u); return Promise.all([after!==before?syncMyPostNames(after):null, syncMyProfile()]); })
     .then(function(){
+      if(!authSession.isCurrent(token)) return;
       var c=window.__uprofCtx, sc=document.getElementById('screen-uprof');
       if(c&&c.self&&sc&&sc.classList.contains('active')){ c.name=displayNameOf(u); loadUserProfile(c); }
     })
@@ -4031,7 +4187,7 @@ function syncMyPostNames(nm){
   return fbDb.collection('posts').where('uid','==',me).get().then(function(snap){
     var jobs=[];
     snap.forEach(function(d){
-      var p=d.data(), want=p.anon?'':nm;
+      var p=d.data(); if(p.anon!==false)return; var want=nm;
       if((p.authorName||'')!==want) jobs.push(d.ref.update({authorName:want}).catch(function(e){ console.warn('post name sync fail',d.id,e); }));
     });
     return Promise.all(jobs);
@@ -4054,10 +4210,12 @@ function syncMyProfile(opts){
   opts=opts||{};
   if(!(fbReady&&fbAuth.currentUser)) return Promise.resolve();
   var u=getStoredUser(); if(!canPublishProfile(u)) return Promise.resolve();
+  var token=authSession.capture();
   var me=fbAuth.currentUser.uid, ref=fbDb.collection('profiles').doc(me);
   var cur=(myProfileCache&&myProfileCache.uid===me)?Promise.resolve(myProfileCache.data)
     :ref.get().then(function(d){ return d.exists?d.data():null; });
   return cur.then(function(c){
+    if(!authSession.isCurrent(token)) return null;
     // 一度名前を出して投稿したら、そのまま（あとで伏せた投稿だけにしても戻さない）
     if(opts.listed||(c&&c.listed)||u.type==='org') return {cur:c, listed:true};
     return fbDb.collection('posts').where('uid','==',me).get().then(function(snap){
@@ -4065,11 +4223,12 @@ function syncMyProfile(opts){
       return {cur:c, listed:named};
     });
   }).then(function(r){
+    if(!r||!authSession.isCurrent(token)) return;
     var want=publicProfileOf(u,r.listed), c=r.cur;
     if(c && ['name','type','bio','verified','listed'].every(function(k){ return c[k]===want[k]; })){ myProfileCache={uid:me,data:c}; return; }
     var d={}; for(var k in want) d[k]=want[k];
     d.updatedAt=firebase.firestore.FieldValue.serverTimestamp();
-    return ref.set(d).then(function(){ myProfileCache={uid:me,data:want}; });
+    return ref.set(d).then(function(){ if(authSession.isCurrent(token))myProfileCache={uid:me,data:want}; });
   }).catch(function(e){ console.warn('profile sync fail',e); });
 }
 /* 相手のプロフィールを開く。opts.from==='chat'：会話から／opts.masked：相手が名前を伏せている／opts.preview：自分の見え方 */
@@ -4091,7 +4250,7 @@ function loadUserProfile(ctx){
   renderUserProfile(ctx,null,null);
   var prof=fbDb.collection('profiles').doc(uid).get()
     .then(function(d){ return d.exists?d.data():false; },function(){ return false; });
-  var posts=fbDb.collection('posts').where('uid','==',uid).limit(50).get().then(function(snap){
+  var posts=fbDb.collection('posts').where('uid','==',uid).where('anon','==',false).limit(50).get().then(function(snap){
     var a=[]; snap.forEach(function(d){ var p=d.data(); p.id=d.id; if(!p.anon) a.push(p); });
     a.sort(function(x,y){ return tsMs(y.createdAt)-tsMs(x.createdAt); });
     return a;
@@ -4162,12 +4321,12 @@ function saveEmailChange(){
   const v=document.getElementById('ec-email').value.trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){toast('正しいメールアドレスを入力してください');return}
   if(fbReady&&fbAuth.currentUser){
-    var cu=fbAuth.currentUser;
+    var cu=fbAuth.currentUser, token=authSession.capture();
     // 新しいアドレスに確認メールを送り、リンククリックで変更を確定（乗っ取り防止）
     if(cu.verifyBeforeUpdateEmail){
-      cu.verifyBeforeUpdateEmail(v).then(function(){closeSheet();toast('確認メールを送信しました。新しいアドレスのリンクを開くと変更が完了します');}).catch(function(e){toast(authErrMsg(e));});
+      cu.verifyBeforeUpdateEmail(v).then(function(){if(!authSession.isCurrent(token))return;closeSheet();toast('確認メールを送信しました。新しいアドレスのリンクを開くと変更が完了します');}).catch(function(e){if(authSession.isCurrent(token))toast(authErrMsg(e));});
     }else{
-      cu.updateEmail(v).then(function(){var u=getStoredUser()||{};u.email=v;setStoredUser(u);closeSheet();toast('メールアドレスを変更しました');}).catch(function(e){toast(authErrMsg(e));});
+      cu.updateEmail(v).then(function(){if(!authSession.isCurrent(token))return;var u=getStoredUser();if(!u)return;u.email=v;setStoredUser(u);closeSheet();toast('メールアドレスを変更しました');}).catch(function(e){if(authSession.isCurrent(token))toast(authErrMsg(e));});
     }
     return;
   }
@@ -4633,13 +4792,13 @@ function renderCareCard(){
     '<div class="care-body">このところ、あなたは支える側が続いています。支える人ほど、ひとりで抱えこみがちです。今度は、あなたが「ついで」に頼ってみませんか。</div>'+
     '<div class="care-chips">'+CARE_DRAFTS.map(function(t,i){ return '<button class="care-chip" onclick="openCareRequest('+i+')">'+t+'</button>'; }).join('')+'</div>'+
     '<div class="care-actions"><button class="btn-primary" onclick="openCareRequest(-1)">頼みごとを出してみる</button><button class="btn-secondary" onclick="openCareDesk()">専門の相談窓口</button></div>'+
-    '<div class="care-foot"><span>名前を伏せて頼めます。＆ポイントの残高が0でも大丈夫です。</span><button onclick="snoozeCare()">いまは大丈夫</button></div>';
+    '<div class="care-foot"><span>'+(isGuestDemo()?'名前を伏せて頼めます。':'匿名機能は一時停止しています。表示名を出して頼めます。')+'＆ポイントの残高が0でも大丈夫です。</span><button onclick="snoozeCare()">いまは大丈夫</button></div>';
 }
 /* 下書きを入れた「困っていること」へ。頼みやすいよう、名前を伏せる設定をはじめから入れておく */
 function openCareRequest(i){
   openPostWith('need');
   var t=document.getElementById('post-title'); if(t) t.value=(i>=0?CARE_DRAFTS[i]:'');
-  var a=document.getElementById('post-anon'); if(a) a.checked=true;
+  var a=document.getElementById('post-anon'); if(a) a.checked=isGuestDemo();
 }
 function markCareAnswered(){
   if(isGuestDemo()) window.__careDismissed=true;
@@ -4727,6 +4886,7 @@ function loadDemoData(){
   renderLivePosts();
 }
 function startDemo(withGuide){
+  authSession.invalidate(); stopRealtime();
   window.__guest=true; currentProfile=null;
   loadDemoData();
   navTo('main');
@@ -4841,18 +5001,32 @@ function toggleSetting(el,key){
 function isGuestMode(){ try{ return sessionStorage.getItem('youi_guest')==='1'; }catch(e){ return false; } }
 if(fbReady){
   fbAuth.onAuthStateChanged(function(user){
-    if(!user){ stopRealtime(); return; }
+    var token=authSession.begin();
+    clearRealAccountState(window.__guest===true||isGuestMode());
+    if(!user){
+      if(!window.__guest&&!isGuestMode()) goScreen('login');
+      return;
+    }
     // ゲストモード中に古いログインセッションが残っていたら、必ずサインアウトしてゲストを優先
     if(isGuestMode()){ fbAuth.signOut(); return; }
     window.__guest=false;
+    // 新規登録の保存が終わるまで、未完成のプロフィールで画面を開かない。
+    if(signupInProgress) return;
     fbDb.collection('users').doc(user.uid).get().then(function(doc){
-      var p = doc.exists ? doc.data() : {type:'individual',name:(user.email||'利用者'),bio:''};
+      if(!authSession.isCurrent(token)) return;
+      if(!doc.exists){
+        authSession.invalidate();clearRealAccountState(false);
+        fbAuth.signOut().catch(function(e){console.warn('incomplete account signout failed',e);});
+        goScreen('login');toast('登録情報が見つかりませんでした。運営へお問い合わせください');return;
+      }
+      var p = doc.data();
       p.email=user.email; p.uid=user.uid; setStoredUser(p);
       // ブロックリストを復元してから購読（投稿・会話の描画で除外に使う）
       window.__blocked=(p.blocked&&typeof p.blocked==='object')?p.blocked:{};
       subscribePosts();
       subscribeConversations();
       subscribeThanks();
+      subscribeWallet();
       subscribeDeals();
       subscribeDisaster();
       if(typeof applyUserToUI==='function') applyUserToUI();
@@ -4860,10 +5034,14 @@ if(fbReady){
       var active=document.querySelector('.screen.active');
       if(active && active.id==='screen-login'){
         navTo('main');
-        setTimeout(function(){toast('ようこそ、You&i Spaceへ');},300);
-        if(user.emailVerified===false){ setTimeout(function(){toast('メールアドレスの確認が未完了です。設定から再送できます');},2900); }
+        setTimeout(function(){if(authSession.isCurrent(token))toast('ようこそ、You&i Spaceへ');},300);
+        if(user.emailVerified===false){ setTimeout(function(){if(authSession.isCurrent(token))toast('メールアドレスの確認が未完了です。設定から再送できます');},2900); }
       }
-    }).catch(function(){ subscribePosts(); subscribeConversations(); });
+    }).catch(function(e){
+      if(!authSession.isCurrent(token)) return;
+      console.warn('profile load failed',e);
+      toast('プロフィールを読み込めませんでした。ログインし直してください');
+    });
   });
 }
 

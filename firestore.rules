@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// You&i Space — Firestore セキュリティルール（アプリ v0.5.3 対応。v0.5.0〜v0.5.2 のアプリとも両立）
+// You&i Space — Firestore セキュリティルール（P1 不具合の対策版）
 // ※ このファイルは記録用。実際の反映は Firebase コンソール
 //   （プロジェクト you-i-space → Firestore Database → ルール）に
 //   丸ごと貼り付けて「公開」してください。
@@ -8,6 +8,8 @@ rules_version = '2';
 //   「少し気になった」の確認）は Firebase コンソールから行います。
 //   コンソールからの操作は、このルールの制限を受けません。
 // ※ ここに書いていないコレクションは、すべて読み書きできません。
+// ※ 匿名機能は実アカウントでは一時停止。旧匿名データは本人・運営以外に新たに見せない。
+//   旧アプリの広い一覧・旧方式の送金も拒否するため、ルール反映後に新アプリと移行が必要。
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -19,14 +21,37 @@ service cloud.firestore {
     function optStr(key, max) { return !(key in incoming()) || str(incoming()[key], max); }
     // 書き込み時刻はサーバー時刻（serverTimestamp）だけを受け付ける
     function stampedNow(key) { return incoming()[key] == request.time; }
-    // 会話IDは2人の uid をソートして「_」でつないだもの（index.html の convIdFor）
-    function convMembers(cid) { return cid.split('_'); }
+    // 新規会話は v2_<uidA>_<uidB>。旧通常会話は <uidA>_<uidB> のまま更新できる。
+    function convMembers(cid) {
+      let p = cid.split('_');
+      return p.size() == 3 && p[0] == 'v2' ? [p[1], p[2]] : p;
+    }
+    function pairId(a, b) { return a < b ? a + '_' + b : b + '_' + a; }
+    // 旧匿名会話・親なし履歴の当事者は、新しい会話を作って相手の名前を引き出せない。
+    function legacyPairPermits(a, b) {
+      let p = /databases/$(database)/documents/conversations/$(pairId(a, b));
+      return !exists(p) || get(p).data.get('privacySafe', false) == true;
+    }
+    // privacySafe は新しいアプリ、または運営の移行だけが付ける。
+    // 旧匿名会話を新しいアプリから通常会話へ書き換えることは許さない。
+    function safeConv(cid) {
+      let p = /databases/$(database)/documents/conversations/$(cid);
+      let members = cid.split('_');
+      return privacyReady() && exists(p) && get(p).data.get('privacySafe', false) == true
+        && (members.size() != 3 || members[0] != 'v2' || legacyPairPermits(members[1], members[2]));
+    }
+    function safePair(a, b) {
+      return legacyPairPermits(a, b) && (safeConv(pairId(a, b)) || safeConv('v2_' + pairId(a, b)));
+    }
+    function privacyReady() {
+      return get(/databases/$(database)/documents/config/privacyMigration).data.get('ready', false) == true;
+    }
 
     // ── ユーザープロフィール ──
     // 読めるのは本人だけ（本名・メールアドレス・ブロックリストを含むため）。
     // name＝本名（本人と運営だけ）、nickname＝ほかの人に表示する名前。
     // 本人が変えられるのは下の項目だけ。「本人確認済み（verified）」は運営だけが付ける。
-    // ＆ポイントは本人の操作では減る（手渡す）ことしかできない。
+    // ＆ポイントは wallets の原子送金だけで動かす。旧 points は本人から変更できない。
     match /users/{uid} {
       function changed() { return incoming().diff(resource.data).affectedKeys(); }
       function ifChanged(key, ok) { return !(key in changed()) || ok; }
@@ -40,7 +65,7 @@ service cloud.firestore {
         && optStr('orgName', 60) && optStr('bio', 200) && optStr('email', 254);
       allow update: if isMe(uid)
         && changed().hasOnly(['name', 'nickname', 'bio', 'verifyRequested', 'verifyRequestedAt',
-                              'gateOverrideUntil', 'blocked', 'points'])
+                              'gateOverrideUntil', 'blocked'])
         && ifChanged('name', str(incoming().name, 40) && incoming().name.size() > 0)
         && ifChanged('nickname', str(incoming().nickname, 20) && incoming().nickname.size() > 0)
         && ifChanged('bio', str(incoming().bio, 200))
@@ -49,10 +74,7 @@ service cloud.firestore {
         // 本人による「お礼の確認のおやすみ」は最長24時間（＋端末の時計のずれ1時間）
         && ifChanged('gateOverrideUntil', incoming().gateOverrideUntil is number
              && incoming().gateOverrideUntil <= request.time.toMillis() + 25 * 3600 * 1000)
-        && ifChanged('blocked', incoming().blocked is map)
-        // 登録時は 300pt（アプリの初期値）。本人の操作では増やせない
-        && ifChanged('points', incoming().points is int && incoming().points >= 0
-             && incoming().points <= resource.data.get('points', 300));
+        && ifChanged('blocked', incoming().blocked is map);
       allow delete: if isMe(uid);   // 退会
     }
 
@@ -67,9 +89,7 @@ service cloud.firestore {
     //   ※ 本人がブロックしている人は読めない
     match /profiles/{uid} {
       function ownerAfter() { return getAfter(/databases/$(database)/documents/users/$(uid)).data; }
-      function pairId(a, b) { return a < b ? a + '_' + b : b + '_' + a; }
-      function convPath() { return /databases/$(database)/documents/conversations/$(pairId(request.auth.uid, uid)); }
-      function seesViaConv() { return exists(convPath()) && !(uid in get(convPath()).data.get('masked', [])); }
+      function seesViaConv() { return safePair(request.auth.uid, uid); }
       function notBlocked() {
         return !(request.auth.uid in get(/databases/$(database)/documents/users/$(uid)).data.get('blocked', {}));
       }
@@ -92,8 +112,17 @@ service cloud.firestore {
     }
 
     // ── 支援・受援の投稿（ついで／困っていること／できること札）──
-    // ログイン者は全員閲覧可。作成・編集・削除は投稿者本人のみ。
+    // 名前つき投稿はログイン者が閲覧可。旧匿名投稿は本人だけ閲覧・取り下げ可。
     match /posts/{postId} {
+      // 自動IDと、英数字・ハイフン・下線のIDだけを新規作成に使う。
+      // 既存データの読み出し・編集・削除は別に扱い、安全な画面から整理できる。
+      function safeNewPostId() { return postId.matches('[A-Za-z0-9_-]{1,120}'); }
+      function categoriesOk(c) {
+        return c is list && c.size() <= 20
+          && c.hasOnly(['買い物', '移動・送迎', '家事・育児', '話し相手', '貸し借り',
+                        '老老介護', 'ひとり親', 'ヤングケアラー', '通院付き添い',
+                        '学習サポート', '防災・見回り', '貸し借り・共同作業']);
+      }
       function postFieldsOk(d) {
         return d.type in ['tsuide', 'need', 'can']
           && str(d.title, 60) && d.title.size() > 0
@@ -101,61 +130,79 @@ service cloud.firestore {
           && str(d.pref, 10)
           && str(d.area, 40);
       }
-      allow read: if signedIn();
+      // 匿名機能の整備中は、以前の匿名投稿を投稿者本人だけが読める。
+      // 一般の一覧は anon == false で絞る。本人の uid == auth.uid の一覧も使える。
+      allow read: if signedIn() && (resource.data.get('anon', true) == false || resource.data.uid == request.auth.uid);
       allow create: if signedIn()
+        && safeNewPostId()
         && incoming().uid == request.auth.uid
         && incoming().keys().hasOnly(['type', 'title', 'detail', 'categories', 'pref', 'area',
                                       'when', 'anon', 'uid', 'authorName', 'createdAt'])
         && postFieldsOk(incoming())
-        && incoming().categories is list && incoming().categories.size() <= 20
+        && categoriesOk(incoming().categories)
         && str(incoming().when, 40)
-        && incoming().anon is bool
+        && incoming().anon == false
         && str(incoming().authorName, 60)
         && stampedNow('createdAt');
       allow update: if signedIn()
         && resource.data.uid == request.auth.uid
+        && resource.data.get('anon', true) == false
         && ((incoming().diff(resource.data).affectedKeys().hasOnly(['type', 'title', 'detail', 'pref', 'area'])
              && postFieldsOk(incoming()))
-            // 表示名（ニックネーム）の変更をこれまでの投稿にそろえる。名前を伏せた投稿は空にしかできない
+            // 名前つき投稿の表示名（ニックネーム）をそろえる。
             || (incoming().diff(resource.data).affectedKeys().hasOnly(['authorName'])
-                && str(incoming().authorName, 60)
-                && (resource.data.get('anon', false) != true || incoming().authorName == '')));
+                && str(incoming().authorName, 60)));
       allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
     // ── 会話（メッセージスレッド）──
-    // 参加者（会話IDに含まれる2人）だけが閲覧・作成・更新できる。
-    // masked＝名前を伏せている人（名前を伏せた頼みごとから始まった会話で、頼んだ人）。
+    // 安全な通常会話だけを、参加者（会話IDに含まれる2人）が閲覧・作成・更新できる。
+    // 旧匿名会話は privacySafe が false または未設定のまま運営限定で保持する。
     match /conversations/{cid} {
       function convOk() {
-        return incoming().keys().hasOnly(['participants', 'names', 'lastMessage', 'lastSender', 'updatedAt', 'masked'])
-          && (!('masked' in incoming())
-              || (incoming().masked is list && incoming().masked.size() <= 2
-                  && incoming().participants.hasAll(incoming().masked)))
+        return incoming().keys().hasOnly(['participants', 'names', 'lastMessage', 'lastSender', 'updatedAt', 'masked', 'privacySafe'])
+          && incoming().privacySafe == true
+          && incoming().get('masked', []) == []
           && incoming().participants is list
           && incoming().participants.size() == 2
           && incoming().participants.hasOnly(convMembers(cid))
           && convMembers(cid).hasOnly(incoming().participants)
+          && incoming().names is map
+          && incoming().names.keys().hasOnly(incoming().participants)
+          && str(incoming().names[incoming().participants[0]], 60)
+          && incoming().names[incoming().participants[0]].size() > 0
+          && str(incoming().names[incoming().participants[1]], 60)
+          && incoming().names[incoming().participants[1]].size() > 0
           && request.auth.uid in incoming().participants
           && incoming().lastSender == request.auth.uid
           && str(incoming().lastMessage, 500)
           && stampedNow('updatedAt');
       }
-      allow read: if signedIn() && request.auth.uid in resource.data.participants;
-      allow create: if signedIn() && convOk();
+      // 新規会話の存在確認だけは空の結果を返す。旧メッセージの購読権限は与えない。
+      allow get: if signedIn()
+        && ((!exists(/databases/$(database)/documents/conversations/$(cid)) && request.auth.uid in convMembers(cid))
+            || (safeConv(cid) && request.auth.uid in resource.data.participants));
+      allow list: if signedIn() && privacyReady() && resource.data.get('privacySafe', false) == true
+        && request.auth.uid in resource.data.participants;
+      allow create: if signedIn() && privacyReady() && convOk()
+        && legacyPairPermits(incoming().participants[0], incoming().participants[1])
+        && cid == 'v2_' + pairId(incoming().participants[0], incoming().participants[1]);
       // 伏せる設定を外せるのは本人だけ（相手が勝手に外して本名を書かせることはできない）
       function keepsOthersMask() {
         return incoming().get('masked', []).hasAll(resource.data.get('masked', []).removeAll([request.auth.uid]));
       }
-      allow update: if signedIn() && request.auth.uid in resource.data.participants && convOk() && keepsOthersMask();
+      allow update: if signedIn() && privacyReady() && resource.data.get('privacySafe', false) == true
+        && request.auth.uid in resource.data.participants && convOk() && keepsOthersMask()
+        && legacyPairPermits(incoming().participants[0], incoming().participants[1]);
 
       // ── 個々のメッセージ ──
-      // 参加者だけが閲覧できる。会話がまだ無い（はじめての相手）ときも、
-      // 空の一覧を読めるように、会話ドキュメントではなく会話IDで判定する。
+      // 安全な親会話と参加者を確認する。親だけ削除された旧匿名メッセージも公開しない。
+      // 初回は親の通常会話を作成してからメッセージを購読する。
       // 送信は本人（senderId==自分）かつ参加者のみ。編集・削除はできない。
       match /messages/{mid} {
-        allow read: if signedIn() && request.auth.uid in convMembers(cid);
+        allow read: if signedIn() && safeConv(cid) && request.auth.uid in convMembers(cid);
         allow create: if signedIn()
+          && safeConv(cid)
           && request.auth.uid in convMembers(cid)
           && incoming().keys().hasOnly(['senderId', 'text', 'createdAt'])
           && incoming().senderId == request.auth.uid
@@ -164,32 +211,112 @@ service cloud.firestore {
       }
     }
 
+    // ── ＆ポイントの確定残高 ──
+    // 本人だけが残高を読める。相手への加算は感謝と同一保存のときだけ。
+    // walletは削除不可。退会後にusersを再作成しても300ptを再配布しない。
+    function walletPath(uid) { return /databases/$(database)/documents/wallets/$(uid); }
+    function walletOk(d) {
+      return d.keys().hasOnly(['balance', 'version', 'lastTransfer', 'updatedAt'])
+        && d.balance is int && d.balance >= -1000000000000 && d.balance <= 1000000000000
+        && d.version == 1 && str(d.lastTransfer, 1500);
+    }
+    function transferBalancesOk(id, t) {
+      let beforeFrom = get(walletPath(t.fromUid)).data;
+      let beforeTo = get(walletPath(t.toUid)).data;
+      let afterFrom = getAfter(walletPath(t.fromUid)).data;
+      let afterTo = getAfter(walletPath(t.toUid)).data;
+      return walletOk(beforeFrom) && walletOk(beforeTo)
+        && walletOk(afterFrom) && walletOk(afterTo)
+        && beforeFrom.balance >= t.points
+        && afterFrom.balance == beforeFrom.balance - t.points
+        && afterTo.balance == beforeTo.balance + t.points
+        && afterFrom.lastTransfer == id && afterTo.lastTransfer == id
+        && afterFrom.updatedAt == request.time && afterTo.updatedAt == request.time;
+    }
+    match /wallets/{uid} {
+      allow read: if isMe(uid);
+      allow create: if isMe(uid) && walletOk(incoming())
+        && incoming().balance == 300 && incoming().lastTransfer == ''
+        && stampedNow('updatedAt')
+        && get(/databases/$(database)/documents/config/pointsLedger).data.ready == true
+        && !exists(/databases/$(database)/documents/pointsGrants/$(uid))
+        && getAfter(/databases/$(database)/documents/pointsGrants/$(uid)).data.amount == 300
+        && !exists(/databases/$(database)/documents/users/$(uid))
+        && getAfter(/databases/$(database)/documents/users/$(uid)).data.createdAt == request.time;
+      function withNewTransfer() {
+        let id = incoming().lastTransfer;
+        let path = /databases/$(database)/documents/thanks/$(id);
+        let t = getAfter(path).data;
+        return id.size() > 0 && !exists(path)
+          && t.fromUid == request.auth.uid && t.toUid != t.fromUid
+          && t.points in [30, 50, 100]
+          && uid in [t.fromUid, t.toUid]
+          && incoming().balance == resource.data.balance + (uid == t.fromUid ? -t.points : t.points);
+      }
+      allow update: if signedIn() && walletOk(incoming()) && stampedNow('updatedAt')
+        && incoming().diff(resource.data).affectedKeys().hasOnly(['balance', 'lastTransfer', 'updatedAt'])
+        && withNewTransfer();
+      // create/update以外（削除）は許可しない。
+    }
+    // 初回配布の履歴も削除不可。再登録や移行再実行で配布し直さない。
+    match /pointsGrants/{uid} {
+      allow read: if isMe(uid);
+      allow create: if isMe(uid)
+        && incoming().keys().hasOnly(['version', 'amount', 'createdAt'])
+        && incoming().version == 1 && incoming().amount == 300 && stampedNow('createdAt')
+        && get(/databases/$(database)/documents/config/pointsLedger).data.ready == true
+        && !exists(/databases/$(database)/documents/users/$(uid))
+        && !exists(walletPath(uid))
+        && getAfter(walletPath(uid)).data.balance == 300
+        && getAfter(walletPath(uid)).data.lastTransfer == '';
+    }
+
     // ── 感謝（ありがとう・＆ポイントの手渡し）──
     // 贈った本人と受け取った本人だけが読める。自分から自分へは贈れない。一度贈ったら変更・削除できない。
     match /thanks/{id} {
+      function safeNamedConversation(cid) {
+        let path = /databases/$(database)/documents/conversations/$(cid);
+        return privacyReady() && exists(path) && get(path).data.get('privacySafe', false) == true
+          && get(path).data.get('masked', []).size() == 0;
+      }
+      function namedPairOk() {
+        let pair = request.auth.uid < incoming().toUid
+          ? request.auth.uid + '_' + incoming().toUid : incoming().toUid + '_' + request.auth.uid;
+        return incoming().pairKey == pair && legacyPairPermits(request.auth.uid, incoming().toUid)
+          && (safeNamedConversation(pair) || safeNamedConversation('v2_' + pair));
+      }
       allow read: if signedIn()
+        && privacyReady() && resource.data.get('privacySafe', false) == true
         && (resource.data.toUid == request.auth.uid || resource.data.fromUid == request.auth.uid);
       allow create: if signedIn()
         && incoming().keys().hasOnly(['fromUid', 'fromName', 'toUid', 'toName', 'postId', 'dealId',
-                                      'pairKey', 'disaster', 'tags', 'note', 'points', 'createdAt'])
+                                      'pairKey', 'disaster', 'tags', 'note', 'points', 'createdAt', 'ledgerVersion', 'privacySafe'])
         && incoming().fromUid == request.auth.uid
         && incoming().toUid is string && incoming().toUid != request.auth.uid
+        && incoming().get('privacySafe', false) == true && namedPairOk()
         && incoming().tags is list && incoming().tags.size() >= 1 && incoming().tags.size() <= 5
         && str(incoming().note, 200)
         && incoming().points in [0, 30, 50, 100]
-        && stampedNow('createdAt');
+        && stampedNow('createdAt')
+        // 0pt感謝は移行前でも使える。正の送金には財布2件の同時更新が必須。
+        && (incoming().points == 0 || (incoming().get('ledgerVersion', 0) == 1
+             && get(/databases/$(database)/documents/config/pointsLedger).data.ready == true
+             && transferBalancesOk(id, incoming())));
     }
 
     // ── 支え合いの記録（「終わりました」）──
     // 当事者の2人だけが読める。記録した本人が参加者に含まれていること。
     match /deals/{id} {
-      allow read: if signedIn() && request.auth.uid in resource.data.participants;
+      allow read: if signedIn() && privacyReady() && resource.data.get('privacySafe', false) == true
+        && request.auth.uid in resource.data.participants;
       allow create: if signedIn()
-        && incoming().keys().hasOnly(['participants', 'byUid', 'byName', 'otherName', 'title', 'disaster', 'createdAt'])
+        && incoming().keys().hasOnly(['participants', 'byUid', 'byName', 'otherName', 'title', 'disaster', 'createdAt', 'privacySafe'])
+        && incoming().privacySafe == true
         && incoming().byUid == request.auth.uid
         && incoming().participants is list && incoming().participants.size() == 2
         && request.auth.uid in incoming().participants
         && incoming().participants[0] != incoming().participants[1]
+        && safePair(incoming().participants[0], incoming().participants[1])
         && stampedNow('createdAt');
     }
 
