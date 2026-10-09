@@ -8,7 +8,7 @@ export async function run(browser) {
   const bUid = await signupAndLogin(B, '馬場 一郎', 'bob@example.com', 'password-b1', 'いちろう');
   const aShown = await A.evaluate(() => currentProfile.nickname || currentProfile.name);
 
-  // Alice：名前を伏せて「困っていること」／できること札
+  // Alice：名前を伏せて「頼みたい」／できること札
   await clearToasts(A);
   await A.evaluate(() => {
     openPostWith('need');

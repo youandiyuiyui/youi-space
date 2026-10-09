@@ -72,8 +72,8 @@ await t('users: 他人を削除', 'deny', () => deleteDoc(doc(as(A), 'users', B)
 
 // ===== posts =====
 await t('posts: 掲示板を読む（新しい順50件）', 'allow', () => getDocs(query(collection(as(A), 'posts'), orderBy('createdAt', 'desc'), limit(50))));
-await t('posts: 「ついで」を投稿', 'allow', () => addDoc(collection(as(A), 'posts'), postDoc(A)));
-await t('posts: 名前を伏せて「困っていること」を投稿', 'allow', () => addDoc(collection(as(A), 'posts'), postDoc(A, { type: 'need', when: '', anon: true, pref: '', area: '' })));
+await t('posts: 「支えたい」を投稿', 'allow', () => addDoc(collection(as(A), 'posts'), postDoc(A)));
+await t('posts: 名前を伏せて「頼みたい」を投稿', 'allow', () => addDoc(collection(as(A), 'posts'), postDoc(A, { type: 'need', when: '', anon: true, pref: '', area: '' })));
 await t('posts: できること札を登録', 'allow', () => addDoc(collection(as(A), 'posts'), postDoc(A, { type: 'can', categories: [], when: '' })));
 await t('posts: 自分の投稿を編集', 'allow', () => updateDoc(doc(as(A), 'posts', 'pA'), { type: 'need', title: '編集後', detail: 'x', pref: '大阪府', area: '茨木市' }));
 await t('posts: 自分の投稿を削除', 'allow', () => deleteDoc(doc(as(A), 'posts', 'pA')));

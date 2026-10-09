@@ -91,7 +91,7 @@ service cloud.firestore {
       allow delete: if isMe(uid);   // 退会
     }
 
-    // ── 支援・受援の投稿（ついで／困っていること／できること札）──
+    // ── 支援・受援の投稿（支えたい／頼みたい／できること札）──
     // ログイン者は全員閲覧可。作成・編集・削除は投稿者本人のみ。
     match /posts/{postId} {
       function postFieldsOk(d) {
