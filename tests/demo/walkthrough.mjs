@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const APP = path.resolve(HERE, '../../index.html');
+const APP = path.resolve(HERE, '../../legacy.html');
 const LEAFLET = path.resolve(HERE, '../node_modules/leaflet/dist');
 const steps = JSON.parse(fs.readFileSync(path.join(HERE, 'steps.json'), 'utf8'));
 const SHOTS = process.env.SHOTS;
