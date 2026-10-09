@@ -1,5 +1,5 @@
 // 通し確認（E2E）の共通部品。
-// 実際の legacy.html を Auth・Firestore エミュレーターにつないで、Chromium で操作する。
+// 実際の index.html を Auth・Firestore エミュレーターにつないで、Chromium で操作する。
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
@@ -10,18 +10,18 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const TESTS = path.resolve(HERE, '..');
 export const REPO = path.resolve(TESTS, '..');
 const NM = path.join(TESTS, 'node_modules');
-const PROJECT = 'you-i-space';   // legacy.html の firebaseConfig.projectId
-const URL = 'http://localhost:5555/legacy.html';
+const PROJECT = 'you-i-space';   // index.html の firebaseConfig.projectId
+const URL = 'http://localhost:5555/index.html';
 
 export const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 /* アプリを読み込み、Firebase の接続先をエミュレーターに差し替える */
 export function loadApp(html) {
   const out = html.replace('fbReady=true;', "fbReady=true; fbAuth.useEmulator('http://127.0.0.1:9099',{disableWarnings:true}); fbDb.useEmulator('127.0.0.1',8080);");
-  if (out === html) throw new Error('legacy.html にエミュレーター接続を差し込めませんでした（fbReady=true; が見つからない）');
+  if (out === html) throw new Error('index.html にエミュレーター接続を差し込めませんでした（fbReady=true; が見つからない）');
   return out;
 }
-export const currentApp = () => loadApp(fs.readFileSync(path.join(REPO, 'legacy.html'), 'utf8'));
+export const currentApp = () => loadApp(fs.readFileSync(path.join(REPO, 'index.html'), 'utf8'));
 /* ニックネーム導入前のアプリ（v0.5.0）。移行の確認に使う。取り出せなければ null */
 export const OLD_APP_COMMIT = '13bd66e';
 export function oldApp() {
