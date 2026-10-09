@@ -3,10 +3,11 @@
   "private": true,
   "description": "You&i Space のルールの単体テスト・通し確認（エミュレーター）・デモの通し操作",
   "scripts": {
-    "test": "npm run test:rules && npm run test:e2e && npm run test:demo",
+    "test": "npm run test:rules && npm run test:e2e && npm run test:demo && npm run test:pilot",
     "test:rules": "firebase emulators:exec --only firestore --project demo-youi \"node rules.test.mjs\"",
     "test:e2e": "firebase emulators:exec --only auth,firestore --project demo-youi \"node e2e/run.mjs\"",
-    "test:demo": "node demo/walkthrough.mjs"
+    "test:demo": "node demo/walkthrough.mjs",
+    "test:pilot": "node --test pilot-economy.test.cjs && node demo/pilot-walkthrough.mjs"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.2",
