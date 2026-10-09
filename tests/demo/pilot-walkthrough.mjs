@@ -14,7 +14,7 @@ const KEY = 'youi_pilot_20261008_v1';
 const SHOTS = process.env.SHOTS;
 if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
 const files = new Map([
-  ['/demo.html', 'text/html'], ['/pilot-demo.js', 'application/javascript'],
+  ['/index.html', 'text/html'], ['/demo.html', 'text/html'], ['/pilot-demo.js', 'application/javascript'],
   ['/pilot-economy.js', 'application/javascript'], ['/pilot-demo.css', 'text/css']
 ]);
 const server = http.createServer((request, response) => {
@@ -33,12 +33,12 @@ const selector = (action, more = '') => `[data-action="${action}"]${more}`;
 const click = (page, action, more = '') => page.locator(selector(action, more)).first().click();
 const saved = page => page.evaluate(key => JSON.parse(localStorage.getItem(key)), KEY);
 const current = s => s.activities.find(a => a.id === s.activeActivityId);
-async function newPage(context, width = 390) {
+async function newPage(context, width = 390, entry = 'index.html') {
   const page = await context.newPage();
   await page.setViewportSize({ width, height: width < 720 ? 844 : 1000 });
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
-  await page.goto(origin + '/demo.html');
+  await page.goto(origin + '/' + entry);
   return page;
 }
 async function context() {
@@ -114,6 +114,9 @@ try {
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   const primary = await context();
   const page = await newPage(primary);
+  assert.equal(await page.locator('script[src*="firebase"]').count(), 0);
+  assert.equal(await page.locator('a[href="legacy.html"]').count(), 1);
+  await snapshot(page, '00-onboard-small', 320);
   await snapshot(page, '01-onboard-mobile');
   await snapshot(page, '02-onboard-desktop', 1440);
   await register(page);
@@ -122,7 +125,31 @@ try {
   await snapshot(page, '04-explore-desktop', 1440);
   checks.push('登録0pt・入力は文字として表示');
 
+  await click(page, 'explore-role', '[data-role="receiver"]');
+  assert.equal(await page.locator(selector('create', '[data-role="provider"]')).count(), 0);
+  assert.equal(await page.locator(selector('create', '[data-role="receiver"]')).count(), 3);
+  await page.locator('#duration-filter').selectOption('30分');
+  assert.equal(await page.locator('.activity-card').count(), 1);
+  await click(page, 'category', '[data-category="cleanup"]');
+  assert.equal(await page.locator('.activity-card').count(), 0);
+  assert.match(await page.locator('#app').innerText(), /条件に合う活動がありません/);
+  await click(page, 'clear-filters');
+  assert.equal(await page.locator('.activity-card').count(), 3);
+  await click(page, 'explore-role', '[data-role="both"]');
+  await click(page, 'create', '[data-scenario="talk"][data-role="provider"]');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('dialog[open]').count(), 0);
+  assert.equal(await page.evaluate(() => document.activeElement.dataset.action), 'create');
+  await snapshot(page, '04a-explore-small', 320);
+  checks.push('関わり方・時間・種類で絞り込み、0件から解除、キーボードで画面に戻れる');
+
   await create(page, 'talk', 'receiver');
+  const activeId = current((await saved(page)).state).id;
+  await click(page, 'nav', '[data-view="explore"]');
+  assert.match(await page.locator('.resume-card').innerText(), /完了を確認/);
+  await page.locator('.resume-card').click();
+  assert.equal(current((await saved(page)).state).id, activeId);
+  await snapshot(page, '04b-activity-detail-mobile');
   await complete(page);
   assert.equal((await saved(page)).state.actors.me.balance, 10);
   await pair(page, 'partner', 'me');
@@ -196,7 +223,8 @@ try {
   assert.equal((await saved(page)).state.actors.me.balance, 30);
   checks.push('商品とSpace体験を交換・消却し、取消で残高/枠返還、再読込保持');
 
-  const mirrored = await newPage(primary);
+  const mirrored = await newPage(primary, 390, 'demo.html');
+  assert.equal((await saved(mirrored)).state.actors.me.balance, 30, '旧デモURLと新ホームは同じ記録を使う');
   await click(page, 'reset');
   await click(page, 'reset-confirm');
   await mirrored.locator('[data-form="register"]').waitFor();
@@ -230,9 +258,19 @@ try {
   checks.push('学校/清掃主催は団体へ各10pt・中断確認と取消で発行枠を解放');
   await organizer.close();
 
+  const starter = await context();
+  const first = await newPage(starter);
+  await first.locator('[name="role"][value="receiver"]').check();
+  await register(first);
+  assert.equal(await first.locator(selector('create', '[data-role="provider"]')).count(), 0);
+  await first.locator('.wallet-mini').click();
+  assert.match(await first.locator('#app').innerText(), /次の楽しみを/);
+  await starter.close();
+  checks.push('最初に選んだ立場をホームに反映し、残高カードからポイントへ移動');
+
   assert.deepEqual(errors, [], '画面のJavaScript/consoleエラーなし');
   assert.deepEqual(external, [], '外部通信の要求なし');
-  console.log('OK   新デモ: ' + checks.length + '項目・390px/1440pxで確認、JSエラー0・外部通信0\n' + checks.map(text => '- ' + text).join('\n'));
+  console.log('OK   新ホーム: ' + checks.length + '項目・320px/390px/1440pxで確認、JSエラー0・外部通信0\n' + checks.map(text => '- ' + text).join('\n'));
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));

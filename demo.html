@@ -3,25 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f3f8">
-  <meta name="description" content="話し相手、部活動の補助、地域の清掃。You&i Spaceの支え合いと、評価・＆ポイントを体験するデモです。">
-  <title>You&i Space｜支え合いを体験する</title>
+  <meta name="theme-color" content="#f7f5f2">
+  <title>You&i Space｜支える日も、頼る日も。</title>
+  <meta name="description" content="話し相手、部活動の補助、まちの清掃。支え合いから、＆ポイントと次の機会へ。You&i Spaceの新しい仕組みを体験できます。">
+  <meta property="og:title" content="You&i Space｜支える日も、頼る日も。">
+  <meta property="og:description" content="残高0でも頼れる。活動の達成を双方のポイントと経験につなげる、3つの支え合いの体験デモ。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://youandiyuiyui.github.io/youi-space/">
+  <meta property="og:image" content="https://youandiyuiyui.github.io/youi-website/ogp-space.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="pilot-demo.css">
   <script src="pilot-economy.js" defer></script>
   <script src="pilot-demo.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#app">本文へ進む</a>
   <header class="site-header">
-    <a class="brand" href="demo.html" aria-label="You&i Space ホーム"><svg viewBox="0 0 60 42" aria-hidden="true"><circle cx="22" cy="21" r="16"/><circle cx="39" cy="21" r="16"/></svg><span>You<span class="amp">&</span>i <em>Space</em></span></a>
-    <span class="demo-label">体験デモ <small>2026.10</small></span>
+    <a class="brand" href="index.html" aria-label="You&i Space ホーム"><svg viewBox="0 0 64 48" aria-hidden="true"><defs><linearGradient id="logo-lav" x2="1" y2="1"><stop stop-color="#b8afd6"/><stop offset="1" stop-color="#d59caa"/></linearGradient><linearGradient id="logo-sage" x2="1" y2="1"><stop stop-color="#7ab0c4"/><stop offset="1" stop-color="#a8bd94"/></linearGradient></defs><circle cx="23" cy="24" r="17" stroke="url(#logo-lav)"/><circle cx="42" cy="24" r="17" stroke="url(#logo-sage)"/></svg><span>You<span class="amp">&</span>i <em>Space</em></span></a>
+    <div class="header-actions"><button type="button" class="text-button" data-action="guide">仕組みを知る</button><span class="demo-label"><span aria-hidden="true"></span>体験デモ</span></div>
   </header>
-  <div class="demo-notice">架空の人物・活動・特典を使います。記録はこの端末内だけに保存され、実際の申込み・配布・交換は行われません。</div>
+  <div class="demo-notice">架空の活動・ポイントを使うデモです。記録はこの端末内だけに保存され、実際の申込み・配布・交換は行われません。</div>
   <main id="app" tabindex="-1"></main>
   <nav class="app-nav" aria-label="メインメニュー" id="app-nav" hidden></nav>
   <div id="toast" role="status" aria-live="polite"></div>
   <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
-  <footer class="site-footer">You&i Space v0.6.0 · 支援を善意で終わらせない<br><a href="index.html">従来の実証アプリへ（旧制度）</a></footer>
-  <noscript>このデモを体験するにはJavaScriptを有効にしてください。</noscript>
+  <footer class="site-footer"><span class="footer-brand">You&i Space</span><p>支援を善意で終わらせない、支援者支援のプラットフォーム</p><a href="legacy.html">既存の実証アカウントでログイン（旧制度）</a><small>体験デモ v0.6.1</small></footer>
+  <noscript><p class="panel">この体験にはJavaScriptが必要です。有効にして再度開いてください。</p></noscript>
 </body>
 </html>
