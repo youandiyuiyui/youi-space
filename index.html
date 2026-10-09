@@ -598,6 +598,47 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 .info-box-h{font-size:.82rem;font-weight:600;margin-bottom:4px}
 .info-box-b{font-size:.74rem;color:var(--tl);line-height:1.85}
 
+/* 新しい仕組み（ゲストのデモ）：活動の流れ・＆ポイント・3つの記録 */
+.eco-card{background:linear-gradient(135deg,rgba(158,202,216,.2),rgba(184,175,214,.2));border-color:rgba(158,202,216,.42)}
+.eco-card .care-eyebrow{color:#3f7f92}
+.eco-steps{display:flex;gap:4px;margin:4px 0 14px}
+.eco-step{flex:1;font-size:.58rem;line-height:1.4;text-align:center;padding:6px 2px;border-radius:8px;background:rgba(184,175,214,.1);color:var(--tl)}
+.eco-step.done{background:rgba(168,196,176,.3);color:#4f8a60;font-weight:600}
+.eco-step.now{background:var(--lav);color:#fff;font-weight:600}
+.eco-h{font-size:.92rem;font-weight:600;margin:4px 0 6px}
+.eco-sub{font-size:.76rem;color:var(--tl);line-height:1.85;margin-bottom:12px}
+.eco-check{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;font-size:.8rem;line-height:1.7;cursor:pointer;background:#fff}
+.eco-check input{margin-top:5px;accent-color:var(--lav);flex-shrink:0}
+.eco-note{font-size:.72rem;color:var(--tl);line-height:1.85;background:rgba(184,175,214,.08);border-radius:12px;padding:10px 13px;margin-top:12px}
+.eco-ok{font-size:.8rem;color:#3f6f4c;line-height:1.85;background:rgba(168,196,176,.22);border-radius:12px;padding:11px 13px;margin-bottom:12px}
+.eco-wait{font-size:.8rem;color:#5d4d8c;line-height:1.85;background:rgba(184,175,214,.16);border-radius:12px;padding:11px 13px;margin-bottom:12px}
+.eco-demo{border:1px dashed rgba(184,175,214,.65);border-radius:12px;padding:10px 12px;margin-top:12px}
+.eco-demo-h{font-size:.66rem;color:var(--lav3);font-weight:600;letter-spacing:.06em;margin-bottom:4px}
+.eco-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid rgba(184,175,214,.12);font-size:.8rem;line-height:1.6}
+.eco-row:last-child{border-bottom:none}
+.eco-row .kai-read{margin:0;flex-shrink:0}
+.kai-read:disabled{opacity:.5;cursor:default}
+.btn-primary:disabled{opacity:.45;cursor:default;box-shadow:none}
+.eco-two{display:flex;gap:9px;margin-top:9px}
+.eco-two .btn-secondary,.eco-two .btn-primary{padding:12px 8px;font-size:.8rem}
+.eco-dl{font-size:.78rem;line-height:1.8}
+.eco-dl div{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid rgba(184,175,214,.1)}
+.eco-dl b{color:var(--tl);font-weight:500;min-width:84px;font-size:.72rem;flex-shrink:0}
+.eco-tag{display:inline-block;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(158,202,216,.32);color:#3f7f92;white-space:nowrap;margin:0 4px 0 0}
+.eco-tag.fit{background:rgba(168,196,176,.34);color:#4f8a60}
+.eco-tag.mute{background:rgba(184,175,214,.16);color:var(--tl);font-weight:500}
+.eco-rec{padding:11px 0;border-bottom:1px solid rgba(184,175,214,.12)}
+.eco-rec:last-child{border-bottom:none}
+.eco-rec-h{font-size:.84rem;font-weight:600}
+.eco-rec-sub{font-size:.7rem;color:var(--tl);line-height:1.7;margin:2px 0 6px}
+.eco-kv{display:flex;justify-content:space-between;gap:10px;font-size:.78rem;padding:3px 0}
+.eco-kv span:last-child{font-weight:600;white-space:nowrap}
+.eco-opp{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 13px;margin-bottom:8px}
+.eco-select{width:100%;padding:10px 12px;border:1px solid rgba(184,175,214,.35);border-radius:10px;background:#fff;font-family:inherit;font-size:.82rem;color:var(--ink);margin:5px 0 13px}
+.eco-label{font-size:.78rem;font-weight:600;display:block}
+.eco-stock{font-size:.64rem;color:var(--tl);margin-top:4px}
+.rew-card.off{opacity:.55}
+
 /* Toast */
 .toast{position:absolute;bottom:90px;left:20px;right:20px;background:rgba(40,42,53,.94);backdrop-filter:blur(20px);color:#fff;padding:11px 18px;border-radius:12px;font-size:.82rem;text-align:center;z-index:300;opacity:0;pointer-events:none;transition:all .3s}
 .toast.show{opacity:1;transform:translateY(-6px)}
@@ -828,6 +869,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 
   <!-- 支える人への声かけ（支援者支援：頼る回路を、こちらから作りに行く） -->
   <div id="care-card" class="care-card" style="display:none"></div>
+  <!-- 新しい仕組み（ゲストのデモ）：進行中の活動／最初の実証の3つの活動 -->
+  <div id="eco-card" class="care-card eco-card demo-only" style="display:none"></div>
 
   <div class="main-tabs">
     <button class="main-tab on" onclick="switchMainTab(this,'list')"><svg class="ic"><use href="#i-users"/></svg>支えたい</button>
@@ -860,7 +903,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">みさこ <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：話し相手</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">老老介護</span>
@@ -879,7 +922,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">まえけん <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：清掃活動</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag skill">買い物代行</span>
@@ -898,7 +941,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">ちなつ <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust"><span class="stage-chip">結い手</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：部活補助</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag parent">子育て支援</span>
@@ -920,7 +963,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">けん</div>
-            <div class="prov-trust"><span class="stage-chip">あわじ結び</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：部活補助</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag young">ヤングケアラー支援</span>
@@ -939,7 +982,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">ゆみ</div>
-            <div class="prov-trust"><span class="stage-chip">梅結び</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：話し相手</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">老老介護</span>
@@ -959,7 +1002,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">まり</div>
-            <div class="prov-trust"><span class="stage-chip">結い手</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：話し相手</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag parent">ひとり親支援</span>
@@ -982,7 +1025,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">たいち</div>
-            <div class="prov-trust"><span class="stage-chip">あわじ結び</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：清掃活動</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag skill">買い物代行</span>
@@ -1001,7 +1044,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">ひでき</div>
-            <div class="prov-trust"><span class="stage-chip">ひと結び</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：清掃活動</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">多目的支援</span>
@@ -1056,6 +1099,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>頼みたい</b><small>助けてほしいことを伝える</small></div>
     </div>
     <div id="pt-hint" style="font-size:.74rem;color:var(--lav3);line-height:1.8;background:rgba(184,175,214,.1);border-radius:12px;padding:11px 14px;margin-bottom:20px"></div>
+    <div class="demo-only" style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-10px 0 18px">最初の実証で、運営の確認と＆ポイントの発行の対象になるのは「話し相手」「部活補助」「清掃活動」の3つです。部活補助と清掃活動は、学校・主催団体が頼みます。それ以外のことも、メッセージで相談できます。</div>
     <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物のついでに寄れます"></div>
     <div class="post-field" id="post-when-field" style="display:none"><label class="post-label">いつ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-when" maxlength="40" placeholder="例：今日15時ごろ／土曜の午前／平日の夕方なら"></div>
     <div class="post-field"><label class="post-label">地域 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（大まかで大丈夫です）</span></label>
@@ -1251,8 +1295,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="notif-item unread" onclick="navTo('profile')">
       <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-heart"/></svg></div>
       <div class="notif-body">
-        <div class="notif-title">今週、4人からありがとうが届きました</div>
-        <div class="notif-desc">「ていねいだった」「安心できた」など。誰から届いたかは表示しません。</div>
+        <div class="notif-title">振り返りが表示されました</div>
+        <div class="notif-desc">かずこさんとの「話し相手」。おたがいに答えたので、相手の振り返りが見られます。</div>
         <div class="notif-time">今朝 08:00</div>
       </div>
     </div>
@@ -1269,7 +1313,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="notif-illust"><svg class="ic" style="width:18px;height:18px"><use href="#i-location"/></svg></div>
       <div class="notif-body">
         <div class="notif-title">あなたの「できること札」に近い頼みごとがあります</div>
-        <div class="notif-desc">高槻市 ○○町・介護の合間の話し相手</div>
+        <div class="notif-desc">高槻市 ○○町・介護の合間に、母の話し相手を30分</div>
         <div class="notif-time">2日前</div>
       </div>
     </div>
@@ -1284,9 +1328,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="notif-item" onclick="navTo('rewards')">
       <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-gift"/></svg></div>
       <div class="notif-body">
-        <div class="notif-title">＆ポイントの引き換え完了</div>
-        <div class="notif-desc">（例）まちかどカフェ クーポン（−500＆pt）</div>
-        <div class="notif-time">1週間前</div>
+        <div class="notif-title">＆ポイントを特典に使いました</div>
+        <div class="notif-desc">交流の体験（見本）に 10pt。使った分は消却されます。</div>
+        <div class="notif-time">10日前</div>
+      </div>
+    </div>
+    <div class="notif-item" onclick="navTo('rewards')">
+      <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-gift"/></svg></div>
+      <div class="notif-body">
+        <div class="notif-title">運営から＆ポイントが発行されました（＋10pt）</div>
+        <div class="notif-desc">かずこさんとの「話し相手」の完了を確かめました。かずこさんにも発行しています。</div>
+        <div class="notif-time">20日前</div>
       </div>
     </div>
     <div class="notif-item" onclick="openLegal('privacy')">
@@ -1315,11 +1367,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="rew-balance-num"><span id="rew-balance-num">1,050</span><span style="font-size:1.3rem;margin-left:6px">＆pt</span></div>
       <div class="rew-balance-sub" id="rew-balance-sub">受け取った：930pt ／ 手渡した：80pt ／ 使った：100pt</div>
     </div>
-    <div class="info-box">
+    <div class="info-box real-only">
       <div class="info-box-h">＆ポイントは「手渡し」のお礼です</div>
       <div class="info-box-b">運営が配るものではありません。支えてもらった人が、お礼として手渡します。受け取った＆ポイントは、地域のお店や You&amp;i Gallery で使えます。金銭的な価値・換金性はなく、信頼の段階を＆ポイントで買うこともできません。</div>
     </div>
-    <div class="info-box" style="margin-bottom:16px">
+    <div class="info-box real-only" style="margin-bottom:16px">
       <div class="info-box-h">町のつみたて</div>
       <div class="info-box-b">手渡しで動いた＆ポイントの一部は、町ごとの積み立てに貯まります。貯まると、結の日や防災訓練、子どもの行事の原資になります。個人と個人の貸し借りが、そのまま町の資産に変わっていきます。</div>
       <div style="margin-top:10px;display:flex;align-items:center;gap:9px">
@@ -1327,6 +1379,28 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div style="font-size:.72rem;color:var(--lav3);font-weight:600;white-space:nowrap">4,200 / 10,000 pt</div>
       </div>
     </div>
+    <!-- 新しい仕組み（ゲストのデモ）：運営からの発行・発行の上限と消却・特典（すべて見本） -->
+    <div class="demo-only" id="eco-rewards">
+      <div class="info-box">
+        <div class="info-box-h">＆ポイントは、活動を成立させた双方への発行です</div>
+        <div class="info-box-b">活動の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。振り返りの評価で、配る量は変わりません。登録したときは 0pt で、残高がなくても頼めます・応募できます。現金での購入・チャージ、換金、売買、ほかの人への譲渡はできません。</div>
+      </div>
+      <div class="info-box" style="margin-bottom:16px">
+        <div class="info-box-h">発行の上限と、使った分の消却</div>
+        <div class="info-box-b" id="eco-budget-text">—</div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:9px">
+          <div style="flex:1;height:6px;background:rgba(184,175,214,.2);border-radius:3px;overflow:hidden;display:flex"><div id="eco-budget-issued" style="height:100%;width:0;background:linear-gradient(to right,var(--lav),var(--gold))"></div><div id="eco-budget-reserved" style="height:100%;width:0;background:rgba(158,202,216,.75)"></div></div>
+          <div id="eco-budget-num" style="font-size:.72rem;color:var(--lav3);font-weight:600;white-space:nowrap">— / — pt</div>
+        </div>
+      </div>
+      <div class="rew-tabs" id="eco-rew-tabs">
+        <div class="rew-tab on" data-k="tangible" onclick="ecoRewTab('tangible')">外部の特典</div>
+        <div class="rew-tab" data-k="space" onclick="ecoRewTab('space')">Space内の特典</div>
+      </div>
+      <div class="rew-grid" id="eco-rew-grid"></div>
+      <div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">特典はすべて見本です。交換先・内容・必要なポイントは、これから検証して決めます。基本の依頼・応募、プロフィール、安全の確認は、ポイントなしで使えます。</div>
+    </div>
+    <div class="real-only">
     <div class="rew-tabs">
       <div class="rew-tab on" onclick="rewTab(this,'coupon')">地域のお店</div>
       <div class="rew-tab" onclick="rewTab(this,'gallery')">You&amp;i Gallery</div>
@@ -1422,12 +1496,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="rew-price">1,000<small>＆pt</small></div>
       </div>
     </div>
+    </div><!-- /real-only -->
 
     <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px;display:flex;gap:10px;align-items:center;cursor:pointer" onclick="openPointsHistory()">
       <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(184,175,214,.18),rgba(158,202,216,.18));display:flex;align-items:center;justify-content:center;color:var(--lav2)"><svg class="ic"><use href="#i-info"/></svg></div>
       <div style="flex:1">
         <div style="font-size:.86rem;font-weight:500">＆ポイントの記録を見る</div>
-        <div style="font-size:.74rem;color:var(--tl)">受け取った・手渡した・使った＆ポイント</div>
+        <div style="font-size:.74rem;color:var(--tl)"><span class="real-only">受け取った・手渡した・使った＆ポイント</span><span class="demo-only">発行された・使った・返還された＆ポイント</span></div>
       </div>
       <svg class="ic" style="color:var(--ttl)"><use href="#i-chevron-r"/></svg>
     </div>
@@ -1460,7 +1535,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="kai-item">
         <div class="kai-from">○○地区 自主防災会</div>
         <div class="kai-title">防災訓練のお知らせ（9月1日）</div>
-        <div class="kai-body">9月1日（火）午前9時から、第2公園で防災訓練を行います。参加された方には＆ポイントをお渡しします。ご都合のつく方はどなたでもご参加ください。</div>
+        <div class="kai-body">9月1日（火）午前9時から、第2公園で防災訓練を行います。ご都合のつく方はどなたでもご参加ください。</div>
         <button class="kai-read" onclick="markKaiRead(this)">見ました</button>
       </div>
       <div class="kai-item">
@@ -1550,8 +1625,29 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <button class="btn-link" id="prof-preview-link" style="display:none;margin-top:10px;font-size:.74rem;color:#7c6fa3" onclick="previewMyProfile()">ほかの人からの見え方を確認する</button>
   </div>
 
+  <!-- 新しい仕組み（ゲストのデモ）：確認済みの活動と＆ポイント（本人だけが見る） -->
+  <div class="score-card demo-only" id="eco-score" style="margin:16px 18px;padding:24px 22px">
+    <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:center;position:relative;z-index:1">
+      <div style="text-align:center">
+        <div class="score-label" style="margin-bottom:8px">確認済みの活動</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fff"><span id="eco-acts-num">0</span><span style="font-size:1rem;margin-left:4px;font-family:'Noto Sans JP',sans-serif">件</span></div>
+        <div id="eco-acts-chip" style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(200,232,212,.22);color:#c8e8d4;font-size:.7rem;font-weight:500">確認できた相手 0人</div>
+      </div>
+      <div style="width:1px;height:74px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.35),transparent);justify-self:center"></div>
+      <div style="text-align:center;cursor:pointer" onclick="navTo('rewards')">
+        <div class="score-label" style="margin-bottom:8px">＆ポイント</div>
+        <div id="eco-points" style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:#fceea8">0</div>
+        <div style="display:inline-flex;align-items:center;gap:3px;margin-top:8px;padding:3px 10px;border-radius:14px;background:rgba(252,238,168,.18);color:#fceea8;font-size:.7rem;font-weight:500">
+          <svg class="ic" style="font-size:.85em"><use href="#i-gift"/></svg>特典に使える
+        </div>
+      </div>
+    </div>
+    <div class="score-tags" id="eco-badges" style="margin-top:18px;justify-content:center"></div>
+    <div style="position:relative;z-index:1;font-size:.66rem;color:rgba(255,255,255,.75);line-height:1.7;margin-top:12px;text-align:center">この記録は、あなたが確かめるためのものです。ポイントの残高や活動の回数で、信頼の度合いを決めたり、ほかの人と順位をつけたりしません。</div>
+  </div>
+
   <!-- 信頼スコア & ＆ポイント カード -->
-  <div class="score-card" style="margin:16px 18px;padding:24px 22px">
+  <div class="score-card real-only" style="margin:16px 18px;padding:24px 22px">
     <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:center;position:relative;z-index:1">
       <div style="text-align:center">
         <div class="score-label" style="margin-bottom:8px">信頼の段階</div>
@@ -1597,8 +1693,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
+  <!-- 新しい仕組み（ゲストのデモ）：記録は3つに分ける -->
+  <div class="set-section demo-only" id="eco-records" style="margin:14px 18px 0;padding:16px 18px"></div>
+  <!-- 新しい仕組み（ゲストのデモ）：登録している内容（関心・できること・経験・時間・範囲・配慮） -->
+  <div class="set-section demo-only" id="eco-reg" style="margin:14px 18px 0;padding:16px 18px"></div>
+
   <!-- 人柄資本（言葉のまま。数値にしない） -->
-  <div class="set-section" style="margin:14px 18px 0;padding:16px 18px">
+  <div class="set-section real-only" style="margin:14px 18px 0;padding:16px 18px">
     <div style="font-size:.92rem;font-weight:600">よく言われること</div>
     <div style="font-size:.72rem;color:var(--tl);line-height:1.85;margin-top:5px">贈られた言葉は、点数にしません。誰が書いたかも表示しません。</div>
     <div id="prof-words" style="margin-top:11px"><span class="thanks-tag on" style="cursor:default">ていねいだった <b style="opacity:.8">×9</b></span><span class="thanks-tag on" style="cursor:default">安心できた <b style="opacity:.8">×7</b></span><span class="thanks-tag on" style="cursor:default">すぐ来てくれた <b style="opacity:.8">×5</b></span><span class="thanks-tag on" style="cursor:default">また会いたい <b style="opacity:.8">×4</b></span><span class="thanks-tag on" style="cursor:default">話しやすかった <b style="opacity:.8">×3</b></span></div>
@@ -1624,8 +1725,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
   </div>
 
+  <!-- 新しい仕組み（ゲストのデモ）：活動の一覧・これからの機会・確認済みの活動プロフィール -->
+  <div class="sec-block demo-only" id="eco-acts"></div>
+  <div class="sec-block demo-only" id="eco-opps"></div>
+  <div class="sec-block demo-only" id="eco-showcase"></div>
+
   <!-- 最近の活動 -->
-  <div class="sec-block" id="prof-activity">
+  <div class="sec-block real-only" id="prof-activity">
     <div class="sec-h">
       <div class="sec-h-title">最近の活動</div>
     </div>
@@ -1664,7 +1770,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div style="padding:2px 18px 6px;font-size:.68rem;color:var(--tl);line-height:1.8">届いたありがとうは、まとめてお知らせしています。誰が送ったか・送らなかったかは表示しません。</div>
   </div>
 
-  <div class="score-detail" style="margin-top:18px">
+  <div class="score-detail real-only" style="margin-top:18px">
     <div class="sd-h"><div class="sd-title">信頼の段階の内訳</div><div class="sd-value" id="prof-trust2" style="font-family:'Noto Serif JP',serif;font-size:.95rem">梅結び</div></div>
     <div class="sd-bars" id="prof-scorebars">
       <div class="sd-bar-row"><div class="sd-bar-lbl">本人確認</div><div class="sd-bar-track"><div class="sd-bar-fill" style="width:100%"></div></div><div class="sd-bar-val">済</div></div>
@@ -1674,7 +1780,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     </div>
     <div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">助けを求めることにも、段階の条件はありません。支えた回数と支えられた回数を、同じだけ「支え合い」に数えます。どちらか一方に偏っていても、段階は同じように上がります。信頼は、＆ポイントでもお金でも買えません。</div>
   </div>
-  <div class="sec-block" id="prof-certs">
+  <div class="sec-block real-only" id="prof-certs">
     <div class="sec-h"><div class="sec-h-title">活動の記録（証明書）</div></div>
     <div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-4px 0 10px">学校や勤め先、地域の活動に提出できる記録です。＆ポイントと交換せず、いつでも出せます。</div>
     <div class="cert-list" style="padding:0">
@@ -1842,7 +1948,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.5.5 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.8.0 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -1871,11 +1977,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
     <div class="modal-tags" id="mm-tags"></div>
     <div class="modal-content" id="mm-content">—</div>
     <div style="background:rgba(184,175,214,.06);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
-      <div style="font-size:.7rem;color:var(--tl);margin-bottom:4px">この方の信頼の段階</div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="flex:1;height:6px;background:rgba(184,175,214,.18);border-radius:3px;overflow:hidden"><div id="mm-score-bar" style="height:100%;width:78%;background:linear-gradient(to right,var(--lav),var(--sky))"></div></div>
-        <div style="font-family:'Noto Serif JP',serif;font-size:.92rem;font-weight:500;color:var(--lav3);white-space:nowrap" id="mm-score">あわじ結び</div>
-      </div>
+      <div style="font-size:.7rem;color:var(--tl);margin-bottom:6px">この方が示している、確認済みの活動</div>
+      <div id="mm-score" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      <div style="font-size:.66rem;color:var(--tl);line-height:1.7;margin-top:7px">示す活動は本人が選びます。活動の回数や評価の点数は表示しません。</div>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal(null,'match-modal');openDemoProfile(window.__mmName)">プロフィール</button>
@@ -1968,6 +2072,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<!-- ゲストのデモの＆ポイントと評価の仕組み（端末の中だけで計算する） -->
+<script src="space-economy.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyA6EppsUrzoeXv5NIjO7bs6hnK_ctT0m84",
@@ -2045,7 +2151,7 @@ function navTo(name){
   if((name==='profile'||name==='rewards')&&isGuestDemo()) renderDemoPoints();
   if(name==='post'){ setPostType(null,curPostType||'tsuide'); }
   if(name==='main'){
-    renderDemoRibbon(); renderCareCard(); renderNickBanner();
+    renderDemoRibbon(); renderCareCard(); renderEcoCard(); renderNickBanner();
     // Re-init map if user is on map tab
     const mapPanel=document.getElementById('main-panel-map');
     if(mapPanel && mapPanel.style.display!=='none'){
@@ -2105,6 +2211,7 @@ function applyUserToUI(){
 /* 実アカウントではデモ用の投稿・支援者・メッセージを隠す（ゲストは従来どおり表示） */
 function hideDemoContent(){
   document.querySelectorAll('.demo-only').forEach(function(e){e.style.display='none';});
+  document.querySelectorAll('.real-only').forEach(function(e){e.style.display='';});
   var me=document.getElementById('msg-empty'); if(me) me.style.display='';
   var mp=document.getElementById('map-empty'); if(mp) mp.style.display='';
   var ne=document.getElementById('notif-empty'); if(ne) ne.style.display='';
@@ -2459,11 +2566,8 @@ function openProvider(name,color,initial,trust,stars,reviews,region,dist,timeSta
   s.style.color='var(--tl)';
   s.innerHTML='';
   s.style.fontSize='.78rem';tags.appendChild(s);
-  // 生の数値は出さず、水引の段階の位置だけを示す
-  var stName=stage_label_for(trust), si=0;
-  TRUST_STAGES.forEach(function(st,k){ if(st.name===stName) si=k; });
-  document.getElementById('mm-score').textContent=stName;
-  document.getElementById('mm-score-bar').style.width=Math.round((si+1)/TRUST_STAGES.length*100)+'%';
+  // 信頼の段階や点数は出さない。本人が選んで示している確認済みの活動だけ（ゲストのデモの見本）
+  document.getElementById('mm-score').innerHTML=(DEMO_SHOWN[name]||[]).map(function(x){ return '<span class="stage-chip">'+escapeHtml(x)+'</span>'; }).join('')||'<span style="font-size:.74rem;color:var(--tl)">まだ示している活動はありません</span>';
   window.__mmName=name;
   document.getElementById('mm-contact-btn').onclick=function(){
     closeModal(null,'match-modal');
@@ -2508,8 +2612,6 @@ var POST_TYPES={
           ph:'例：ゴミ出しを手伝ってくれる方を探しています', btn:'投稿する'}
 };
 /* 旧データ（provide／receive）を新しい4分類に読み替える */
-/* デモ用：0-100の目安値を、水引の段階名に読み替える（生の数字は出さない） */
-function stage_label_for(v){ v=parseInt(v,10)||0; return v>=93?'結い手':(v>=87?'梅結び':(v>=80?'あわじ結び':'ひと結び')); }
 function normType(t){ if(t==='provide')return 'can'; if(t==='receive')return 'need'; return POST_TYPES[t]?t:'can'; }
 function typeInfo(t){ return POST_TYPES[normType(t)]; }
 function typeBadge(t){ var i=typeInfo(t); return '<span class="ptype '+i.cls+'">'+i.label+'</span>'; }
@@ -2779,7 +2881,7 @@ function pointsLedger(){
   return {received:sum(window.__thanksIn), given:sum(window.__thanksOut)};
 }
 function myPoints(){
-  if(isGuestDemo()) return Math.max(0, pointsTotals(demoTx()).balance);
+  if(isGuestDemo()) return ecoBalance();
   var l=pointsLedger();
   return Math.max(0, START_PT+l.received-l.given);
 }
@@ -2942,10 +3044,9 @@ function renderActivity(){
 /* ===== 感謝を贈る（星評価なし・＆ポイントは手渡し・「お互いさま」で借りを閉じる） ===== */
 var thanksSel={tags:[],pts:50,to:null,toName:'',postId:'',dealId:''};
 function openThanks(toUid,toName,postId,dealId){
-  if(!isGuestDemo()){
-    if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
-    if(toUid===fbAuth.currentUser.uid){ toast('自分には贈れません'); return; }
-  }
+  if(isGuestDemo()){ demoCloseDeal(); return; }   // デモでは＆ポイントを手渡さない
+  if(!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
+  if(toUid===fbAuth.currentUser.uid){ toast('自分には贈れません'); return; }
   thanksSel={tags:[],pts:50,to:toUid,toName:toName||'相手の方',postId:postId||'',dealId:dealId||''};
   var bal=myPoints();
   // 語彙は方向で分ける。どちらだったかは本人にしか分からないので、両方見せて選んでもらう
@@ -2982,8 +3083,7 @@ function setThanksPt(el,v){
   el.classList.add('on'); thanksSel.pts=v;
 }
 function sendThanks(){
-  var demo=isGuestDemo();
-  if(!demo&&(!fbReady||!fbAuth.currentUser)){ toast('ログインが必要です'); return; }
+  if(isGuestDemo()||!fbReady||!fbAuth.currentUser){ toast('ログインが必要です'); return; }
   if(!thanksSel.to){ toast('相手が特定できません'); return; }
   if(!thanksSel.tags.length){ toast('感謝タグを1つ以上えらんでください'); return; }
   var note=((document.getElementById('th-note')||{}).value||'').trim();
@@ -2991,7 +3091,6 @@ function sendThanks(){
   var pts=thanksSel.pts||0;
   if(pts>myPoints()){ toast('＆ポイントが足りません。0ptでも贈れます'); return; }
   if(busy('thanks',3000)) return;
-  if(demo){ demoSendThanks(pts); return; }
   // 送り主の名前は保存しない（受け取った側に「誰から」を見せない設計のため。人数の集計には uid だけ使う）
   fbDb.collection('thanks').add({
     fromUid:fbAuth.currentUser.uid,
@@ -3033,6 +3132,7 @@ function renderNeedList(){
         (loc?'<div class="mc-dist"><svg class="ic" style="font-size:.85em"><use href="#i-location"/></svg>'+escapeHtml(loc)+'</div>':'')+'</div>'+
         '<div class="mc-desc">'+escapeHtml(p.title||'')+'</div>'+
         '<div class="mc-meta"><span class="ptype need">頼みたい</span><span style="font-size:.7rem;color:var(--tl)">'+timeAgo(p.createdAt)+'</span>'+pinned+'</div>'+
+        (ecoPostTags(p)?'<div style="margin-top:5px">'+ecoPostTags(p)+'</div>':'')+
       '</div>'+
     '</div>';
   }).join('');
@@ -3279,6 +3379,7 @@ function renderPostCard(p){
       '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+badge+'<span style="font-weight:600;font-size:.9rem">'+escapeHtml(p.title||'')+'</span></div>'+
       (p.detail?'<div style="font-size:.76rem;color:var(--tl);margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+escapeHtml(p.detail)+'</div>':'')+
       whenHtml+
+      (ecoPostTags(p)?'<div style="margin-top:6px">'+ecoPostTags(p)+'</div>':'')+
       (cats?'<div style="margin-top:6px">'+cats+'</div>':'')+
       loc+
       '<div style="font-size:.7rem;color:var(--tl);margin-top:5px">'+escapeHtml(postAuthor(p))+' ・ '+timeAgo(p.createdAt)+(isMyPost(p)?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
@@ -3310,10 +3411,12 @@ function openPostDetail(id){
       (p.anon?'<div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:10px;text-align:center">頼む側は名前を伏せています。応える側の名前とプロフィールは、相手に表示されます。</div>':'')+
       '<div style="text-align:center;margin-top:12px"><button class="btn-link" style="color:#c07880;font-size:.76rem" onclick="openReport(\'post\',\''+id+'\',\''+escapeHtml(p.uid||'')+'\',\'この投稿\')">この投稿を通報する</button></div>';
   }else if(isGuestDemo()){
-    // デモ：名前を伏せた頼みごとは、プロフィールを開けない（頼む側だけが匿名になれる）
-    actions='<div style="display:flex;gap:10px">'+
+    // デモ：名前を伏せた頼みごとは、プロフィールを開けない（頼む側だけが匿名になれる）。
+    // 最初の実証の活動（scenario）なら「応募する」「頼む」を主なボタンにして、メッセージは相談用にする
+    var ecoBtn=ecoPostActions(p,id);
+    actions=ecoBtn+'<div style="display:flex;gap:10px'+(ecoBtn?';margin-top:10px':'')+'">'+
       (p.anon?'':'<button class="btn-secondary" style="flex:1" onclick="closeSheet();demoProfilePost(\''+id+'\')">プロフィール</button>')+
-      '<button class="btn-primary" style="flex:1" onclick="demoMessageFromPost(\''+id+'\')">メッセージを送る</button></div>'+
+      '<button class="'+(ecoBtn?'btn-secondary':'btn-primary')+'" style="flex:1" onclick="demoMessageFromPost(\''+id+'\')">'+(ecoBtn?'メッセージで相談する':'メッセージを送る')+'</button></div>'+
       (p.anon?'<div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:10px;text-align:center">頼む側は名前を伏せています。応える側の名前とプロフィールは、相手に表示されます。</div>':'');
   }else{
     actions='<button class="btn-primary" onclick="closeSheet();navTo(\'msg\')">メッセージを送る</button>';
@@ -3328,6 +3431,7 @@ function openPostDetail(id){
     (cats?'<div style="margin-bottom:12px">'+cats+'</div>':'')+
     loc+
     '<div style="font-size:.78rem;color:var(--tl);margin-bottom:16px">'+escapeHtml(postAuthor(p))+' ・ '+timeAgo(p.createdAt)+(mine?' ・ <span style="color:#7c6fa3;font-weight:600">自分の投稿</span>':'')+'</div>'+
+    ecoPostBlock(p)+
     actions);
 }
 
@@ -3447,72 +3551,10 @@ function rewTab(el,key){
   });
 }
 /* ＆ポイントの引き換え。実アカウントは実証期間中は準備中（誤解を招く偽の成功表示はしない）。
-   ゲストのデモでは、確認 → 引換券 → 記録（＆ポイントの記録）まで体験できる。端末の中だけで、何も送信しない */
-var REDEEM_KINDS={
-  shop:   {title:'引き換えの確認', verb:'引き換える', done:'引換券', where:'お店のレジで、この画面を見せてください。'},
-  gallery:{title:'引き換えの確認', verb:'引き換える', done:'引換券', where:'You&i Gallery の受付で、この画面を見せてください。'},
-  donate: {title:'応援の確認',     verb:'入れる',     done:'受け付けました', where:''}
-};
+   ゲストのデモの特典は、新しい仕組み（ecoRedeem）で選ぶ */
 function redeem(name,pt,kind){
-  if(currentProfile&&currentProfile.uid){ toast('＆ポイントの交換は実証期間中は準備中です'); return; }
-  kind=REDEEM_KINDS[kind]?kind:'shop';
-  var k=REDEEM_KINDS[kind], n=parseInt(String(pt).replace(/,/g,''),10)||0, bal=myPoints(), after=bal-n;
-  window.__redeemCtx={name:name, n:n, kind:kind};
-  var line=function(l,v,strong){ return '<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.84rem'+(strong?';font-weight:600':'')+'"><span>'+l+'</span><span>'+v+'</span></div>'; };
-  openSheet(k.title,
-    '<div style="font-weight:600;font-size:1rem;margin-bottom:4px">'+escapeHtml(name)+'</div>'+
-    '<div style="font-size:.76rem;color:var(--tl);margin-bottom:14px">'+(kind==='donate'?'寄付・つみたて':(kind==='gallery'?'You&amp;i Gallery':'地域のお店'))+'</div>'+
-    '<div style="background:rgba(184,175,214,.08);border:1px solid var(--border);border-radius:12px;padding:8px 14px;margin-bottom:14px">'+
-      line('いま持っている',bal.toLocaleString()+' pt')+
-      line(kind==='donate'?'入れる':'引き換える','−'+n.toLocaleString()+' pt')+
-      '<div style="border-top:1px solid var(--border);margin:4px 0"></div>'+
-      line(kind==='donate'?'入れたあと':'引き換えたあと',(after>=0?after.toLocaleString()+' pt':'—'),true)+
-    '</div>'+
-    (after<0
-      ? '<div style="font-size:.84rem;color:#c07880;line-height:1.8;margin-bottom:14px">あと '+(-after).toLocaleString()+' pt 足りません。お礼として受け取ると、たまっていきます。</div>'+
-        '<button class="btn-secondary" onclick="closeSheet()">とじる</button>'
-      : '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin-bottom:14px">デモのため、実際には引き換えられません。この端末の中の記録だけが変わります。</div>'+
-        '<div style="display:flex;gap:10px"><button class="btn-secondary" style="flex:1" onclick="closeSheet()">やめる</button>'+
-        '<button class="btn-primary" style="flex:1" onclick="confirmRedeem()">'+k.verb+'</button></div>'));
-}
-function newVoucherCode(){
-  var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r='';
-  for(var i=0;i<4;i++) r+=a.charAt(Math.floor(Math.random()*a.length));
-  return 'YS-'+String(Math.floor(1000+Math.random()*9000))+'-'+r;
-}
-function confirmRedeem(){
-  var c=window.__redeemCtx; if(!c||!isGuestDemo()) return;
-  if(c.n>myPoints()){ toast('＆ポイントが足りません（デモ）'); return; }
-  if(busy('redeem',1500)) return;
-  var now=Date.now();
-  var tx={id:'tx'+now, kind:'use', label:c.name, pts:-c.n, at:now, rk:c.kind, code:newVoucherCode(), until:now+30*DAY_MS};
-  demoTx().unshift(tx);
-  window.__redeemCtx=null;
-  renderDemoPoints();
-  var act=document.getElementById('prof-activity'), h=act&&act.querySelector('.sec-h');
-  if(h) h.insertAdjacentHTML('afterend',
-    '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--gold)"></div>'+
-    '<div class="feed-text">＆ポイントを<b>'+escapeHtml(c.name)+'</b>'+(c.kind==='donate'?'に入れました':'と引き換えました')+'</div><div class="feed-time">たった今</div></div>'+
-    '<div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−'+c.n.toLocaleString()+' ＆pt</span></div></div>');
-  openVoucher(tx.id);
-}
-/* 引換券（寄付は受付の記録）。＆ポイントの記録からも、あとで開ける */
-function openVoucher(id){
-  var tx=demoTx().filter(function(t){ return t.id===id; })[0]; if(!tx) return;
-  var k=REDEEM_KINDS[tx.rk]||REDEEM_KINDS.shop, donate=(tx.rk==='donate');
-  openSheet(k.done,
-    (donate
-      ? '<div style="font-size:.88rem;line-height:1.9;margin-bottom:14px">ありがとうございます。<b>'+escapeHtml(tx.label)+'</b>に '+(-tx.pts).toLocaleString()+' pt を入れました。</div>'
-      : '<div style="font-size:.84rem;color:var(--tl);line-height:1.8;margin-bottom:12px">'+escapeHtml(k.where)+'</div>')+
-    '<div style="border:1.5px dashed rgba(184,175,214,.8);border-radius:16px;padding:18px 16px;text-align:center;background:linear-gradient(135deg,rgba(184,175,214,.08),rgba(200,184,122,.08));margin-bottom:14px">'+
-      '<div style="font-weight:600;font-size:.95rem;margin-bottom:10px">'+escapeHtml(tx.label)+'</div>'+
-      '<div style="font-size:.7rem;color:var(--tl);letter-spacing:.08em">'+(donate?'受付番号':'引換番号')+'</div>'+
-      '<div id="voucher-code" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.5rem;font-weight:700;letter-spacing:.12em;margin:4px 0 10px">'+escapeHtml(tx.code)+'</div>'+
-      '<div style="font-size:.78rem;color:var(--ink)">'+(-tx.pts).toLocaleString()+' pt ・ '+fmtYMD(tx.at)+(donate?'':' 〜 '+fmtYMD(tx.until)+' まで有効')+'</div>'+
-    '</div>'+
-    '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin-bottom:14px">デモのため、実際のお店・Gallery では使えません。'+(donate?'':'引換券は「＆ポイントの記録」から、いつでも見返せます。')+'</div>'+
-    '<div style="display:flex;gap:10px"><button class="btn-secondary" style="flex:1" onclick="closeSheet()">とじる</button>'+
-    '<button class="btn-primary" style="flex:1" onclick="openPointsHistory()">＆ポイントの記録</button></div>');
+  if(isGuestDemo()){ toast('デモでは、外部の特典・Space内の特典から選べます'); return; }
+  toast('＆ポイントの交換は実証期間中は準備中です');
 }
 /* 「ありがとう」は数を出さない（人気の軸をつくらないため） */
 function cpLike(el){ el.classList.toggle('liked'); }
@@ -3860,7 +3902,7 @@ function revealMyName(){
    投稿ではなく会話から贈る（「頼みたい」でお礼の向きが逆になる不具合の是正） */
 function thanksToPartner(){
   if(!(currentConv&&currentConv.otherUid)){
-    if(isGuestDemo()){ var dc=window.__demoChat||{}; openThanks('demo',dc.name||'相手の方','','demo'); return; }
+    if(isGuestDemo()){ demoCloseDeal(); return; }
     toast('実際の会話から、お礼を贈れます'); return;
   }
   openThanks(currentConv.otherUid, currentConv.otherName||'相手の方', '');
@@ -3869,8 +3911,8 @@ function openChatMenu(){
   var real=!!(currentConv&&currentConv.id);
   var demo=!real&&isGuestDemo();
   var html='<div class="set-section">'+
-    ((real||demo)?'<div class="set-item" onclick="closeSheet();closeDeal()"><div class="set-icon" style="color:#5a9a6a"><svg class="ic"><use href="#i-check"/></svg></div><div class="set-label">この支え合いは終わりました<div style="font-size:.7rem;color:var(--tl);margin-top:2px">記録して、お礼を伝えるか決めます</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
-    ((real||demo)?'<div class="set-item" onclick="closeSheet();thanksToPartner()"><div class="set-icon" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">お礼を伝える</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    ((real||demo)?'<div class="set-item" onclick="closeSheet();closeDeal()"><div class="set-icon" style="color:#5a9a6a"><svg class="ic"><use href="#i-check"/></svg></div><div class="set-label">この支え合いは終わりました<div style="font-size:.7rem;color:var(--tl);margin-top:2px">'+(demo?'完了を確かめると、運営の照合のあと＆ポイントが発行されます':'記録して、お礼を伝えるか決めます')+'</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
+    (real?'<div class="set-item" onclick="closeSheet();thanksToPartner()"><div class="set-icon" style="color:#c07880"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">お礼を伝える</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     ((real&&iAmMasked())?'<div class="set-item" onclick="closeSheet();revealMyName()"><div class="set-icon"><svg class="ic"><use href="#i-user"/></svg></div><div class="set-label">相手に名前を伝える<div style="font-size:.7rem;color:var(--tl);margin-top:2px">いまは「'+ANON_NAME+'」と表示されています</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     ((real||demo)?'<div class="set-item" onclick="closeSheet();openConcern()"><div class="set-icon" style="color:#a59056"><svg class="ic"><use href="#i-info"/></svg></div><div class="set-label">少し気になった<div style="font-size:.7rem;color:var(--tl);margin-top:2px">運営だけが読みます。相手には分かりません</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>':'')+
     '<div class="set-item" onclick="closeSheet();openLegal(\'safety\')"><div class="set-icon"><svg class="ic"><use href="#i-heart"/></svg></div><div class="set-label">安全ガイド</div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
@@ -4235,7 +4277,9 @@ function openLegal(kind){
       legalQA('どんなサービスですか？','「支える人もまた、支えを必要としている」という考えから生まれた、支援者支援のプラットフォームです。ご近所どうしが顔の見える関係になり、ふだんの「支えたい」と「頼みたい」のやりとりから、いざというときに動ける関係を日常のうちに育てておきます。')+
       legalQA('支援者支援とは？','特定の誰かを選んで助けることではなく、「支える」という行為が生まれやすく・続きやすく・報われやすい環境を整えることです。家族を介護する人、ひとりで子育てをする人、家族を支える若い人——支える側ほど「大丈夫な人」と見なされ、助けを求める回路が塞がれがちです。You&i Space は、その回路をこちらから作りに行きます。')+
       legalQA('「支えたい」「頼みたい」とは？','「支えたい」は、手を貸せることを伝えるための投稿です。用事のついででも、空いた時間でもかまいません。「頼みたい」は、助けてほしいことを伝えるための投稿で、名前を伏せて出すこともできます。同じ人が、ある日は支えたい側に、別の日は頼みたい側になれます。')+
-      legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。')+
+      (isGuestDemo()
+        ? legalQA('＆ポイントとは？','活動を成立させた双方の参加を認め、使える選択肢を増やすポイントです。最初の実証で扱う活動（話し相手・部活補助・清掃活動）の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。登録したときは0ptで、残高がなくても頼めます。特典に使った分は消却します。現金での購入・換金・売買・譲渡はできません。')
+        : legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。'))+
       legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
       legalQA('ほかの人に表示される名前は？','ニックネームです。本名は本人確認のために運営だけが使い、ほかの利用者には表示しません。ニックネームは 設定 →「プロフィール編集」から変えられます。団体・行政のアカウントは、団体名が表示されます。')+
       legalQA('相手のプロフィールは見られますか？','投稿の詳細の「プロフィール」や、メッセージ画面の相手の名前から見られます。表示されるのは、ニックネーム・自己紹介・本人確認済みの印と、名前を出した投稿（できること・頼みたいこと）だけです。支え合った回数や評価の点数は表示しません。名前を伏せている方のプロフィールは、その方が名前を伝えるまで見られません。')+
@@ -4280,37 +4324,13 @@ function copyShareLink(){
 }
 
 /* ===== ＆ポイントの記録（取引の履歴） =====
-   実アプリ：感謝の記録（thanks）から作る。受け取ったお礼は、誰からかを表示しない（送り主の名前はデータにも持たない）。
-   ゲストのデモ：端末の中の記録（window.__demoTx）。お礼の手渡しと引き換えが、ここに足されていく */
+   実アカウント：感謝の記録（thanks）から作る。受け取ったお礼は、誰からかを表示しない（送り主の名前はデータにも持たない）。
+   ゲストのデモ：新しい仕組みの記録（openEcoHistory）。運営からの発行・特典に使った分・返還を出す */
 var DAY_MS=86400000;
 function msOf(v){ if(!v) return 0; if(v.toDate) return v.toDate().getTime(); if(typeof v==='number') return v; var t=Date.parse(v); return isNaN(t)?0:t; }
 function fmtYMD(ms){ if(!ms) return ''; var d=new Date(ms); return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate(); }
-/* デモの最初の記録（受け取った 930pt・手渡した 80pt・使った 100pt ＋ 登録のお祝い 300pt ＝ 残高 1,050pt） */
-function demoTxSeed(){
-  var now=Date.now(), n=0, at=function(d){ return now-d*DAY_MS; };
-  var recv=function(d,pts,tags){ return {id:'seed'+(n++), kind:'recv', label:'ありがとうを受け取りました', pts:pts, tags:tags, at:at(d)}; };
-  return [
-    recv(9,100,['また会いたい']),
-    recv(16,100,['話しやすかった']),
-    recv(24,100,['安心できた','ていねいだった']),
-    {id:'seed-give2', kind:'give', label:'ひでき さんへ', pts:-30, tags:['安心できた'], at:at(20)},
-    recv(31,100,['すぐ来てくれた']),
-    {id:'seed-use1', kind:'use', label:'町のつみたて', pts:-100, rk:'donate', code:'YS-2718-KTMR', at:at(35)},
-    recv(40,100,['また会いたい']),
-    recv(47,50,['ていねいだった']),
-    recv(55,100,['安心できた']),
-    {id:'seed-give1', kind:'give', label:'ゆみ さんへ', pts:-50, tags:['ていねいだった'], at:at(58)},
-    recv(63,30,['声をかけてくれてうれしかった']),
-    recv(71,100,['話しやすかった']),
-    recv(80,100,['すぐ来てくれた','安心できた']),
-    recv(88,50,['ていねいだった']),
-    {id:'seed-start', kind:'start', label:'登録のお祝い', pts:START_PT, at:at(92)}
-  ].sort(function(a,b){ return b.at-a.at; });
-}
-function demoTx(){ if(!window.__demoTx) window.__demoTx=demoTxSeed(); return window.__demoTx; }
-/* 実アプリ・デモ共通の記録（新しい順）。0pt のお礼はポイントの動きがないので載せない */
+/* 実アカウントの記録（新しい順）。0pt のお礼はポイントの動きがないので載せない */
 function pointsTx(){
-  if(isGuestDemo()) return demoTx().slice();
   var u=getStoredUser()||{}, out=[{id:'start', kind:'start', label:'登録のお祝い', pts:START_PT, at:msOf(u.createdAt)}];
   (window.__thanksIn||[]).forEach(function(t){ var p=parseInt(t.points,10)||0;
     if(p>0) out.push({id:t.id, kind:'recv', label:'ありがとうを受け取りました', pts:p, tags:t.tags||[], at:msOf(t.createdAt)||Date.now()}); });
@@ -4334,6 +4354,7 @@ function balanceSubText(t){
 }
 var TX_FILTERS=[['all','すべて'],['recv','受け取った'],['give','手渡した'],['use','使った']];
 function openPointsHistory(filter){
+  if(isGuestDemo()){ openEcoHistory(filter); return; }
   filter=filter||'all';
   var list=pointsTx(), t=pointsTotals(list), bal=myPoints();
   var shown=list.filter(function(x){ return filter==='all' || x.kind===filter; });
@@ -4342,10 +4363,8 @@ function openPointsHistory(filter){
   var rows=shown.map(function(x){
     var plus=x.pts>0, sub='';
     if(x.kind==='recv'||x.kind==='give') sub=(x.tags||[]).map(function(g){ return '「'+escapeHtml(g)+'」'; }).join('');
-    if(x.kind==='use') sub=(x.code?(x.rk==='donate'?'受付番号 ':'引換番号 ')+escapeHtml(x.code):'')+(x.code&&x.id&&isGuestDemo()?' ・ <span style="color:var(--lav3);text-decoration:underline">'+(x.rk==='donate'?'受付を見る':'引換券を見る')+'</span>':'');
     var kindLbl={recv:'受け取った',give:'手渡した',use:(x.rk==='donate'?'入れた':'使った'),start:'はじめに'}[x.kind]||'';
-    var click=(x.kind==='use'&&x.code&&isGuestDemo())?' style="cursor:pointer" onclick="openVoucher(\''+escapeHtml(x.id)+'\')"':'';
-    return '<div class="set-item tx-row" data-kind="'+x.kind+'"'+click+'>'+
+    return '<div class="set-item tx-row" data-kind="'+x.kind+'">'+
       '<div style="flex:1;min-width:0"><div class="set-label">'+escapeHtml(x.label)+'</div>'+
       '<div style="font-size:.7rem;color:var(--tl);margin-top:2px;line-height:1.6">'+fmtYMD(x.at)+' ・ '+kindLbl+(sub?' ・ '+sub:'')+'</div></div>'+
       '<div class="tx-pts" style="font-size:.86rem;font-weight:600;white-space:nowrap;color:'+(plus?'#5a9a6a':'#c07880')+'">'+(plus?'＋':'−')+Math.abs(x.pts).toLocaleString()+' pt</div></div>';
@@ -4359,13 +4378,13 @@ function openPointsHistory(filter){
     '</div>'+
     '<div style="margin-bottom:10px">'+chips+'</div>'+
     (rows?'<div class="set-section" id="tx-list">'+rows+'</div>':emptyHist('この種類の記録は、まだありません。'))+
-    '<div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">受け取ったお礼は、誰からかを表示しません。'+
-      (isGuestDemo()?'デモの記録は、この端末の中だけのものです。':'引き換えは、実証期間中は準備中です。')+'</div>');
+    '<div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">受け取ったお礼は、誰からかを表示しません。引き換えは、実証期間中は準備中です。</div>');
 }
 
 /* 履歴・実績・お気に入り */
 function openHistory(kind){
   var isNew = currentProfile && currentProfile.uid;
+  if(kind==='support'&&isGuestDemo()){ openEcoActivities(); return; }
   if(kind==='support'){
     openSheet('支援実績', isNew?emptyHist('まだ支援実績がありません。'):histList([['買い物の付き添い','2026/06/10','＋15 ＆P'],['話し相手・見守り','2026/06/03','＋10 ＆P'],['子どもの送迎','2026/05/28','＋20 ＆P']]));
   }else if(kind==='fav'){
@@ -4504,7 +4523,7 @@ function centerMap(){if(mapInstance){mapInstance.setView([34.8485,135.6178],14);
 function isGuestDemo(){ return !(currentProfile&&currentProfile.uid) && !(fbReady&&fbAuth&&fbAuth.currentUser); }
 function onLoginScreen(){ var a=document.querySelector('.screen.active'); return !!(a&&a.id==='screen-login'); }
 /* 団体名や「ご近所の方」には「さん」を付けない */
-function honorific(name){ return /(役所|会|課|センター|の方)$/.test(name||'')?'':' さん'; }
+function honorific(name){ return /(役所|会|課|センター|の方|部|学校)$/.test(name||'')?'':' さん'; }
 
 /* ===== 構想ガイド ===== */
 function gPt(icon,html,tap){
@@ -4545,17 +4564,32 @@ var GUIDE=[
         gPt('i-edit','投稿の主語は、いつも自分だけ。<b>他の人を主語にして書く機能はつくりません</b>')+
         gPt('i-alert','<b>低い評価は公開しません</b>。気になったことは、運営が非公開でお預かりします')+
         gPt('i-id-card','本人確認は運営がおひとりずつ行い、<b>身分証の画像は保存しません</b>。金銭の授受は禁止、＆ポイントに換金性はありません')},
-  {eb:'デモの歩き方', h:'さわって、\n確かめてみてください。',
+];
+/* ゲストのデモ（と、ログイン前の構想ガイド）は、新しい仕組みのスライドにする。実アカウントは従来のまま */
+var GUIDE_ECO_ROLE={eb:'02　役割の循環', h:'今日助けられた人が、\n明日は誰かを助ける。',
+   lead:'慈善ではなく、相互扶助。支える人と頼む人を固定せず、同じ人が「今日は支える側、明日は頼る側」になれる仕組みです。',
+   body:gPt('i-users','<b>支えたい</b>——手を貸せることを出せます')+
+        gPt('i-chat','<b>頼みたい</b>——助けてほしいことを出せます。地図にはおおまかな位置だけが出ます')+
+        gPt('i-heart','登録は<b>0pt</b>。＆ポイントがなくても頼めて、応募できます。先に誰かを支える義務もありません')+
+        gPt('i-check','最初の実証は<b>話し相手・部活補助・清掃活動</b>の3つ。双方が内容に納得してから成立します。断ることも、条件を相談し直すこともできます')};
+var GUIDE_ECO_POINT={eb:'＆ポイントと記録', h:'支える人にも、頼む人にも。\n双方の参加が報われる。',
+   lead:'活動の達成を確かめたあと、運営が、支える人にも頼む人にも＆ポイントを無償で発行します。頼んだ人の残高は減りません。',
+   body:gPt('i-shield','<b>活動前の確認 → 完了の確認 → 運営の照合 → 発行</b>。運営は当事者とは別の立場で確かめます。双方が「完了」を押しただけでは発行しません')+
+        gPt('i-gift','使い道は<b>外部の特典とSpace内の特典</b>。使った分は消却し、現金での購入・換金・売買・譲渡はしません')+
+        gPt('i-lock','振り返りは<b>「確認できた／判断できない／運営に相談したい」</b>。双方が答えるか7日たつまで相手には見せず、答えなくても低い評価にしません')+
+        gPt('i-medal','記録は<b>共通の信頼・活動ごとの経験・資格と確認事項</b>の3つ。積み重ねが、自分に合う役割の紹介や、小さな企画に関わる機会につながります')+
+        '<div class="guide-note">各10pt・発行の上限300pt・振り返りの締切7日などは、実証のための仮の設定です。</div>'};
+var GUIDE_ECO_WALK={eb:'デモの歩き方', h:'さわって、\n確かめてみてください。',
    lead:'気になるところから、どうぞ。設定 →「You&amp;i Space とは」から、いつでもこのガイドに戻れます。',
    body:gPt('i-users','<b>ホーム</b>で、ご近所の「支えたい」と「頼みたい」を見る','guideGo(\'main\')')+
+        gPt('i-check','話し相手の「頼みたい」に応募して、<b>成立から＆ポイントの発行・振り返り</b>まで体験する','guideGo(\'activity\')')+
+        gPt('i-gift','<b>＆ポイント</b>を、特典（見本）に使ってみる','guideGo(\'rewards\')')+
         gPt('i-heart','<b>支える人への声かけ</b>を見る（ホーム上部のお便り）','guideGo(\'care\')')+
-        gPt('i-chat','支え合いが終わった後の<b>お礼と「お互いさま」</b>を体験する','guideGo(\'thanks\')')+
         gPt('i-shield','<b>結モード</b>（災害時の画面）に切り替えてみる','guideGo(\'yui\')')+
-        '<div class="guide-note">このデモに登場する人物・団体・お店は、すべて架空の例です。操作した内容はこの端末の中だけで動き、どこにも送信されません。</div>'}
-];
+        '<div class="guide-note">このデモに登場する人物・団体・お店は、すべて架空の例です。操作した内容はこの端末の中だけで動き、どこにも送信されません。</div>'};
 var guideIdx=0;
-/* 実アカウントには「デモの歩き方」を出さない */
-function guideSlides(){ return isGuestDemo()?GUIDE:GUIDE.slice(0,GUIDE.length-1); }
+/* 実アカウントは従来の5枚（「デモの歩き方」は出さない）。ゲストのデモは、役割の循環を新しい仕組みに替えて、＆ポイントと記録・デモの歩き方を足す */
+function guideSlides(){ return isGuestDemo()?[GUIDE[0],GUIDE[1],GUIDE_ECO_ROLE,GUIDE_ECO_POINT,GUIDE[3],GUIDE[4],GUIDE_ECO_WALK]:GUIDE; }
 function openGuide(i){
   guideIdx=Math.max(0,Math.min(guideSlides().length-1,i||0));
   renderGuide();
@@ -4603,7 +4637,12 @@ function guideGo(t){
     window.__careDismissed=false; navTo('main');
     setTimeout(function(){ var c=document.getElementById('care-card'); if(c&&c.style.display!=='none') c.scrollIntoView({behavior:'smooth',block:'center'}); },120);
   }
-  else if(t==='thanks'){ openChat('ともこ','green','鈴'); setTimeout(demoCloseDeal,650); }
+  else if(t==='activity'){
+    navTo('main'); switchMainTab(document.querySelectorAll('.main-tab')[1],'map');
+    var tp=(window.__rawPosts||[]).filter(function(p){ return p.uid==='demo-suzuki'&&p.scenario; })[0];
+    if(tp) setTimeout(function(){ openPostDetail(tp.id); },300);
+  }
+  else if(t==='rewards'){ navTo('rewards'); }
   else if(t==='yui'){ doEnterYui(); }
 }
 
@@ -4678,15 +4717,29 @@ function saveDemoMe(f){
   renderLivePosts();
 }
 function demoTs(min){ var ms=Date.now()-min*60000; return {toDate:function(){ return new Date(ms); }}; }
+/* scenario のある投稿は、最初の実証で扱う3つの活動（新しい仕組み）。eco は相手の参加者（space-economy.js）、
+   match は「マッチングで確かめること」の中身、place・host・task・end は今回の約束（場所・当日の責任者・担当すること・終わりの目安） */
 var DEMO_POSTS=[
   // 支えたい（掲示板）
-  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'夕方スーパーに行くので、ついでに買ってこられます',when:'今日 17時ごろ',area:'高槻市 ○○町',categories:['買い物'],detail:'お米や飲みものなど、重いものもだいじょうぶです。受け渡しは玄関先か、公民館で。',min:25},
-  {type:'tsuide',uid:'demo-takahashi',authorName:'みさこ',title:'木曜の午前なら、通院の付き添いに行けます',when:'木曜の午前',area:'高槻市',categories:['通院付き添い','話し相手'],detail:'以前、病院で働いていました。付き添いと、待ち時間の話し相手くらいなら。',min:95},
+  {type:'tsuide',uid:'demo-takahashi',authorName:'みさこ',title:'木曜の午後、話し相手になれます',when:'木曜 14:00〜14:30',area:'高槻市',categories:['話し相手'],detail:'以前、病院で働いていました。聞き役が得意です。はじめは、スタッフのいる交流サロンで30分から。',min:20,
+   scenario:'talk',eco:'misako',place:'○○公民館の交流サロン',host:'交流サロンのスタッフ',task:'お茶を飲みながら、30分ほど話し相手をする。介助や専門的な相談は、スタッフにつなぐ',end:'30分たったら終わり。続けるかは、その場で相談する',
+   match:{'話題':'園芸や、昔の仕事の話','会話のペース':'ゆっくりで大丈夫。聞き役が得意','希望する距離感':'はじめはスタッフのいる場所で。連絡はアプリのメッセージで'}},
+  {type:'tsuide',uid:'demo-nakamura',authorName:'けん',title:'部活の準備・記録・片付けなら手伝えます',when:'平日 16時以降',area:'茨木市',categories:[],detail:'中学・高校と陸上部でした。指導はできませんが、準備や記録、片付けなら。',min:45,scenario:'club'},
+  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'週末の清掃活動に参加できます',when:'土日の午前',area:'高槻市',categories:[],detail:'公園や川沿いのごみ拾いなら、軍手を持って行けます。',min:70,scenario:'cleanup'},
+  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'夕方スーパーに行くので、ついでに買ってこられます',when:'今日 17時ごろ',area:'高槻市 ○○町',categories:['買い物'],detail:'お米や飲みものなど、重いものもだいじょうぶです。受け渡しは玄関先か、公民館で。',min:95},
   {type:'tsuide',uid:'demo-inoue',authorName:'まり',title:'日曜の午後、公園で子どもたちを見ていられます',when:'日曜 14〜16時',area:'茨木市',categories:['家事・育児'],detail:'うちの子も一緒です。そのあいだ、1〜2時間ひと息ついてください。',min:200},
   {type:'tsuide',uid:'demo-yamamoto',authorName:'たいち',title:'土曜の午前、車を出せます',when:'土曜の午前',area:'高槻市',categories:['移動・送迎'],detail:'通院・買い物・役所の手続きなどに。4人まで乗れます。',min:1500},
   {type:'tsuide',uid:'demo-nakamura',authorName:'けん',title:'中学生の宿題、オンラインで30分見られます',when:'平日の20時以降',area:'茨木市',categories:['学習サポート'],detail:'家のことで勉強の時間がとりにくい子の、力になれたらと思っています。',min:2900},
   // 頼みたい（地図）：頼んでいるのは、ふだん誰かを支えている人たち
-  {type:'need',uid:'demo-suzuki',authorName:'ともこ',title:'介護の合間に、自分の通院の2時間だけ母の話し相手を',area:'高槻市 ○○町',categories:['話し相手'],detail:'母（85）の介護を3年続けています。自分の歯医者に行くあいだの2時間ほど、母の話し相手をしていただける方を探しています。',min:40},
+  {type:'need',uid:'demo-suzuki',authorName:'ともこ',title:'介護の合間に、母の話し相手を30分だけ',area:'高槻市 ○○町',categories:['話し相手'],detail:'母（85）の介護を3年続けています。自分の歯医者に行くあいだ、母はデイサービスの交流スペースで過ごします。30分ほど、母の話し相手をしていただける方を探しています。',min:40,
+   scenario:'talk',eco:'tomoko',when:'来週水曜 14:00〜14:30',place:'○○デイサービスの交流スペース',host:'デイサービスの職員',task:'交流スペースで30分ほど、母の話し相手をする。介助やトイレの付き添いは職員が行う',end:'30分たったら終わり。職員に声をかけて帰る',
+   match:{'話題':'昔の高槻の話、編み物','会話のペース':'ゆっくり。耳が少し遠いので、はっきりめに','希望する距離感':'はじめは交流スペースの共有の場所で。家には上がらない'}},
+  {type:'need',uid:'demo-jhs',authorName:'○○中学校 陸上部',title:'練習の準備・記録・片付けを手伝ってほしい',area:'高槻市',categories:[],detail:'顧問が同席します。ハードルやマーカーの準備、タイムの記録、片付けをお願いしたいです（60分）。専門的な指導はお願いしません。',min:55,
+   scenario:'club',eco:'jhs',when:'金曜 16:00〜17:00',place:'○○中学校のグラウンド',host:'陸上部の顧問',task:'ハードル・マーカーの準備、タイムの記録、片付け。指導はしない',end:'片付けが終わり、顧問が終わりを伝えたら終わり',
+   match:{'担当作業':'準備・タイムの記録・片付け','経験':'陸上の経験は問いません。ストップウォッチが使えれば大丈夫','参加時間':'金曜 16:00〜17:00（60分）','受入側の説明':'はじめに顧問が10分ほど、安全のことと当日の流れを説明します'}},
+  {type:'need',uid:'demo-town',authorName:'○○町 自治会',title:'○○公園の清掃活動に、あと5人',area:'高槻市 ○○町',categories:[],detail:'受付・軍手・ごみ袋・トングは自治会で用意します。区域を分けて、60分のごみ拾いです。はじめての方も歓迎です。',min:150,
+   scenario:'cleanup',eco:'town',when:'日曜 9:00〜10:00',place:'○○公園の入口に集合',host:'自治会の環境係',task:'区域を分けてごみ拾い。危ないものは拾わず、責任者に知らせる',end:'60分たつか、担当の区域が終わったら終わり',
+   match:{'日時':'日曜 9:00〜10:00。雨のときは前日18時までに連絡','場所':'○○公園の入口に集合','作業の負担':'歩きながら60分。重いものは運びません','参加条件':'小学生以下は保護者と一緒に。危ないものは拾わず、責任者へ'}},
   {type:'need',uid:'demo-anon1',anon:true,authorName:'',title:'水曜だけ、15時の保育園のお迎えを',area:'高槻市',categories:['ひとり親','家事・育児'],detail:'ひとりで子育てをしています。水曜だけ仕事が延びるので、お迎えから1時間ほど一緒にいていただける方がいると助かります。',min:130},
   {type:'need',uid:'demo-anon2',anon:true,authorName:'',title:'試験前の2週間だけ、夕食づくりを手伝ってほしい',area:'高槻市',categories:['ヤングケアラー','家事・育児'],detail:'高校生です。家族のケアをしながら受験勉強をしています。試験前だけ、夕食の準備を手伝ってもらえたら助かります。',min:300},
   {type:'need',uid:'demo-kimura',authorName:'かずこ',title:'夫の通院に、月2回同行してほしい',area:'高槻市',categories:['老老介護','通院付き添い'],detail:'わたしも78歳になり、夫の車いすを押して病院まで行くのが難しくなってきました。',min:1400},
@@ -4714,17 +4767,23 @@ var DEMO_PEOPLE={
   'めぐみ':{c:'pink',bio:'高槻市・子ども食堂を運営しています',intro:'毎月2回、公民館で子ども食堂を開いています。支える側の人手が足りないのが、いちばんの悩みです。'},
   'ちなつ':{c:'pink',bio:'大阪市・保育士',intro:'子どもを見ることなら、任せてください。'},
   'ゆみ':{c:'green',bio:'高槻市',intro:'家事や料理なら、ついでにお手伝いできます。'},
-  'ひでき':{c:'sky',v:false,bio:'高槻市・退職後、地域の見回りをしています',intro:''}
+  'ひでき':{c:'sky',v:false,bio:'高槻市・退職後、地域の見回りをしています',intro:''},
+  '○○中学校 陸上部':{c:'sky',org:true,bio:'高槻市・中学校の部活（例）',intro:'部員は30人ほどです。顧問がひとりで準備から記録までしていて、手が足りません。'},
+  '○○町 自治会':{c:'green',org:true,bio:'高槻市 ○○町（例）',intro:'毎月第3日曜に、公園の清掃をしています。'}
 };
+/* ご近所の札（サンプル）の人が、本人が選んで示している確認済みの活動 */
+var DEMO_SHOWN={'みさこ':['話し相手（支える側）'],'まえけん':['清掃活動（支える側）'],'ちなつ':['部活補助（支える側）'],'けん':['部活補助（支える側）'],'ゆみ':['話し相手（支える側）'],'まり':['話し相手（支える側）','清掃活動（支える側）'],'たいち':['清掃活動（支える側）'],'ひでき':['清掃活動（支える側）']};
 function loadDemoData(){
   window.__demoLoaded=true;
-  demoTx();
+  ecoInit();
+  document.querySelectorAll('.real-only').forEach(function(e){ e.style.display='none'; });
   window.__rawPosts=DEMO_POSTS.map(function(p,i){
     var q={}; for(var k in p) q[k]=p[k];
     q.id='demo-p'+i; q.pref=q.pref||'大阪府'; q.when=q.when||''; q.anon=!!q.anon; q.createdAt=demoTs(p.min||60);
     return q;
   });
   renderLivePosts();
+  renderEco();
 }
 function startDemo(withGuide){
   window.__guest=true; currentProfile=null;
@@ -4741,12 +4800,7 @@ function demoAddPost(p){
   window.__rawPosts=[p].concat(window.__rawPosts||[]);
   renderLivePosts();
 }
-function renderDemoPoints(){
-  var v=myPoints().toLocaleString();
-  var a=document.getElementById('prof-points'); if(a) a.textContent=v;
-  var b=document.getElementById('rew-balance-num'); if(b) b.textContent=v;
-  var c=document.getElementById('rew-balance-sub'); if(c) c.textContent=balanceSubText(pointsTotals(demoTx()));
-}
+function renderDemoPoints(){ renderEco(); }
 function demoProfilePost(id){ var p=(window.__posts||{})[id]; if(p&&!p.anon) openDemoProfile(p.authorName); }
 /* デモの相手のプロフィール。実アプリと同じ描き方（ニックネーム・自己紹介・本人確認済みの印と、名前を出した投稿）。
    from==='chat' なら会話から開いたもの */
@@ -4757,7 +4811,7 @@ function openDemoProfile(name,from){
   var posts=(window.__rawPosts||[]).filter(function(p){ return p.authorName===name && !p.anon; });
   (d.can||[]).forEach(function(t){ posts.push({type:'can',title:t}); });
   var ctx={uid:'', name:name, color:d.c, self:false, from:from||''};
-  renderUserProfile(ctx,{name:name, type:'personal', bio:[d.bio,d.intro].filter(Boolean).join('。'), verified:demoVerified(name)},posts);
+  renderUserProfile(ctx,{name:name, type:d.org?'org':'personal', bio:[d.bio,d.intro].filter(Boolean).join('。'), verified:demoVerified(name)},posts);
   if(ctx.from!=='chat') document.getElementById('up-msg-btn').onclick=function(){ openChat(name,d.c,name.charAt(0)); };
   var rb=document.getElementById('up-report-btn');
   if(rb) rb.onclick=function(){ toast('通報は運営だけが確認し、相手には通知されません（デモでは送信しません）'); };
@@ -4779,46 +4833,662 @@ function demoMessageFromPost(id){
     '<div class="bubble-wrap me"><div><div class="bubble">'+mine+'</div><div class="bubble-time">今</div></div></div>'+
     '<div class="bubble-wrap">'+av+'<div><div class="bubble">'+theirs+'</div><div class="bubble-time">今</div></div></div>';
 }
-/* 支え合いが終わった → お礼を決める（デモ版。実運用の「ゲート」の説明つき） */
+/* 支え合いが終わった → この相手と成立している活動の完了確認へ。
+   ＆ポイントは手渡さない。お礼の言葉や、交通費などの実費の取り決めは、当事者どうしに委ねる（機能には含めない） */
 function demoCloseDeal(){
-  var c=window.__demoChat||{name:'ともこ'};
-  toast('支え合いを記録しました（デモ）');
-  setTimeout(function(){
-    openSheet('お礼を決める',
-      '<div style="font-size:.8rem;color:var(--tl);line-height:1.9;margin-bottom:6px">どちらを選んでも構いません。伝えないことを選んでも、相手には分かりません。</div>'+
-      '<div style="padding:14px 0;border-bottom:1px solid rgba(184,175,214,.15)">'+
-        '<div style="font-size:.9rem;font-weight:600">'+escapeHtml(c.name+honorific(c.name))+'との支え合い</div>'+
-        '<div style="display:flex;gap:9px;margin-top:11px">'+
-          '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem" onclick="closeSheet();toast(\'わかりました。相手には伝わりません（デモ）\')">今回は伝えない</button>'+
-          '<button class="btn-secondary" style="flex:1;padding:13px 10px;font-size:.84rem;color:var(--lav3);border-color:rgba(184,175,214,.55)" onclick="closeSheet();thanksToPartner()">ありがとうを伝える</button>'+
-        '</div>'+
-      '</div>'+
-      '<div style="margin-top:16px;font-size:.72rem;color:var(--tl);line-height:1.8">実際の運用では、決めるまで新しい「頼みたい」は出せません（記録の質を保つため）。72時間で自動的に閉じ、急ぎのときや災害時は外れます。</div>');
-  },450);
-}
-function demoSendThanks(pts){
-  if(pts>0){ var nm=thanksSel.toName||'相手の方'; demoTx().unshift({id:'tx'+Date.now(), kind:'give', label:nm+honorific(nm)+'へ', pts:-pts, tags:(thanksSel.tags||[]).slice(0,5), at:Date.now()}); }
-  renderDemoPoints();
-  var act=document.getElementById('prof-activity'), h=act&&act.querySelector('.sec-h');
-  if(h) h.insertAdjacentHTML('afterend',
-    '<div class="feed-item"><div class="feed-h"><div class="feed-dot" style="background:var(--lav)"></div>'+
-    '<div class="feed-text"><b>'+escapeHtml(thanksSel.toName)+'</b>'+honorific(thanksSel.toName).trim()+'にありがとうを贈りました</div><div class="feed-time">たった今</div></div>'+
-    (pts?'<div style="margin-left:18px;margin-top:6px"><span class="feed-point minus">−'+pts+' ＆pt</span></div>':'')+'</div>');
-  closeSheet();
-  toast('お互いさま。貸し借りは、これでおしまいです');
-  setTimeout(demoExplainThanks,1100);
-}
-function demoExplainThanks(){
-  openSheet('いま起きたこと',
-    '<div style="font-size:.8rem;color:var(--tl);line-height:1.85;margin-bottom:12px">お礼ひとつにも、支える人が負い目なく続けられるための工夫を入れています。</div>'+
-    gPt('i-heart','選んだ感謝タグは、相手のマイページの<b>「よく言われること」に言葉のまま</b>届きます。ほかの人には見せず、誰が書いたかも表示しません')+
-    gPt('i-gift','＆ポイントは運営が配るのではなく、<b>受けた人から手渡し</b>ます。その場で借りを返したことになるので、負い目が残りません')+
-    gPt('i-users','同じ相手との2回目以降は、信頼の伸びがゆるやかになります。<b>いろいろな人と支え合うほど</b>、段階が上がります')+
-    gPt('i-lock','「今回は伝えない」を選んでも、相手には分かりません。<b>低い評価を公開する仕組みはありません</b>')+
-    '<button class="btn-primary" style="margin-top:8px" onclick="closeSheet()">わかりました</button>');
+  var c=window.__demoChat||{}, s=window.__eco;
+  var withHim=function(list){ return list.filter(function(a){ var o=s.actors[ecoOther(a)]; return o&&o.name===c.name; }); };
+  // 進行中の活動があればその完了確認へ。なければ、完了した活動（振り返り）へ
+  var hit=withHim(ecoOngoing());
+  if(!hit.length&&ecoOn()) hit=withHim(s.activities.filter(function(a){ return a.status==='completed'; }));
+  if(hit.length){ openActivity(hit[hit.length-1].id); return; }
+  openSheet('この相手と成立した活動は、まだありません',
+    '<div class="eco-sub">＆ポイントは、最初の実証で扱う3つの活動（話し相手・部活補助・清掃活動）で、双方が納得して成立し、達成を確かめたあとに、運営から双方へ発行します。頼んだ人から手渡すものではありません。</div>'+
+    '<div class="eco-note" style="margin-top:0">お礼の言葉や、交通費などの実費の取り決めは、当事者どうしにおまかせしています（アプリの機能には含めません）。</div>'+
+    '<button class="btn-primary" style="margin-top:14px" onclick="closeSheet();navTo(\'main\')">ホームで活動を探す</button>');
 }
 /* デモ会話の最初の中身（投稿から開いた会話で上書きされても、ここから戻す） */
 var DEMO_THREAD_HTML=(document.getElementById('chat-thread')||{}).innerHTML||'';
+
+/* ===================================================================
+   v0.8.0：ゲストのデモに、2026年10月に合意した新しい仕組みを入れる（見た目は旧デザインのまま）
+   正本：運営の「You&i（結）概念ノート」「You&i Space ＆ポイントと貢献実績 設計メモ」（リポジトリの外）
+   ・登録時は0pt。残高がなくても頼める・応募できる。先に誰かを支える義務はない
+   ・最初の実証は「話し相手」「部活補助」「清掃活動」の3つ。マッチングで確かめることをすべて確かめてから成立する
+     （断る・条件を相談し直すこともできる）。成立のとき運営が発行枠を確保し、枠がなければ成立させない
+   ・運営は当事者とは別の立場。活動前の確認（本人・所属・当日の責任者）→ 参加者の完了確認 → 運営の照合
+     → 運営から双方へ無償で発行（頼んだ人の残高は減らない。団体は1開催に1回）→ 相互評価 → 次の活動や機会
+   ・使うと消却する（運営のプールに戻して配り直さない）。現金での購入・換金・売買・譲渡はしない
+   ・計算は space-economy.js（単体テストつき）。この端末の中だけで動き、何も送信しない。再読み込みで最初に戻る
+   ・実アカウントの＆ポイント（thanks から計算）と、その画面（.real-only）は変えない
+   ・各10pt・発行の上限300pt・振り返りの締切7日・機会の条件「2活動・異なる2人の相手の確認」はデモの仮の値
+   =================================================================== */
+var ECO=window.YouiSpaceEconomy||null;
+var ECO_SCEN={
+  talk:   {label:'話し相手', min:30, icon:'i-chat',  about:'高齢者など、日常の会話や交流を求める人と話します。', form:'スタッフのいる交流拠点などで、初回30分程度', who:'1対1・スタッフのいる場所'},
+  club:   {label:'部活補助', min:60, icon:'i-users', about:'小中高の部活で、顧問・コーチの補助として、準備・記録・片付けなどを手伝います。専門的な指導はしません。', form:'顧問などの責任者が同席し、60分程度', who:'支える人1人・顧問が同席'},
+  cleanup:{label:'清掃活動', min:60, icon:'i-house', about:'公園や地域のごみ拾いなど、市町の清掃活動に参加します。', form:'主催団体が受付・道具・区域を用意し、5人程度で60分', who:'支える人5人程度・主催団体'}
+};
+var ECO_CHECKS={talk:['話題','会話のペース','希望する距離感'], club:['担当作業','経験','参加時間','受入側の説明'], cleanup:['日時','場所','作業の負担','参加条件']};
+var ECO_PEOPLE=[['misako','みさこ','person'],['tomoko','ともこ','person'],['kazuko','かずこ','person'],['jhs','○○中学校 陸上部','organization'],['town','○○町 自治会','organization']];
+var ECO_HELPERS=['participant2','participant3','participant4','participant5'];   // 清掃活動で一緒に参加する、ご近所の人（架空）
+var ECO_STATUS={draft:'内容の確認',reserved:'成立・活動の予定',ready:'発行の準備ができました',completed:'活動完了',hold:'運営が確かめています',cancelled:'見送り・取り消し'};
+var ECO_STEPS=['内容・成立','活動前の確認','完了の確認','双方へ発行','振り返り・次へ'];
+var ECO_HOLD={partial:'途中で終わった',disputed:'確かめた内容が食い違う',unconfirmed:'片方の確認が取れない'};
+var ECO_ANS={yes:'確認できた',unknown:'判断できない',consult:'運営に相談したい',none:'変更はなかった'};
+var ECO_REVIEW_Q=[['keptPromise','合意した範囲を守ってくれたか'],['toldChanges','変更があるとき、伝えてくれたか'],['respectedWishes','こちらの希望を尊重してくれたか']];
+var ECO_ITEM_LOOK={'local-drink':['i-gift','green'],'partner-service':['i-globe','sky'],'local-event':['i-users','gold'],'space-room':['i-chat',''],'activity-booklet':['i-book','gold'],'profile-look':['i-star','sky'],'space-workshop':['i-edit','green']};
+var ECO_OPP_GROUPS=[['role','自分に合う役割の紹介','関心・経験・時間などに合う活動や担当を、運営から紹介します。紹介されることと、実際に任されることは別で、受け入れ側と確かめて決めます。同じ相手からの評価だけでは、担える役割は広がりません。'],
+  ['project','小さな企画に関わる機会','会話会、部活の準備の改善、小さな清掃企画などを、運営や受け入れ先と一緒に考えます。初めてでも相談できます。'],
+  ['basic','いつでも使えること',''],['future','これから','']];
+
+/* デモのはじまり：たろうさんは登録（0pt）から、先月に清掃活動、20日前に話し相手を経験し、10日前に特典を1つ使った */
+function ecoInit(){
+  window.__eco=null; window.__ecoMeta={}; window.__ecoProposals=[]; window.__ecoHidden=[]; window.__ecoRewKind='tangible';
+  window.__ecoProfile={interests:['talk','cleanup'], skills:'聞き役・重いものを運べる', exp:'町内の清掃に参加したことがある', time:60, area:'高槻市内（自転車で行ける範囲）', care:''};
+  if(!ECO) return;
+  var DAY=86400000, t0=Date.now()-40*DAY, at=function(d){ return new Date(t0+d*DAY).toISOString(); };
+  window.__ecoJoined=t0-12*DAY;
+  try{
+    var s=ECO.createState({now:at(0), actors:ECO_PEOPLE});
+    var R=function(a){ s=ECO.reduce(s,a); };
+    var done=function(scen,opts,d,meta){
+      R(Object.assign({type:'CREATE_ACTIVITY',scenario:scen,at:at(d)},opts));
+      var id=s.activeActivityId; window.__ecoMeta[id]=meta;
+      R({type:'RESERVE_ACTIVITY',activityId:id}); R({type:'CHECK_BEFORE_ACTIVITY',activityId:id,actorId:'operator'});
+      ecoFind(s,id).requiredConfirmers.forEach(function(x){ R({type:'CONFIRM_COMPLETION',activityId:id,actorId:x}); });
+      R({type:'VERIFY_ACTIVITY',activityId:id,actorId:'operator'}); R({type:'AWARD_ACTIVITY',activityId:id});
+      return id;
+    };
+    var ok={keptPromise:'yes',toldChanges:'none',respectedWishes:'yes',workAgain:'yes'};
+    var c=done('cleanup',{organizationId:'town',participantIds:['me'].concat(ECO_HELPERS),title:'○○公園の清掃活動（先月）',place:'○○公園の入口に集合',time:'日曜 9:00〜10:00',details:'区域を分けてごみ拾い'},0,{host:'自治会の環境係',end:'60分たつか、担当の区域が終わったら終わり'});
+    R({type:'SUBMIT_REVIEW',activityId:c,fromActorId:'town',toActorId:'me',answers:ok,at:at(1)});
+    R({type:'SUBMIT_REVIEW',activityId:c,fromActorId:'me',toActorId:'town',answers:ok});
+    var k=done('talk',{partnerId:'kazuko',title:'交流サロンで、かずこさんの話し相手',place:'○○公民館の交流サロン',time:'水曜 14:00〜14:30',details:'お茶を飲みながら、漬物づくりの話を聞く'},20,{host:'交流サロンのスタッフ',end:'30分たったら終わり'});
+    R({type:'SUBMIT_REVIEW',activityId:k,fromActorId:'kazuko',toActorId:'me',answers:{keptPromise:'yes',toldChanges:'yes',respectedWishes:'yes',workAgain:'yes'},at:at(21)});
+    R({type:'SUBMIT_REVIEW',activityId:k,fromActorId:'me',toActorId:'kazuko',answers:ok});
+    R({type:'REDEEM',actorId:'me',productId:'space-room',at:at(30)});
+    R({type:'ADVANCE_TIME',days:10});
+    window.__eco=s;
+  }catch(e){ console.warn('eco init',e); window.__eco=null; }
+}
+function ecoFind(s,id){ return ((s&&s.activities)||[]).filter(function(a){ return a.id===id; })[0]||null; }
+function ecoOn(){ return !!(ECO&&window.__eco&&isGuestDemo()); }
+function ecoAct(id){ return ecoOn()?ecoFind(window.__eco,id):null; }
+function ecoBalance(){ return ecoOn()?window.__eco.actors.me.balance:0; }
+/* 参加者の呼び名（自分は「あなた」、清掃活動のほかの参加者は「ご近所の参加者」、団体には「さん」を付けない） */
+function ecoNm(id){
+  if(id==='me') return 'あなた';
+  if(ECO_HELPERS.indexOf(id)>=0) return 'ご近所の参加者';
+  var a=(window.__eco.actors||{})[id]; if(!a) return '相手の方';
+  return a.type==='organization'?a.name:a.name+honorific(a.name);
+}
+function ecoOther(a){ return a.providerIds.indexOf('me')>=0?a.receiverIds[0]:a.providerIds[0]; }
+function ecoMine(a){ return a.providerIds.indexOf('me')>=0?'provider':'receiver'; }
+function ecoMeta(id){ return window.__ecoMeta[id]||(window.__ecoMeta[id]={}); }
+function ecoOngoing(){ return ecoOn()?window.__eco.activities.filter(function(a){ return ['draft','reserved','ready','hold'].indexOf(a.status)>=0; }):[]; }
+function ecoDispatch(action,msg){
+  if(!ecoOn()) return false;
+  try{ window.__eco=ECO.reduce(window.__eco,action); }
+  catch(e){ toast(e&&e.message?e.message:'操作を確かめてください'); return false; }
+  renderEco(); if(msg) toast(msg); return true;
+}
+function ecoRewardText(k){ return k==='talk'?'支える人と頼む人に、各10pt':(k==='club'?'支える人に10pt、学校（団体）に1開催で10pt':'支える人に1人10pt、主催団体に1開催で10pt'); }
+function ecoDate(iso){ return fmtYMD(Date.parse(iso)); }
+
+/* ===== ホーム：進行中の活動／最初の実証の3つの活動 ===== */
+function ecoNextText(a){
+  if(a.status==='draft') return '内容を確かめて、成立させましょう';
+  if(a.status==='reserved') return a.preCheck?'活動が終わったら、完了を確かめましょう':'活動の前に、運営が本人・所属・当日の責任者を確かめます';
+  if(a.status==='ready') return '全員の完了確認と運営の照合がそろいました。運営から発行します';
+  if(a.status==='hold') return '運営が状況を確かめています';
+  return ECO_STATUS[a.status];
+}
+function renderEcoCard(){
+  var el=document.getElementById('eco-card'); if(!el) return;
+  if(!ecoOn()){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='';
+  var on=ecoOngoing();
+  if(on.length){
+    var a=on[on.length-1], sc=ECO_SCEN[a.scenario];
+    el.innerHTML='<div class="care-eyebrow"><svg class="ic"><use href="#'+sc.icon+'"/></svg>進行中の活動'+(on.length>1?'（'+on.length+'件）':'')+'</div>'+
+      '<div class="care-h">'+escapeHtml(a.title||sc.label)+'</div>'+
+      '<div class="care-body"><span class="eco-tag">'+sc.label+'</span>'+escapeHtml(ecoNextText(a))+'</div>'+
+      '<div class="care-actions" style="margin-top:11px"><button class="btn-primary" onclick="openActivity(\''+a.id+'\')">つづきを見る</button>'+
+        (on.length>1?'<button class="btn-secondary" onclick="openEcoActivities()">ほかの活動</button>':'')+'</div>';
+  }else{
+    el.innerHTML='<div class="care-eyebrow"><svg class="ic"><use href="#i-users"/></svg>最初の実証で扱う活動</div>'+
+      '<div class="care-h">話し相手・部活補助・清掃活動の、3つから。</div>'+
+      '<div class="care-body">登録は 0pt。＆ポイントがなくても、頼めます・応募できます。活動の達成を確かめたあと、運営が双方に＆ポイントを発行します。</div>'+
+      '<div class="care-chips">'+Object.keys(ECO_SCEN).map(function(k){ return '<button class="care-chip" onclick="openEcoScenario(\''+k+'\')">'+ECO_SCEN[k].label+'</button>'; }).join('')+'</div>'+
+      '<div class="care-foot"><span>時間・人数は実証のための仮の設定です。</span><button onclick="openEcoGuide()">仕組みを見る</button></div>';
+  }
+}
+function openEcoGuide(){ var list=guideSlides(); for(var i=0;i<list.length;i++){ if(list[i]===GUIDE_ECO_POINT){ openGuide(i); return; } } openGuide(0); }
+function openEcoScenario(k){
+  var sc=ECO_SCEN[k]; if(!sc) return;
+  var posts=(window.__rawPosts||[]).filter(function(p){ return p.scenario===k; });
+  openSheet(sc.label,
+    '<div class="eco-sub">'+sc.about+'</div>'+
+    '<div class="eco-dl"><div><b>実施の形</b><span>'+sc.form+'</span></div><div><b>マッチングで確かめること</b><span>'+ECO_CHECKS[k].join('・')+'</span></div><div><b>＆ポイント</b><span>'+ecoRewardText(k)+'（仮の設定）</span></div></div>'+
+    '<div class="eco-h" style="margin-top:16px">いま出ている投稿</div>'+
+    (posts.length?'<div class="set-section">'+posts.map(function(p){
+      return '<div class="set-item" onclick="openPostDetail(\''+p.id+'\')"><div style="flex:1;min-width:0"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'+typeBadge(p.type)+'<span class="set-label">'+escapeHtml(p.title||'')+'</span></div>'+
+        '<div style="font-size:.7rem;color:var(--tl);margin-top:3px">'+escapeHtml(postAuthor(p))+'</div></div><div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
+    }).join('')+'</div>':emptyHist('いまは出ていません。'))+
+    '<div class="eco-note">専門的な相談や指導、身体介護は、最初の活動には含めません。必要な資格や受け入れの体制は、評価とは別に確かめます。</div>');
+}
+
+/* ===== 投稿：最初の実証の活動か・関心や時間に合うか ===== */
+function ecoPostTags(p){
+  if(!p||!p.scenario||!isGuestDemo()) return '';
+  var sc=ECO_SCEN[p.scenario], pr=window.__ecoProfile||{}, out='<span class="eco-tag">実証の活動：'+sc.label+'</span>';
+  if(isMyPost(p)) return out;
+  if((pr.interests||[]).indexOf(p.scenario)>=0) out+='<span class="eco-tag fit">関心に合う</span>';
+  if(pr.time&&sc.min<=pr.time) out+='<span class="eco-tag fit">時間が合う</span>';
+  return out;
+}
+function ecoPostBlock(p){
+  if(!isGuestDemo()||!p) return '';
+  if(!p.scenario) return isMyPost(p)?'':'<div class="eco-note" style="margin:0 0 14px">この内容は、最初の実証で扱う3つの活動（話し相手・部活補助・清掃活動）の外にあります。メッセージで相談はできますが、運営の確認や＆ポイントの発行はありません。</div>';
+  var sc=ECO_SCEN[p.scenario], rows=[['活動の種類',sc.label+'（'+sc.form+'）']];
+  if(p.when&&normType(p.type)==='need') rows.push(['日時',p.when]);
+  if(p.place) rows.push(['場所',p.place]);
+  if(p.host) rows.push(['当日の責任者',p.host]);
+  if(p.task) rows.push(['担当すること',p.task]);
+  if(p.end) rows.push(['終わりの目安',p.end]);
+  rows.push(['＆ポイント',ecoRewardText(p.scenario)+'。達成を確かめたあと、運営から発行します（頼む人の残高は減りません）']);
+  var tags=ecoPostTags(p);
+  return '<div style="background:rgba(158,202,216,.1);border:1px solid rgba(158,202,216,.3);border-radius:14px;padding:12px 14px;margin-bottom:14px">'+
+    '<div style="margin-bottom:6px">'+tags+'</div>'+
+    '<div class="eco-dl">'+rows.map(function(r){ return '<div><b>'+r[0]+'</b><span>'+escapeHtml(r[1])+'</span></div>'; }).join('')+'</div></div>';
+}
+function ecoActivityForPost(postId){
+  var on=ecoOngoing();
+  for(var i=on.length-1;i>=0;i--){ if((window.__ecoMeta[on[i].id]||{}).postId===postId) return on[i]; }
+  return null;
+}
+/* 投稿の詳細の主なボタン（応募する・頼む・つづきを見る）。最初の実証の活動でなければ空 */
+function ecoPostActions(p,id){
+  if(!p||!p.scenario||!ecoOn()||isMyPost(p)) return '';
+  var cur=ecoActivityForPost(id);
+  if(cur) return '<button class="btn-primary" onclick="openActivity(\''+cur.id+'\')">この活動のつづきを見る</button>';
+  if(normType(p.type)==='need') return '<button class="btn-primary" onclick="ecoApply(\''+id+'\')">この活動に応募する</button>';
+  if(p.scenario==='talk') return '<button class="btn-primary" onclick="ecoApply(\''+id+'\')">この人に頼む</button>';
+  return '<div class="eco-note" style="margin:0 0 4px">部活補助と清掃活動は、学校・主催団体が頼む活動です。団体のアカウントから、この人に声をかけられます（このデモでは、個人として「頼みたい」に応募する流れを体験できます）。</div>';
+}
+function ecoApply(postId){
+  var p=(window.__posts||{})[postId]; if(!p||!p.scenario||!ecoOn()) return;
+  var cur=ecoActivityForPost(postId); if(cur){ openActivity(cur.id); return; }
+  var n=window.__eco.activities.filter(function(a){ return (window.__ecoMeta[a.id]||{}).postId===postId; }).length;
+  var act={type:'CREATE_ACTIVITY',scenario:p.scenario,meRole:normType(p.type)==='need'?'provider':'receiver',occurrenceId:'post-'+postId+'-'+(n+1),
+    title:(p.title||'').slice(0,60),place:(p.place||p.area||'').slice(0,80),time:(p.when||'').slice(0,80),details:(p.task||'').slice(0,500)};
+  if(p.scenario==='talk') act.partnerId=p.eco; else act.organizationId=p.eco;
+  if(p.scenario==='cleanup') act.participantIds=['me'].concat(ECO_HELPERS);
+  if(!ecoDispatch(act)) return;
+  var id=window.__eco.activeActivityId;
+  window.__ecoMeta[id]={postId:postId,host:p.host||'',end:p.end||'',match:p.match||{},matched:{}};
+  openActivity(id);
+}
+
+/* ===== 活動のシート：内容・成立 → 活動前の確認 → 完了の確認 → 双方へ発行 → 振り返り・次へ ===== */
+function ecoMyTasks(a){ return ECO.getReviewTasks(window.__eco,a.id).filter(function(t){ return t.fromActorId==='me'||t.toActorId==='me'; }); }
+function ecoMyReviewDone(a){ var t=ecoMyTasks(a).filter(function(x){ return x.fromActorId==='me'; })[0]; return !!t&&(t.submitted||t.status==='expired'); }
+function ecoStage(a){
+  if(a.status==='draft'||a.status==='cancelled') return 0;
+  if(a.status==='completed') return ecoMyReviewDone(a)?5:4;
+  if(a.status==='ready') return 3;
+  return a.preCheck?2:1;
+}
+function openActivity(id){
+  var a=ecoAct(id); if(!a){ toast('活動が見つかりません'); return; }
+  var sc=ECO_SCEN[a.scenario], m=window.__ecoMeta[id]||{}, st=ecoStage(a), other=ecoOther(a);
+  var who=a.scenario==='talk'?(ecoMine(a)==='provider'?'頼む人：':'支える人：')+ecoNm(other)
+         :(a.scenario==='club'?'受け入れ：'+ecoNm(other)+'（顧問が同席）':'主催：'+ecoNm(other)+' ・ 支える人 '+a.providerIds.length+'人（あなたを含む）');
+  var steps='<div class="eco-steps">'+ECO_STEPS.map(function(t,i){ return '<div class="eco-step'+(a.status==='cancelled'?'':(i<st?' done':(i===st?' now':'')))+'">'+t+'</div>'; }).join('')+'</div>';
+  var body=a.status==='draft'?ecoDraftHtml(a,m):((a.status==='reserved'||a.status==='ready')?ecoProgressHtml(a,m):(a.status==='hold'?ecoHoldHtml(a):(a.status==='completed'?ecoDoneHtml(a):ecoCancelledHtml(a))));
+  openSheet(sc.label,
+    '<div id="eco-sheet" data-id="'+a.id+'" data-status="'+a.status+'">'+
+    '<div style="font-weight:600;font-size:1rem;line-height:1.6">'+escapeHtml(a.title||sc.label)+'</div>'+
+    '<div style="font-size:.76rem;color:var(--tl);margin:3px 0 10px">'+escapeHtml(who)+' ・ <span style="color:#7c6fa3;font-weight:600">'+ECO_STATUS[a.status]+'</span></div>'+
+    steps+body+ecoPromiseHtml(a,m)+'</div>');
+}
+function ecoPromiseHtml(a,m){
+  var sc=ECO_SCEN[a.scenario];
+  var rows=[['活動の内容',a.title||sc.label],['日時',a.time||'—'],['場所',a.place||'—'],['必要な人数',sc.who+'（仮の設定）'],['担当すること',a.details||'—'],['終わりの目安',m.end||'—'],['当日の責任者',m.host||'—']];
+  var helpers=a.rewards.filter(function(r){ return ECO_HELPERS.indexOf(r.actorId)>=0; });
+  var rw=a.rewards.filter(function(r){ return ECO_HELPERS.indexOf(r.actorId)<0; }).map(function(r){
+    return '<div class="eco-kv"><span>'+escapeHtml(ecoNm(r.actorId))+'（'+(r.role==='provider'?'支える人':(a.scenario==='talk'?'頼む人':'団体・1開催に1回'))+'）</span><span>'+r.points+' pt</span></div>';
+  }).join('')+(helpers.length?'<div class="eco-kv"><span>ご近所の参加者 '+helpers.length+'人（支える人）</span><span>各 '+helpers[0].points+' pt</span></div>':'');
+  return '<details style="margin-top:16px"><summary style="font-size:.8rem;font-weight:600;cursor:pointer;color:var(--lav3)">今回の約束と、発行する＆ポイント</summary>'+
+    '<div class="eco-dl" style="margin-top:8px">'+rows.map(function(r){ return '<div><b>'+r[0]+'</b><span>'+escapeHtml(r[1])+'</span></div>'; }).join('')+'</div>'+
+    '<div style="margin-top:10px">'+rw+'<div class="eco-kv" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px"><span>合計（成立のとき、運営が発行枠を確保）</span><span>'+a.rewardTotal+' pt</span></div></div>'+
+    '<div class="eco-sub" style="margin-top:8px">頼む側の参加（内容を伝える・場を整える・調整する・終わりを確かめる）も認めて、運営が双方へ無償で発行します。頼んだ人の残高は減りません。振り返りの評価で、配る量は変わりません。'+(a.scenario==='talk'?'':'団体には1開催に1回で、担当者個人には重ねて配りません。')+'</div></details>';
+}
+function ecoDraftHtml(a,m){
+  var keys=ECO_CHECKS[a.scenario], mt=m.match||{}, ok=m.matched||{};
+  var all=keys.every(function(k){ return ok[k]; });
+  return '<div class="eco-h">内容に納得してから、成立</div>'+
+    '<div class="eco-sub">マッチングで確かめることを、相手と一緒に確かめます。双方が納得したら成立です。断ることも、条件を相談し直すこともできます。</div>'+
+    keys.map(function(k){ return '<label class="eco-check"><input type="checkbox" data-eco-match="'+escapeHtml(k)+'"'+(ok[k]?' checked':'')+' onchange="ecoMatchChanged(\''+a.id+'\')"><span><b>'+escapeHtml(k)+'</b>'+(mt[k]?'：'+escapeHtml(mt[k]):'')+'</span></label>'; }).join('')+
+    '<button class="btn-primary" id="eco-reserve-btn" style="margin-top:6px"'+(all?'':' disabled')+' onclick="ecoReserve(\''+a.id+'\')">双方が納得して、成立させる</button>'+
+    '<div class="eco-two"><button class="btn-secondary" onclick="ecoRenegotiate(\''+a.id+'\')">条件を相談し直す</button><button class="btn-secondary" onclick="ecoDecline(\''+a.id+'\')">今回は見送る</button></div>'+
+    '<div class="eco-note">＆ポイントが 0pt でも成立できます。成立したとき、運営がこの活動の分（'+a.rewardTotal+'pt）の発行枠を確保します。枠が足りないときは次の受付枠をご案内し、配れるか分からないまま約束はしません。最初の実証では、運営が候補の紹介や条件の確認を手伝います。</div>';
+}
+/* チェックのたびに描き直さない（押した場所がずれないように、ボタンの状態だけ変える） */
+function ecoMatchChanged(id){
+  var m=ecoMeta(id), all=true, boxes=document.querySelectorAll('#sheet-content [data-eco-match]');
+  m.matched={};
+  Array.prototype.forEach.call(boxes,function(b){ m.matched[b.getAttribute('data-eco-match')]=b.checked; if(!b.checked) all=false; });
+  var btn=document.getElementById('eco-reserve-btn'); if(btn) btn.disabled=!(all&&boxes.length);
+}
+function ecoReserve(id){
+  var a=ecoAct(id); if(!a) return;
+  var ok=(window.__ecoMeta[id]||{}).matched||{};
+  if(!ECO_CHECKS[a.scenario].every(function(k){ return ok[k]; })){ toast('マッチングで確かめることを、すべて確かめてください'); return; }
+  if(a.status==='draft'&&ECO.getEconomy(window.__eco).remaining<a.rewardTotal){
+    openSheet('いまの受付枠は終わりました',
+      '<div class="eco-sub">この活動に必要な発行枠（'+a.rewardTotal+'pt）が、いまの受付では残っていません。＆ポイントを配れるか分からないまま、約束はしません。</div>'+
+      '<div class="eco-note" style="margin-top:0">次の受付枠をご案内します（デモの見本）。内容はこのまま残しています。</div>'+
+      '<button class="btn-secondary" style="margin-top:14px" onclick="openActivity(\''+id+'\')">活動に戻る</button>');
+    return;
+  }
+  if(ecoDispatch({type:'RESERVE_ACTIVITY',activityId:id},'成立しました。運営が発行枠を確保しました')) openActivity(id);
+}
+function ecoDecline(id){ if(ecoDispatch({type:'CANCEL_ACTIVITY',activityId:id},'今回は見送りました。断っても、記録や評価に影響はありません')) openActivity(id); }
+function ecoRenegotiate(id){
+  var a=ecoAct(id); if(!a) return;
+  ecoMeta(id).matched={};
+  var nm=window.__eco.actors[ecoOther(a)].name;
+  closeSheet(); openChat(nm,colorForUid(nm),nm.charAt(0));
+  var f=document.getElementById('chat-field'); if(f) f.value='条件を相談させてください。';
+  toast('条件は、メッセージで相談できます。決まったら、もう一度内容を確かめます');
+}
+function ecoProgressHtml(a,m){
+  var id=a.id, pre=!!a.preCheck, c=a.confirmations||{};
+  var h='<div class="eco-h">活動前の確認</div>'+
+    '<div class="eco-sub">実際の活動の前に、運営が次のことを確かめます。入力が難しい方には、電話や対面で運営がお手伝いします。</div>'+
+    '<div class="eco-dl"><div><b>本人</b><span>参加する人が本人であること</span></div><div><b>所属・受け入れ先</b><span>'+(a.scenario==='talk'?'交流拠点・受け入れ先':'学校・主催団体')+'</span></div><div><b>当日の責任者</b><span>'+escapeHtml(m.host||'—')+'</span></div></div>'+
+    (pre?'<div class="eco-ok" style="margin-top:10px">運営が、活動前の確認を記録しました。</div>'
+        :'<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場）</div><div class="eco-row"><span>本人・所属・当日の責任者を確かめた</span><button class="kai-read" data-eco="precheck" onclick="ecoPrecheck(\''+id+'\')">記録する</button></div></div>');
+  if(!pre) return h+ecoSideLinks(a,false);
+  var btn=function(who,label){ return '<button class="kai-read" data-eco="confirm-'+who+'"'+(c[who]?' disabled':'')+' onclick="ecoConfirm(\''+id+'\',\''+who+'\')">'+(c[who]?'確認済み':label)+'</button>'; };
+  var others=a.requiredConfirmers.filter(function(x){ return x!=='me'&&ECO_HELPERS.indexOf(x)<0; });
+  var helpers=a.requiredConfirmers.filter(function(x){ return ECO_HELPERS.indexOf(x)>=0; });
+  var helpersDone=helpers.every(function(x){ return c[x]; });
+  h+='<div class="eco-h" style="margin-top:18px">活動の完了を確かめる</div>'+
+    '<div class="eco-sub">約束した活動ができたか、参加した人がそれぞれ確かめます。そのうえで運営が、主催者の記録や担当者の確認と照らし合わせます。双方が「完了」を押しただけでは発行しません。</div>'+
+    '<div class="eco-row"><span>あなた</span>'+btn('me','完了を確認')+'</div>'+
+    others.map(function(o){ return '<div class="eco-row"><span>'+escapeHtml(ecoNm(o))+'<br><small style="color:var(--tl)">デモでは、相手の確認も代わりに押せます</small></span>'+btn(o,'相手の確認')+'</div>'; }).join('')+
+    (helpers.length?'<div class="eco-row"><span>ご近所の参加者 '+helpers.length+'人<br><small style="color:var(--tl)">デモでは、まとめて押せます</small></span><button class="kai-read" data-eco="confirm-helpers"'+(helpersDone?' disabled':'')+' onclick="ecoConfirmHelpers(\''+id+'\')">'+(helpersDone?'確認済み':'まとめて確認')+'</button></div>':'')+
+    '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場）</div>'+
+      '<div class="eco-row"><span>実施の根拠（主催者の記録・担当者の確認）と照らし合わせた</span><button class="kai-read" data-eco="verify"'+(a.verification?' disabled':'')+' onclick="ecoVerify(\''+id+'\')">'+(a.verification?'照合済み':'照合する')+'</button></div>'+
+      '<button class="btn-primary" data-eco="award" style="margin-top:8px"'+(a.status==='ready'?'':' disabled')+' onclick="ecoAward(\''+id+'\')">運営から双方へ発行する</button></div>'+
+    '<div class="eco-note">発行は、全員の完了確認と運営の照合がそろってから、1つの活動につき一度だけです。振り返りの入力は、発行の条件ではありません。</div>'+
+    ecoSideLinks(a,true);
+  return h;
+}
+function ecoSideLinks(a,withHold){
+  var id=a.id;
+  return '<div style="display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px">'+
+    (withHold?'<button class="btn-link" onclick="ecoHoldSheet(\''+id+'\')">中断・食い違いなどを伝える</button>':'')+
+    '<button class="btn-link" onclick="ecoCancelSheet(\''+id+'\')">活動を取り消す</button>'+
+    '<button class="btn-link" onclick="ecoConcernSheet(\''+id+'\')">安全について運営に相談する</button></div>';
+}
+function ecoPrecheck(id){ if(ecoDispatch({type:'CHECK_BEFORE_ACTIVITY',activityId:id,actorId:'operator'},'運営が、活動前の確認を記録しました')) openActivity(id); }
+function ecoConfirm(id,who){ if(ecoDispatch({type:'CONFIRM_COMPLETION',activityId:id,actorId:who},who==='me'?'完了を確認しました':'相手の完了確認を記録しました（デモ）')) openActivity(id); }
+function ecoConfirmHelpers(id){
+  var a=ecoAct(id); if(!a) return;
+  var ok=a.requiredConfirmers.filter(function(x){ return ECO_HELPERS.indexOf(x)>=0&&!(a.confirmations||{})[x]; }).every(function(x){
+    return ecoDispatch({type:'CONFIRM_COMPLETION',activityId:id,actorId:x});
+  });
+  if(ok){ toast('ご近所の参加者の完了確認を記録しました（デモ）'); openActivity(id); }
+}
+function ecoVerify(id){ if(ecoDispatch({type:'VERIFY_ACTIVITY',activityId:id,actorId:'operator'},'運営が、実施の根拠と照らし合わせました')) openActivity(id); }
+function ecoAward(id){
+  var a=ecoAct(id); if(!a) return;
+  var mine=a.rewards.filter(function(r){ return r.actorId==='me'; })[0];
+  if(ecoDispatch({type:'AWARD_ACTIVITY',activityId:id},'運営から双方へ＆ポイントを発行しました（あなた ＋'+(mine?mine.points:0)+'pt）')) openActivity(id);
+}
+function ecoHoldSheet(id){
+  openSheet('活動の状況を伝える',
+    '<div class="eco-sub">発行はいったん止めて、運営が状況を確かめます。そのあと、再開するか取り消すかを運営が決めます。</div>'+
+    Object.keys(ECO_HOLD).map(function(k){ return '<button class="btn-secondary" style="margin-bottom:8px" onclick="ecoHold(\''+id+'\',\''+k+'\')">'+ECO_HOLD[k]+'</button>'; }).join('')+
+    '<button class="btn-link" onclick="openActivity(\''+id+'\')">戻る</button>');
+}
+function ecoHold(id,r){ if(ecoDispatch({type:'HOLD_ACTIVITY',activityId:id,reason:r},'運営が確かめるまで、発行を止めました')) openActivity(id); }
+function ecoHoldHtml(a){
+  return '<div class="eco-wait">理由：'+ECO_HOLD[a.holdReason]+'。運営が状況を確かめるまで、発行は止めています。途中までの活動の扱いは、実証の中で決めます。</div>'+
+    '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場）</div><div class="eco-two" style="margin-top:4px">'+
+      '<button class="btn-secondary" onclick="ecoResolve(\''+a.id+'\',\'resume\')">確かめて再開する</button><button class="btn-secondary" onclick="ecoResolve(\''+a.id+'\',\'cancel\')">取り消す</button></div>'+
+      '<div class="eco-sub" style="margin:8px 0 0">再開すると、完了の確認と照合をやり直します。</div></div>'+
+    '<div style="margin-top:12px"><button class="btn-link" onclick="ecoConcernSheet(\''+a.id+'\')">安全について運営に相談する</button></div>';
+}
+function ecoResolve(id,o){ if(ecoDispatch({type:'RESOLVE_ACTIVITY',activityId:id,actorId:'operator',outcome:o},o==='resume'?'運営が確かめて、再開しました':'運営が取り消しました。確保していた発行枠を戻しました')) openActivity(id); }
+function ecoCancelSheet(id){
+  openSheet('この活動を取り消しますか',
+    '<div class="eco-sub">確保していた発行枠を戻します。＆ポイントの発行はありません。</div>'+
+    '<div class="eco-two"><button class="btn-secondary" onclick="openActivity(\''+id+'\')">戻る</button><button class="btn-primary" style="background:linear-gradient(135deg,#e8b4b8,#d99aa0)" onclick="ecoCancel(\''+id+'\')">取り消す</button></div>');
+}
+function ecoCancel(id){ if(ecoDispatch({type:'CANCEL_ACTIVITY',activityId:id},'取り消しました')) openActivity(id); }
+function ecoCancelledHtml(a){
+  return '<div class="eco-wait">この活動は、見送り（取り消し）ました。＆ポイントの発行はありません。確保していた発行枠は戻しました。断っても、記録や評価に影響はありません。</div>'+
+    '<button class="btn-secondary" onclick="closeSheet();navTo(\'main\')">ほかの活動を探す</button>';
+}
+function ecoConcernSheet(id){
+  openSheet('安全について運営に相談する',
+    '<div class="eco-sub">振り返りの締切を待たずに、運営が確かめます。相手には表示しません。</div>'+
+    '<textarea id="eco-concern" maxlength="500" class="input" rows="4" style="resize:vertical;font-family:inherit;margin-bottom:14px" placeholder="気になっていること（デモの内容だけを書いてください）"></textarea>'+
+    '<div class="eco-two"><button class="btn-secondary" onclick="openActivity(\''+id+'\')">戻る</button><button class="btn-primary" onclick="ecoConcern(\''+id+'\')">運営に相談する</button></div>');
+}
+function ecoConcern(id){
+  var t=((document.getElementById('eco-concern')||{}).value||'').trim();
+  if(!t){ toast('気になっていることを書いてください'); return; }
+  if(ecoDispatch({type:'REPORT_CONCERN',activityId:id,fromActorId:'me',text:t},'運営に届けました（デモのため、送信はしません）。相手には表示しません')) openActivity(id);
+}
+function ecoDoneHtml(a){
+  var mine=a.rewards.filter(function(r){ return r.actorId==='me'; })[0], other=ecoOther(a);
+  var h='<div class="eco-ok">達成を確かめ、運営が双方へ無償で発行しました。あなたに ＋'+(mine?mine.points:0)+'pt（いま '+ecoBalance()+'pt）。'+escapeHtml(ecoNm(other))+'にも発行しています。頼んだ人の残高は減りません。</div>'+
+    '<div class="eco-h">お互いの関わりを振り返る</div>'+
+    '<div class="eco-sub">星の点数や、公開の低い評価はありません。「確認できた」「判断できない」「運営に相談したい」で答えます。双方が答えるか、活動の完了から7日（仮）たつまで、相手には表示しません。答えなくても低い評価にはならず、発行や次の依頼も止まりません。</div>';
+  h+=ecoMyTasks(a).map(function(t){
+    var mineT=t.fromActorId==='me';
+    var st=t.status==='published'?'表示されています':(t.status==='expired'?'締切になりました。未回答は評価に含めません':(t.submitted?'相手の回答か、締切を待っています':'まだ答えていません'));
+    var lbl=mineT?'あなた → '+ecoNm(t.toActorId):ecoNm(t.fromActorId)+' → あなた';
+    var b=(t.submitted||t.status==='expired')?'<button class="kai-read" disabled>'+(t.submitted?'回答済み':'締切')+'</button>'
+      :'<button class="kai-read" data-eco="review-'+(mineT?'me':'other')+'" onclick="ecoReviewSheet(\''+a.id+'\',\''+t.fromActorId+'\',\''+t.toActorId+'\')">'+(mineT?'振り返る':'相手の立場で答える')+'</button>';
+    return '<div class="eco-row"><span>'+escapeHtml(lbl)+'<br><small style="color:var(--tl)">'+st+(mineT?'':'（デモ）')+'</small></span>'+b+'</div>';
+  }).join('');
+  var seen=ECO.getReviews(window.__eco,a.id,'me'), toMe=seen.filter(function(r){ return r.toActorId==='me'; }), fromMe=seen.filter(function(r){ return r.fromActorId==='me'; })[0];
+  h+=toMe.map(function(r){
+    return '<div class="eco-note" id="eco-review-to-me"><b>'+escapeHtml(ecoNm(r.fromActorId))+'からの振り返り</b><br>'+
+      ECO_REVIEW_Q.map(function(q){ return q[1]+'：'+(r.answers[q[0]]?ECO_ANS[r.answers[q[0]]]:'答えなかった'); }).join('<br>')+'</div>';
+  }).join('');
+  // 相性（また活動したいか）は信頼と分ける。おたがいに「また活動したい」のときだけ伝える
+  if(fromMe&&fromMe.answers.workAgain==='yes'&&toMe.some(function(r){ return r.answers.workAgain==='yes'; }))
+    h+='<div class="eco-ok" style="margin-top:10px">おたがいに「また活動したい」と答えています。</div>';
+  h+='<div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:12px"><button class="kai-read" style="margin:0" data-eco="advance" onclick="ecoAdvance(\''+a.id+'\')">7日後の状態を試す（デモ）</button>'+
+    '<button class="btn-link" onclick="ecoConcernSheet(\''+a.id+'\')">安全について運営に相談する</button></div>'+
+    '<div class="eco-h" style="margin-top:18px">これから、どうしますか</div>'+
+    '<div class="eco-two"><button class="btn-secondary" onclick="ecoRepeat(\''+a.id+'\')">同じ相手と続ける</button><button class="btn-secondary" onclick="closeSheet();navTo(\'main\')">別の活動を探す</button></div>'+
+    '<div class="eco-two"><button class="btn-secondary" onclick="closeSheet();toast(\'いったん休みます。確かめた活動の記録は残ります\')">いったん休む</button><button class="btn-secondary" onclick="closeSheet();navTo(\'profile\')">記録を見る</button></div>'+
+    '<div class="eco-sub" style="margin-top:10px">休んでも、確かめた活動の記録は残ります。</div>';
+  return h;
+}
+function ecoReviewSheet(id,from,to){
+  var sel=function(k,label,extra){ return '<label class="eco-label">'+label+'</label><select class="eco-select" data-eco-q="'+k+'"><option value="unknown">判断できない</option><option value="yes">確認できた</option>'+(extra||'')+'<option value="consult">運営に相談したい</option></select>'; };
+  openSheet(from==='me'?'振り返り':'振り返り（相手の立場・デモ）',
+    '<div class="eco-sub">'+escapeHtml(ecoNm(from))+' → '+escapeHtml(ecoNm(to))+'。双方が答えるか、活動の完了から7日（仮）たつと、相手に表示します。＆ポイントの発行には影響しません。</div>'+
+    sel('keptPromise','合意した範囲を守ってくれたか')+sel('toldChanges','変更があるとき、伝えてくれたか','<option value="none">変更はなかった</option>')+sel('respectedWishes','こちらの希望を尊重してくれたか')+
+    '<label class="eco-label">同じ相手と、また活動したいか（信頼とは分ける「相性」）</label><select class="eco-select" data-eco-q="workAgain"><option value="">いまは決めない</option><option value="yes">また活動したい</option><option value="no">今回はここまで</option></select>'+
+    '<label class="eco-label">運営に伝えたいこと（任意）</label><textarea id="eco-report" maxlength="500" class="input" rows="3" style="resize:vertical;font-family:inherit;margin:5px 0 10px" placeholder="デモの内容だけを書いてください"></textarea>'+
+    '<div class="eco-sub">「運営に相談したい」と、運営に伝えたいことは、締切を待たずに運営へ届きます。相手には表示しません。</div>'+
+    '<div class="eco-two"><button class="btn-secondary" onclick="openActivity(\''+id+'\')">戻る</button><button class="btn-primary" onclick="ecoSubmitReview(\''+id+'\',\''+from+'\',\''+to+'\')">振り返りを出す</button></div>');
+}
+function ecoSubmitReview(id,from,to){
+  var ans={};
+  Array.prototype.forEach.call(document.querySelectorAll('#sheet-content [data-eco-q]'),function(s){ ans[s.getAttribute('data-eco-q')]=s.value||null; });
+  var rep=((document.getElementById('eco-report')||{}).value||'');
+  var consult=Object.keys(ans).some(function(k){ return ans[k]==='consult'; })||!!rep.trim();
+  if(ecoDispatch({type:'SUBMIT_REVIEW',activityId:id,fromActorId:from,toActorId:to,answers:ans,report:rep},
+     consult?'振り返りを出しました。運営に伝えたいことは、締切を待たずに届きました（デモ）':'振り返りを出しました。＆ポイントの発行には影響しません')) openActivity(id);
+}
+function ecoAdvance(id){ if(ecoDispatch({type:'ADVANCE_TIME',days:7},'デモの日時を7日進めました。締切を過ぎた振り返りは表示され、未回答は評価に含めません')) openActivity(id); }
+function ecoRepeat(id){
+  var a=ecoAct(id); if(!a) return;
+  var m=window.__ecoMeta[id]||{}, o=ecoOther(a);
+  var act={type:'CREATE_ACTIVITY',scenario:a.scenario,meRole:ecoMine(a),occurrenceId:'repeat-'+id+'-'+Date.now(),title:a.title,place:a.place,time:a.time,details:a.details};
+  if(a.scenario==='talk') act.partnerId=o; else act.organizationId=o;
+  if(a.scenario==='cleanup') act.participantIds=a.providerIds.slice();
+  if(!ecoDispatch(act,'同じ相手との次の活動です。もう一度、内容を確かめて成立させます')) return;
+  var nid=window.__eco.activeActivityId;
+  window.__ecoMeta[nid]={postId:m.postId,host:m.host||'',end:m.end||'',match:m.match||{},matched:{}};
+  openActivity(nid);
+}
+function openEcoActivities(){
+  if(!ecoOn()) return;
+  openSheet('活動と記録',ecoActivityList(window.__eco.activities.slice().reverse())+
+    '<div class="eco-sub" style="margin-top:10px">終わった活動も、取り消した活動も残ります。休んでも、確かめた活動の記録は消えません。</div>');
+}
+function ecoActivityList(list){
+  if(!list.length) return emptyHist('まだ活動がありません。');
+  return '<div class="set-section">'+list.map(function(a){
+    var sc=ECO_SCEN[a.scenario];
+    return '<div class="set-item eco-act-row" data-status="'+a.status+'" onclick="openActivity(\''+a.id+'\')"><div class="set-icon"><svg class="ic"><use href="#'+sc.icon+'"/></svg></div>'+
+      '<div style="flex:1;min-width:0"><div class="set-label">'+escapeHtml(a.title||sc.label)+'</div>'+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:2px">'+sc.label+' ・ '+(ecoMine(a)==='provider'?'支える側':'頼む側')+' ・ '+ECO_STATUS[a.status]+'</div></div>'+
+      '<div class="set-arrow"><svg class="ic"><use href="#i-chevron-r"/></svg></div></div>';
+  }).join('')+'</div>';
+}
+
+/* ===== マイページ：確認済みの活動・3つの記録・登録している内容・これからの機会 =====
+   「確認済みの活動プロフィール」は、機会の一覧ではなく、いちばん下の証明書の場所（eco-showcase）に出す */
+function renderEcoProfile(){
+  if(!ecoOn()) return;
+  var s=window.__eco, me=s.actors.me, rec=ECO.getRecords(s,'me'), sum=ECO.getTrustSummary(s,'me');
+  var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+  set('eco-acts-num',String(me.experiences.length)); set('eco-acts-chip','確認できた相手 '+sum.trustedCounterparties+'人'); set('eco-points',me.balance.toLocaleString());
+  var chk=function(v,l){ return '<span class="score-tag"><svg class="ic" style="font-size:.85em"><use href="#'+(v?'i-check':'i-info')+'"/></svg>'+l+(v?'':'（未確認）')+'</span>'; };
+  var b=document.getElementById('eco-badges'); if(b) b.innerHTML=chk(rec.checks.identity,'本人確認')+chk(rec.checks.orientation,'活動説明')+chk(rec.checks.childSafety,'子どもとの関わり方');
+  var yn=function(v){ return v?'確認済み':'未確認'; };
+  var exp=Object.keys(ECO_SCEN).filter(function(k){ return rec.experiences[k]; }).map(function(k){
+    var x=rec.experiences[k]; return '<div class="eco-kv"><span>'+ECO_SCEN[k].label+'</span><span>'+[x.provider?'支える側 '+x.provider+'回':'',x.receiver?'頼む側 '+x.receiver+'回':''].filter(Boolean).join('・')+'</span></div>';
+  }).join('');
+  var r=document.getElementById('eco-records');
+  if(r) r.innerHTML='<div style="font-size:.92rem;font-weight:600">記録は、3つに分けています</div>'+
+    '<div style="font-size:.72rem;color:var(--tl);line-height:1.85;margin-top:5px">ポイントの残高や活動の回数だけで、信頼の度合いを決めません。高い評価を、資格の代わりにはしません。</div>'+
+    '<div class="eco-rec"><div class="eco-rec-h">共通の信頼</div><div class="eco-rec-sub">合意した範囲を守ったか・変更を伝えたか・相手の希望を尊重したか（表示された相手の振り返りから）</div>'+
+      '<div class="eco-kv"><span>合意した範囲を守った</span><span>'+rec.trust.keptPromise+'件</span></div>'+
+      '<div class="eco-kv"><span>変更を伝えた（変更なしを含む）</span><span>'+rec.trust.toldChanges+'件</span></div>'+
+      '<div class="eco-kv"><span>希望を尊重した</span><span>'+rec.trust.respectedWishes+'件</span></div>'+
+      '<div class="eco-kv"><span>確認できた相手（異なる人）</span><span>'+rec.trust.trustedCounterparties+'人</span></div>'+
+      '<div class="eco-rec-sub" style="margin:6px 0 0">「また活動したいか」は相性として分け、ここには入れません。</div></div>'+
+    '<div class="eco-rec"><div class="eco-rec-h">活動ごとの経験</div><div class="eco-rec-sub">どの活動で、どんな役割を担当したか</div>'+(exp||'<div class="eco-rec-sub">最初の活動が終わると、ここに残ります。</div>')+'</div>'+
+    '<div class="eco-rec"><div class="eco-rec-h">資格・現在の確認事項</div><div class="eco-rec-sub">本人・所属、必要な研修や資格、責任者、活動の条件など。評価とは別に、運営が確かめます</div>'+
+      '<div class="eco-kv"><span>本人の確認</span><span>'+yn(rec.checks.identity)+'</span></div>'+
+      '<div class="eco-kv"><span>活動説明の確認</span><span>'+yn(rec.checks.orientation)+'</span></div>'+
+      '<div class="eco-kv"><span>子どもとの関わり方の確認（部活補助）</span><span>'+yn(rec.checks.childSafety)+'</span></div>'+
+      '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場・実際の研修や資格の認定ではありません）</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+
+        '<button class="kai-read" style="margin:0" data-eco="orientation"'+(rec.checks.orientation?' disabled':'')+' onclick="ecoRoleCheck(\'orientation\')">活動説明の確認を記録</button>'+
+        '<button class="kai-read" style="margin:0" data-eco="childSafety"'+(rec.checks.childSafety?' disabled':'')+' onclick="ecoRoleCheck(\'childSafety\')">子どもとの関わり方を記録</button></div></div></div>';
+  var pr=window.__ecoProfile||{}, g=document.getElementById('eco-reg');
+  if(g) g.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="font-size:.92rem;font-weight:600">登録している内容</div>'+
+      '<button class="kai-read" style="margin:0;padding:6px 13px;font-size:.74rem" onclick="ecoRegSheet()">変更する</button></div>'+
+    '<div style="font-size:.72rem;color:var(--tl);line-height:1.85;margin:6px 0 4px">関心・経験・時間などに合う活動や担当の紹介に使います。ほかの人には表示しません。</div>'+
+    '<div class="eco-dl">'+[['関心',(pr.interests||[]).map(function(k){ return ECO_SCEN[k].label; }).join('・')||'未登録'],['できること',pr.skills||'未登録'],['経験',pr.exp||'未登録'],
+      ['時間',pr.time?pr.time+'分くらい':'決めていない'],['範囲',pr.area||'未登録'],['配慮',pr.care||'とくになし']].map(function(x){ return '<div><b>'+x[0]+'</b><span>'+escapeHtml(x[1])+'</span></div>'; }).join('')+'</div>';
+  var ac=document.getElementById('eco-acts');
+  if(ac){ var list=s.activities.slice().reverse();
+    ac.innerHTML='<div class="sec-h"><div class="sec-h-title">活動と記録</div>'+(list.length>4?'<button class="btn-link" onclick="openEcoActivities()">すべて見る</button>':'')+'</div>'+ecoActivityList(list.slice(0,4)); }
+  var op=document.getElementById('eco-opps');
+  if(op){
+    var opps=ECO.getOpportunities(s,'me');
+    op.innerHTML='<div class="sec-h"><div class="sec-h-title">これからの機会</div></div>'+
+      '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-4px 0 10px">関わりの積み重ねで、自分に合う役割や機会が増えていきます。経験のない分野の役割を、自動で任せることはしません。条件はデモの仮の値です。</div>'+
+      ECO_OPP_GROUPS.map(function(gp){
+        var items=opps.filter(function(o){ return o.group===gp[0]; }); if(!items.length) return '';
+        return '<div style="font-size:.78rem;font-weight:600;margin:12px 0 4px">'+gp[1]+'</div>'+(gp[2]?'<div style="font-size:.7rem;color:var(--tl);line-height:1.75;margin-bottom:6px">'+gp[2]+'</div>':'')+
+          items.map(function(o){
+            var st=o.available?'<span class="eco-tag fit">案内できます</span>':(o.group==='future'?'<span class="eco-tag mute">準備中</span>':'<span class="eco-tag mute">条件を確かめています</span>');
+            var act=!o.available?'':(o.id==='basic-match'?'<button class="kai-read" onclick="navTo(\'main\')">活動を探す</button>'
+              :(o.id==='activity-profile'?'<button class="kai-read" onclick="ecoShowcaseSheet()">示す活動を選ぶ</button>':'<button class="kai-read" data-eco="opp-'+o.id+'" onclick="ecoOppSheet(\''+o.id+'\')">希望を伝える</button>'));
+            return '<div class="eco-opp" data-opp="'+o.id+'" data-available="'+(o.available?'1':'0')+'"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="font-size:.84rem;font-weight:600">'+escapeHtml(o.title)+'</div>'+st+'</div>'+
+              '<div style="font-size:.74rem;color:var(--tl);line-height:1.75;margin-top:4px">'+escapeHtml(o.reason)+'</div>'+
+              (o.requirements.length?'<div style="font-size:.68rem;color:var(--tl);margin-top:4px">条件（仮）：'+o.requirements.map(escapeHtml).join('・')+'</div>':'')+act+'</div>';
+          }).join('');
+      }).join('')+
+      (window.__ecoProposals.length?'<div style="font-size:.72rem;color:var(--lav3);margin-top:8px">あなたが伝えた希望：'+window.__ecoProposals.length+'件（デモのため、送信はしていません）</div>':'');
+  }
+  var sh=document.getElementById('eco-showcase');
+  if(sh){ var n=me.experiences.length, hidden=window.__ecoHidden.length;
+    sh.innerHTML='<div class="sec-h"><div class="sec-h-title">確認済みの活動プロフィール</div></div>'+
+      '<div style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-4px 0 10px">実際に担当した活動や役割を、自分で選んで示せます。資格や能力の認定ではありません。</div>'+
+      '<div class="cert" onclick="ecoShowcaseSheet()"><div class="cert-illust lav"><svg class="ic" style="width:22px;height:22px"><use href="#i-medal"/></svg></div>'+
+      '<div class="cert-body"><div class="cert-title">'+escapeHtml(DEMO_ME_NAME)+' さんの活動プロフィール</div><div class="cert-meta">示している活動 '+Math.max(0,n-hidden)+'件 ／ 確かめた活動 '+n+'件</div></div>'+
+      '<div class="cert-action">選ぶ <svg class="ic" style="font-size:.85em"><use href="#i-chevron-r"/></svg></div></div>';
+  }
+}
+function ecoRoleCheck(k){ ecoDispatch({type:'SET_ROLE_CHECK',actorId:'me',check:k,value:true,verifiedBy:'operator'},'運営が確認事項を記録しました（デモ）'); }
+function ecoOppSheet(oid){
+  var o=ECO.getOpportunities(window.__eco,'me').filter(function(x){ return x.id===oid; })[0];
+  if(!o||!o.available){ toast('必要な条件を確かめてください'); return; }
+  openSheet(o.title,
+    '<div class="eco-sub">'+(o.group==='project'?'運営や受け入れ先と一緒に考えます。採用するかは、受け入れ側が確かめて決めます。':'条件に合う役割の紹介を受けられます。実際に担当するかは、受け入れ側と確かめてから決めます。')+'</div>'+
+    '<label class="eco-label">やってみたいこと</label><textarea id="eco-proposal" maxlength="500" class="input" rows="3" style="resize:vertical;font-family:inherit;margin:5px 0 14px" placeholder="例：園芸をテーマにした、小さな会話会を開きたい"></textarea>'+
+    '<button class="btn-primary" onclick="ecoSaveProposal(\''+oid+'\')">希望を伝える</button>');
+}
+function ecoSaveProposal(oid){
+  var t=((document.getElementById('eco-proposal')||{}).value||'').trim();
+  if(!t){ toast('やってみたいことを書いてください'); return; }
+  window.__ecoProposals.push({id:oid,text:t.slice(0,500)});
+  closeSheet(); renderEco(); toast('希望を記録しました（デモのため、送信はしません）');
+}
+function ecoCertHtml(){
+  var ex=window.__eco.actors.me.experiences, hid=window.__ecoHidden;
+  var shown=ex.filter(function(e){ return hid.indexOf(e.activityId)<0; });
+  return '<div class="cert-detail lav" style="margin-top:14px"><div class="cert-detail-name">'+escapeHtml(DEMO_ME_NAME)+' さんの活動プロフィール</div><div class="cert-detail-id">YOU&amp;I SPACE ・ デモの見本</div>'+
+    '<div style="font-size:.8rem;line-height:1.9;margin-top:12px;text-align:left">'+(shown.length?shown.map(function(e){ return '・'+ECO_SCEN[e.scenario].label+'（'+(e.role==='provider'?'支える側':'頼む側')+'） '+ecoDate(e.at); }).join('<br>'):'示す活動が選ばれていません。')+'</div></div>'+
+    '<div class="eco-sub" id="eco-cert-count">示している活動 '+shown.length+'件（確かめた活動 '+ex.length+'件）。資格や能力の認定、外部での評価を保証するものではありません。</div>';
+}
+function ecoShowcaseSheet(){
+  if(!ecoOn()) return;
+  var s=window.__eco, ex=s.actors.me.experiences, hid=window.__ecoHidden;
+  if(!ex.length){ openSheet('確認済みの活動プロフィール',emptyHist('確かめた活動があると作れます。')); return; }
+  openSheet('確認済みの活動プロフィール','<div class="eco-sub">示したい活動を選べます。外しても、記録からは消えません。</div>'+
+    ex.map(function(e){ var a=ecoFind(s,e.activityId);
+      return '<label class="eco-check"><input type="checkbox" data-eco-show="'+e.activityId+'"'+(hid.indexOf(e.activityId)>=0?'':' checked')+' onchange="ecoShowChanged()"><span>'+ECO_SCEN[e.scenario].label+'（'+(e.role==='provider'?'支える側':'頼む側')+'）<br><small style="color:var(--tl)">'+escapeHtml(a?a.title:'')+'</small></span></label>'; }).join('')+
+    '<div id="eco-cert">'+ecoCertHtml()+'</div>');
+}
+function ecoShowChanged(){
+  var h=[]; Array.prototype.forEach.call(document.querySelectorAll('#sheet-content [data-eco-show]'),function(b){ if(!b.checked) h.push(b.getAttribute('data-eco-show')); });
+  window.__ecoHidden=h;
+  var c=document.getElementById('eco-cert'); if(c) c.innerHTML=ecoCertHtml();
+  renderEcoProfile();
+}
+function ecoRegSheet(){
+  var p=window.__ecoProfile||{};
+  var inp=function(k,l,ph){ return '<label class="eco-label">'+l+'</label><input class="input" id="eco-reg-'+k+'" maxlength="80" value="'+escapeHtml(p[k]||'')+'" placeholder="'+ph+'" style="margin:5px 0 12px">'; };
+  openSheet('登録している内容',
+    '<div class="eco-sub">どれも任意です。関心・経験・時間などに合う活動や担当の紹介に使い、ほかの人には表示しません。入力が難しい方には、電話や対面で運営がお手伝いします。</div>'+
+    '<label class="eco-label">関心のあること</label><div style="margin:6px 0 10px">'+Object.keys(ECO_SCEN).map(function(k){ return '<label class="eco-check"><input type="checkbox" data-eco-int="'+k+'"'+((p.interests||[]).indexOf(k)>=0?' checked':'')+'><span>'+ECO_SCEN[k].label+'</span></label>'; }).join('')+'</div>'+
+    inp('skills','できること','例：聞き役が得意、重いものを運べる')+inp('exp','経験','例：部活で記録係をしていた')+
+    '<label class="eco-label">活動できる時間</label><select class="eco-select" id="eco-reg-time">'+[[0,'決めていない'],[30,'30分くらい'],[60,'60分くらい']].map(function(o){ return '<option value="'+o[0]+'"'+((p.time||0)===o[0]?' selected':'')+'>'+o[1]+'</option>'; }).join('')+'</select>'+
+    inp('area','活動できる範囲','例：自宅から歩いて行ける範囲')+inp('care','必要な配慮','例：長い時間の立ち作業はむずかしい')+
+    '<button class="btn-primary" onclick="ecoSaveReg()">保存する</button>');
+}
+function ecoSaveReg(){
+  var v=function(k){ return ((document.getElementById('eco-reg-'+k)||{}).value||'').trim().slice(0,80); };
+  var ints=[]; Array.prototype.forEach.call(document.querySelectorAll('#sheet-content [data-eco-int]'),function(b){ if(b.checked) ints.push(b.getAttribute('data-eco-int')); });
+  window.__ecoProfile={interests:ints, skills:v('skills'), exp:v('exp'), time:parseInt(v('time'),10)||0, area:v('area'), care:v('care')};
+  closeSheet(); renderLivePosts(); renderEco(); toast('登録している内容を変えました');
+}
+
+/* ===== ＆ポイント：残高・発行の上限と消却・特典（すべて見本）・記録 ===== */
+function ecoTotals(){
+  var t={award:0,redeem:0,refund:0};
+  window.__eco.transactions.forEach(function(x){ if(x.actorId==='me'&&t.hasOwnProperty(x.type)) t[x.type]+=x.points; });
+  return t;
+}
+function ecoRewTab(k){
+  window.__ecoRewKind=k;
+  Array.prototype.forEach.call(document.querySelectorAll('#eco-rew-tabs .rew-tab'),function(t){ t.classList.toggle('on',t.getAttribute('data-k')===k); });
+  renderEcoRewards();
+}
+function renderEcoRewards(){
+  if(!ecoOn()) return;
+  var s=window.__eco, e=ECO.getEconomy(s), bal=s.actors.me.balance, t=ecoTotals();
+  var set=function(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; };
+  set('rew-balance-num',bal.toLocaleString());
+  set('rew-balance-sub','登録したときは 0pt ／ 発行された：'+t.award+'pt ／ 使った：'+t.redeem+'pt'+(t.refund?' ／ 返還：'+t.refund+'pt':''));
+  set('eco-budget-text','今期の発行枠は '+e.cap+'pt（実証のための仮の設定）。発行済み '+e.issued+'pt ・ 成立した活動のために確保中 '+e.reserved+'pt ・ 残り '+e.remaining+'pt。特典に使った分は消却し（これまで '+e.netBurned+'pt）、運営のプールに戻して配り直すことはしません。続けられるかは、消却だけでなく、発行の上限・特典の在庫や提供枠・特典の原資・運営の人手と時間をあわせて見ます。「消却すれば価値が上がる」「1ptは必ず何円」といった説明や保証はしません。');
+  set('eco-budget-num',(e.issued+e.reserved)+' / '+e.cap+' pt');
+  var w=function(id,v){ var el=document.getElementById(id); if(el) el.style.width=Math.min(100,Math.round(v/e.cap*1000)/10)+'%'; };
+  w('eco-budget-issued',e.issued); w('eco-budget-reserved',e.reserved);
+  var g=document.getElementById('eco-rew-grid');
+  if(g) g.innerHTML=s.catalog.filter(function(p){ return p.kind===window.__ecoRewKind; }).map(function(p){
+    var look=ECO_ITEM_LOOK[p.id]||['i-gift',''];
+    return '<div class="rew-card'+(p.stock?'':' off')+'" data-item="'+p.id+'" onclick="ecoRedeem(\''+p.id+'\')"><div class="rew-img '+look[1]+'"><svg class="ic" style="width:36px;height:36px"><use href="#'+look[0]+'"/></svg></div>'+
+      '<div class="rew-cat">'+(p.kind==='space'?'Space内の特典':'外部の特典')+'<span class="lbl-example">見本</span></div>'+
+      '<div class="rew-name">'+escapeHtml(p.title.replace('（見本）','').replace('・見本',''))+'</div>'+
+      '<div class="rew-price">'+p.points+'<small>＆pt</small></div><div class="eco-stock">'+(p.stock?'残り '+p.stock+' 枠':'受付は終わりました')+'</div></div>';
+  }).join('');
+}
+function ecoRedeem(pid){
+  if(!ecoOn()) return;
+  var s=window.__eco, p=s.catalog.filter(function(x){ return x.id===pid; })[0]; if(!p) return;
+  var bal=s.actors.me.balance, after=bal-p.points;
+  var line=function(l,v,strong){ return '<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.84rem'+(strong?';font-weight:600':'')+'"><span>'+l+'</span><span>'+v+'</span></div>'; };
+  openSheet('特典を選ぶ',
+    '<div style="font-weight:600;font-size:1rem;margin-bottom:4px">'+escapeHtml(p.title)+'</div>'+
+    '<div style="font-size:.76rem;color:var(--tl);margin-bottom:14px">'+(p.kind==='space'?'Space内の特典':'外部の特典')+' ・ 残り '+p.stock+' 枠</div>'+
+    '<div style="background:rgba(184,175,214,.08);border:1px solid var(--border);border-radius:12px;padding:8px 14px;margin-bottom:14px">'+
+      line('いま持っている',bal+' pt')+line('使う','−'+p.points+' pt')+'<div style="border-top:1px solid var(--border);margin:4px 0"></div>'+line('使ったあと',after>=0?after+' pt':'—',true)+'</div>'+
+    (!p.stock?'<div class="eco-wait">この特典の受付は終わりました。</div><button class="btn-secondary" onclick="closeSheet()">とじる</button>'
+     :(after<0?'<div id="eco-short" style="font-size:.84rem;color:#c07880;line-height:1.8;margin-bottom:14px">あと '+(-after)+' pt 足りません。活動の達成を確かめると、運営から発行されます。頼むことや応募することに、＆ポイントは要りません。</div><button class="btn-secondary" onclick="closeSheet()">とじる</button>'
+     :'<div class="eco-sub">使った分は消却し、運営のプールに戻して配り直すことはしません。経験や信頼の記録は減りません。デモのため、実際の特典は届きません。</div>'+
+      '<div class="eco-two"><button class="btn-secondary" onclick="closeSheet()">やめる</button><button class="btn-primary" data-eco="redeem-go" onclick="ecoRedeemGo(\''+pid+'\')">'+p.points+'pt を使う</button></div>')));
+}
+function ecoRedeemGo(pid){
+  if(busy('redeem',1200)) return;
+  if(ecoDispatch({type:'REDEEM',actorId:'me',productId:pid},'特典を選びました（デモ）')){ var r=window.__eco.redemptions; ecoReceipt(r[r.length-1].id); }
+}
+function ecoCode(r){ return 'YS-'+('000'+String(r.id).replace(/\D/g,'')).slice(-4)+'-DEMO'; }
+function ecoReceipt(rid){
+  var r=window.__eco.redemptions.filter(function(x){ return x.id===rid; })[0]; if(!r) return;
+  var st=r.status==='cancelled'?(r.cancelReason==='unavailable'?'提供できなかったため、返還しました':'取り消して、返還しました'):'使いました（消却）';
+  openSheet('特典の記録',
+    '<div style="border:1.5px dashed rgba(184,175,214,.8);border-radius:16px;padding:18px 16px;text-align:center;background:linear-gradient(135deg,rgba(184,175,214,.08),rgba(200,184,122,.08));margin-bottom:14px">'+
+      '<div style="font-weight:600;font-size:.95rem;margin-bottom:10px">'+escapeHtml(r.title)+'</div>'+
+      '<div style="font-size:.7rem;color:var(--tl);letter-spacing:.08em">受付番号</div>'+
+      '<div id="voucher-code" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;font-weight:700;letter-spacing:.1em;margin:4px 0 10px">'+ecoCode(r)+'</div>'+
+      '<div style="font-size:.78rem;color:var(--ink)">'+r.points+' pt ・ '+ecoDate(r.at)+'</div>'+
+      '<div id="eco-receipt-status" style="font-size:.78rem;font-weight:600;color:'+(r.status==='cancelled'?'#5a9a6a':'#7c6fa3')+';margin-top:6px">'+st+'</div></div>'+
+    '<div class="eco-sub">デモの見本のため、実際には使えません。取り消すと、＆ポイントと交換の枠が戻ります。特典を提供できなかったときは、運営が記録を残して返還します。</div>'+
+    (r.status==='cancelled'?'':'<div class="eco-two"><button class="btn-secondary" data-eco="refund" onclick="ecoRefund(\''+rid+'\',\'user\')">取り消して返還する</button><button class="btn-secondary" onclick="openPointsHistory()">＆ポイントの記録</button></div>'+
+      '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場）</div><div class="eco-row"><span>特典を提供できなかった</span><button class="kai-read" data-eco="unavailable" onclick="ecoRefund(\''+rid+'\',\'unavailable\')">返還する</button></div></div>')+
+    (r.status==='cancelled'?'<button class="btn-secondary" onclick="openPointsHistory()">＆ポイントの記録</button>':''));
+}
+function ecoRefund(rid,reason){
+  var act={type:'CANCEL_REDEMPTION',redemptionId:rid,reason:reason,actorId:reason==='unavailable'?'operator':'me'};
+  if(ecoDispatch(act,reason==='unavailable'?'提供できなかったため、記録を残して返還しました':'取り消して、＆ポイントと交換の枠を戻しました')) ecoReceipt(rid);
+}
+var ECO_TX_FILTERS=[['all','すべて'],['award','発行された'],['redeem','使った'],['refund','返還された']];
+function openEcoHistory(filter){
+  if(!ecoOn()){ openSheet('＆ポイントの記録',emptyHist('記録はまだありません。')); return; }
+  filter=filter||'all';
+  var s=window.__eco, t=ecoTotals();
+  var titleOf=function(x){ var a=x.activityId?ecoFind(s,x.activityId):null; if(a) return a.title||ECO_SCEN[a.scenario].label; var r=s.redemptions.filter(function(y){ return y.id===x.redemptionId; })[0]; return r?r.title:''; };
+  var list=s.transactions.filter(function(x){ return x.actorId==='me'&&['award','redeem','refund'].indexOf(x.type)>=0; }).slice().reverse()
+    .concat([{type:'start',points:0,at:new Date(window.__ecoJoined||Date.now()).toISOString()}]);
+  var shown=list.filter(function(x){ return filter==='all'||x.type===filter; });
+  var sum=function(l,v,c){ return '<div style="flex:1;text-align:center"><div style="font-size:.66rem;color:var(--tl)">'+l+'</div><div style="font-size:.9rem;font-weight:600;color:'+c+'">'+v+'</div></div>'; };
+  var chips=ECO_TX_FILTERS.map(function(f){ return '<span class="thanks-tag'+(f[0]===filter?' on':'')+'" data-f="'+f[0]+'" onclick="openEcoHistory(\''+f[0]+'\')">'+f[1]+'</span>'; }).join('');
+  var rows=shown.map(function(x){
+    var label, sub, plus=x.type==='award'||x.type==='refund', click='';
+    if(x.type==='award'){ label='運営から発行：'+titleOf(x); sub='活動の達成を確かめました'; }
+    else if(x.type==='redeem'){ label=titleOf(x); sub='特典に使った（消却）'; click=' style="cursor:pointer" onclick="ecoReceipt(\''+x.redemptionId+'\')"'; }
+    else if(x.type==='refund'){ label=titleOf(x); sub=x.reason==='unavailable'?'提供できなかったため返還':'取り消して返還'; click=' style="cursor:pointer" onclick="ecoReceipt(\''+x.redemptionId+'\')"'; }
+    else { label='登録'; sub='登録したときは 0pt'; }
+    var pts=x.type==='start'?'0 pt':((plus?'＋':'−')+x.points+' pt');
+    return '<div class="set-item tx-row" data-kind="'+x.type+'"'+click+'><div style="flex:1;min-width:0"><div class="set-label">'+escapeHtml(label)+'</div>'+
+      '<div style="font-size:.7rem;color:var(--tl);margin-top:2px;line-height:1.6">'+ecoDate(x.at)+' ・ '+sub+'</div></div>'+
+      '<div class="tx-pts" style="font-size:.86rem;font-weight:600;white-space:nowrap;color:'+(x.type==='start'?'var(--tl)':(plus?'#5a9a6a':'#c07880'))+'">'+pts+'</div></div>';
+  }).join('');
+  openSheet('＆ポイントの記録',
+    '<div style="text-align:center;margin-bottom:12px"><div style="font-size:.72rem;color:var(--tl)">いま持っている</div>'+
+      '<div id="tx-balance" style="font-size:1.6rem;font-weight:600">'+s.actors.me.balance+' <span style="font-size:.9rem">pt</span></div></div>'+
+    '<div style="display:flex;gap:6px;background:rgba(184,175,214,.08);border:1px solid var(--border);border-radius:12px;padding:10px 6px;margin-bottom:14px">'+
+      sum('発行された','＋'+t.award,'#5a9a6a')+sum('使った','−'+t.redeem,'#c07880')+sum('返還された','＋'+t.refund,'#5a9a6a')+sum('登録したとき','0','var(--tl)')+'</div>'+
+    '<div style="margin-bottom:10px">'+chips+'</div>'+
+    (rows?'<div class="set-section" id="tx-list">'+rows+'</div>':emptyHist('この種類の記録は、まだありません。'))+
+    '<div style="font-size:.7rem;color:var(--tl);line-height:1.8;margin-top:12px">＆ポイントは、頼んだ人から受け取るものではありません。活動の達成を確かめたあと、運営から発行されます。デモの記録は、この端末の中だけのものです（再読み込みで最初に戻ります）。</div>');
+}
+
+/* 新しい仕組みの表示をまとめて描き直す（ホームのカード・マイページ・＆ポイント） */
+function renderEco(){
+  if(!ecoOn()) return;
+  renderEcoCard(); renderEcoProfile(); renderEcoRewards();
+}
 
 /* 都道府県セレクト（地域フィルター・投稿フォーム）を全国対応で生成 */
 initPrefSelects();

@@ -84,6 +84,8 @@ export async function newUser(browser, who, html) {
     const u = r.request().url();
     if (u.startsWith('http://127.0.0.1:')) return r.continue();
     if (u === URL) return r.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: page.__html });
+    // ゲストのデモの＆ポイントと評価の仕組み（実アカウントは使わないが、アプリと一緒に配信される）
+    if (u === 'http://localhost:5555/space-economy.js') return r.fulfill({ path: path.join(REPO, 'space-economy.js'), contentType: 'application/javascript' });
     const m = u.match(/firebasejs\/[\d.]+\/(firebase-[a-z]+-compat\.js)$/);
     if (m) return r.fulfill({ path: path.join(NM, 'firebase', m[1]), contentType: 'application/javascript' });
     if (u.includes('leaflet') && u.endsWith('.js')) return r.fulfill({ path: path.join(NM, 'leaflet/dist/leaflet.js'), contentType: 'application/javascript' });
