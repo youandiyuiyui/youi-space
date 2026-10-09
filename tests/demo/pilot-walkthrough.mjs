@@ -67,11 +67,19 @@ async function register(page) {
   assert.match(await page.locator('#app').innerText(), /はる <script>/);
   assert.equal(await page.locator('#app script').count(), 0);
 }
+async function checkMatching(page) {
+  const points = await page.locator('[data-match-check]').evaluateAll(list => list.map(el => el.dataset.matchCheck));
+  assert(points.length >= 3, 'マッチングで確かめる点を示す');
+  for (const point of points) await page.locator(`[data-match-check="${point}"]`).check();
+  assert.equal(await page.locator(selector('reserve')).isEnabled(), true);
+}
 async function create(page, scenario, role = 'provider') {
   await click(page, 'nav', '[data-view="explore"]');
   await click(page, 'create', `[data-scenario="${scenario}"][data-role="${role}"]`);
   await page.locator('[data-form="activity"] button[type="submit"]').click();
   assert.equal(current((await saved(page)).state).status, 'draft');
+  assert.equal(await page.locator(selector('reserve')).isDisabled(), true, '確かめる前は成立させない');
+  await checkMatching(page);
   await click(page, 'reserve');
   const a = current((await saved(page)).state);
   assert.equal(a.status, 'reserved');
@@ -80,6 +88,10 @@ async function create(page, scenario, role = 'provider') {
 }
 async function complete(page) {
   assert.equal(await page.locator(selector('award')).isDisabled(), true);
+  assert.equal(await page.locator(selector('confirm') + ':not(:disabled)').count(), 0, '活動前の確認の前は完了確認できない');
+  assert.equal(await page.locator(selector('verify')).isDisabled(), true);
+  await click(page, 'precheck');
+  assert.equal(current((await saved(page)).state).preCheck.actorId, 'operator');
   while (await page.locator(selector('confirm') + ':not(:disabled)').count()) {
     await page.locator(selector('confirm') + ':not(:disabled)').first().click();
   }
@@ -96,7 +108,8 @@ async function complete(page) {
 async function review(page, from, to) {
   await click(page, 'review', `[data-from="${from}"][data-to="${to}"]`);
   await page.locator('[name="keptPromise"]').selectOption('yes');
-  await page.locator('[name="clearRole"]').selectOption('yes');
+  await page.locator('[name="toldChanges"]').selectOption('none');
+  await page.locator('[name="respectedWishes"]').selectOption('yes');
   await page.locator('[name="workAgain"]').selectOption('no');
   await page.locator('[data-form="review"] button[type="submit"]').click();
 }
@@ -153,26 +166,26 @@ try {
   await complete(page);
   assert.equal((await saved(page)).state.actors.me.balance, 10);
   await pair(page, 'partner', 'me');
-  checks.push('残高0で話し相手を依頼し、双方完了・担当者確認後に双方10pt');
+  checks.push('残高0で話し相手を依頼し、マッチングの確認・活動前の確認・双方の完了確認・運営の照合の後に双方10pt');
 
   await create(page, 'club');
   await complete(page);
   await click(page, 'nav', '[data-view="profile"]');
-  assert.equal(await page.locator(selector('opportunity', '[data-id="propose-project"]')).count(), 0);
+  assert.equal(await page.locator(selector('opportunity', '[data-id="project-role"]')).count(), 0);
   await click(page, 'nav', '[data-view="activities"]');
   const clubId = current((await saved(page)).state).id;
   await click(page, 'open', `[data-id="${clubId}"]`);
   await pair(page, 'me', 'organization');
   await click(page, 'nav', '[data-view="profile"]');
-  assert.equal(await page.locator(selector('opportunity', '[data-id="propose-project"]')).count(), 0, '説明確認前には役割を解放しない');
+  assert.equal(await page.locator(selector('opportunity', '[data-id="project-role"]')).count(), 0, '説明確認前には役割を解放しない');
   await click(page, 'role-check', '[data-check="orientation"]');
   await click(page, 'role-check', '[data-check="childSafety"]');
-  assert.equal(await page.locator(selector('opportunity', '[data-id="club-support"]')).count(), 1);
+  assert.equal(await page.locator(selector('opportunity', '[data-id="role-club"]')).count(), 1);
   await click(page, 'certificate', '[data-id="activity-profile"]');
   assert.match(await page.locator('#dialog').innerText(), /活動記録/);
   assert.equal(await page.locator('#proposal-text').count(), 0);
   await click(page, 'close');
-  await click(page, 'opportunity', '[data-id="propose-project"]');
+  await click(page, 'opportunity', '[data-id="project-role"]');
   await page.locator('#proposal-text').fill('園芸をテーマにした会話会を開きたい。');
   await click(page, 'opportunity-save');
   assert.match(await page.locator('#app').innerText(), /園芸をテーマにした会話会を開きたい。/);
@@ -216,7 +229,7 @@ try {
   await click(page, 'wallet-actor', '[data-actor="organization"]');
   assert.equal(await page.locator(selector('redeem', '[data-id="local-drink"]')).isDisabled(), true);
   await click(page, 'nav', '[data-view="profile"]');
-  assert.equal(await page.locator(selector('opportunity', '[data-id="propose-project"]')).count(), 1);
+  assert.equal(await page.locator(selector('opportunity', '[data-id="project-role"]')).count(), 1);
   await page.reload();
   await click(page, 'nav', '[data-view="profile"]');
   assert.match(await page.locator('#app').innerText(), /園芸をテーマにした会話会を開きたい。/);
@@ -267,6 +280,80 @@ try {
   assert.match(await first.locator('#app').innerText(), /次の楽しみを/);
   await starter.close();
   checks.push('最初に選んだ立場をホームに反映し、残高カードからポイントへ移動');
+
+  const extra = await context();
+  const x = await newPage(extra);
+  await x.locator('.profile-details summary').click();
+  await x.locator('[name="interests"][value="talk"]').check();
+  await x.locator('[name="time"]').selectOption('30分');
+  await register(x);
+  assert.match(await x.locator('.activity-card').first().innerText(), /関心に合う/);
+  assert.deepEqual((await saved(x)).metadata.profile.interests, ['talk']);
+  await click(x, 'create', '[data-scenario="club"][data-role="provider"]');
+  await x.locator('[data-form="activity"] button[type="submit"]').click();
+  await click(x, 'edit');
+  await x.locator('[data-form="activity"] [name="end"]').fill('準備が終わったら終了');
+  await x.locator('[data-form="activity"] button[type="submit"]').click();
+  let xs = await saved(x);
+  assert.equal(xs.metadata[current(xs.state).id].end, '準備が終わったら終了');
+  await click(x, 'decline');
+  assert.equal(current((await saved(x)).state).status, 'cancelled');
+  assert.match(await x.locator('#app').innerText(), /断っても、記録や評価に影響はありません/);
+  await create(x, 'talk');
+  await click(x, 'concern');
+  await x.locator('[data-form="concern"] [name="text"]').fill('待ち合わせ場所が分かりにくい');
+  await x.locator('[data-form="concern"] button[type="submit"]').click();
+  assert.equal((await saved(x)).state.reports.at(-1).kind, 'safety');
+  await complete(x);
+  await click(x, 'review', '[data-from="me"][data-to="partner"]');
+  await x.locator('[name="respectedWishes"]').selectOption('consult');
+  await x.locator('[data-form="review"] button[type="submit"]').click();
+  assert.equal((await saved(x)).state.reports.at(-1).kind, 'consult');
+  await click(x, 'rest');
+  assert.equal(await x.evaluate(() => document.body.dataset.view), 'explore');
+  await click(x, 'nav', '[data-view="wallet"]');
+  await click(x, 'redeem', '[data-id="local-event"]');
+  await click(x, 'redeem-confirm');
+  await click(x, 'unavailable');
+  xs = (await saved(x)).state;
+  assert.equal(xs.redemptions.at(-1).cancelReason, 'unavailable');
+  assert.equal(xs.actors.me.balance, 10);
+  await click(x, 'close');
+  await click(x, 'nav', '[data-view="profile"]');
+  const records = await x.locator('#app').innerText();
+  for (const heading of ['共通の信頼', '活動ごとの経験', '資格・現在の確認事項', '自分に合う役割の紹介', '確認済みの活動プロフィール', '小さな企画に関わる機会']) assert.match(records, new RegExp(heading));
+  await snapshot(x, '11-records-mobile');
+  await snapshot(x, '12-records-desktop', 1440);
+  await click(x, 'certificate', '[data-id="activity-profile"]');
+  await x.locator('[data-show-exp]').first().uncheck();
+  assert.match(await x.locator('#dialog').innerText(), /示している活動 0件/);
+  await click(x, 'close');
+  await extra.close();
+  checks.push('登録内容を紹介に反映・相談し直す/見送る・安全の相談と「運営に相談したい」は運営へ・提供できなかった返還・3つの記録と示す活動の選択');
+
+  const limits = await context();
+  const y = await newPage(limits);
+  await y.evaluate(key => {
+    localStorage.setItem(key, JSON.stringify({ state: YouiPilotEconomy.createState({ config: { issueBudget: 20 } }), registered: true, metadata: {} }));
+  }, KEY);
+  await y.reload();
+  await click(y, 'create', '[data-scenario="cleanup"][data-role="provider"]');
+  await y.locator('[data-form="activity"] button[type="submit"]').click();
+  await checkMatching(y);
+  await click(y, 'reserve');
+  assert.match(await y.locator('#dialog').innerText(), /今回の受付枠は終了しています/);
+  assert.equal(current((await saved(y)).state).status, 'draft', '枠がないまま約束しない');
+  await click(y, 'close');
+  const v1 = JSON.parse(fs.readFileSync(path.join(HERE, '../fixtures/pilot-v1-state.json'), 'utf8'));
+  await y.evaluate(({ key, state }) => localStorage.setItem(key, JSON.stringify({ state, registered: true, metadata: {} })), { key: KEY, state: v1 });
+  await y.reload();
+  const migrated = (await saved(y)).state;
+  assert.equal(migrated.version, 2);
+  assert.equal(migrated.actors.me.balance, v1.actors.me.balance);
+  await click(y, 'nav', '[data-view="activities"]');
+  assert.equal(await y.locator('.list-card').count(), 2);
+  await limits.close();
+  checks.push('発行枠が足りないときは成立させずに案内・前の版の保存データを移行して表示');
 
   assert.deepEqual(errors, [], '画面のJavaScript/consoleエラーなし');
   assert.deepEqual(external, [], '外部通信の要求なし');

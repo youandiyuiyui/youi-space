@@ -4,12 +4,30 @@
   else root.YouiPilotEconomy = factory();
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  var VERSION = 1;
+  var VERSION = 2;
   var DAY = 86400000;
   var DEFAULT_CONFIG = {
     issueBudget: 300, providerPoints: 10, receiverPoints: 10,
     groupMax: 5, reviewDelayDays: 7, minVerifiedActivities: 2, minTrustedCounterparties: 2
   };
+  var ACTOR_IDS = ['me', 'partner', 'organization', 'participant2', 'participant3', 'participant4', 'participant5', 'operator'];
+  var CHECK_KEYS = ['identity', 'orientation', 'childSafety'];
+  var HOLD_REASONS = ['partial', 'disputed', 'unconfirmed'];
+  // 共通の信頼は「確認できた／判断できない／運営に相談したい」で答える。相性（workAgain）は信頼と分ける
+  var ANSWERS = {
+    keptPromise: ['yes', 'unknown', 'consult'], toldChanges: ['yes', 'none', 'unknown', 'consult'],
+    respectedWishes: ['yes', 'unknown', 'consult'], workAgain: ['yes', 'no']
+  };
+  // tangible＝外部の特典、space＝Space内の特典。すべて見本
+  var CATALOG = [
+    { id: 'local-drink', title: '協力店の商品（見本）', kind: 'tangible', points: 20, stock: 2 },
+    { id: 'partner-service', title: '提携先のサービス（見本）', kind: 'tangible', points: 30, stock: 1 },
+    { id: 'local-event', title: '地域の催しへの参加（見本）', kind: 'tangible', points: 10, stock: 3 },
+    { id: 'space-room', title: '交流の体験（テーマ別の交流会・見本）', kind: 'space', points: 10, stock: 3 },
+    { id: 'activity-booklet', title: '活動記録の冊子（見本）', kind: 'space', points: 20, stock: 3 },
+    { id: 'profile-look', title: 'プロフィールの見た目（見本）', kind: 'space', points: 10, stock: 5 },
+    { id: 'space-workshop', title: '企画準備の補助（見本）', kind: 'space', points: 30, stock: 2 }
+  ];
   function fail(code, message) { var e = new Error(message); e.code = code; throw e; }
   function check(ok, code, message) { if (!ok) fail(code, message); }
   function copy(x) { return JSON.parse(JSON.stringify(x)); }
@@ -32,6 +50,8 @@
   function log(state, type, data) {
     state.transactions.push(Object.assign({ id: nextId(state, 'txn'), type: type, at: state.now }, data));
   }
+  function freshChecks() { return { identity: false, orientation: false, childSafety: false }; }
+  function catalogItem(entry) { return Object.assign({}, entry, { initialStock: entry.stock }); }
   function createState(options) {
     options = options || {};
     var config = Object.assign({}, DEFAULT_CONFIG, options.config || {});
@@ -45,22 +65,51 @@
     [['me', 'あなた', 'person'], ['partner', '協力する相手', 'person'],
       ['organization', '活動の主催者', 'organization'], ['participant2', '参加者B', 'person'],
       ['participant3', '参加者C', 'person'], ['participant4', '参加者D', 'person'],
-      ['participant5', '参加者E', 'person']].forEach(function (entry) {
+      ['participant5', '参加者E', 'person'], ['operator', '運営（You&i Space）', 'operator']].forEach(function (entry) {
       actors[entry[0]] = { id: entry[0], name: entry[1], label: entry[1], type: entry[2], balance: 0,
-        checks: { orientation: false, childSafety: false }, experiences: [] };
+        checks: freshChecks(), experiences: [] };
     });
     var state = {
       version: VERSION, localOnly: true, now: iso(options.now || '2026-10-08T09:00:00+09:00'),
       sequence: 0, config: config, actors: actors, activities: [], activeActivityId: null,
       economy: { cap: config.issueBudget, issued: 0, reserved: 0, burned: 0, restored: 0 },
-      catalog: [
-        { id: 'space-room', title: 'Spaceのテーマ別交流会（見本）', kind: 'space', points: 10, stock: 3, initialStock: 3 },
-        { id: 'local-drink', title: '協力店のドリンク（見本）', kind: 'tangible', points: 20, stock: 2, initialStock: 2 },
-        { id: 'space-workshop', title: 'Spaceの体験ワークショップ（見本）', kind: 'space', points: 30, stock: 2, initialStock: 2 }
-      ],
+      catalog: CATALOG.map(catalogItem),
       redemptions: [], transactions: [], reviews: [], reports: []
     };
     assertState(state); return state;
+  }
+  /* 前の版（v1）の保存データを、運営・活動前の確認・新しい振り返りの形に移す */
+  function migrate(input) {
+    if (!input || input.localOnly !== true || input.version === VERSION) return input;
+    check(input.version === 1, 'INVALID_STATE', 'このデモ用の保存データではありません。');
+    var s = copy(input);
+    s.version = VERSION;
+    s.actors.operator = { id: 'operator', name: '運営（You&i Space）', label: '運営（You&i Space）', type: 'operator',
+      balance: 0, checks: freshChecks(), experiences: [] };
+    Object.keys(s.actors).forEach(function (id) {
+      var a = s.actors[id], old = a.checks || {};
+      a.checks = { identity: !!old.identity || a.experiences.length > 0, orientation: !!old.orientation, childSafety: !!old.childSafety };
+    });
+    s.activities.forEach(function (a) {
+      if (a.verification) a.verification.actorId = 'operator';
+      var started = ['ready', 'completed', 'hold'].includes(a.status)
+        || (a.status === 'reserved' && (Object.keys(a.confirmations).length > 0 || !!a.verification));
+      a.preCheck = started ? { actorId: 'operator', at: a.createdAt } : null;
+    });
+    var map = function (v) { return v === 'yes' ? 'yes' : v === 'partly' || v === 'no' ? 'consult' : null; };
+    s.reviews.forEach(function (r) {
+      var o = r.answers || {};
+      r.answers = { keptPromise: map(o.keptPromise), toldChanges: null, respectedWishes: map(o.clearRole),
+        workAgain: o.workAgain === 'yes' || o.workAgain === 'no' ? o.workAgain : null };
+    });
+    s.reports.forEach(function (r) { r.kind = r.kind || 'review'; });
+    s.redemptions.forEach(function (r) { r.cancelReason = r.status === 'cancelled' ? (r.cancelReason || 'user') : null; });
+    CATALOG.forEach(function (entry) {
+      var existing = s.catalog.find(function (p) { return p.id === entry.id; });
+      if (existing) { existing.title = entry.title; existing.kind = entry.kind; }
+      else s.catalog.push(catalogItem(entry));
+    });
+    assertState(s); return s;
   }
   function getEconomy(state) {
     var e = copy(state.economy);
@@ -77,6 +126,9 @@
   }
   function allowReserved(a) {
     check(a.status === 'reserved' || a.status === 'ready', 'INVALID_STATUS', '発行枠を確保した進行中の活動が対象です。');
+  }
+  function requirePreCheck(a) {
+    check(!!a.preCheck, 'PRECHECK_REQUIRED', '活動前の確認（本人・所属・当日の責任者）が済んでから確認できます。');
   }
   function release(state, a) {
     if (!a.reservedPoints) return;
@@ -114,18 +166,43 @@
       var safe = copy(review); delete safe.report; return safe;
     });
   }
+  // 共通の信頼として数えるのは、約束・希望の尊重が確認でき、変更の連絡にも心配がない回答だけ
+  function trustworthy(answers) {
+    return answers.keptPromise === 'yes' && answers.respectedWishes === 'yes'
+      && (answers.toldChanges === 'yes' || answers.toldChanges === 'none');
+  }
+  function incomingReviews(state, a) {
+    return a.experiences.reduce(function (all, e) {
+      return all.concat(getReviews(state, e.activityId, a.id).filter(function (r) { return r.toActorId === a.id; }));
+    }, []);
+  }
   function getTrustSummary(state, actorId) {
     var a = actor(state, actorId || 'me');
     var experiences = a.experiences;
     var distinct = unique(experiences.reduce(function (all, e) { return all.concat(e.counterpartyIds); }, []));
-    var trusted = unique(experiences.reduce(function (all, e) {
-      return all.concat(getReviews(state, e.activityId, a.id).filter(function (r) {
-        return r.toActorId === a.id && r.answers.keptPromise === 'yes' && r.answers.clearRole === 'yes';
-      }).map(function (r) { return r.fromActorId; }));
-    }, []));
+    var trusted = unique(incomingReviews(state, a).filter(function (r) { return trustworthy(r.answers); })
+      .map(function (r) { return r.fromActorId; }));
     return { verifiedActivities: experiences.length, distinctCounterparties: distinct.length,
       trustedCounterparties: trusted.length, trustedCounterpartyIds: trusted,
       minVerifiedActivities: state.config.minVerifiedActivities, minTrustedCounterparties: state.config.minTrustedCounterparties };
+  }
+  /* 評価経済の記録を3つに分けて返す：共通の信頼／活動ごとの経験／資格・現在の確認事項 */
+  function getRecords(state, actorId) {
+    var a = actor(state, actorId || 'me');
+    var incoming = incomingReviews(state, a);
+    var count = function (key, values) { return incoming.filter(function (r) { return values.includes(r.answers[key]); }).length; };
+    var experiences = {};
+    a.experiences.forEach(function (e) {
+      experiences[e.scenario] = experiences[e.scenario] || { provider: 0, receiver: 0 };
+      experiences[e.scenario][e.role] += 1;
+    });
+    return {
+      trust: { publishedReviews: incoming.length, keptPromise: count('keptPromise', ['yes']),
+        toldChanges: count('toldChanges', ['yes', 'none']), respectedWishes: count('respectedWishes', ['yes']),
+        trustedCounterparties: getTrustSummary(state, a.id).trustedCounterparties },
+      experiences: experiences,
+      checks: copy(a.checks)
+    };
   }
   function getOpportunities(state, actorId) {
     var a = actor(state, actorId || 'me');
@@ -133,22 +210,33 @@
     var summary = getTrustSummary(state, a.id);
     var diverse = summary.verifiedActivities >= state.config.minVerifiedActivities
       && summary.trustedCounterparties >= state.config.minTrustedCounterparties;
-    var club = experiences.some(function (e) { return e.scenario === 'club' && e.role === 'provider'; });
-    var evidence = ['確認済み活動' + state.config.minVerifiedActivities + '回',
-      '異なる' + state.config.minTrustedCounterparties + '相手から約束・役割の公開済み確認', '活動説明の確認'];
+    var oriented = a.checks.orientation;
+    // 経験のない分野の役割は紹介しない：同じ種類の活動を支える側で経験していることが条件
+    var did = function (scenario) { return experiences.some(function (e) { return e.scenario === scenario && e.role === 'provider'; }); };
+    var evidence = ['確認済みの活動' + state.config.minVerifiedActivities + '回',
+      '異なる' + state.config.minTrustedCounterparties + '人の相手からの公開済みの確認', '活動説明の確認'];
+    function role(id, title, scenario, extraOk, extraRequirements) {
+      var ok = diverse && oriented && did(scenario) && extraOk;
+      return { id: id, group: 'role', title: title, available: ok,
+        reason: ok ? '関心・経験・時間に合う担当として、運営から紹介できます。実際の担当は受入側と確認して決めます。'
+          : '同じ種類の活動の経験、異なる相手からの確認、活動説明の確認がそろうと紹介できます。',
+        requirements: evidence.concat(extraRequirements) };
+    }
     return [
-      { id: 'basic-match', title: '通常の依頼・応募', available: true, reason: '残高・評価提出の有無によらず利用できます。', requirements: [] },
-      { id: 'activity-profile', title: '確認済み活動プロフィール', available: experiences.length > 0,
-        reason: experiences.length > 0 ? '実施確認済みの活動をプロフィールに表示できます。' : '実施確認済みの活動があると表示できます。', requirements: ['確認済み活動1回'] },
-      { id: 'repeat-support', title: '継続活動のサポート役への応募', available: diverse && a.checks.orientation,
-        reason: diverse && a.checks.orientation ? '実績・異なる相手からの確認・説明確認がそろっています。' : '確認済み活動と異なる相手からの約束・役割の確認、活動説明の確認が必要です。',
+      { id: 'basic-match', group: 'basic', title: '通常の依頼・応募', available: true, reason: '残高や評価の有無によらず、いつでも利用できます。', requirements: [] },
+      { id: 'project-consult', group: 'project', title: '企画の相談', available: true,
+        reason: '初参加でも、運営や受入先に企画を相談できます。', requirements: [] },
+      { id: 'activity-profile', group: 'profile', title: '確認済みの活動プロフィール', available: experiences.length > 0,
+        reason: experiences.length > 0 ? '実際に担当した活動や役割を、自分で選んで示せます。' : '実施を確認した活動があると作れます。', requirements: ['確認済みの活動1回'] },
+      role('role-talk', '話し相手の継続担当', 'talk', true, ['話し相手の経験']),
+      role('role-club', '部活補助の継続担当', 'club', a.checks.childSafety, ['部活補助の経験', '子どもとの関わり方の確認']),
+      role('role-cleanup', '清掃活動の受付・道具係', 'cleanup', true, ['清掃活動の経験']),
+      { id: 'project-role', group: 'project', title: '小さな企画を一緒に進める', available: diverse && oriented,
+        reason: diverse && oriented ? '会話会・部活の準備改善・小さな清掃企画などを、運営や受入先と一緒に検討できます。採用は受入側が確認します。'
+          : '確認済みの活動と、異なる相手からの確認、活動説明の確認がそろうと案内できます。',
         requirements: evidence.slice() },
-      { id: 'club-support', title: '部活の継続補助への応募', available: diverse && club && a.checks.orientation && a.checks.childSafety,
-        reason: diverse && club && a.checks.orientation && a.checks.childSafety ? '応募条件を満たしています。受入側が役割を確認します。' : '実績の広がり・部活補助の経験・活動説明・子どもとの関わり方の確認が必要です。',
-        requirements: evidence.concat(['部活補助の経験', '子どもとの関わり方の確認']) },
-      { id: 'propose-project', title: '新しい活動の企画提案', available: diverse && a.checks.orientation,
-        reason: diverse && a.checks.orientation ? '実績と異なる相手からの確認をもとに企画を提案できます。採用は受入側が確認します。' : '確認済み活動と異なる相手からの約束・役割の確認、活動説明の確認が必要です。',
-        requirements: evidence.slice() }
+      { id: 'future-training', group: 'future', title: '研修の機会・運営への参画', available: false,
+        reason: '提供する体制と条件を整えた後に案内します（準備中）。', requirements: [] }
     ];
   }
   function reduce(input, action) {
@@ -180,7 +268,9 @@
       }
       check(unique(providers).length === providers.length && unique(receivers).length === receivers.length,
         'DUPLICATE_PARTICIPANT', '同じ参加者を重複登録できません。');
-      providers.concat(receivers).forEach(function (id) { actor(state, id); });
+      providers.concat(receivers).forEach(function (id) {
+        check(actor(state, id).type !== 'operator', 'OPERATOR_NOT_PARTICIPANT', '運営は活動の参加者になりません。');
+      });
       check(!providers.some(function (id) { return receivers.includes(id); }), 'SELF_ACTIVITY', '同じ人が同じ活動の支援者と受援者になることはできません。');
       if (action.scenario === 'cleanup') check(actor(state, receivers[0]).type === 'organization', 'INVALID_ORGANIZATION', '清掃活動には登録済みの主催者が必要です。');
       var occurrenceId = action.occurrenceId || 'demo-occurrence-' + (state.sequence + 1);
@@ -191,7 +281,7 @@
         .concat(receivers.map(function (id) { return { actorId: id, points: state.config.receiverPoints, role: 'receiver' }; }));
       a = { id: nextId(state, 'activity'), occurrenceId: occurrenceId, scenario: action.scenario, meRole: meRole,
         status: 'draft', createdAt: state.now, providerIds: providers.slice(), receiverIds: receivers.slice(),
-        requiredConfirmers: providers.concat(receivers), confirmations: {}, verification: null,
+        requiredConfirmers: providers.concat(receivers), confirmations: {}, verification: null, preCheck: null,
         rewards: rewards, rewardTotal: rewards.reduce(function (sum, r) { return sum + r.points; }, 0), reservedPoints: 0,
         requiredReviewPairs: providers.map(function (id) { return { providerId: id, receiverId: receivers[0] }; }),
         holdReason: null, awardedAt: null, cancelledAt: null };
@@ -210,19 +300,28 @@
       check(getEconomy(state).remaining >= a.rewardTotal, 'ISSUE_BUDGET_EXHAUSTED', '発行枠が不足しています。ポイント配布はまだ約束されていません。');
       a.reservedPoints = a.rewardTotal; state.economy.reserved += a.rewardTotal; a.status = 'reserved';
       log(state, 'reserve', { activityId: a.id, points: a.rewardTotal }); break;
-    case 'CONFIRM_COMPLETION':
+    case 'CHECK_BEFORE_ACTIVITY':
       a = activity(state, action.activityId); allowReserved(a);
+      check(action.actorId === 'operator', 'OPERATOR_REQUIRED', '活動前の確認は運営が記録します。');
+      if (!a.preCheck) {
+        a.preCheck = { actorId: 'operator', at: state.now };
+        a.requiredConfirmers.forEach(function (id) { actor(state, id).checks.identity = true; });
+      }
+      break;
+    case 'CONFIRM_COMPLETION':
+      a = activity(state, action.activityId); allowReserved(a); requirePreCheck(a);
       check(a.requiredConfirmers.includes(action.actorId), 'NOT_PARTICIPANT', '登録された参加者の確認が必要です。');
       a.confirmations[action.actorId] = a.confirmations[action.actorId] || state.now; refreshReady(a); break;
     case 'VERIFY_ACTIVITY':
       a = activity(state, action.activityId); allowReserved(a);
-      check(action.actorId === 'organization', 'VERIFIER_REQUIRED', '実証担当者による実施確認が必要です。');
+      check(action.actorId === 'operator', 'VERIFIER_REQUIRED', '運営による実施の確認が必要です。');
+      requirePreCheck(a);
       a.verification = a.verification || { actorId: action.actorId, at: state.now }; refreshReady(a); break;
     case 'AWARD_ACTIVITY':
       a = activity(state, action.activityId);
       if (a.status === 'completed') break;
       check(a.status === 'ready' && a.verification && a.requiredConfirmers.every(function (id) { return !!a.confirmations[id]; }),
-        'COMPLETION_NOT_VERIFIED', '全員の完了確認と実証担当者の実施確認が必要です。');
+        'COMPLETION_NOT_VERIFIED', '全員の完了確認と、運営による実施の確認が必要です。');
       check(a.reservedPoints === a.rewardTotal, 'RESERVATION_REQUIRED', '配布予定の発行枠を確認できません。');
       state.economy.reserved -= a.reservedPoints; state.economy.issued += a.reservedPoints; a.reservedPoints = 0;
       a.rewards.forEach(function (reward) {
@@ -234,11 +333,11 @@
       a.status = 'completed'; a.awardedAt = state.now; break;
     case 'HOLD_ACTIVITY':
       a = activity(state, action.activityId); allowReserved(a);
-      check(action.reason === 'partial' || action.reason === 'disputed', 'INVALID_REASON', '中断または認識の相違を選んでください。');
+      check(HOLD_REASONS.includes(action.reason), 'INVALID_REASON', '中断・認識の相違・片方の確認が取れない、から選んでください。');
       a.status = 'hold'; a.holdReason = action.reason; break;
     case 'RESOLVE_ACTIVITY':
       a = activity(state, action.activityId);
-      check(a.status === 'hold' && action.actorId === 'organization', 'REVIEW_REQUIRED', '保留中の活動を実証担当者が確認してください。');
+      check(a.status === 'hold' && action.actorId === 'operator', 'REVIEW_REQUIRED', '保留中の活動を運営が確認してください。');
       check(action.outcome === 'resume' || action.outcome === 'cancel', 'INVALID_OUTCOME', '再確認または取消を選んでください。');
       a.holdReason = null;
       if (action.outcome === 'cancel') { release(state, a); a.status = 'cancelled'; a.cancelledAt = state.now; }
@@ -258,45 +357,61 @@
       check(!task.submitted, 'ALREADY_REVIEWED', 'この相手への振り返りは提出済みです。');
       check(task.status !== 'expired', 'REVIEW_EXPIRED', '振り返りの受付期間は終了しました。未回答は低評価として扱いません。');
       var answers = {};
-      ['keptPromise', 'clearRole', 'workAgain'].forEach(function (key) {
+      Object.keys(ANSWERS).forEach(function (key) {
         var value = action.answers && action.answers[key] !== undefined ? action.answers[key] : null;
-        check(value === null || ['yes', 'partly', 'no'].includes(value), 'INVALID_REVIEW', '振り返りの回答形式が正しくありません。'); answers[key] = value;
+        check(value === null || ANSWERS[key].includes(value), 'INVALID_REVIEW', '振り返りの回答形式が正しくありません。'); answers[key] = value;
       });
       var report = action.report || '';
       check(typeof report === 'string' && report.length <= 2000, 'INVALID_REPORT', '報告は2000文字以内で入力してください。');
       state.reviews.push({ id: nextId(state, 'review'), activityId: a.id, fromActorId: action.fromActorId,
         toActorId: action.toActorId, answers: answers, at: state.now });
-      if (report.trim()) state.reports.push({ id: nextId(state, 'report'), activityId: a.id,
+      // 「運営に相談したい」や相談の文章は、締切を待たずに運営へ届く。相手には見せない
+      var consult = Object.keys(answers).some(function (key) { return answers[key] === 'consult'; });
+      if (report.trim() || consult) state.reports.push({ id: nextId(state, 'report'), activityId: a.id, kind: consult ? 'consult' : 'review',
         fromActorId: action.fromActorId, toActorId: action.toActorId, text: report.trim(), at: state.now, status: 'open' });
+      break;
+    }
+    case 'REPORT_CONCERN': {
+      a = activity(state, action.activityId);
+      check(a.requiredConfirmers.includes(action.fromActorId), 'NOT_PARTICIPANT', 'この活動の参加者が相談できます。');
+      var text = action.text === undefined ? '' : action.text;
+      check(typeof text === 'string' && text.trim().length > 0 && text.length <= 2000, 'INVALID_REPORT', '相談の内容を2000文字以内で入力してください。');
+      state.reports.push({ id: nextId(state, 'report'), activityId: a.id, kind: 'safety', fromActorId: action.fromActorId,
+        toActorId: null, text: text.trim(), at: state.now, status: 'open' });
       break;
     }
     case 'SET_ROLE_CHECK':
       target = actor(state, action.actorId);
-      check(action.verifiedBy === 'organization', 'VERIFIER_REQUIRED', '役割の確認は実証担当者が記録します。');
-      check(['orientation', 'childSafety'].includes(action.check) && typeof action.value === 'boolean', 'INVALID_ROLE_CHECK', '確認する項目を指定してください。');
+      check(action.verifiedBy === 'operator', 'VERIFIER_REQUIRED', '確認事項は運営が記録します。');
+      check(CHECK_KEYS.includes(action.check) && typeof action.value === 'boolean', 'INVALID_ROLE_CHECK', '確認する項目を指定してください。');
       target.checks[action.check] = action.value; break;
     case 'REDEEM': {
       target = actor(state, action.actorId || 'me');
+      check(target.type !== 'operator', 'OPERATOR_NOT_PARTICIPANT', '運営はポイントを使いません。');
       item = state.catalog.find(function (p) { return p.id === action.productId; });
       check(item, 'UNKNOWN_PRODUCT', '交換先が見つかりません。');
-      check(target.type !== 'organization' || item.kind !== 'tangible', 'ORGANIZATION_TANGIBLE_FORBIDDEN', '団体のポイントはSpace内の交換先で利用できます。');
+      check(target.type !== 'organization' || item.kind !== 'tangible', 'ORGANIZATION_TANGIBLE_FORBIDDEN', '団体のポイントは、担当者個人の商品ではなく、Space内の特典に使えます。');
       check(item.stock > 0, 'OUT_OF_STOCK', 'この見本の交換枠は終了しました。');
       check(target.balance >= item.points, 'INSUFFICIENT_POINTS', '交換に必要なポイントが不足しています。通常の依頼は利用できます。');
       target.balance -= item.points; item.stock -= 1; state.economy.burned += item.points;
       var redemption = { id: nextId(state, 'redemption'), actorId: target.id, productId: item.id,
-        title: item.title, points: item.points, status: 'redeemed', at: state.now, cancelledAt: null };
+        title: item.title, points: item.points, status: 'redeemed', at: state.now, cancelledAt: null, cancelReason: null };
       state.redemptions.push(redemption);
       log(state, 'redeem', { redemptionId: redemption.id, actorId: target.id, productId: item.id, points: item.points, delta: -item.points }); break;
     }
-    case 'CANCEL_REDEMPTION':
+    case 'CANCEL_REDEMPTION': {
       target = state.redemptions.find(function (r) { return r.id === action.redemptionId; });
       check(target, 'UNKNOWN_REDEMPTION', '交換履歴が見つかりません。');
       if (target.status === 'cancelled') break;
-      if (action.actorId) check(action.actorId === target.actorId, 'NOT_REDEMPTION_OWNER', '交換した本人が取り消してください。');
+      var reason = action.reason || 'user';
+      check(reason === 'user' || reason === 'unavailable', 'INVALID_REASON', '取消の理由が正しくありません。');
+      if (reason === 'unavailable') check(action.actorId === 'operator', 'OPERATOR_REQUIRED', '提供できなかったときの取消は運営が記録します。');
+      else if (action.actorId) check(action.actorId === target.actorId, 'NOT_REDEMPTION_OWNER', '交換した本人が取り消してください。');
       item = state.catalog.find(function (p) { return p.id === target.productId; });
       actor(state, target.actorId).balance += target.points; item.stock += 1; state.economy.restored += target.points;
-      target.status = 'cancelled'; target.cancelledAt = state.now;
-      log(state, 'refund', { redemptionId: target.id, actorId: target.actorId, productId: item.id, points: target.points, delta: target.points }); break;
+      target.status = 'cancelled'; target.cancelledAt = state.now; target.cancelReason = reason;
+      log(state, 'refund', { redemptionId: target.id, actorId: target.actorId, productId: item.id, points: target.points, delta: target.points, reason: reason }); break;
+    }
     case 'ADVANCE_TIME':
       check(integer(action.days) && action.days > 0 && action.days <= 365, 'INVALID_DAYS', '1〜365日を指定してください。');
       state.now = iso(new Date(state.now).getTime() + action.days * DAY); break;
@@ -319,11 +434,14 @@
     check(state.economy.cap === state.config.issueBudget, 'INVALID_STATE', '発行上限の記録が一致しません。');
     Object.keys(state.actors).forEach(function (id) {
       var a = state.actors[id];
-      check(a && a.id === id && typeof a.name === 'string' && ['person', 'organization'].includes(a.type) && integer(a.balance) && Array.isArray(a.experiences)
-        && a.checks && typeof a.checks.orientation === 'boolean' && typeof a.checks.childSafety === 'boolean', 'INVALID_STATE', '参加者の記録が正しくありません。');
+      check(a && a.id === id && typeof a.name === 'string' && ['person', 'organization', 'operator'].includes(a.type) && integer(a.balance) && Array.isArray(a.experiences)
+        && a.checks && CHECK_KEYS.every(function (key) { return typeof a.checks[key] === 'boolean'; }), 'INVALID_STATE', '参加者の記録が正しくありません。');
       totals[id] = 0;
     });
-    ['me', 'partner', 'organization', 'participant2', 'participant3', 'participant4', 'participant5'].forEach(function (id) { actor(state, id); });
+    ACTOR_IDS.forEach(function (id) { actor(state, id); });
+    check(state.actors.operator.type === 'operator' && Object.keys(state.actors).every(function (id) { return id === 'operator' || state.actors[id].type !== 'operator'; }),
+      'INVALID_STATE', '運営の記録が正しくありません。');
+    check(state.actors.operator.balance === 0 && state.actors.operator.experiences.length === 0, 'INVALID_STATE', '運営はポイントや活動実績を持ちません。');
     var activityIds = [];
     state.activities.forEach(function (a) {
       check(a && typeof a.id === 'string' && !activityIds.includes(a.id) && ['draft', 'reserved', 'ready', 'completed', 'hold', 'cancelled'].includes(a.status)
@@ -333,6 +451,7 @@
       activityIds.push(a.id);
       check(unique(a.providerIds.concat(a.receiverIds)).length === a.providerIds.length + a.receiverIds.length,
         'INVALID_STATE', '参加者が重複しています。');
+      check(a.providerIds.concat(a.receiverIds).every(function (id) { return actor(state, id).type !== 'operator'; }), 'INVALID_STATE', '運営は活動の参加者になりません。');
       check(a.providerIds.length >= 1 && a.receiverIds.length === 1
         && a.providerIds.length <= (a.scenario === 'cleanup' ? state.config.groupMax : 1),
         'INVALID_STATE', '参加者数が活動の条件に合っていません。');
@@ -345,7 +464,12 @@
       Object.keys(a.confirmations).forEach(function (id) {
         check(a.requiredConfirmers.includes(id), 'INVALID_STATE', '完了確認者が参加者に含まれていません。'); iso(a.confirmations[id]);
       });
-      if (a.verification) { check(a.verification.actorId === 'organization', 'INVALID_STATE', '実証担当者の確認が正しくありません。'); iso(a.verification.at); }
+      check(a.preCheck === null || (a.preCheck && a.preCheck.actorId === 'operator'), 'INVALID_STATE', '活動前の確認の記録が正しくありません。');
+      if (a.preCheck) iso(a.preCheck.at);
+      if (Object.keys(a.confirmations).length || a.verification || a.status === 'ready' || a.status === 'completed')
+        check(!!a.preCheck, 'INVALID_STATE', '活動前の確認がないまま完了の確認が記録されています。');
+      check(a.holdReason === null || a.holdReason === undefined || HOLD_REASONS.includes(a.holdReason), 'INVALID_STATE', '保留の理由が正しくありません。');
+      if (a.verification) { check(a.verification.actorId === 'operator', 'INVALID_STATE', '運営による確認の記録が正しくありません。'); iso(a.verification.at); }
       if (a.status === 'ready' || a.status === 'completed') check(a.verification && a.requiredConfirmers.every(function (id) { return !!a.confirmations[id]; }),
         'INVALID_STATE', '必要な実施確認が不足しています。');
       if (a.status === 'completed') { check(!!a.awardedAt, 'INVALID_STATE', '活動完了日時がありません。'); iso(a.awardedAt); }
@@ -380,9 +504,15 @@
       var submittedAt = new Date(iso(review.at)).getTime(), awardedAt = new Date(a.awardedAt).getTime();
       check(submittedAt >= awardedAt && submittedAt < awardedAt + state.config.reviewDelayDays * DAY,
         'INVALID_STATE', '振り返りの提出日時が受付期間外です。');
-      ['keptPromise', 'clearRole', 'workAgain'].forEach(function (key) {
-        check(review.answers[key] === null || ['yes', 'partly', 'no'].includes(review.answers[key]), 'INVALID_STATE', '振り返りの回答が正しくありません。');
+      check(Object.keys(review.answers).length === Object.keys(ANSWERS).length, 'INVALID_STATE', '振り返りの回答が正しくありません。');
+      Object.keys(ANSWERS).forEach(function (key) {
+        check(review.answers[key] === null || ANSWERS[key].includes(review.answers[key]), 'INVALID_STATE', '振り返りの回答が正しくありません。');
       });
+    });
+    state.reports.forEach(function (r) {
+      check(r && typeof r.id === 'string' && ['review', 'consult', 'safety'].includes(r.kind) && typeof r.text === 'string',
+        'INVALID_STATE', '運営への相談の記録が正しくありません。');
+      check(activity(state, r.activityId).requiredConfirmers.includes(r.fromActorId), 'INVALID_STATE', '相談した人が活動の参加者ではありません。');
     });
     var txnIds = [];
     state.transactions.forEach(function (t) {
@@ -411,7 +541,8 @@
     });
     var redemptionIds = [];
     state.redemptions.forEach(function (r) {
-      check(r && typeof r.id === 'string' && !redemptionIds.includes(r.id) && ['redeemed', 'cancelled'].includes(r.status),
+      check(r && typeof r.id === 'string' && !redemptionIds.includes(r.id) && ['redeemed', 'cancelled'].includes(r.status)
+        && (r.status === 'cancelled' ? ['user', 'unavailable'].includes(r.cancelReason) : r.cancelReason === null),
         'INVALID_STATE', '交換記録が正しくありません。');
       redemptionIds.push(r.id);
       var user = actor(state, r.actorId), product = state.catalog.find(function (p) { return p.id === r.productId; });
@@ -424,13 +555,15 @@
         'INVALID_STATE', '交換・返還の履歴が一致しません。');
     });
     state.catalog.forEach(function (p) {
-      check(integer(p.stock) && integer(p.initialStock) && integer(p.points) && p.points > 0, 'INVALID_STATE', '交換先の設定が正しくありません。');
+      check(integer(p.stock) && integer(p.initialStock) && integer(p.points) && p.points > 0 && ['tangible', 'space'].includes(p.kind),
+        'INVALID_STATE', '交換先の設定が正しくありません。');
       var used = state.redemptions.filter(function (r) { return r.productId === p.id && r.status === 'redeemed'; }).length;
       check(p.stock + used === p.initialStock, 'INVALID_STATE', '交換枠と履歴が一致しません。');
     });
     return true;
   }
   return { VERSION: VERSION, DEFAULT_CONFIG: copy(DEFAULT_CONFIG), createState: createState, seed: createState,
-    reduce: reduce, reducer: reduce, assertState: assertState, getEconomy: getEconomy,
-    getOpportunities: getOpportunities, getTrustSummary: getTrustSummary, getReviewTasks: getReviewTasks, getReviews: getReviews };
+    migrate: migrate, reduce: reduce, reducer: reduce, assertState: assertState, getEconomy: getEconomy,
+    getOpportunities: getOpportunities, getTrustSummary: getTrustSummary, getRecords: getRecords,
+    getReviewTasks: getReviewTasks, getReviews: getReviews };
 });
