@@ -338,20 +338,22 @@ test('request details preserve plain text, enforce limits, and config states dem
   assert.equal(current(reserve(create(configurable))).rewardTotal, 10);
 });
 
-test('redemption burns points and cancellation restores exact stock and balance only once', () => {
+test('redemption returns points to the pool and holds exact refunds and stock only once', () => {
   let s = completed(completed());
   rejects(E.seed(), 'REDEEM', { productId: 'space-room' }, 'INSUFFICIENT_POINTS');
   s = act(s, 'REDEEM', { productId: 'local-drink' });
-  assert.equal(s.actors.me.balance, 0); assert.equal(E.getEconomy(s).burned, 20);
+  assert.equal(s.actors.me.balance, 0); assert.equal(E.getEconomy(s).burned, 0);
+  assert.equal(E.getEconomy(s).pool, 20); assert.equal(E.getEconomy(s).poolHeld, 20); assert.equal(E.getEconomy(s).poolAvailable, 0);
+  assert.equal(E.getEconomy(s).outstanding, 40);
   assert.equal(s.catalog.find(p => p.id === 'local-drink').stock, 1);
   const redemptionId = s.redemptions[0].id;
   rejects(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'partner' }, 'NOT_REDEMPTION_OWNER');
   s = act(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'me' });
-  assert.equal(s.actors.me.balance, 20); assert.equal(E.getEconomy(s).restored, 20);
-  assert.equal(E.getEconomy(s).netBurned, 0);
+  assert.equal(s.actors.me.balance, 20); assert.equal(E.getEconomy(s).refunded, 20);
+  assert.equal(E.getEconomy(s).pool, 0); assert.equal(E.getEconomy(s).poolHeld, 0);
   assert.equal(s.redemptions[0].cancelReason, 'user');
   assert.equal(s.catalog.find(p => p.id === 'local-drink').stock, 2);
-  assert.deepEqual(act(s, 'CANCEL_REDEMPTION', { redemptionId }), s);
+  assert.deepEqual(act(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'me' }), s);
   assert.equal(E.getEconomy(s).issued, 40, 'refund does not create new issued points');
 });
 
@@ -372,10 +374,10 @@ test('stock and ledger conservation hold across different actors and repeated ca
   s = act(s, 'REDEEM', { actorId: 'me', productId: 'local-drink' });
   s = act(s, 'REDEEM', { actorId: 'participant2', productId: 'local-drink' });
   rejects(s, 'REDEEM', { actorId: 'participant3', productId: 'local-drink' }, 'OUT_OF_STOCK');
-  s = act(s, 'CANCEL_REDEMPTION', { redemptionId: s.redemptions[0].id });
+  s = act(s, 'CANCEL_REDEMPTION', { redemptionId: s.redemptions[0].id, actorId: 'me' });
   s = act(s, 'REDEEM', { actorId: 'participant3', productId: 'local-drink' });
   const e = E.getEconomy(s);
-  assert.equal(e.totalBalances, e.issued - e.burned + e.restored);
+  assert.equal(e.totalBalances + e.pool, e.issued - e.burned);
   assert.equal(e.remaining, 180, 'redemption does not replenish issuance budget');
   assert(E.assertState(JSON.parse(JSON.stringify(s))));
 });
@@ -433,4 +435,138 @@ test('demo people and organizations join as named participants; clubs and cleanu
   for (const bad of [[['me', '重複', 'person']], [['operator2', '運営', 'operator']], [['Bad Id', '名前', 'person']], [['x', '', 'person']]])
     assert.throws(() => E.seed({ actors: bad }), e => e.code === 'INVALID_ACTOR');
   assert(E.assertState(JSON.parse(JSON.stringify(s))));
+});
+
+
+test('first completion issues to both with a zero pool and records the unretired target', () => {
+  const s = completed(), e = E.getEconomy(s);
+  assert.equal(e.pool, 0); assert.equal(e.burned, 0); assert.equal(e.outstanding, 20);
+  assert.equal(e.retirementTarget, 2); assert.equal(e.retirementSkipped, 2);
+  assert.equal(s.transactions.filter(t => t.type === 'retire').length, 1);
+  assert.equal(s.transactions.at(-1).points, 0);
+  assert.deepEqual(act(s, 'AWARD_ACTIVITY', { activityId: s.activeActivityId }), s);
+});
+
+test('pending benefits remain refundable while completion cannot retire their held points', () => {
+  let s = act(completed(), 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  assert.equal(s.redemptions[0].status, 'pending');
+  s = completed(s);
+  assert.equal(E.getEconomy(s).pool, 10); assert.equal(E.getEconomy(s).poolHeld, 10);
+  assert.equal(E.getEconomy(s).burned, 0); assert.equal(E.getEconomy(s).retirementSkipped, 4);
+  rejects(s, 'CANCEL_REDEMPTION', { redemptionId: s.redemptions[0].id }, 'NOT_REDEMPTION_OWNER');
+  s = act(s, 'CANCEL_REDEMPTION', { redemptionId: s.redemptions[0].id, actorId: 'me' });
+  assert.equal(s.actors.me.balance, 20); assert.equal(E.getEconomy(s).pool, 0);
+});
+
+test('only the operator finalizes once, freeing pool points without another user deduction', () => {
+  let s = act(completed(), 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  const redemptionId = s.redemptions[0].id;
+  rejects(s, 'FINALIZE_REDEMPTION', { redemptionId, actorId: 'me' }, 'OPERATOR_REQUIRED');
+  rejects(s, 'FINALIZE_REDEMPTION', { redemptionId }, 'OPERATOR_REQUIRED');
+  s = act(s, 'FINALIZE_REDEMPTION', { redemptionId, actorId: 'operator' });
+  assert.equal(s.actors.me.balance, 0); assert.equal(E.getEconomy(s).poolAvailable, 10); assert.equal(E.getEconomy(s).available, 10);
+  assert.equal(s.redemptions[0].status, 'fulfilled'); assert.equal(s.redemptions[0].fulfilledAt, s.now);
+  assert.deepEqual(act(s, 'FINALIZE_REDEMPTION', { redemptionId, actorId: 'operator' }), s);
+  rejects(s, 'FINALIZE_REDEMPTION', { redemptionId, actorId: 'me' }, 'OPERATOR_REQUIRED');
+  rejects(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'me' }, 'ALREADY_FULFILLED');
+  rejects(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'operator', reason: 'unavailable' }, 'ALREADY_FULFILLED');
+  const before = E.getEconomy(s).outstanding;
+  s = completed(s);
+  const e = E.getEconomy(s);
+  assert.equal(s.actors.me.balance, 10); assert.equal(s.actors.partner.balance, 20);
+  assert.equal(e.burned, 2); assert.equal(e.pool, 8); assert.equal(e.poolHeld, 0);
+  assert.equal(e.outstanding - before, 18, 'new issue minus actual retirement is the total change');
+  assert.equal(e.remaining, 260, 'retirement does not replenish the cumulative issuance budget');
+});
+
+test('pool shortages retire only available points and never debit users or catch up later', () => {
+  let s = E.seed({ config: { poolBurnPercent: 100 } });
+  s = completed(s);
+  s = act(s, 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  s = act(s, 'FINALIZE_REDEMPTION', { redemptionId: s.redemptions[0].id, actorId: 'operator' });
+  s = completed(s);
+  const e = E.getEconomy(s);
+  assert.equal(e.burned, 10); assert.equal(e.pool, 0); assert.equal(e.retirementSkipped, 30);
+  assert.equal(s.actors.me.balance, 10); assert.equal(s.actors.partner.balance, 20);
+  assert.equal(s.transactions.at(-1).target, 20); assert.equal(s.transactions.at(-1).skipped, 10);
+  s = act(s, 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  s = act(s, 'FINALIZE_REDEMPTION', { redemptionId: s.redemptions.at(-1).id, actorId: 'operator' });
+  assert.equal(E.getEconomy(s).pool, 10); assert.equal(E.getEconomy(s).burned, 10, 'later usage does not collect earlier shortages');
+});
+
+test('group completion retires six points once while keeping pending refunds reserved', () => {
+  let s = completed(E.seed(), 'cleanup');
+  s = act(s, 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  s = act(s, 'FINALIZE_REDEMPTION', { redemptionId: s.redemptions[0].id, actorId: 'operator' });
+  s = act(s, 'REDEEM', { actorId: 'participant2', productId: 'space-room' });
+  s = completed(s, 'cleanup');
+  assert.equal(E.getEconomy(s).burned, 6); assert.equal(E.getEconomy(s).pool, 14);
+  assert.equal(E.getEconomy(s).poolHeld, 10); assert.equal(E.getEconomy(s).poolAvailable, 4);
+  assert.deepEqual(act(s, 'AWARD_ACTIVITY', { activityId: s.activeActivityId }), s);
+  s = act(s, 'CANCEL_REDEMPTION', { redemptionId: s.redemptions[1].id, actorId: 'participant2' });
+  assert.equal(s.actors.participant2.balance, 20); assert.equal(E.getEconomy(s).pool, 4);
+  assert.equal(E.getEconomy(s).totalBalances + E.getEconomy(s).pool, E.getEconomy(s).outstanding);
+});
+
+test('retirement percentage is a bounded integer and floors fractional targets', () => {
+  for (const value of [-1, 101, 1.5, NaN, '10']) assert.throws(() => E.seed({ config: { poolBurnPercent: value } }), e => e.code === 'INVALID_CONFIG');
+  const zero = completed(E.seed({ config: { poolBurnPercent: 0 } }));
+  assert.equal(E.getEconomy(zero).retirementTarget, 0);
+  const fraction = completed(E.seed({ config: { providerPoints: 7, receiverPoints: 8 } }));
+  assert.equal(E.getEconomy(fraction).retirementTarget, 1);
+});
+
+test('cancelled benefits cannot finalize and even repeated cancellations need the owner or operator', () => {
+  let s = act(completed(), 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  const redemptionId = s.redemptions[0].id;
+  s = act(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'me' });
+  rejects(s, 'FINALIZE_REDEMPTION', { redemptionId, actorId: 'operator' }, 'INVALID_STATUS');
+  rejects(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'partner' }, 'NOT_REDEMPTION_OWNER');
+  rejects(s, 'CANCEL_REDEMPTION', { redemptionId }, 'NOT_REDEMPTION_OWNER');
+  assert.deepEqual(act(s, 'CANCEL_REDEMPTION', { redemptionId, actorId: 'operator', reason: 'unavailable' }), s);
+});
+
+test('pool state detects corrupt outstanding, held funds, orphan logs and impossible chronology', () => {
+  let original = act(completed(), 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  original = act(original, 'FINALIZE_REDEMPTION', { redemptionId: original.redemptions[0].id, actorId: 'operator' });
+  original = completed(original);
+  for (const corrupt of [
+    s => { s.economy.pool += 1; }, s => { s.economy.poolHeld += 1; },
+    s => { s.economy.burned += 1; }, s => { s.economy.retirementSkipped += 1; },
+    s => { s.redemptions[0].status = 'pending'; },
+    s => { s.transactions.find(t => t.type === 'finalize').verifiedBy = 'me'; },
+    s => { s.transactions.find(t => t.type === 'retire').activityId = 'unknown'; },
+    s => { s.transactions.find(t => t.type === 'redeem').redemptionId = 'unknown'; },
+    s => { const i = s.transactions.findIndex(t => t.type === 'finalize'); const [t] = s.transactions.splice(i, 1); s.transactions.unshift(t); },
+    s => { const t = s.transactions.findLast(t => t.type === 'retire'); t.points = 10; t.skipped = -8; },
+    s => { s.transactions.push({ ...s.transactions.find(t => t.type === 'retire'), id: 'orphan-retire' }); }
+  ]) {
+    const s = structuredClone(original); corrupt(s);
+    assert.throws(() => E.assertState(s));
+  }
+  assert(E.assertState(JSON.parse(JSON.stringify(original))));
+});
+
+
+test('a redemption cannot finalize before its own receipt using another pending balance', () => {
+  let s = completed(completed());
+  s = act(s, 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  s = act(s, 'REDEEM', { actorId: 'partner', productId: 'space-room' });
+  s = act(s, 'FINALIZE_REDEMPTION', { redemptionId: s.redemptions[1].id, actorId: 'operator' });
+  const invalid = structuredClone(s), i = invalid.transactions.findIndex(t => t.type === 'finalize');
+  const [finalize] = invalid.transactions.splice(i, 1);
+  invalid.transactions.splice(invalid.transactions.findIndex(t => t.type === 'redeem' && t.redemptionId === s.redemptions[1].id), 0, finalize);
+  assert.throws(() => E.assertState(invalid), e => e.code === 'INVALID_STATE');
+  assert(E.assertState(s));
+});
+
+test('chronology rejects future or out-of-order transactions and spending before issue', () => {
+  let s = completed();
+  s = act(s, 'ADVANCE_TIME', { days: 1 });
+  s = act(s, 'REDEEM', { actorId: 'me', productId: 'space-room' });
+  for (const corrupt of [
+    state => { state.transactions.at(-1).at = '2099-01-01T00:00:00.000Z'; },
+    state => { state.transactions.at(-1).at = '2000-01-01T00:00:00.000Z'; },
+    state => { const [redeem] = state.transactions.splice(state.transactions.length - 1, 1); redeem.at = state.transactions[0].at; state.redemptions[0].at = redeem.at; state.transactions.unshift(redeem); }
+  ]) { const invalid = structuredClone(s); corrupt(invalid); assert.throws(() => E.assertState(invalid)); }
 });
