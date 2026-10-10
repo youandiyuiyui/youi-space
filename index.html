@@ -1329,7 +1329,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="notif-illust gold"><svg class="ic" style="width:18px;height:18px"><use href="#i-gift"/></svg></div>
       <div class="notif-body">
         <div class="notif-title">＆ポイントを特典に使いました</div>
-        <div class="notif-desc">交流の体験（見本）に 10pt。使った分は消却されます。</div>
+        <div class="notif-desc">交流の体験（見本）に 10pt。使った分は運営プールに戻ります。</div>
         <div class="notif-time">10日前</div>
       </div>
     </div>
@@ -1379,15 +1379,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div style="font-size:.72rem;color:var(--lav3);font-weight:600;white-space:nowrap">4,200 / 10,000 pt</div>
       </div>
     </div>
-    <!-- 新しい仕組み（ゲストのデモ）：運営からの発行・発行の上限と消却・特典（すべて見本） -->
+    <!-- 新しい仕組み（ゲストのデモ）：運営からの発行・発行の上限・運営プール・完了時の償却・特典（すべて見本） -->
     <div class="demo-only" id="eco-rewards">
       <div class="info-box">
         <div class="info-box-h">＆ポイントは、活動を成立させた双方への発行です</div>
         <div class="info-box-b">活動の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。振り返りの評価で、配る量は変わりません。登録したときは 0pt で、残高がなくても頼めます・応募できます。現金での購入・チャージ、換金、売買、ほかの人への譲渡はできません。</div>
       </div>
       <div class="info-box" style="margin-bottom:16px">
-        <div class="info-box-h">発行の上限と、使った分の消却</div>
-        <div class="info-box-b" id="eco-budget-text">—</div>
+        <div class="info-box-h">発行の上限と、運営プールからの償却</div>
+        <div class="info-box-b" id="eco-budget-text" style="white-space:pre-line">—</div>
         <div style="margin-top:10px;display:flex;align-items:center;gap:9px">
           <div style="flex:1;height:6px;background:rgba(184,175,214,.2);border-radius:3px;overflow:hidden;display:flex"><div id="eco-budget-issued" style="height:100%;width:0;background:linear-gradient(to right,var(--lav),var(--gold))"></div><div id="eco-budget-reserved" style="height:100%;width:0;background:rgba(158,202,216,.75)"></div></div>
           <div id="eco-budget-num" style="font-size:.72rem;color:var(--lav3);font-weight:600;white-space:nowrap">— / — pt</div>
@@ -1948,7 +1948,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.8.0 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.8.1 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -4278,7 +4278,7 @@ function openLegal(kind){
       legalQA('支援者支援とは？','特定の誰かを選んで助けることではなく、「支える」という行為が生まれやすく・続きやすく・報われやすい環境を整えることです。家族を介護する人、ひとりで子育てをする人、家族を支える若い人——支える側ほど「大丈夫な人」と見なされ、助けを求める回路が塞がれがちです。You&i Space は、その回路をこちらから作りに行きます。')+
       legalQA('「支えたい」「頼みたい」とは？','「支えたい」は、手を貸せることを伝えるための投稿です。用事のついででも、空いた時間でもかまいません。「頼みたい」は、助けてほしいことを伝えるための投稿で、名前を伏せて出すこともできます。同じ人が、ある日は支えたい側に、別の日は頼みたい側になれます。')+
       (isGuestDemo()
-        ? legalQA('＆ポイントとは？','活動を成立させた双方の参加を認め、使える選択肢を増やすポイントです。最初の実証で扱う活動（話し相手・部活補助・清掃活動）の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。登録したときは0ptで、残高がなくても頼めます。特典に使った分は消却します。現金での購入・換金・売買・譲渡はできません。')
+        ? legalQA('＆ポイントとは？','活動を成立させた双方の参加を認め、使える選択肢を増やすポイントです。最初の実証で扱う活動（話し相手・部活補助・清掃活動）の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。登録したときは0ptで、残高がなくても頼めます。特典に使った分は運営プールに戻します。依頼の完了時に、返還用の保留分を除いたプールから一部を償却します。償却率などは本番に向けて検討中です。現金での購入・換金・売買・譲渡はできません。')
         : legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。'))+
       legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
       legalQA('ほかの人に表示される名前は？','ニックネームです。本名は本人確認のために運営だけが使い、ほかの利用者には表示しません。ニックネームは 設定 →「プロフィール編集」から変えられます。団体・行政のアカウントは、団体名が表示されます。')+
@@ -4575,7 +4575,7 @@ var GUIDE_ECO_ROLE={eb:'02　役割の循環', h:'今日助けられた人が、
 var GUIDE_ECO_POINT={eb:'＆ポイントと記録', h:'支える人にも、頼む人にも。\n双方の参加が報われる。',
    lead:'活動の達成を確かめたあと、運営が、支える人にも頼む人にも＆ポイントを無償で発行します。頼んだ人の残高は減りません。',
    body:gPt('i-shield','<b>活動前の確認 → 完了の確認 → 運営の照合 → 発行</b>。運営は当事者とは別の立場で確かめます。双方が「完了」を押しただけでは発行しません')+
-        gPt('i-gift','使い道は<b>外部の特典とSpace内の特典</b>。使った分は消却し、現金での購入・換金・売買・譲渡はしません')+
+        gPt('i-gift','使い道は<b>外部の特典とSpace内の特典</b>。使った分は運営プールに戻し、完了時にプールの一部を償却します（条件は検討中）。現金での購入・換金・売買・譲渡はしません')+
         gPt('i-lock','振り返りは<b>「確認できた／判断できない／運営に相談したい」</b>。双方が答えるか7日たつまで相手には見せず、答えなくても低い評価にしません')+
         gPt('i-medal','記録は<b>共通の信頼・活動ごとの経験・資格と確認事項</b>の3つ。積み重ねが、自分に合う役割の紹介や、小さな企画に関わる機会につながります')+
         '<div class="guide-note">各10pt・発行の上限300pt・振り返りの締切7日などは、実証のための仮の設定です。</div>'};
@@ -4851,14 +4851,14 @@ function demoCloseDeal(){
 var DEMO_THREAD_HTML=(document.getElementById('chat-thread')||{}).innerHTML||'';
 
 /* ===================================================================
-   v0.8.0：ゲストのデモに、2026年10月に合意した新しい仕組みを入れる（見た目は旧デザインのまま）
+   v0.8.1：ゲストのデモに、2026年10月に合意した新しい仕組みを入れる（見た目は旧デザインのまま）
    正本：運営の「You&i（結）概念ノート」「You&i Space ＆ポイントと貢献実績 設計メモ」（リポジトリの外）
    ・登録時は0pt。残高がなくても頼める・応募できる。先に誰かを支える義務はない
    ・最初の実証は「話し相手」「部活補助」「清掃活動」の3つ。マッチングで確かめることをすべて確かめてから成立する
      （断る・条件を相談し直すこともできる）。成立のとき運営が発行枠を確保し、枠がなければ成立させない
    ・運営は当事者とは別の立場。活動前の確認（本人・所属・当日の責任者）→ 参加者の完了確認 → 運営の照合
      → 運営から双方へ無償で発行（頼んだ人の残高は減らない。団体は1開催に1回）→ 相互評価 → 次の活動や機会
-   ・使うと消却する（運営のプールに戻して配り直さない）。現金での購入・換金・売買・譲渡はしない
+   ・使った分は運営プールへ戻す。提供待ちは返還用に保留し、提供完了後に保留を解除。活動完了時に使用可能なプールから償却（配布合計の10%は試算用。本番未決）。現金での購入・換金・売買・譲渡はしない
    ・計算は space-economy.js（単体テストつき）。この端末の中だけで動き、何も送信しない。再読み込みで最初に戻る
    ・実アカウントの＆ポイント（thanks から計算）と、その画面（.real-only）は変えない
    ・各10pt・発行の上限300pt・振り返りの締切7日・機会の条件「2活動・異なる2人の相手の確認」はデモの仮の値
@@ -4908,6 +4908,7 @@ function ecoInit(){
     R({type:'SUBMIT_REVIEW',activityId:k,fromActorId:'kazuko',toActorId:'me',answers:{keptPromise:'yes',toldChanges:'yes',respectedWishes:'yes',workAgain:'yes'},at:at(21)});
     R({type:'SUBMIT_REVIEW',activityId:k,fromActorId:'me',toActorId:'kazuko',answers:ok});
     R({type:'REDEEM',actorId:'me',productId:'space-room',at:at(30)});
+    R({type:'FINALIZE_REDEMPTION',redemptionId:s.redemptions[s.redemptions.length-1].id,actorId:'operator'});
     R({type:'ADVANCE_TIME',days:10});
     window.__eco=s;
   }catch(e){ console.warn('eco init',e); window.__eco=null; }
@@ -5188,7 +5189,9 @@ function ecoConcern(id){
 }
 function ecoDoneHtml(a){
   var mine=a.rewards.filter(function(r){ return r.actorId==='me'; })[0], other=ecoOther(a);
+  var retirement=window.__eco.transactions.filter(function(t){ return t.type==='retire'&&t.activityId===a.id; })[0];
   var h='<div class="eco-ok">達成を確かめ、運営が双方へ無償で発行しました。あなたに ＋'+(mine?mine.points:0)+'pt（いま '+ecoBalance()+'pt）。'+escapeHtml(ecoNm(other))+'にも発行しています。頼んだ人の残高は減りません。</div>'+
+    (retirement?'<div class="eco-note" id="eco-completion-pool">この活動で合計 '+a.rewardTotal+'pt を新しく発行し、運営プールから '+retirement.points+'pt を償却しました。全体のポイント量は '+(a.rewardTotal-retirement.points)+'pt 増えました。'+(retirement.skipped?'プール不足で償却できなかった '+retirement.skipped+'pt は記録し、後から自動回収しません。':'')+'利用者の残高には触れません。償却率 '+window.__eco.config.poolBurnPercent+'% は試算用で、本番は未決です。</div>':'')+
     '<div class="eco-h">お互いの関わりを振り返る</div>'+
     '<div class="eco-sub">星の点数や、公開の低い評価はありません。「確認できた」「判断できない」「運営に相談したい」で答えます。双方が答えるか、活動の完了から7日（仮）たつまで、相手には表示しません。答えなくても低い評価にはならず、発行や次の依頼も止まりません。</div>';
   h+=ecoMyTasks(a).map(function(t){
@@ -5383,7 +5386,7 @@ function ecoSaveReg(){
   closeSheet(); renderLivePosts(); renderEco(); toast('登録している内容を変えました');
 }
 
-/* ===== ＆ポイント：残高・発行の上限と消却・特典（すべて見本）・記録 ===== */
+/* ===== ＆ポイント：残高・発行の上限・運営プール・完了時の償却・特典（すべて見本）・記録 ===== */
 function ecoTotals(){
   var t={award:0,redeem:0,refund:0};
   window.__eco.transactions.forEach(function(x){ if(x.actorId==='me'&&t.hasOwnProperty(x.type)) t[x.type]+=x.points; });
@@ -5400,7 +5403,7 @@ function renderEcoRewards(){
   var set=function(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; };
   set('rew-balance-num',bal.toLocaleString());
   set('rew-balance-sub','登録したときは 0pt ／ 発行された：'+t.award+'pt ／ 使った：'+t.redeem+'pt'+(t.refund?' ／ 返還：'+t.refund+'pt':''));
-  set('eco-budget-text','今期の発行枠は '+e.cap+'pt（実証のための仮の設定）。発行済み '+e.issued+'pt ・ 成立した活動のために確保中 '+e.reserved+'pt ・ 残り '+e.remaining+'pt。特典に使った分は消却し（これまで '+e.netBurned+'pt）、運営のプールに戻して配り直すことはしません。続けられるかは、消却だけでなく、発行の上限・特典の在庫や提供枠・特典の原資・運営の人手と時間をあわせて見ます。「消却すれば価値が上がる」「1ptは必ず何円」といった説明や保証はしません。');
+  set('eco-budget-text','今期の累計発行枠は '+e.cap+'pt（仮の設定）。発行済み '+e.issued+'pt ・ 確保中 '+e.reserved+'pt ・ 残り '+e.remaining+'pt。\n\n使用分は運営プールに戻り、現在 '+e.pool+'pt（返還用の保留 '+e.poolHeld+'pt、償却に使える '+e.poolAvailable+'pt）です。\n\n依頼完了時に新しく双方へ配布し、配布合計の '+s.config.poolBurnPercent+'%（小数点以下切捨て）を使用可能なプールから償却します。割合は試算用で、本番は未決です。\n\n累計償却 '+e.burned+'pt、プール不足による未償却 '+e.retirementSkipped+'pt（後から自動回収しません）、現在の総量 '+e.outstanding+'pt。20ptを発行して2ptを償却すると総量は18pt増え、プール0ptなら20pt増えます。還流・償却で発行枠は復活しません。\n\n価値を支えるため、総量に加えて特典の在庫・提供枠・原資・運営の人手をあわせて管理します。円価値や値上がりは保証しません。');
   set('eco-budget-num',(e.issued+e.reserved)+' / '+e.cap+' pt');
   var w=function(id,v){ var el=document.getElementById(id); if(el) el.style.width=Math.min(100,Math.round(v/e.cap*1000)/10)+'%'; };
   w('eco-budget-issued',e.issued); w('eco-budget-reserved',e.reserved);
@@ -5425,7 +5428,7 @@ function ecoRedeem(pid){
       line('いま持っている',bal+' pt')+line('使う','−'+p.points+' pt')+'<div style="border-top:1px solid var(--border);margin:4px 0"></div>'+line('使ったあと',after>=0?after+' pt':'—',true)+'</div>'+
     (!p.stock?'<div class="eco-wait">この特典の受付は終わりました。</div><button class="btn-secondary" onclick="closeSheet()">とじる</button>'
      :(after<0?'<div id="eco-short" style="font-size:.84rem;color:#c07880;line-height:1.8;margin-bottom:14px">あと '+(-after)+' pt 足りません。活動の達成を確かめると、運営から発行されます。頼むことや応募することに、＆ポイントは要りません。</div><button class="btn-secondary" onclick="closeSheet()">とじる</button>'
-     :'<div class="eco-sub">使った分は消却し、運営のプールに戻して配り直すことはしません。経験や信頼の記録は減りません。デモのため、実際の特典は届きません。</div>'+
+     :'<div class="eco-sub">使った分は運営プールに戻ります。提供を待つ間は返還用に保留し、運営が提供完了を確かめると保留を解除します。依頼完了時の償却は使用可能なプールから行い、あなたの残高や経験・信頼の記録には触れません。デモのため、実際の特典は届きません。</div>'+
       '<div class="eco-two"><button class="btn-secondary" onclick="closeSheet()">やめる</button><button class="btn-primary" data-eco="redeem-go" onclick="ecoRedeemGo(\''+pid+'\')">'+p.points+'pt を使う</button></div>')));
 }
 function ecoRedeemGo(pid){
@@ -5435,7 +5438,7 @@ function ecoRedeemGo(pid){
 function ecoCode(r){ return 'YS-'+('000'+String(r.id).replace(/\D/g,'')).slice(-4)+'-DEMO'; }
 function ecoReceipt(rid){
   var r=window.__eco.redemptions.filter(function(x){ return x.id===rid; })[0]; if(!r) return;
-  var st=r.status==='cancelled'?(r.cancelReason==='unavailable'?'提供できなかったため、返還しました':'取り消して、返還しました'):'使いました（消却）';
+  var st=r.status==='cancelled'?(r.cancelReason==='unavailable'?'提供できなかったため、返還しました':'取り消して、返還しました'):(r.status==='fulfilled'?'提供が完了しました（プールの保留を解除）':'提供を待っています（プールで返還用に保留）');
   openSheet('特典の記録',
     '<div style="border:1.5px dashed rgba(184,175,214,.8);border-radius:16px;padding:18px 16px;text-align:center;background:linear-gradient(135deg,rgba(184,175,214,.08),rgba(200,184,122,.08));margin-bottom:14px">'+
       '<div style="font-weight:600;font-size:.95rem;margin-bottom:10px">'+escapeHtml(r.title)+'</div>'+
@@ -5443,10 +5446,13 @@ function ecoReceipt(rid){
       '<div id="voucher-code" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;font-weight:700;letter-spacing:.1em;margin:4px 0 10px">'+ecoCode(r)+'</div>'+
       '<div style="font-size:.78rem;color:var(--ink)">'+r.points+' pt ・ '+ecoDate(r.at)+'</div>'+
       '<div id="eco-receipt-status" style="font-size:.78rem;font-weight:600;color:'+(r.status==='cancelled'?'#5a9a6a':'#7c6fa3')+';margin-top:6px">'+st+'</div></div>'+
-    '<div class="eco-sub">デモの見本のため、実際には使えません。取り消すと、＆ポイントと交換の枠が戻ります。特典を提供できなかったときは、運営が記録を残して返還します。</div>'+
-    (r.status==='cancelled'?'':'<div class="eco-two"><button class="btn-secondary" data-eco="refund" onclick="ecoRefund(\''+rid+'\',\'user\')">取り消して返還する</button><button class="btn-secondary" onclick="openPointsHistory()">＆ポイントの記録</button></div>'+
-      '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場）</div><div class="eco-row"><span>特典を提供できなかった</span><button class="kai-read" data-eco="unavailable" onclick="ecoRefund(\''+rid+'\',\'unavailable\')">返還する</button></div></div>')+
-    (r.status==='cancelled'?'<button class="btn-secondary" onclick="openPointsHistory()">＆ポイントの記録</button>':''));
+    '<div class="eco-sub">デモの見本のため、実際には使えません。提供待ちの間は取り消せて、プールの保留分からポイントを返還し、交換枠も戻します。提供できなかった場合は運営が返還します。提供完了後は通常の取消ができません。</div>'+
+    (r.status!=='pending'?'':'<div class="eco-two"><button class="btn-secondary" data-eco="refund" onclick="ecoRefund(\''+rid+'\',\'user\')">取り消して返還する</button><button class="btn-secondary" onclick="openPointsHistory()">＆ポイントの記録</button></div>'+
+      '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場）</div><div class="eco-row"><span>特典の提供を確かめた</span><button class="kai-read" data-eco="finalize" onclick="ecoFinalize(\''+rid+'\')">提供完了を記録</button></div><div class="eco-row"><span>特典を提供できなかった</span><button class="kai-read" data-eco="unavailable" onclick="ecoRefund(\''+rid+'\',\'unavailable\')">返還する</button></div></div>')+
+    (r.status!=='pending'?'<button class="btn-secondary" onclick="openPointsHistory()">＆ポイントの記録</button>':''));
+}
+function ecoFinalize(rid){
+  if(ecoDispatch({type:'FINALIZE_REDEMPTION',redemptionId:rid,actorId:'operator'},'提供完了を記録し、プールの保留を解除しました')) ecoReceipt(rid);
 }
 function ecoRefund(rid,reason){
   var act={type:'CANCEL_REDEMPTION',redemptionId:rid,reason:reason,actorId:reason==='unavailable'?'operator':'me'};
@@ -5466,7 +5472,7 @@ function openEcoHistory(filter){
   var rows=shown.map(function(x){
     var label, sub, plus=x.type==='award'||x.type==='refund', click='';
     if(x.type==='award'){ label='運営から発行：'+titleOf(x); sub='活動の達成を確かめました'; }
-    else if(x.type==='redeem'){ label=titleOf(x); sub='特典に使った（消却）'; click=' style="cursor:pointer" onclick="ecoReceipt(\''+x.redemptionId+'\')"'; }
+    else if(x.type==='redeem'){ label=titleOf(x); sub='特典に使い、運営プールへ還流'; click=' style="cursor:pointer" onclick="ecoReceipt(\''+x.redemptionId+'\')"'; }
     else if(x.type==='refund'){ label=titleOf(x); sub=x.reason==='unavailable'?'提供できなかったため返還':'取り消して返還'; click=' style="cursor:pointer" onclick="ecoReceipt(\''+x.redemptionId+'\')"'; }
     else { label='登録'; sub='登録したときは 0pt'; }
     var pts=x.type==='start'?'0 pt':((plus?'＋':'−')+x.points+' pt');

@@ -5,11 +5,11 @@
   else root.YouiSpaceEconomy = factory();
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  var VERSION = 1;
+  var VERSION = 2;
   var DAY = 86400000;
   var DEFAULT_CONFIG = {
     issueBudget: 300, providerPoints: 10, receiverPoints: 10,
-    groupMax: 5, reviewDelayDays: 7, minVerifiedActivities: 2, minTrustedCounterparties: 2
+    poolBurnPercent: 10, groupMax: 5, reviewDelayDays: 7, minVerifiedActivities: 2, minTrustedCounterparties: 2
   };
   var ACTOR_IDS = ['me', 'partner', 'organization', 'participant2', 'participant3', 'participant4', 'participant5', 'operator'];
   var CHECK_KEYS = ['identity', 'orientation', 'childSafety'];
@@ -59,7 +59,7 @@
     Object.keys(DEFAULT_CONFIG).forEach(function (key) {
       check(integer(config[key]), 'INVALID_CONFIG', '設定値は0以上の整数にしてください。');
     });
-    check(config.groupMax >= 1 && config.groupMax <= 5 && config.reviewDelayDays > 0
+    check(config.poolBurnPercent <= 100 && config.groupMax >= 1 && config.groupMax <= 5 && config.reviewDelayDays > 0
       && config.minVerifiedActivities > 0 && config.minTrustedCounterparties > 0,
       'INVALID_CONFIG', '実証の参加人数は1〜5人、評価待機日数と実績条件は1以上です。');
     var actors = {};
@@ -81,7 +81,7 @@
     var state = {
       version: VERSION, localOnly: true, now: iso(options.now || '2026-10-08T09:00:00+09:00'),
       sequence: 0, config: config, actors: actors, activities: [], activeActivityId: null,
-      economy: { cap: config.issueBudget, issued: 0, reserved: 0, burned: 0, restored: 0 },
+      economy: { cap: config.issueBudget, issued: 0, reserved: 0, burned: 0, pool: 0, poolHeld: 0, returned: 0, refunded: 0, retirementTarget: 0, retirementSkipped: 0 },
       catalog: CATALOG.map(catalogItem),
       redemptions: [], transactions: [], reviews: [], reports: []
     };
@@ -90,8 +90,9 @@
   function getEconomy(state) {
     var e = copy(state.economy);
     e.remaining = e.cap - e.issued - e.reserved;
-    e.available = e.remaining;
-    e.netBurned = e.burned - e.restored;
+    e.poolAvailable = e.pool - e.poolHeld;
+    e.available = e.poolAvailable;
+    e.outstanding = e.issued - e.burned;
     e.totalBalances = Object.values(state.actors).reduce(function (sum, a) { return sum + a.balance; }, 0);
     return e;
   }
@@ -306,6 +307,13 @@
           counterpartyIds: (reward.role === 'provider' ? a.receiverIds : a.providerIds).slice() });
         log(state, 'award', { activityId: a.id, actorId: reward.actorId, points: reward.points, delta: reward.points });
       });
+      // 完了時の償却率は試算用の仮値。返還に備えた保留分と利用者残高には触れない。
+      var retirementTarget = Math.floor(a.rewardTotal * state.config.poolBurnPercent / 100);
+      var retirement = Math.min(retirementTarget, state.economy.pool - state.economy.poolHeld);
+      state.economy.pool -= retirement; state.economy.burned += retirement;
+      state.economy.retirementTarget += retirementTarget; state.economy.retirementSkipped += retirementTarget - retirement;
+      log(state, 'retire', { activityId: a.id, points: retirement, target: retirementTarget,
+        skipped: retirementTarget - retirement });
       a.status = 'completed'; a.awardedAt = state.now; break;
     case 'HOLD_ACTIVITY':
       a = activity(state, action.activityId); allowReserved(a);
@@ -369,25 +377,37 @@
       check(target.type !== 'organization' || item.kind !== 'tangible', 'ORGANIZATION_TANGIBLE_FORBIDDEN', '団体のポイントは、担当者個人の商品ではなく、Space内の特典に使えます。');
       check(item.stock > 0, 'OUT_OF_STOCK', 'この見本の交換枠は終了しました。');
       check(target.balance >= item.points, 'INSUFFICIENT_POINTS', '交換に必要なポイントが不足しています。通常の依頼は利用できます。');
-      target.balance -= item.points; item.stock -= 1; state.economy.burned += item.points;
+      target.balance -= item.points; item.stock -= 1; state.economy.pool += item.points;
+      state.economy.poolHeld += item.points; state.economy.returned += item.points;
       var redemption = { id: nextId(state, 'redemption'), actorId: target.id, productId: item.id,
-        title: item.title, points: item.points, status: 'redeemed', at: state.now, cancelledAt: null, cancelReason: null };
+        title: item.title, points: item.points, status: 'pending', at: state.now, fulfilledAt: null, cancelledAt: null, cancelReason: null };
       state.redemptions.push(redemption);
       log(state, 'redeem', { redemptionId: redemption.id, actorId: target.id, productId: item.id, points: item.points, delta: -item.points }); break;
     }
     case 'CANCEL_REDEMPTION': {
       target = state.redemptions.find(function (r) { return r.id === action.redemptionId; });
       check(target, 'UNKNOWN_REDEMPTION', '交換履歴が見つかりません。');
-      if (target.status === 'cancelled') break;
       var reason = action.reason || 'user';
       check(reason === 'user' || reason === 'unavailable', 'INVALID_REASON', '取消の理由が正しくありません。');
       if (reason === 'unavailable') check(action.actorId === 'operator', 'OPERATOR_REQUIRED', '提供できなかったときの取消は運営が記録します。');
-      else if (action.actorId) check(action.actorId === target.actorId, 'NOT_REDEMPTION_OWNER', '交換した本人が取り消してください。');
+      else check(action.actorId === target.actorId, 'NOT_REDEMPTION_OWNER', '交換した本人が取り消してください。');
+      if (target.status === 'cancelled') break;
+      check(target.status === 'pending', 'ALREADY_FULFILLED', '提供が完了した特典は通常の取消ができません。');
       item = state.catalog.find(function (p) { return p.id === target.productId; });
-      actor(state, target.actorId).balance += target.points; item.stock += 1; state.economy.restored += target.points;
+      actor(state, target.actorId).balance += target.points; item.stock += 1;
+      state.economy.pool -= target.points; state.economy.poolHeld -= target.points; state.economy.refunded += target.points;
       target.status = 'cancelled'; target.cancelledAt = state.now; target.cancelReason = reason;
       log(state, 'refund', { redemptionId: target.id, actorId: target.actorId, productId: item.id, points: target.points, delta: target.points, reason: reason }); break;
     }
+    case 'FINALIZE_REDEMPTION':
+      check(action.actorId === 'operator', 'OPERATOR_REQUIRED', '特典の提供完了は運営が記録します。');
+      target = state.redemptions.find(function (r) { return r.id === action.redemptionId; });
+      check(target, 'UNKNOWN_REDEMPTION', '交換履歴が見つかりません。');
+      if (target.status === 'fulfilled') break;
+      check(target.status === 'pending', 'INVALID_STATUS', '提供を待っている特典が対象です。');
+      target.status = 'fulfilled'; target.fulfilledAt = state.now; state.economy.poolHeld -= target.points;
+      log(state, 'finalize', { redemptionId: target.id, actorId: target.actorId, productId: target.productId,
+        points: target.points, verifiedBy: 'operator' }); break;
     case 'ADVANCE_TIME':
       check(integer(action.days) && action.days > 0 && action.days <= 365, 'INVALID_DAYS', '1〜365日を指定してください。');
       state.now = iso(new Date(state.now).getTime() + action.days * DAY); break;
@@ -402,9 +422,9 @@
       'INVALID_STATE', '保存データの形式が正しくありません。');
     iso(state.now);
     check(integer(state.sequence), 'INVALID_STATE', '履歴番号が正しくありません。');
-    var totals = {}, issued = 0, burned = 0, restored = 0, reserved = 0;
+    var totals = {}, issued = 0, burned = 0, reserved = 0, pool = 0, poolHeld = 0, returned = 0, refunded = 0, retirementTarget = 0, retirementSkipped = 0;
     Object.keys(DEFAULT_CONFIG).forEach(function (key) { check(integer(state.config[key]), 'INVALID_STATE', '設定値が正しくありません。'); });
-    check(state.config.groupMax >= 1 && state.config.groupMax <= 5 && state.config.reviewDelayDays > 0
+    check(state.config.poolBurnPercent <= 100 && state.config.groupMax >= 1 && state.config.groupMax <= 5 && state.config.reviewDelayDays > 0
       && state.config.minVerifiedActivities > 0 && state.config.minTrustedCounterparties > 0,
       'INVALID_STATE', '実証条件の設定が正しくありません。');
     check(state.economy.cap === state.config.issueBudget, 'INVALID_STATE', '発行上限の記録が一致しません。');
@@ -490,25 +510,64 @@
         'INVALID_STATE', '運営への相談の記録が正しくありません。');
       check(activity(state, r.activityId).requiredConfirmers.includes(r.fromActorId), 'INVALID_STATE', '相談した人が活動の参加者ではありません。');
     });
-    var txnIds = [];
+    var txnIds = [], replayRedemptions = {}, previousTxnAt = null;
     state.transactions.forEach(function (t) {
-      check(t && !txnIds.includes(t.id) && integer(t.points) && ['reserve', 'release', 'award', 'redeem', 'refund'].includes(t.type), 'INVALID_STATE', '取引履歴が正しくありません。');
-      txnIds.push(t.id);
+      check(t && !txnIds.includes(t.id) && integer(t.points) && ['reserve', 'release', 'award', 'redeem', 'refund', 'finalize', 'retire'].includes(t.type), 'INVALID_STATE', '取引履歴が正しくありません。');
+      txnIds.push(t.id); var transactionTime = new Date(iso(t.at)).getTime();
+      check(transactionTime <= new Date(state.now).getTime() && (previousTxnAt === null || transactionTime >= previousTxnAt), 'INVALID_STATE', '取引の日時順が正しくありません。');
+      previousTxnAt = transactionTime;
+      if (['reserve', 'release', 'award', 'retire'].includes(t.type)) activity(state, t.activityId);
+      if (['redeem', 'refund', 'finalize'].includes(t.type)) check(state.redemptions.some(function (r) { return r.id === t.redemptionId; }), 'INVALID_STATE', '交換先のない履歴があります。');
       if (['award', 'redeem', 'refund'].includes(t.type)) {
         actor(state, t.actorId);
         var expected = t.type === 'redeem' ? -t.points : t.points;
         check(t.delta === expected, 'INVALID_STATE', '残高増減が一致しません。'); totals[t.actorId] += t.delta;
+        check(totals[t.actorId] >= 0, 'INVALID_STATE', '発行前のポイントが使われています。');
+      }
+      if (['redeem', 'refund', 'finalize'].includes(t.type)) {
+        var linkedRedemption = state.redemptions.find(function (r) { return r.id === t.redemptionId; });
+        check(t.actorId === linkedRedemption.actorId && t.productId === linkedRedemption.productId && t.points === linkedRedemption.points,
+          'INVALID_STATE', '交換と取引の内容が一致しません。');
+        if (t.type === 'redeem') {
+          check(!replayRedemptions[t.redemptionId] && t.at === linkedRedemption.at, 'INVALID_STATE', '交換の受付順が正しくありません。');
+          replayRedemptions[t.redemptionId] = 'pending';
+        } else {
+          check(replayRedemptions[t.redemptionId] === 'pending', 'INVALID_STATE', '受付後の保留中の交換だけ確定・返還できます。');
+          check(t.type === 'refund' ? t.at === linkedRedemption.cancelledAt && t.reason === linkedRedemption.cancelReason : t.at === linkedRedemption.fulfilledAt,
+            'INVALID_STATE', '交換の確定・返還の記録日時が一致しません。');
+          replayRedemptions[t.redemptionId] = t.type === 'refund' ? 'cancelled' : 'fulfilled';
+        }
       }
       if (t.type === 'award') issued += t.points;
-      if (t.type === 'redeem') burned += t.points;
-      if (t.type === 'refund') restored += t.points;
+      if (t.type === 'redeem') { pool += t.points; poolHeld += t.points; returned += t.points; }
+      if (t.type === 'refund') { pool -= t.points; poolHeld -= t.points; refunded += t.points; }
+      if (t.type === 'finalize') { check(t.verifiedBy === 'operator', 'INVALID_STATE', '提供完了の確認者が正しくありません。'); poolHeld -= t.points; }
+      if (t.type === 'retire') {
+        var retirementActivity = activity(state, t.activityId);
+        var expectedTarget = Math.floor(retirementActivity.rewardTotal * state.config.poolBurnPercent / 100);
+        check(integer(t.target) && integer(t.skipped) && t.target === expectedTarget
+          && t.points === Math.min(expectedTarget, pool - poolHeld) && t.skipped === t.target - t.points,
+          'INVALID_STATE', '完了時の償却数が一致しません。');
+        check(state.transactions.filter(function (x) { return x.type === 'award' && x.activityId === t.activityId && txnIds.includes(x.id); }).length === retirementActivity.rewards.length,
+          'INVALID_STATE', '配布が終わる前に償却されています。');
+        pool -= t.points; burned += t.points; retirementTarget += t.target; retirementSkipped += t.skipped;
+      }
+      check(pool >= 0 && poolHeld >= 0 && poolHeld <= pool, 'INVALID_STATE', '返還用の保留分またはプールが不足しています。');
     });
     Object.keys(totals).forEach(function (id) { check(totals[id] === state.actors[id].balance, 'INVALID_STATE', '残高と履歴が一致しません。'); });
-    ['cap', 'issued', 'reserved', 'burned', 'restored'].forEach(function (key) { check(integer(state.economy[key]), 'INVALID_STATE', '台帳の数値が正しくありません。'); });
-    check(issued === state.economy.issued && burned === state.economy.burned && restored === state.economy.restored && reserved === state.economy.reserved
-      && restored <= burned && issued + reserved <= state.economy.cap, 'INVALID_STATE', '発行・消却・復元の台帳が一致しません。');
-    check(getEconomy(state).totalBalances === issued - burned + restored, 'INVALID_STATE', 'ポイント総量が一致しません。');
+    ['cap', 'issued', 'reserved', 'burned', 'pool', 'poolHeld', 'returned', 'refunded', 'retirementTarget', 'retirementSkipped'].forEach(function (key) { check(integer(state.economy[key]), 'INVALID_STATE', '台帳の数値が正しくありません。'); });
+    check(issued === state.economy.issued && burned === state.economy.burned && reserved === state.economy.reserved
+      && pool === state.economy.pool && poolHeld === state.economy.poolHeld && returned === state.economy.returned
+      && refunded === state.economy.refunded && retirementTarget === state.economy.retirementTarget
+      && retirementSkipped === state.economy.retirementSkipped && issued + reserved <= state.economy.cap,
+      'INVALID_STATE', '発行・還流・償却・返還の台帳が一致しません。');
+    check(getEconomy(state).totalBalances + pool === issued - burned, 'INVALID_STATE', 'ポイント総量が一致しません。');
+    check(poolHeld === state.redemptions.filter(function (r) { return r.status === 'pending'; }).reduce(function (sum, r) { return sum + r.points; }, 0),
+      'INVALID_STATE', '返還用の保留分が交換記録と一致しません。');
     state.activities.forEach(function (a) {
+      var retirements = state.transactions.filter(function (t) { return t.type === 'retire' && t.activityId === a.id; });
+      check(retirements.length === (a.status === 'completed' ? 1 : 0) && retirements.every(function (t) { return t.at === a.awardedAt; }),
+        'INVALID_STATE', '完了記録と償却履歴が一致しません。');
       var awards = state.transactions.filter(function (t) { return t.type === 'award' && t.activityId === a.id; });
       check(awards.length === (a.status === 'completed' ? a.rewards.length : 0)
         && awards.every(function (t) { return a.rewards.some(function (r) { return r.actorId === t.actorId && r.points === t.points; }); })
@@ -517,23 +576,29 @@
     });
     var redemptionIds = [];
     state.redemptions.forEach(function (r) {
-      check(r && typeof r.id === 'string' && !redemptionIds.includes(r.id) && ['redeemed', 'cancelled'].includes(r.status)
+      check(r && typeof r.id === 'string' && !redemptionIds.includes(r.id) && ['pending', 'fulfilled', 'cancelled'].includes(r.status)
         && (r.status === 'cancelled' ? ['user', 'unavailable'].includes(r.cancelReason) : r.cancelReason === null),
         'INVALID_STATE', '交換記録が正しくありません。');
-      redemptionIds.push(r.id);
+      redemptionIds.push(r.id); iso(r.at);
+      check(r.status === 'fulfilled' ? !!r.fulfilledAt : r.fulfilledAt === null, 'INVALID_STATE', '提供完了日時が一致しません。');
+      check(r.status === 'cancelled' ? !!r.cancelledAt : r.cancelledAt === null, 'INVALID_STATE', '取消日時が一致しません。');
+      if (r.fulfilledAt) check(new Date(iso(r.fulfilledAt)) >= new Date(r.at), 'INVALID_STATE', '提供完了日時が正しくありません。');
+      if (r.cancelledAt) check(new Date(iso(r.cancelledAt)) >= new Date(r.at), 'INVALID_STATE', '取消日時が正しくありません。');
       var user = actor(state, r.actorId), product = state.catalog.find(function (p) { return p.id === r.productId; });
       check(product && r.points === product.points && !(user.type === 'organization' && product.kind === 'tangible'),
         'INVALID_STATE', '交換内容または交換対象が正しくありません。');
       var redeemed = state.transactions.filter(function (t) { return t.type === 'redeem' && t.redemptionId === r.id; });
       var refunded = state.transactions.filter(function (t) { return t.type === 'refund' && t.redemptionId === r.id; });
+      var finalized = state.transactions.filter(function (t) { return t.type === 'finalize' && t.redemptionId === r.id; });
+      check(finalized.length === (r.status === 'fulfilled' ? 1 : 0) && finalized.every(function (t) { return t.at === r.fulfilledAt; }), 'INVALID_STATE', '提供完了の履歴が一致しません。');
       check(redeemed.length === 1 && refunded.length === (r.status === 'cancelled' ? 1 : 0)
-        && redeemed.concat(refunded).every(function (t) { return t.actorId === r.actorId && t.productId === r.productId && t.points === r.points; }),
+        && redeemed.concat(refunded, finalized).every(function (t) { return t.actorId === r.actorId && t.productId === r.productId && t.points === r.points; }),
         'INVALID_STATE', '交換・返還の履歴が一致しません。');
     });
     state.catalog.forEach(function (p) {
       check(integer(p.stock) && integer(p.initialStock) && integer(p.points) && p.points > 0 && ['tangible', 'space'].includes(p.kind),
         'INVALID_STATE', '交換先の設定が正しくありません。');
-      var used = state.redemptions.filter(function (r) { return r.productId === p.id && r.status === 'redeemed'; }).length;
+      var used = state.redemptions.filter(function (r) { return r.productId === p.id && r.status !== 'cancelled'; }).length;
       check(p.stock + used === p.initialStock, 'INVALID_STATE', '交換枠と履歴が一致しません。');
     });
     return true;
