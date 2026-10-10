@@ -922,7 +922,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">まえけん <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust"><span class="stage-chip">確認済み：清掃活動</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：市町の清掃活動</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag skill">買い物代行</span>
@@ -941,7 +941,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">ちなつ <span class="name-active">アクティブ</span></div>
-            <div class="prov-trust"><span class="stage-chip">確認済み：部活補助</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：顧問・コーチの補助</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag parent">子育て支援</span>
@@ -963,7 +963,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">けん</div>
-            <div class="prov-trust"><span class="stage-chip">確認済み：部活補助</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：顧問・コーチの補助</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag young">ヤングケアラー支援</span>
@@ -1025,7 +1025,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">たいち</div>
-            <div class="prov-trust"><span class="stage-chip">確認済み：清掃活動</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：市町の清掃活動</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag skill">買い物代行</span>
@@ -1044,7 +1044,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
         <div class="prov-body">
           <div class="prov-row1">
             <div class="prov-name">ひでき</div>
-            <div class="prov-trust"><span class="stage-chip">確認済み：清掃活動</span></div>
+            <div class="prov-trust"><span class="stage-chip">確認済み：市町の清掃活動</span></div>
           </div>
           <div class="prov-tags">
             <span class="prov-tag elder">多目的支援</span>
@@ -1099,7 +1099,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       <div class="pt-card" data-type="need" onclick="setPostType(this,'need')"><b>頼みたい</b><small>助けてほしいことを伝える</small></div>
     </div>
     <div id="pt-hint" style="font-size:.74rem;color:var(--lav3);line-height:1.8;background:rgba(184,175,214,.1);border-radius:12px;padding:11px 14px;margin-bottom:20px"></div>
-    <div class="demo-only" style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-10px 0 18px">最初の実証で、運営の確認と＆ポイントの発行の対象になるのは「話し相手」「部活補助」「清掃活動」の3つです。部活補助と清掃活動は、学校・主催団体が頼みます。それ以外のことも、メッセージで相談できます。</div>
+    <div class="demo-only" style="font-size:.72rem;color:var(--tl);line-height:1.8;margin:-10px 0 18px">最初の依頼は「話し相手」「顧問・コーチの補助」「市町の清掃活動」の3つから選びます。顧問・コーチの補助と市町の清掃活動は、学校・主催団体が頼みます。達成を確かめたあと、運営が双方に＆ポイントを発行します。</div>
     <div class="post-field"><label class="post-label">タイトル <span style="font-weight:400;color:var(--tl);font-size:.74rem">（60文字まで）</span></label><input type="text" class="post-input" id="post-title" maxlength="60" placeholder="例：高槻市内で買い物のついでに寄れます"></div>
     <div class="post-field" id="post-when-field" style="display:none"><label class="post-label">いつ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意）</span></label><input type="text" class="post-input" id="post-when" maxlength="40" placeholder="例：今日15時ごろ／土曜の午前／平日の夕方なら"></div>
     <div class="post-field"><label class="post-label">地域 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（大まかで大丈夫です）</span></label>
@@ -1108,7 +1108,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </select>
     </div>
     <div class="post-field"><label class="post-label">市区町村・町名 <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意・入れるのがおすすめ）</span></label><input type="text" class="post-input" id="post-area" maxlength="40" placeholder="例：高槻市 ○○町（番地は不要）"><div style="font-size:.7rem;color:var(--tl);line-height:1.7;margin-top:5px">町名まで入れると、歩いて行ける範囲の人に届きます。番地は書かないでください。</div></div>
-    <div class="post-field">
+    <div class="post-field" id="post-category-field">
       <label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（任意・いくつでも）</span></label>
       <div class="cat-pick cat-pick-3">
         <div class="cat-opt" onclick="selectCatMulti(this)"><svg class="cat-illust ic"><use href="#i-shopping"/></svg>買い物</div>
@@ -1948,7 +1948,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(140deg,#e8
       </div>
     </div>
     <div style="text-align:center;font-size:.7rem;color:var(--ttl);margin-top:18px;line-height:1.8">
-      You&amp;i Space v0.8.1 — 限定実証版<br>© 2026 You&amp;i（結）
+      You&amp;i Space v0.8.2 — 限定実証版<br>© 2026 You&amp;i（結）
     </div>
   </div>
 </div>
@@ -2210,6 +2210,7 @@ function applyUserToUI(){
 
 /* 実アカウントではデモ用の投稿・支援者・メッセージを隠す（ゲストは従来どおり表示） */
 function hideDemoContent(){
+  syncCategoryFilter();
   document.querySelectorAll('.demo-only').forEach(function(e){e.style.display='none';});
   document.querySelectorAll('.real-only').forEach(function(e){e.style.display='';});
   var me=document.getElementById('msg-empty'); if(me) me.style.display='';
@@ -2397,8 +2398,41 @@ function switchMainTab(el,which){
   }
 }
 
-// Post: multi-select category
-function selectCatMulti(el){el.classList.toggle('on')}
+/* ゲストの投稿は、最初の実証で扱う3種類から1つ選ぶ。実アカウントは従来の任意複数選択。 */
+var DEMO_CATEGORIES=[
+  {scenario:'talk',label:'話し相手',icon:'i-chat'},
+  {scenario:'club',label:'顧問・コーチの補助',icon:'i-users'},
+  {scenario:'cleanup',label:'市町の清掃活動',icon:'i-house'}
+];
+var postCategoryOriginal=null, postCategoryGuest=null;
+function demoCategoryPicker(selected){
+  return '<label class="post-label">カテゴリ <span style="font-weight:400;color:var(--tl);font-size:.74rem">（1つ選んでください）</span></label>'+
+    '<div class="cat-pick cat-pick-3">'+DEMO_CATEGORIES.map(function(c){
+      var label=c.scenario==='club'?'顧問・コーチ<br>の補助':(c.scenario==='cleanup'?'市町の<br>清掃活動':c.label);
+      return '<div class="cat-opt'+(selected===c.scenario?' on':'')+'" data-scenario="'+c.scenario+'" role="button" tabindex="0" aria-pressed="'+(selected===c.scenario)+'" onclick="selectCatMulti(this)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();this.click()}"><svg class="cat-illust ic"><use href="#'+c.icon+'"/></svg><span>'+label+'</span></div>';
+    }).join('')+'</div>';
+}
+function syncPostCategories(){
+  var field=document.getElementById('post-category-field'); if(!field) return;
+  if(postCategoryOriginal===null) postCategoryOriginal=field.innerHTML;
+  syncCategoryFilter();
+  var guest=isGuestDemo(); if(postCategoryGuest===guest) return;
+  field.innerHTML=guest?demoCategoryPicker(''):postCategoryOriginal;
+  postCategoryGuest=guest;
+}
+function selectedDemoCategory(fieldId){
+  var selected=document.querySelectorAll('#'+fieldId+' .cat-opt.on');
+  if(selected.length!==1) return null;
+  var key=selected[0].dataset.scenario;
+  return DEMO_CATEGORIES.find(function(c){ return c.scenario===key; })||null;
+}
+function selectCatMulti(el){
+  if(isGuestDemo() && el.hasAttribute('data-scenario')){
+    el.parentNode.querySelectorAll('.cat-opt').forEach(function(c){
+      var selected=c===el; c.classList.toggle('on',selected); c.setAttribute('aria-pressed',String(selected));
+    });
+  }else el.classList.toggle('on');
+}
 /* カテゴリは、よく使う6つだけを最初に出す（画面のボタンを減らすため） */
 function toggleCatMore(){
   var m=document.getElementById('cat-more'), b=document.getElementById('cat-more-btn');
@@ -2434,6 +2468,7 @@ function initPrefSelects(){
 // 投稿カテゴリ → フィルタ用トークン
 function catTokens(cats){
   var map={'老老介護':'elder','ひとり親':'parent','ヤングケアラー':'young'};
+  if(isGuestDemo()) DEMO_CATEGORIES.forEach(function(c){ map[c.label]=c.scenario; });
   var set={};
   (cats||[]).forEach(function(c){ set[map[c]||'daily']=1; });
   return Object.keys(set);
@@ -2466,13 +2501,21 @@ function filterCat(el,cat){
 
 /* ===== 絞り込みシート（地域・カテゴリをひとまとめにして、画面のボタンを減らす） ===== */
 var CAT_FILTERS=[['all','すべて'],['elder','老老介護'],['parent','ひとり親'],['young','ヤングケアラー'],['daily','日常支援']];
+function categoryFilters(){
+  return isGuestDemo()?[['all','すべて']].concat(DEMO_CATEGORIES.map(function(c){ return [c.scenario,c.label]; })):CAT_FILTERS;
+}
+/* ゲストと実アカウントで選択肢が異なるため、切替時に存在しない条件を持ち越さない。 */
+function syncCategoryFilter(){
+  if(categoryFilters().some(function(c){ return c[0]===curCat; })) return;
+  curCat='all'; fsCat='all'; updateFilterButton();
+}
 var TYPE_FILTERS=[['all','すべて'],['tsuide','支えたい'],['need','頼みたい'],['can','できること札']];
 var fsCat='all', fsPref='all', fsType='all';
 function openFilterSheet(){
   fsCat=curCat; fsPref=curRegion; fsType=curType;
   var opts='<option value="all">すべての地域（全国）</option>';
   PREFS.forEach(function(p){ opts+='<option value="'+p+'"'+(p===curRegion?' selected':'')+'>'+p+'</option>'; });
-  var chips=CAT_FILTERS.map(function(c){
+  var chips=categoryFilters().map(function(c){
     return '<span class="thanks-tag'+(curCat===c[0]?' on':'')+'" data-cat="'+c[0]+'" onclick="pickFsCat(this,\''+c[0]+'\')">'+c[1]+'</span>';
   }).join('');
   openSheet('絞り込み',
@@ -2519,18 +2562,19 @@ function updateFilterButton(){
   var parts=[];
   if(curArea) parts.push(curArea);
   else if(curRegion!=='all') parts.push(curRegion);
-  if(curCat!=='all'){ CAT_FILTERS.forEach(function(c){ if(c[0]===curCat) parts.push(c[1]); }); }
+  if(curCat!=='all'){ categoryFilters().forEach(function(c){ if(c[0]===curCat) parts.push(c[1]); }); }
   lbl.textContent=parts.length>1?(parts[0]+' 他'):parts.join('');
 }
 function applyProvFilters(){
+  syncCategoryFilter();
   var count=0;
   document.querySelectorAll('.prov-card').forEach(function(card){
     var isLive=card.hasAttribute('data-live');
     var r=card.dataset.region||'', c=card.dataset.cat||'';
-    // ライブ投稿は地域/カテゴリ未設定なら常に表示（ユーザー投稿を勝手に隠さない）
+    // 実アカウントの未設定投稿は残す。デモのカテゴリ指定では、その種類の投稿だけを出す。
     var ty=card.dataset.type||'', ar=card.dataset.area||'';
     var matchR=(curRegion==='all'|| r===curRegion || (isLive && !r));
-    var matchC=(curCat==='all'|| c.split(' ').indexOf(curCat)>=0 || (isLive && !c));
+    var matchC=(curCat==='all'|| c.split(' ').indexOf(curCat)>=0 || (isLive && !c && !isGuestDemo()));
     var matchT=(curType==='all'|| ty===curType || (!isLive && !ty));
     var matchA=(!curArea || ar.indexOf(curArea)>=0);
     if(matchR && matchC && matchT && matchA){card.style.display='';count++;}
@@ -2621,12 +2665,13 @@ function postAuthor(p){ return (p&&p.anon)?'ご近所の方':((p&&p.authorName)|
 
 var curPostType='tsuide';
 function setPostType(el,t){
+  syncPostCategories();
   curPostType=t;
   var cards=document.querySelectorAll('#pt-choice .pt-card');
   for(var i=0;i<cards.length;i++){ cards[i].classList.toggle('on', cards[i].getAttribute('data-type')===t); }
   var info=POST_TYPES[t]||POST_TYPES.tsuide;
   var h=document.getElementById('pt-hint'); if(h) h.textContent=info.hint;
-  var ti=document.getElementById('post-title'); if(ti) ti.placeholder=info.ph;
+  var ti=document.getElementById('post-title'); if(ti) ti.placeholder=isGuestDemo()?(t==='need'?'例：公民館で30分、話し相手をお願いしたい':'例：木曜の午後、話し相手になれます'):info.ph;
   var b=document.getElementById('post-submit-btn'); if(b) b.textContent=info.btn;
   var wf=document.getElementById('post-when-field'); if(wf) wf.style.display=(t==='tsuide')?'':'none';
   var af=document.getElementById('post-anon-field'); if(af) af.style.display=(t==='need')?'':'none';
@@ -3282,8 +3327,10 @@ function submitPost(){
   if(tooLong(detail,'detail','詳細'))return;
   if(tooLong(area,'area','エリア'))return;
   if(isGuestDemo()){
+    var category=selectedDemoCategory('post-category-field');
+    if(!category){toast('3つのカテゴリから1つ選んでください');return;}
     // デモ：端末の中の一覧に足すだけ（送信しない）
-    demoAddPost({type:type,title:title,detail:detail,categories:cats,pref:pref,area:area,
+    demoAddPost({type:type,title:title,detail:detail,categories:[category.label],scenario:category.scenario,pref:pref,area:area,
       when:(type==='tsuide')?when.slice(0,40):'', anon:(type==='need')?anon:false});
     clearPostForm();
     if(type==='need') markCareAnswered();
@@ -3324,6 +3371,7 @@ function clearPostForm(){
   var pp=document.getElementById('post-pref'); if(pp)pp.value='';
   var pw=document.getElementById('post-when'); if(pw)pw.value='';
   var pan=document.getElementById('post-anon'); if(pan)pan.checked=false;
+  if(isGuestDemo()) document.querySelectorAll('#post-category-field .cat-opt').forEach(function(c){ c.classList.remove('on'); c.setAttribute('aria-pressed','false'); });
 }
 
 var postsUnsub=null;
@@ -3486,13 +3534,17 @@ function editPost(id){
   }).join('');
   openSheet('投稿を編集',
     '<div class="pt-choice" id="ep-choice">'+cards+'</div>'+
+    (isGuestDemo()?'<div class="input-group" id="ep-category-field"'+(editType==='can'?' style="display:none"':'')+'>'+demoCategoryPicker(p.scenario||'')+'</div>':'')+
     '<div class="input-group"><label class="input-label">タイトル</label><input id="ep-title" class="input" value="'+escapeHtml(p.title||'')+'"></div>'+
     '<div class="input-group"><label class="input-label">地域（都道府県）</label><select id="ep-pref" class="input">'+prefOptions(p.pref||'')+'</select></div>'+
     '<div class="input-group"><label class="input-label">市区町村・エリア（任意）</label><input id="ep-area" class="input" value="'+escapeHtml(p.area||'')+'" placeholder="例：高槻市 ○○駅周辺"></div>'+
     '<div class="input-group"><label class="input-label">詳細</label><textarea id="ep-detail" class="input" rows="4" style="resize:vertical;font-family:inherit">'+escapeHtml(p.detail||'')+'</textarea></div>'+
     '<button class="btn-primary" onclick="saveEditPost(\''+id+'\')">保存する</button>');
 }
-function setEditType(el,t){ el.parentNode.querySelectorAll('.pt-card').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); editType=t; }
+function setEditType(el,t){
+  el.parentNode.querySelectorAll('.pt-card').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); editType=t;
+  var field=document.getElementById('ep-category-field'); if(field) field.style.display=t==='can'?'none':'';
+}
 function saveEditPost(id){
   var title=((document.getElementById('ep-title')||{}).value||'').trim();
   var detail=((document.getElementById('ep-detail')||{}).value||'').trim();
@@ -3504,7 +3556,14 @@ function saveEditPost(id){
   if(tooLong(area,'area','エリア'))return;
   if(isGuestDemo()){
     var q=(window.__posts||{})[id];
-    if(q){ q.type=editType; q.title=title; q.detail=detail; q.pref=pref; q.area=area; renderLivePosts(); }
+    var category=editType==='can'?null:selectedDemoCategory('ep-category-field');
+    if(editType!=='can'&&!category){toast('3つのカテゴリから1つ選んでください');return;}
+    if(q){
+      q.type=editType; q.title=title; q.detail=detail; q.pref=pref; q.area=area;
+      if(category){ q.categories=[category.label]; q.scenario=category.scenario; }
+      else { q.categories=[]; delete q.scenario; }
+      renderLivePosts();
+    }
     closeSheet(); toast('投稿を更新しました（デモ）'); return;
   }
   if(!fbReady||!fbAuth.currentUser){toast('ログインが必要です');return;}
@@ -4278,7 +4337,7 @@ function openLegal(kind){
       legalQA('支援者支援とは？','特定の誰かを選んで助けることではなく、「支える」という行為が生まれやすく・続きやすく・報われやすい環境を整えることです。家族を介護する人、ひとりで子育てをする人、家族を支える若い人——支える側ほど「大丈夫な人」と見なされ、助けを求める回路が塞がれがちです。You&i Space は、その回路をこちらから作りに行きます。')+
       legalQA('「支えたい」「頼みたい」とは？','「支えたい」は、手を貸せることを伝えるための投稿です。用事のついででも、空いた時間でもかまいません。「頼みたい」は、助けてほしいことを伝えるための投稿で、名前を伏せて出すこともできます。同じ人が、ある日は支えたい側に、別の日は頼みたい側になれます。')+
       (isGuestDemo()
-        ? legalQA('＆ポイントとは？','活動を成立させた双方の参加を認め、使える選択肢を増やすポイントです。最初の実証で扱う活動（話し相手・部活補助・清掃活動）の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。登録したときは0ptで、残高がなくても頼めます。特典に使った分は運営プールに戻します。依頼の完了時に、返還用の保留分を除いたプールから一部を償却します。償却率などは本番に向けて検討中です。現金での購入・換金・売買・譲渡はできません。')
+        ? legalQA('＆ポイントとは？','活動を成立させた双方の参加を認め、使える選択肢を増やすポイントです。最初の実証で扱う活動（話し相手／顧問・コーチの補助／市町の清掃活動）の達成を確かめたあと、運営が、支える人にも頼む人にも無償で発行します。頼んだ人の残高は減りません。登録したときは0ptで、残高がなくても頼めます。特典に使った分は運営プールに戻します。依頼の完了時に、返還用の保留分を除いたプールから一部を償却します。償却率などは本番に向けて検討中です。現金での購入・換金・売買・譲渡はできません。')
         : legalQA('＆ポイントとは？','ありがとうを見えるようにするポイントです。金銭的な価値や換金性はありません。受けた人から支えた人へ手渡しするのは、その場で借りを返したことにするためです。残高が0でも、遠慮なく助けを求めてかまいません。'))+
       legalQA('結モードとは？','災害が起きたときに切り替わる画面です。安否をワンタップで知らせられ、ふだん出されていた「できること札」が、そのまま動ける人の一覧になります。新しく人を集める必要はありません。')+
       legalQA('ほかの人に表示される名前は？','ニックネームです。本名は本人確認のために運営だけが使い、ほかの利用者には表示しません。ニックネームは 設定 →「プロフィール編集」から変えられます。団体・行政のアカウントは、団体名が表示されます。')+
@@ -4571,7 +4630,7 @@ var GUIDE_ECO_ROLE={eb:'02　役割の循環', h:'今日助けられた人が、
    body:gPt('i-users','<b>支えたい</b>——手を貸せることを出せます')+
         gPt('i-chat','<b>頼みたい</b>——助けてほしいことを出せます。地図にはおおまかな位置だけが出ます')+
         gPt('i-heart','登録は<b>0pt</b>。＆ポイントがなくても頼めて、応募できます。先に誰かを支える義務もありません')+
-        gPt('i-check','最初の実証は<b>話し相手・部活補助・清掃活動</b>の3つ。双方が内容に納得してから成立します。断ることも、条件を相談し直すこともできます')};
+        gPt('i-check','最初の実証は<b>話し相手／顧問・コーチの補助／市町の清掃活動</b>の3つ。双方が内容に納得してから成立します。断ることも、条件を相談し直すこともできます')};
 var GUIDE_ECO_POINT={eb:'＆ポイントと記録', h:'支える人にも、頼む人にも。\n双方の参加が報われる。',
    lead:'活動の達成を確かめたあと、運営が、支える人にも頼む人にも＆ポイントを無償で発行します。頼んだ人の残高は減りません。',
    body:gPt('i-shield','<b>活動前の確認 → 完了の確認 → 運営の照合 → 発行</b>。運営は当事者とは別の立場で確かめます。双方が「完了」を押しただけでは発行しません')+
@@ -4650,6 +4709,7 @@ function guideGo(t){
    支える側が続いている人に、アプリのほうから「頼っていい」と伝える。
    実アカウントでは既存の感謝データから判定して表示するだけで、何も書き込まない。 */
 var CARE_DRAFTS=['自分の通院のあいだ、家族を見ていてほしい','買い物を、ついでにお願いしたい','30分だけ、話を聞いてほしい'];
+function careDrafts(){ return isGuestDemo()?['30分だけ、話を聞いてほしい','交流サロンで、母の話し相手をお願いしたい','公民館で、趣味の話を一緒にしたい']:CARE_DRAFTS; }
 var CARE_SNOOZE_DAYS=14;
 function careSnoozed(){
   if(isGuestDemo()) return !!window.__careDismissed;
@@ -4670,14 +4730,15 @@ function renderCareCard(){
   el.innerHTML='<div class="care-eyebrow"><svg class="ic"><use href="#i-heart"/></svg>あなたへのお便り</div>'+
     '<div class="care-h">いつも、支えてくださってありがとうございます。</div>'+
     '<div class="care-body">このところ、あなたは支える側が続いています。支える人ほど、ひとりで抱えこみがちです。今度は、あなたが「頼みたい」を出してみませんか。</div>'+
-    '<div class="care-chips">'+CARE_DRAFTS.map(function(t,i){ return '<button class="care-chip" onclick="openCareRequest('+i+')">'+t+'</button>'; }).join('')+'</div>'+
+    '<div class="care-chips">'+careDrafts().map(function(t,i){ return '<button class="care-chip" onclick="openCareRequest('+i+')">'+t+'</button>'; }).join('')+'</div>'+
     '<div class="care-actions"><button class="btn-primary" onclick="openCareRequest(-1)">頼みごとを出してみる</button><button class="btn-secondary" onclick="openCareDesk()">専門の相談窓口</button></div>'+
     '<div class="care-foot"><span>名前を伏せて頼めます。＆ポイントの残高が0でも大丈夫です。</span><button onclick="snoozeCare()">いまは大丈夫</button></div>';
 }
 /* 下書きを入れた「頼みたい」へ。頼みやすいよう、名前を伏せる設定をはじめから入れておく */
 function openCareRequest(i){
   openPostWith('need');
-  var t=document.getElementById('post-title'); if(t) t.value=(i>=0?CARE_DRAFTS[i]:'');
+  var t=document.getElementById('post-title'); if(t) t.value=(i>=0?careDrafts()[i]:'');
+  if(isGuestDemo()&&i>=0){ var c=document.querySelector('#post-category-field [data-scenario="talk"]'); if(c) selectCatMulti(c); }
   var a=document.getElementById('post-anon'); if(a) a.checked=true;
 }
 function markCareAnswered(){
@@ -4724,26 +4785,21 @@ var DEMO_POSTS=[
   {type:'tsuide',uid:'demo-takahashi',authorName:'みさこ',title:'木曜の午後、話し相手になれます',when:'木曜 14:00〜14:30',area:'高槻市',categories:['話し相手'],detail:'以前、病院で働いていました。聞き役が得意です。はじめは、スタッフのいる交流サロンで30分から。',min:20,
    scenario:'talk',eco:'misako',place:'○○公民館の交流サロン',host:'交流サロンのスタッフ',task:'お茶を飲みながら、30分ほど話し相手をする。介助や専門的な相談は、スタッフにつなぐ',end:'30分たったら終わり。続けるかは、その場で相談する',
    match:{'話題':'園芸や、昔の仕事の話','会話のペース':'ゆっくりで大丈夫。聞き役が得意','希望する距離感':'はじめはスタッフのいる場所で。連絡はアプリのメッセージで'}},
-  {type:'tsuide',uid:'demo-nakamura',authorName:'けん',title:'部活の準備・記録・片付けなら手伝えます',when:'平日 16時以降',area:'茨木市',categories:[],detail:'中学・高校と陸上部でした。指導はできませんが、準備や記録、片付けなら。',min:45,scenario:'club'},
-  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'週末の清掃活動に参加できます',when:'土日の午前',area:'高槻市',categories:[],detail:'公園や川沿いのごみ拾いなら、軍手を持って行けます。',min:70,scenario:'cleanup'},
-  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'夕方スーパーに行くので、ついでに買ってこられます',when:'今日 17時ごろ',area:'高槻市 ○○町',categories:['買い物'],detail:'お米や飲みものなど、重いものもだいじょうぶです。受け渡しは玄関先か、公民館で。',min:95},
-  {type:'tsuide',uid:'demo-inoue',authorName:'まり',title:'日曜の午後、公園で子どもたちを見ていられます',when:'日曜 14〜16時',area:'茨木市',categories:['家事・育児'],detail:'うちの子も一緒です。そのあいだ、1〜2時間ひと息ついてください。',min:200},
-  {type:'tsuide',uid:'demo-yamamoto',authorName:'たいち',title:'土曜の午前、車を出せます',when:'土曜の午前',area:'高槻市',categories:['移動・送迎'],detail:'通院・買い物・役所の手続きなどに。4人まで乗れます。',min:1500},
-  {type:'tsuide',uid:'demo-nakamura',authorName:'けん',title:'中学生の宿題、オンラインで30分見られます',when:'平日の20時以降',area:'茨木市',categories:['学習サポート'],detail:'家のことで勉強の時間がとりにくい子の、力になれたらと思っています。',min:2900},
+  {type:'tsuide',uid:'demo-nakamura',authorName:'けん',title:'部活の準備・記録・片付けなら手伝えます',when:'平日 16時以降',area:'茨木市',categories:['顧問・コーチの補助'],detail:'中学・高校と陸上部でした。指導はできませんが、準備や記録、片付けなら。',min:45,scenario:'club'},
+  {type:'tsuide',uid:'demo-maeda',authorName:'まえけん',title:'週末の清掃活動に参加できます',when:'土日の午前',area:'高槻市',categories:['市町の清掃活動'],detail:'公園や川沿いのごみ拾いなら、軍手を持って行けます。',min:70,scenario:'cleanup'},
   // 頼みたい（地図）：頼んでいるのは、ふだん誰かを支えている人たち
   {type:'need',uid:'demo-suzuki',authorName:'ともこ',title:'介護の合間に、母の話し相手を30分だけ',area:'高槻市 ○○町',categories:['話し相手'],detail:'母（85）の介護を3年続けています。自分の歯医者に行くあいだ、母はデイサービスの交流スペースで過ごします。30分ほど、母の話し相手をしていただける方を探しています。',min:40,
    scenario:'talk',eco:'tomoko',when:'来週水曜 14:00〜14:30',place:'○○デイサービスの交流スペース',host:'デイサービスの職員',task:'交流スペースで30分ほど、母の話し相手をする。介助やトイレの付き添いは職員が行う',end:'30分たったら終わり。職員に声をかけて帰る',
    match:{'話題':'昔の高槻の話、編み物','会話のペース':'ゆっくり。耳が少し遠いので、はっきりめに','希望する距離感':'はじめは交流スペースの共有の場所で。家には上がらない'}},
-  {type:'need',uid:'demo-jhs',authorName:'○○中学校 陸上部',title:'練習の準備・記録・片付けを手伝ってほしい',area:'高槻市',categories:[],detail:'顧問が同席します。ハードルやマーカーの準備、タイムの記録、片付けをお願いしたいです（60分）。専門的な指導はお願いしません。',min:55,
+  {type:'need',uid:'demo-jhs',authorName:'○○中学校 陸上部',title:'練習の準備・記録・片付けを手伝ってほしい',area:'高槻市',categories:['顧問・コーチの補助'],detail:'顧問が同席します。ハードルやマーカーの準備、タイムの記録、片付けをお願いしたいです（60分）。専門的な指導はお願いしません。',min:55,
    scenario:'club',eco:'jhs',when:'金曜 16:00〜17:00',place:'○○中学校のグラウンド',host:'陸上部の顧問',task:'ハードル・マーカーの準備、タイムの記録、片付け。指導はしない',end:'片付けが終わり、顧問が終わりを伝えたら終わり',
    match:{'担当作業':'準備・タイムの記録・片付け','経験':'陸上の経験は問いません。ストップウォッチが使えれば大丈夫','参加時間':'金曜 16:00〜17:00（60分）','受入側の説明':'はじめに顧問が10分ほど、安全のことと当日の流れを説明します'}},
-  {type:'need',uid:'demo-town',authorName:'○○町 自治会',title:'○○公園の清掃活動に、あと5人',area:'高槻市 ○○町',categories:[],detail:'受付・軍手・ごみ袋・トングは自治会で用意します。区域を分けて、60分のごみ拾いです。はじめての方も歓迎です。',min:150,
+  {type:'need',uid:'demo-town',authorName:'○○町 自治会',title:'○○公園の清掃活動に、あと5人',area:'高槻市 ○○町',categories:['市町の清掃活動'],detail:'受付・軍手・ごみ袋・トングは自治会で用意します。区域を分けて、60分のごみ拾いです。はじめての方も歓迎です。',min:150,
    scenario:'cleanup',eco:'town',when:'日曜 9:00〜10:00',place:'○○公園の入口に集合',host:'自治会の環境係',task:'区域を分けてごみ拾い。危ないものは拾わず、責任者に知らせる',end:'60分たつか、担当の区域が終わったら終わり',
    match:{'日時':'日曜 9:00〜10:00。雨のときは前日18時までに連絡','場所':'○○公園の入口に集合','作業の負担':'歩きながら60分。重いものは運びません','参加条件':'小学生以下は保護者と一緒に。危ないものは拾わず、責任者へ'}},
-  {type:'need',uid:'demo-anon1',anon:true,authorName:'',title:'水曜だけ、15時の保育園のお迎えを',area:'高槻市',categories:['ひとり親','家事・育児'],detail:'ひとりで子育てをしています。水曜だけ仕事が延びるので、お迎えから1時間ほど一緒にいていただける方がいると助かります。',min:130},
-  {type:'need',uid:'demo-anon2',anon:true,authorName:'',title:'試験前の2週間だけ、夕食づくりを手伝ってほしい',area:'高槻市',categories:['ヤングケアラー','家事・育児'],detail:'高校生です。家族のケアをしながら受験勉強をしています。試験前だけ、夕食の準備を手伝ってもらえたら助かります。',min:300},
-  {type:'need',uid:'demo-kimura',authorName:'かずこ',title:'夫の通院に、月2回同行してほしい',area:'高槻市',categories:['老老介護','通院付き添い'],detail:'わたしも78歳になり、夫の車いすを押して病院まで行くのが難しくなってきました。',min:1400},
-  {type:'need',uid:'demo-hayashi',authorName:'めぐみ',title:'子ども食堂の片付けに、月2回だけ手を貸してほしい',area:'高槻市',categories:['家事・育児'],detail:'地域で子ども食堂を開いています。運営の仲間が減って、片付けまで手が回らなくなってきました。30分でも助かります。',min:2600},
+  {type:'need',uid:'demo-anon1',anon:true,authorName:'',title:'交流サロンで、30分ほど話し相手をお願いしたい',area:'高槻市',categories:['話し相手'],detail:'ひとりで過ごす時間が増えました。スタッフのいる交流サロンで、園芸や昔の暮らしの話をできたらうれしいです。',min:130,
+   scenario:'talk',eco:'anon',when:'火曜 14:00〜14:30',place:'○○公民館の交流サロン',host:'交流サロンのスタッフ',task:'共有スペースで30分ほど会話する。専門的な相談や介助はスタッフにつなぐ',end:'30分たったら、スタッフに声をかけて終える',
+   match:{'話題':'園芸や昔の暮らし','会話のペース':'ゆっくり、無理に話し続けなくても大丈夫','希望する距離感':'名前を伏せたまま、スタッフのいる共有スペースで'}},
   // できること札（結モードで「いま動ける人」になる）
   {type:'can',uid:'demo-takahashi',authorName:'みさこ',title:'通院の付き添い・話し相手ができます',area:'高槻市',categories:['通院付き添い'],detail:'平日の午前中なら。',min:9000},
   {type:'can',uid:'demo-maeda',authorName:'まえけん',title:'車を出せます（4人乗り）',area:'高槻市',categories:['移動・送迎'],detail:'',min:12000},
@@ -4772,8 +4828,9 @@ var DEMO_PEOPLE={
   '○○町 自治会':{c:'green',org:true,bio:'高槻市 ○○町（例）',intro:'毎月第3日曜に、公園の清掃をしています。'}
 };
 /* ご近所の札（サンプル）の人が、本人が選んで示している確認済みの活動 */
-var DEMO_SHOWN={'みさこ':['話し相手（支える側）'],'まえけん':['清掃活動（支える側）'],'ちなつ':['部活補助（支える側）'],'けん':['部活補助（支える側）'],'ゆみ':['話し相手（支える側）'],'まり':['話し相手（支える側）','清掃活動（支える側）'],'たいち':['清掃活動（支える側）'],'ひでき':['清掃活動（支える側）']};
+var DEMO_SHOWN={'みさこ':['話し相手（支える側）'],'まえけん':['市町の清掃活動（支える側）'],'ちなつ':['顧問・コーチの補助（支える側）'],'けん':['顧問・コーチの補助（支える側）'],'ゆみ':['話し相手（支える側）'],'まり':['話し相手（支える側）','市町の清掃活動（支える側）'],'たいち':['市町の清掃活動（支える側）'],'ひでき':['市町の清掃活動（支える側）']};
 function loadDemoData(){
+  syncCategoryFilter();
   window.__demoLoaded=true;
   ecoInit();
   document.querySelectorAll('.real-only').forEach(function(e){ e.style.display='none'; });
@@ -4843,7 +4900,7 @@ function demoCloseDeal(){
   if(!hit.length&&ecoOn()) hit=withHim(s.activities.filter(function(a){ return a.status==='completed'; }));
   if(hit.length){ openActivity(hit[hit.length-1].id); return; }
   openSheet('この相手と成立した活動は、まだありません',
-    '<div class="eco-sub">＆ポイントは、最初の実証で扱う3つの活動（話し相手・部活補助・清掃活動）で、双方が納得して成立し、達成を確かめたあとに、運営から双方へ発行します。頼んだ人から手渡すものではありません。</div>'+
+    '<div class="eco-sub">＆ポイントは、最初の実証で扱う3つの活動（話し相手／顧問・コーチの補助／市町の清掃活動）で、双方が納得して成立し、達成を確かめたあとに、運営から双方へ発行します。頼んだ人から手渡すものではありません。</div>'+
     '<div class="eco-note" style="margin-top:0">お礼の言葉や、交通費などの実費の取り決めは、当事者どうしにおまかせしています（アプリの機能には含めません）。</div>'+
     '<button class="btn-primary" style="margin-top:14px" onclick="closeSheet();navTo(\'main\')">ホームで活動を探す</button>');
 }
@@ -4851,10 +4908,10 @@ function demoCloseDeal(){
 var DEMO_THREAD_HTML=(document.getElementById('chat-thread')||{}).innerHTML||'';
 
 /* ===================================================================
-   v0.8.1：ゲストのデモに、2026年10月に合意した新しい仕組みを入れる（見た目は旧デザインのまま）
+   v0.8.2：ゲストのデモに、2026年10月に合意した新しい仕組みを入れる（見た目は旧デザインのまま）
    正本：運営の「You&i（結）概念ノート」「You&i Space ＆ポイントと貢献実績 設計メモ」（リポジトリの外）
    ・登録時は0pt。残高がなくても頼める・応募できる。先に誰かを支える義務はない
-   ・最初の実証は「話し相手」「部活補助」「清掃活動」の3つ。マッチングで確かめることをすべて確かめてから成立する
+   ・最初の実証は「話し相手」「顧問・コーチの補助」「市町の清掃活動」の3つ。マッチングで確かめることをすべて確かめてから成立する
      （断る・条件を相談し直すこともできる）。成立のとき運営が発行枠を確保し、枠がなければ成立させない
    ・運営は当事者とは別の立場。活動前の確認（本人・所属・当日の責任者）→ 参加者の完了確認 → 運営の照合
      → 運営から双方へ無償で発行（頼んだ人の残高は減らない。団体は1開催に1回）→ 相互評価 → 次の活動や機会
@@ -4866,11 +4923,11 @@ var DEMO_THREAD_HTML=(document.getElementById('chat-thread')||{}).innerHTML||'';
 var ECO=window.YouiSpaceEconomy||null;
 var ECO_SCEN={
   talk:   {label:'話し相手', min:30, icon:'i-chat',  about:'高齢者など、日常の会話や交流を求める人と話します。', form:'スタッフのいる交流拠点などで、初回30分程度', who:'1対1・スタッフのいる場所'},
-  club:   {label:'部活補助', min:60, icon:'i-users', about:'小中高の部活で、顧問・コーチの補助として、準備・記録・片付けなどを手伝います。専門的な指導はしません。', form:'顧問などの責任者が同席し、60分程度', who:'支える人1人・顧問が同席'},
-  cleanup:{label:'清掃活動', min:60, icon:'i-house', about:'公園や地域のごみ拾いなど、市町の清掃活動に参加します。', form:'主催団体が受付・道具・区域を用意し、5人程度で60分', who:'支える人5人程度・主催団体'}
+  club:   {label:'顧問・コーチの補助', min:60, icon:'i-users', about:'小中高の部活で、顧問・コーチの補助として、準備・記録・片付けなどを手伝います。専門的な指導はしません。', form:'顧問などの責任者が同席し、60分程度', who:'支える人1人・顧問が同席'},
+  cleanup:{label:'市町の清掃活動', min:60, icon:'i-house', about:'公園や地域のごみ拾いなど、市町の清掃活動に参加します。', form:'主催団体が受付・道具・区域を用意し、5人程度で60分', who:'支える人5人程度・主催団体'}
 };
 var ECO_CHECKS={talk:['話題','会話のペース','希望する距離感'], club:['担当作業','経験','参加時間','受入側の説明'], cleanup:['日時','場所','作業の負担','参加条件']};
-var ECO_PEOPLE=[['misako','みさこ','person'],['tomoko','ともこ','person'],['kazuko','かずこ','person'],['jhs','○○中学校 陸上部','organization'],['town','○○町 自治会','organization']];
+var ECO_PEOPLE=[['misako','みさこ','person'],['tomoko','ともこ','person'],['kazuko','かずこ','person'],['anon','ご近所の方','person'],['jhs','○○中学校 陸上部','organization'],['town','○○町 自治会','organization']];
 var ECO_HELPERS=['participant2','participant3','participant4','participant5'];   // 清掃活動で一緒に参加する、ご近所の人（架空）
 var ECO_STATUS={draft:'内容の確認',reserved:'成立・活動の予定',ready:'発行の準備ができました',completed:'活動完了',hold:'運営が確かめています',cancelled:'見送り・取り消し'};
 var ECO_STEPS=['内容・成立','活動前の確認','完了の確認','双方へ発行','振り返り・次へ'];
@@ -4959,7 +5016,7 @@ function renderEcoCard(){
         (on.length>1?'<button class="btn-secondary" onclick="openEcoActivities()">ほかの活動</button>':'')+'</div>';
   }else{
     el.innerHTML='<div class="care-eyebrow"><svg class="ic"><use href="#i-users"/></svg>最初の実証で扱う活動</div>'+
-      '<div class="care-h">話し相手・部活補助・清掃活動の、3つから。</div>'+
+      '<div class="care-h">話し相手／顧問・コーチの補助／市町の清掃活動の、3つから。</div>'+
       '<div class="care-body">登録は 0pt。＆ポイントがなくても、頼めます・応募できます。活動の達成を確かめたあと、運営が双方に＆ポイントを発行します。</div>'+
       '<div class="care-chips">'+Object.keys(ECO_SCEN).map(function(k){ return '<button class="care-chip" onclick="openEcoScenario(\''+k+'\')">'+ECO_SCEN[k].label+'</button>'; }).join('')+'</div>'+
       '<div class="care-foot"><span>時間・人数は実証のための仮の設定です。</span><button onclick="openEcoGuide()">仕組みを見る</button></div>';
@@ -4991,7 +5048,7 @@ function ecoPostTags(p){
 }
 function ecoPostBlock(p){
   if(!isGuestDemo()||!p) return '';
-  if(!p.scenario) return isMyPost(p)?'':'<div class="eco-note" style="margin:0 0 14px">この内容は、最初の実証で扱う3つの活動（話し相手・部活補助・清掃活動）の外にあります。メッセージで相談はできますが、運営の確認や＆ポイントの発行はありません。</div>';
+  if(!p.scenario) return isMyPost(p)?'':'<div class="eco-note" style="margin:0 0 14px">この内容は、最初の実証で扱う3つの活動（話し相手／顧問・コーチの補助／市町の清掃活動）の外にあります。メッセージで相談はできますが、運営の確認や＆ポイントの発行はありません。</div>';
   var sc=ECO_SCEN[p.scenario], rows=[['活動の種類',sc.label+'（'+sc.form+'）']];
   if(p.when&&normType(p.type)==='need') rows.push(['日時',p.when]);
   if(p.place) rows.push(['場所',p.place]);
@@ -5016,7 +5073,7 @@ function ecoPostActions(p,id){
   if(cur) return '<button class="btn-primary" onclick="openActivity(\''+cur.id+'\')">この活動のつづきを見る</button>';
   if(normType(p.type)==='need') return '<button class="btn-primary" onclick="ecoApply(\''+id+'\')">この活動に応募する</button>';
   if(p.scenario==='talk') return '<button class="btn-primary" onclick="ecoApply(\''+id+'\')">この人に頼む</button>';
-  return '<div class="eco-note" style="margin:0 0 4px">部活補助と清掃活動は、学校・主催団体が頼む活動です。団体のアカウントから、この人に声をかけられます（このデモでは、個人として「頼みたい」に応募する流れを体験できます）。</div>';
+  return '<div class="eco-note" style="margin:0 0 4px">顧問・コーチの補助と市町の清掃活動は、学校・主催団体が頼む活動です。団体のアカウントから、この人に声をかけられます（このデモでは、個人として「頼みたい」に応募する流れを体験できます）。</div>';
 }
 function ecoApply(postId){
   var p=(window.__posts||{})[postId]; if(!p||!p.scenario||!ecoOn()) return;
@@ -5290,7 +5347,7 @@ function renderEcoProfile(){
     '<div class="eco-rec"><div class="eco-rec-h">資格・現在の確認事項</div><div class="eco-rec-sub">本人・所属、必要な研修や資格、責任者、活動の条件など。評価とは別に、運営が確かめます</div>'+
       '<div class="eco-kv"><span>本人の確認</span><span>'+yn(rec.checks.identity)+'</span></div>'+
       '<div class="eco-kv"><span>活動説明の確認</span><span>'+yn(rec.checks.orientation)+'</span></div>'+
-      '<div class="eco-kv"><span>子どもとの関わり方の確認（部活補助）</span><span>'+yn(rec.checks.childSafety)+'</span></div>'+
+      '<div class="eco-kv"><span>子どもとの関わり方の確認（顧問・コーチの補助）</span><span>'+yn(rec.checks.childSafety)+'</span></div>'+
       '<div class="eco-demo"><div class="eco-demo-h">デモの操作（運営の立場・実際の研修や資格の認定ではありません）</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+
         '<button class="kai-read" style="margin:0" data-eco="orientation"'+(rec.checks.orientation?' disabled':'')+' onclick="ecoRoleCheck(\'orientation\')">活動説明の確認を記録</button>'+
         '<button class="kai-read" style="margin:0" data-eco="childSafety"'+(rec.checks.childSafety?' disabled':'')+' onclick="ecoRoleCheck(\'childSafety\')">子どもとの関わり方を記録</button></div></div></div>';
