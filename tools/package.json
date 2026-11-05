@@ -1,0 +1,6 @@
+{
+  "name": "youi-space-admin-migrations",
+  "private": true,
+  "type": "module",
+  "dependencies": { "firebase-admin": "^13.5.0" }
+}
