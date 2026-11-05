@@ -1,18 +1,19 @@
 // ニックネーム：導入前（v0.5.0）に登録した人の移行と、新規登録者の表示名
-import { step, sleep, newUser, waitFor, signupAndLogin, post, hookToasts, onMain, currentApp, oldApp, checkErrors, OLD_APP_COMMIT } from './common.mjs';
+import { step, sleep, newUser, waitFor, signupAndLogin, post, hookToasts, onMain, currentApp, checkErrors, adminSetBool, adminGet, field } from './common.mjs';
+import { legacyUser, legacyPosts } from './legacy-fixtures.mjs';
 
 const namesOf = (page, uid) => page.evaluate(uid => (window.__rawPosts || []).filter(p => p.uid === uid)
   .map(p => (p.anon ? '[伏せ]' : '') + p.title + '=' + JSON.stringify(p.authorName || '')).join(' | '), uid);
 
 export async function run(browser) {
-  const OLD = oldApp(), NEW = currentApp();
-  if (!OLD) { step('準備', '旧アプリ（' + OLD_APP_COMMIT + '）を git から取り出す', false, 'git の履歴が足りません（git fetch --unshallow）'); return; }
+  await adminSetBool('config/pointsLedger', 'ready', true);
+  await adminSetBool('config/privacyMigration', 'ready', true);
+  const NEW = currentApp();
 
-  // 1) 旧アプリで登録した人：ニックネームなし、伏せた投稿にも名前が残っている
-  const C = await newUser(browser, 'Carol(旧→新)', OLD);
-  const cUid = await signupAndLogin(C, '川口 千代', 'carol@example.com', 'password-c1');
-  await post(C, 'tsuide', '土曜に車を出せます', false);
-  await post(C, 'need', '通院の付き添いをお願いしたい', true);
+  // 旧版のスキーマをエミュレーターに用意する。旧クライアントへ閲覧権限を戻さない。
+  const C = await newUser(browser, 'Carol(旧データ→新)', NEW);
+  const cUid = await legacyUser(C, '川口 千代', 'carol@example.com', 'password-c1');
+  const legacy = await legacyPosts(cUid, '川口 千代');
 
   // 2) 新しいアプリで登録する人：ニックネームと本名を分けて持つ
   const D = await newUser(browser, 'Dave(新)', NEW);
@@ -34,9 +35,37 @@ export async function run(browser) {
   step('Carol(旧→新)', 'ホームにニックネームの案内帯が出る', !!banner, banner);
   const sheet = await waitFor(C, () => /ニックネームを決める/.test(document.getElementById('sheet-title').textContent) && document.getElementById('sheet-modal').classList.contains('show'), null, 5000);
   step('Carol(旧→新)', 'ログイン後に設定シートが自動で開く', sheet);
+  const publicName = await C.evaluate(() => myDisplayName());
+  step('Carol(旧→新)', 'ニックネーム未設定の公開表示名は本名を返さない', publicName === '利用者', publicName);
+  const privateName = await C.evaluate(() => displayNameOf(getStoredUser()));
+  step('Carol(旧→新)', '本人用の表示名は従来どおり保持する', privateName === '川口 千代', privateName);
+  const beforeCards = await C.evaluate(() => fbDb.collection('posts').where('uid', '==', currentProfile.uid).get().then(s => s.size));
+  const cardGuard = await C.evaluate(() => {
+    closeSheet(); openAddCard(); document.getElementById('ac-title').value = '設定前に公開しない札'; saveCard();
+    return document.getElementById('sheet-title').textContent === 'ニックネームを決める'
+      && document.getElementById('sheet-modal').classList.contains('show');
+  });
+  await sleep(250);
+  const afterCards = await C.evaluate(() => fbDb.collection('posts').where('uid', '==', currentProfile.uid).get().then(s => s.size));
+  step('Carol(旧→新)', '設定前のできること札は保存せず設定を案内する', cardGuard && afterCards === beforeCards);
+  const blockedConversationId = 'v2_' + [cUid, dUid].sort().join('_');
+  const conversationBefore = await adminGet('conversations/' + blockedConversationId);
+  const conversationGuard = await C.evaluate(uid => {
+    closeSheet(); openConversation(uid, 'だいちゃん', 'lav');
+    return document.getElementById('sheet-title').textContent === 'ニックネームを決める'
+      && document.getElementById('sheet-modal').classList.contains('show');
+  }, dUid);
+  await sleep(250);
+  step('Carol(旧→新)', '設定前の新規会話は保存せず設定を案内する', conversationGuard && !conversationBefore && !(await adminGet('conversations/' + blockedConversationId)));
   await C.evaluate(() => { document.getElementById('nk-nick').value = 'ちよ'; saveNickname(); });
-  const synced = await waitFor(D, uid => { const mine = (window.__rawPosts || []).filter(p => p.uid === uid); return mine.length === 2 && mine.every(p => (p.authorName || '') === (p.anon ? '' : 'ちよ')); }, cUid, 10000);
-  step('Dave(新)', '設定後：旧利用者の投稿名がそろい、伏せた投稿の名前は消える', synced, await namesOf(D, cUid));
+  const synced = await waitFor(D, uid => { const mine = (window.__rawPosts || []).filter(p => p.uid === uid); return mine.length === 1 && mine[0].anon === false && mine[0].authorName === 'ちよ'; }, cUid, 10000);
+  step('Dave(新)', '設定後：公開投稿名がそろい、旧匿名投稿は表示されない', synced, await namesOf(D, cUid));
+  const ownAnon = await C.evaluate(id => fbDb.collection('posts').doc(id).get().then(d => d.exists && d.data().anon === true), legacy.anonId);
+  step('Carol(旧→新)', '以前の匿名投稿は本人が読める', ownAnon);
+  const hiddenAnon = await D.evaluate(id => fbDb.collection('posts').doc(id).get().then(() => false, e => e.code === 'permission-denied'), legacy.anonId);
+  step('Dave(新)', '以前の匿名投稿は他人から読めない', hiddenAnon);
+  D.__errors = [];
+  step('Carol(旧→新)', '隔離中の匿名データを表示名同期で変更しない', field(await adminGet('posts/' + legacy.anonId), 'authorName') === '川口 千代');
   step('Carol(旧→新)', '設定後は案内帯が消える', await C.evaluate(() => document.getElementById('nick-banner').style.display === 'none'));
 
   // 4) 会話でもニックネームが使われる
